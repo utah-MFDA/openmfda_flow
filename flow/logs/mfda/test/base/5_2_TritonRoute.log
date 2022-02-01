@@ -1,0 +1,43 @@
+OpenROAD v2.0-1424-gf864efbae 
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda.tlef
+[INFO ODB-0223]     Created 11 technology layers
+[INFO ODB-0224]     Created 1 technology vias
+[INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda.tlef
+[INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda_merged.lef
+[INFO ODB-0225]     Created 6 library cells
+[INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda_merged.lef
+[INFO ODB-0127] Reading DEF file: ./results/mfda/test/base/3_place.def
+[INFO ODB-0128] Design: test
+[INFO ODB-0130]     Created 2 pins.
+[INFO ODB-0131]     Created 2 components and 4 component-terminals.
+[INFO ODB-0133]     Created 3 nets and 4 connections.
+[INFO ODB-0134] Finished DEF file: ./results/mfda/test/base/3_place.def
+[INFO ORD-0030] Using 4 thread(s).
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     13
+Number of macros:     6
+Number of vias:       1
+Number of viarulegen: 0
+
+[INFO DRT-0150] Reading design.
+
+Design:                   test
+Die area:                 ( 0 0 ) ( 2520000 1536000 )
+Number of track patterns: 12
+Number of DEF vias:       0
+Number of components:     2
+Number of terminals:      2
+Number of snets:          0
+Number of nets:           3
+
+[INFO DRT-0151] Reading guide.
+
+Number of guides:     13
+
+[ERROR DRT-0234] via does not have single-cut via.
+Error: detail_route.tcl, 61 DRT-0234
+        1.64 real         1.54 user         0.05 sys
