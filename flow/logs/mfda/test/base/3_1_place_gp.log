@@ -1,0 +1,191 @@
+OpenROAD v2.0-1424-gf864efbae 
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda.tlef
+[INFO ODB-0223]     Created 11 technology layers
+[INFO ODB-0224]     Created 1 technology vias
+[INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda.tlef
+[INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda_merged.lef
+[INFO ODB-0225]     Created 6 library cells
+[INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda_merged.lef
+[INFO ODB-0127] Reading DEF file: ./results/mfda/test/base/2_floorplan.def
+[INFO ODB-0128] Design: test
+[INFO ODB-0130]     Created 2 pins.
+[INFO ODB-0131]     Created 2 components and 4 component-terminals.
+[INFO ODB-0133]     Created 3 nets and 4 connections.
+[INFO ODB-0134] Finished DEF file: ./results/mfda/test/base/2_floorplan.def
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: 24000 24000
+[INFO GPL-0004] CoreAreaLxLy: 48000 48000
+[INFO GPL-0005] CoreAreaUxUy: 2472000 1488000
+[INFO GPL-0006] NumInstances: 2
+[INFO GPL-0007] NumPlaceInstances: 2
+[INFO GPL-0008] NumFixedInstances: 0
+[INFO GPL-0009] NumDummyInstances: 0
+[INFO GPL-0010] NumNets: 3
+[INFO GPL-0011] NumPins: 6
+[INFO GPL-0012] DieAreaLxLy: 0 0
+[INFO GPL-0013] DieAreaUxUy: 2520000 1536000
+[INFO GPL-0014] CoreAreaLxLy: 48000 48000
+[INFO GPL-0015] CoreAreaUxUy: 2472000 1488000
+[INFO GPL-0016] CoreArea: 3490560000000
+[INFO GPL-0017] NonPlaceInstsArea: 0
+[INFO GPL-0018] PlaceInstsArea: 17280000000
+[INFO GPL-0019] Util(%): 0.50
+[INFO GPL-0020] StdInstsArea: 17280000000
+[INFO GPL-0021] MacroInstsArea: 0
+[InitialPlace]  Iter: 1 CG Error: 0.00000000 HPWL: 4430000
+[InitialPlace]  Iter: 2 CG Error: 0.00000000 HPWL: 4430000
+[InitialPlace]  Iter: 3 CG Error: 0.00000000 HPWL: 4430000
+[InitialPlace]  Iter: 4 CG Error: 0.00000000 HPWL: 4430000
+[InitialPlace]  Iter: 5 CG Error: 0.00000000 HPWL: 4430000
+[INFO GPL-0031] FillerInit: NumGCells: 404
+[INFO GPL-0032] FillerInit: NumGNets: 3
+[INFO GPL-0033] FillerInit: NumGPins: 6
+[INFO GPL-0023] TargetDensity: 1.00
+[INFO GPL-0024] AveragePlaceInstArea: 8640000000
+[INFO GPL-0025] IdealBinArea: 8640000000
+[INFO GPL-0026] IdealBinCnt: 404
+[INFO GPL-0027] TotalBinArea: 3490560000000
+[INFO GPL-0028] BinCnt: 16 16
+[INFO GPL-0029] BinSize: 151500 90000
+[INFO GPL-0030] NumBins: 256
+[NesterovSolve] Iter: 1 overflow: 0 HPWL: 4176000
+[NesterovSolve] Snapshot saved at iter = 0
+[INFO GPL-0075] Routability numCall: 1 inflationIterCnt: 1 bloatIterCnt: 0
+[INFO GRT-0020] Min routing layer: met1
+[INFO GRT-0021] Max routing layer: met3
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[WARNING GRT-0043] No OR_DEFAULT vias defined.
+[INFO GRT-0224] Chose via M2M3_PR_C as default.
+[INFO GRT-0088] Layer li1     Track-Pitch = 1.0000  line-2-Via Pitch: 0.0000
+[INFO GRT-0088] Layer met1    Track-Pitch = 1.0000  line-2-Via Pitch: 0.0000
+[INFO GRT-0088] Layer met2    Track-Pitch = 24.0000  line-2-Via Pitch: 24.0000
+[INFO GRT-0088] Layer met3    Track-Pitch = 24.0000  line-2-Via Pitch: 24.0000
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 0
+[INFO GRT-0019] Found 0 clock nets.
+[WARNING GRT-0036] Pin out is outside die area.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 2
+[INFO GRT-0017] Processing 4 blockages on layer met3.
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+li1        Vertical            0             0          0.00%
+met1       Horizontal      10080          5970          40.77%
+met2       Vertical          420           171          59.29%
+met3       Horizontal        420           240          42.86%
+---------------------------------------------------------------
+
+[INFO GRT-0111] Final number of vias: 6
+[INFO GRT-0112] Final usage 3D: 25
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Overflow
+---------------------------------------------------------------------------------------
+li1                  0             0            0.00%             0 /  0 /  0
+met1              5970             6            0.10%             0 /  0 /  0
+met2               171             1            0.58%             0 /  0 /  0
+met3               240             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total             6381             7            0.11%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 5760 um
+[INFO GPL-0036] TileLxLy: 0 0
+[INFO GPL-0037] TileSize: 360000 360000
+[INFO GPL-0038] TileCnt: 7 5
+[INFO GPL-0039] numRoutingLayers: 6
+[INFO GPL-0040] NumTiles: 35
+[INFO GPL-0063] TotalRouteOverflowH2: 0
+[INFO GPL-0064] TotalRouteOverflowV2: 0
+[INFO GPL-0065] OverflowTileCnt2: 0
+[INFO GPL-0066] 0.5%RC: 0.5333333611488342
+[INFO GPL-0067] 1.0%RC: 0.5333333611488342
+[INFO GPL-0068] 2.0%RC: 0.5333333611488342
+[INFO GPL-0069] 5.0%RC: 0.5333333611488342
+[INFO GPL-0070] 0.5rcK: 1
+[INFO GPL-0071] 1.0rcK: 1
+[INFO GPL-0072] 2.0rcK: 0
+[INFO GPL-0073] 5.0rcK: 0
+[INFO GPL-0074] FinalRC: 0.53333336
+[NesterovSolve] Iter: 10 overflow: 0 HPWL: 4176000
+[NesterovSolve] Iter: 20 overflow: 0 HPWL: 4176000
+[NesterovSolve] Iter: 30 overflow: 0 HPWL: 4176000
+[NesterovSolve] Iter: 40 overflow: 0 HPWL: 4176000
+[NesterovSolve] Iter: 50 overflow: 0 HPWL: 4176000
+[NesterovSolve] Finished with Overflow: 0.000000
+[WARNING RSZ-0014] wire capacitance for corner default is zero. Use the set_wire_rc command to set wire resistance and capacitance.
+
+==========================================================================
+global place report_checks -path_delay min
+--------------------------------------------------------------------------
+No paths found.
+
+==========================================================================
+global place report_checks -path_delay max
+--------------------------------------------------------------------------
+No paths found.
+
+==========================================================================
+global place report_checks -unconstrained
+--------------------------------------------------------------------------
+Startpoint: in (input port)
+Endpoint: route_test0/in (internal pin)
+Path Group: (none)
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00 ^ input external delay
+                  0.00    0.00    0.00 ^ in (in)
+     1    0.00                           in (net)
+                  0.00    0.00    0.00 ^ route_test0/in (route_test)
+                                  0.00   data arrival time
+-----------------------------------------------------------------------------
+(Path is unconstrained)
+
+
+
+==========================================================================
+global place report_tns
+--------------------------------------------------------------------------
+tns 0.00
+
+==========================================================================
+global place report_wns
+--------------------------------------------------------------------------
+wns 0.00
+
+==========================================================================
+global place report_worst_slack
+--------------------------------------------------------------------------
+worst slack INF
+
+==========================================================================
+global place report_clock_skew
+--------------------------------------------------------------------------
+
+==========================================================================
+global place report_power
+--------------------------------------------------------------------------
+Group                  Internal  Switching    Leakage      Total
+                          Power      Power      Power      Power
+----------------------------------------------------------------
+Sequential             0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Combinational          0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Macro                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+Pad                    0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+----------------------------------------------------------------
+Total                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
+                           0.0%       0.0%       0.0%
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 17280 u^2 0% utilization.
+
+        1.70 real         1.58 user         0.07 sys
