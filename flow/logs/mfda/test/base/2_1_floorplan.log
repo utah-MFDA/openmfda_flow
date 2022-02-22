@@ -3,14 +3,14 @@ This program is licensed under the BSD-3 license. See the LICENSE file for detai
 Components of this program may be licensed under more restrictive licenses which must be honored.
 [INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda.tlef
 [INFO ODB-0223]     Created 11 technology layers
-[INFO ODB-0224]     Created 1 technology vias
+[INFO ODB-0224]     Created 25 technology vias
 [INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda.tlef
 [INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda_merged.lef
-[INFO ODB-0225]     Created 6 library cells
+[INFO ODB-0225]     Created 7 library cells
 [INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda_merged.lef
-[WARNING ORD-1011] LEF master route_test has no liberty cell.
-number instances in verilog is 2
-[INFO IFP-0001] Added 60 rows of 101 sites.
+[WARNING ORD-1011] LEF master valve_20px_1 has no liberty cell.
+number instances in verilog is 4
+[INFO IFP-0001] Added 62 rows of 98 sites.
 [INFO RSZ-0026] Removed 0 buffers.
 Default units for flow
  time 1ns
@@ -34,17 +34,17 @@ No paths found.
 ==========================================================================
 floorplan final report_checks -unconstrained
 --------------------------------------------------------------------------
-Startpoint: in (input port)
-Endpoint: route_test0/in (internal pin)
+Startpoint: in_air0 (input port)
+Endpoint: valve0/in_air (internal pin)
 Path Group: (none)
 Path Type: max
 
 Fanout     Cap    Slew   Delay    Time   Description
 -----------------------------------------------------------------------------
                           0.00    0.00 ^ input external delay
-                  0.00    0.00    0.00 ^ in (in)
-     1    0.00                           in (net)
-                  0.00    0.00    0.00 ^ route_test0/in (route_test)
+                  0.00    0.00    0.00 ^ in_air0 (in)
+     1    0.00                           in_air0 (net)
+                  0.00    0.00    0.00 ^ valve0/in_air (valve_20px_1)
                                   0.00   data arrival time
 -----------------------------------------------------------------------------
 (Path is unconstrained)
@@ -87,6 +87,6 @@ Total                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
 ==========================================================================
 floorplan final report_design_area
 --------------------------------------------------------------------------
-Design area 17280 u^2 0% utilization.
+Design area 66 u^2 1% utilization.
 
-        1.56 real         1.22 user         0.09 sys
+        2.03 real         1.66 user         0.11 sys

@@ -3,27 +3,27 @@ This program is licensed under the BSD-3 license. See the LICENSE file for detai
 Components of this program may be licensed under more restrictive licenses which must be honored.
 [INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda.tlef
 [INFO ODB-0223]     Created 11 technology layers
-[INFO ODB-0224]     Created 1 technology vias
+[INFO ODB-0224]     Created 25 technology vias
 [INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda.tlef
 [INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda_merged.lef
-[INFO ODB-0225]     Created 6 library cells
+[INFO ODB-0225]     Created 7 library cells
 [INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda_merged.lef
 [INFO ODB-0127] Reading DEF file: ./results/mfda/test/base/3_2_place_iop.def
 [INFO ODB-0128] Design: test
-[INFO ODB-0130]     Created 2 pins.
-[INFO ODB-0131]     Created 2 components and 4 component-terminals.
-[INFO ODB-0133]     Created 3 nets and 4 connections.
+[INFO ODB-0130]     Created 10 pins.
+[INFO ODB-0131]     Created 4 components and 16 component-terminals.
+[INFO ODB-0133]     Created 13 nets and 16 connections.
 [INFO ODB-0134] Finished DEF file: ./results/mfda/test/base/3_2_place_iop.def
 [WARNING DPL-0010] Cannot find MACRO with VDD/VSS pins.
 [WARNING DPL-0011] Could not find power special net.
 Placement Analysis
 ---------------------------------
-total displacement        173.3 u
-average displacement       86.6 u
-max displacement          159.5 u
-original HPWL            1633.2 u
-legalized HPWL           1772.0 u
-delta HPWL                    8 %
+total displacement          1.8 u
+average displacement        0.5 u
+max displacement            0.8 u
+original HPWL             351.4 u
+legalized HPWL            357.3 u
+delta HPWL                    2 %
 
 [INFO FLW-0012] Placement violations 0.
 [WARNING RSZ-0014] wire capacitance for corner default is zero. Use the set_wire_rc command to set wire resistance and capacitance.
@@ -41,17 +41,17 @@ No paths found.
 ==========================================================================
 detailed place report_checks -unconstrained
 --------------------------------------------------------------------------
-Startpoint: in (input port)
-Endpoint: route_test0/in (internal pin)
+Startpoint: in_air0 (input port)
+Endpoint: valve0/in_air (internal pin)
 Path Group: (none)
 Path Type: max
 
 Fanout     Cap    Slew   Delay    Time   Description
 -----------------------------------------------------------------------------
                           0.00    0.00 ^ input external delay
-                  0.00    0.00    0.00 ^ in (in)
-     1    0.00                           in (net)
-                  0.00    0.00    0.00 ^ route_test0/in (route_test)
+                  0.00    0.00    0.00 ^ in_air0 (in)
+     1    0.00                           in_air0 (net)
+                  0.00    0.00    0.00 ^ valve0/in_air (valve_20px_1)
                                   0.00   data arrival time
 -----------------------------------------------------------------------------
 (Path is unconstrained)
@@ -113,6 +113,6 @@ Total                  0.00e+00   0.00e+00   0.00e+00   0.00e+00   0.0%
 ==========================================================================
 detailed place report_design_area
 --------------------------------------------------------------------------
-Design area 17280 u^2 0% utilization.
+Design area 66 u^2 1% utilization.
 
-        1.62 real         1.53 user         0.05 sys
+        1.79 real         1.62 user         0.08 sys

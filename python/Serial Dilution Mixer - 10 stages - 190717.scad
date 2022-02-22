@@ -195,37 +195,33 @@ module water_channel(){
 
 
 module serial_dilution_mixer_10_stages(){
-    for (j=[-4.5:4.5]){
-        translate([0,pos_dye_DC[1]*2*j,0])
-        mixer();
-    }
+
+    translate([0,pos_dye_DC[1]*2*-4.5,0])
+    mixer();
+        
     // fluid connection - dye valve to outlet valve
     pi_0 = [pos_dye_valve[0]+d_v/2-overlap_fluid_v_xy, 0, overlap_fluid_v_z-hchan];
     pf_0 = pos_outlet_valve + [0, pos_dye_DC[1]-d_v/2+overlap_fluid_v_xy, overlap_fluid_v_z-hchan];
     connect_0 = [["xy", pf_0]];
-    for (j=[-4:4]){
-        translate([0,pos_dye_DC[1]*2*j,0])
-        routing(pi_0, connect_0, dim);
-    }
+
+    translate([0,pos_dye_DC[1]*2*-4,0])
+    routing(pi_0, connect_0, dim);
+
     // water channel
     translate([pos_water_valve[0]-dist_watvalv2watchan_x, 0, overlap_fluid_v_z-hchan-2*layer])
     water_channel();
     // left y-side pinholes 
     water_pinholes_x = pos_water_valve[0]-dist_watvalv2watchan_x-water_chan_width;
-    for(j = [-1:1]){
-        translate([water_pinholes_x, pin2pin_1*j, 0])
-        rotate([0,-90,0])
-        cylinder(d = d_pin, h = l_pin_1, $fn = 100);
-    }
+
+    translate([water_pinholes_x, pin2pin_1*-1, 0])
+    rotate([0,-90,0])
+    cylinder(d = d_pin, h = l_pin_1, $fn = 100);
+    
     // x-sides pinholes
     x_sides_pinholes_x0 = water_pinholes_x + 64*px + floor(d_pin/2/px)*px;
-    for(i = [0:2], j = [0:1]){
-        j = (i == 2)? 0:j;
-        mirror([0,j,0])
-        translate([x_sides_pinholes_x0+pin2pin_2*i,max_y/2-l_pin_2,0])
-        rotate([-90,0,0])
-        cylinder(d = d_pin, h = l_pin_2, $fn = 100);
-    }
+    translate([x_sides_pinholes_x0+pin2pin_2*0,max_y/2-l_pin_2,0])
+    rotate([-90,0,0])
+    cylinder(d = d_pin, h = l_pin_2, $fn = 100);
     
     /////////////////
     // WATER VALVE //
@@ -519,16 +515,24 @@ chip_y_f = max_y/2;
 chip_z_i = -(d_pin/2 + glass2pin);
 chip_z_f = d_pin/2 + pin2surf;
 
-translate(-[chip_x_i,chip_y_i,chip_z_i])
-difference(){
-    box([chip_x_i, chip_x_f], [chip_y_i, chip_y_f], [chip_z_i, chip_z_f]);
+//translate(-[chip_x_i,chip_y_i,chip_z_i])
+/*difference(){
+    //box([chip_x_i, chip_x_f], [chip_y_i, chip_y_f], [chip_z_i, chip_z_f]);
     for (i = [0:1]){
         translate([(chip_x_f+chip_x_i)*i,0,0])
         mirror([0,i,0])
         mirror([i,0,0])
         serial_dilution_mixer_10_stages();
     }
-}
+}*/
+
+translate(-[chip_x_i,chip_y_i,chip_z_i])
+serial_dilution_mixer_10_stages();
+
+translate([1300*px, 0, 0]){
+mixer(){}
+}    
+
 
 
 

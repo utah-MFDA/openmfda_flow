@@ -2,10 +2,10 @@ from solid import *
 from solid import scad_render_to_file
 from solid.utils import *
 
-routing_scadfile = import_scad('routing_181220.scad')
-component_scadfile = import_scad('components_010421.scad')
-output_file = 'test.scad'
-def_file = '3_place copy.def'
+routing_scadfile = import_scad('python/routing_181220.scad')
+component_scadfile = import_scad('python/components_010421.scad')
+output_file = 'python/test.scad'
+def_file = 'python/test_def/6_final.def'
 
 class set_pixel_size:
     """
@@ -20,6 +20,16 @@ class set_pixel_size:
         global px, layer
         px = xy_scale
         layer = z_scale
+
+class set_lef_scale:
+    """
+    This sets the scale used in the lef/def files for 1 pixel. For example,
+    if 1 pixel is equivalent to 0.5 units in the lef/def file then this value
+    should be set to 0.5.
+    """
+    def __init__(self, lef_scale) -> None:
+        global scale_factor
+        scale_factor = lef_scale
 
 class set_render_resolution:
     """
@@ -49,8 +59,8 @@ class serpentine_channel():
         return(dim_matrix)
 
     def connect(self):
-        length_per_turn = 28
-        x_length = 28
+        length_per_turn = 25.6
+        x_length = 25.6
         y_length = self.length
         connect = []
         sign = 1
@@ -106,17 +116,18 @@ class place:
         components_placed = str()
         for i in range(0, len(list)-1):
             if list[i][0][0][0:4] == 'serp':
-                components_placed = components_placed + serpentine_channel(float(list[i][0][1])/1000, float(list[i][0][2])/1000, 0, 14, 7, int(list[i][0][0][11:14])).routing() + " + "
+                components_placed = components_placed + serpentine_channel(float(list[i][0][1])/scale_factor, float(list[i][0][2])/scale_factor, 0, 14, 7, int(list[i][0][0][11:14])).routing() + " + "
             else:
-                components_placed = components_placed + f"component_scadfile.{list[i][0][0]}({list[i][0][1]}/1000, {list[i][0][2]}/1000, '{list[i][0][3]}') + "
+                components_placed = components_placed + f"component_scadfile.{list[i][0][0]}({list[i][0][1]}/{scale_factor}, {list[i][0][2]}/{scale_factor}, '{list[i][0][3]}') + "
         if list[-1][0][0][0:4] == 'serp':
-            components_placed = components_placed + serpentine_channel(float(list[-1][0][1])/1000, float(list[-1][0][2])/1000, 0, 14, 7, int(list[-1][0][0][11:14])).routing()
+            components_placed = components_placed + serpentine_channel(float(list[-1][0][1])/scale_factor, float(list[-1][0][2])/scale_factor, 0, 14, 7, int(list[-1][0][0][11:14])).routing()
         else:
-            components_placed = components_placed + f"component_scadfile.{list[-1][0][0]}({list[-1][0][1]}/1000, {list[-1][0][2]}/1000, '{list[-1][0][3]}')"
+            components_placed = components_placed + f"component_scadfile.{list[-1][0][0]}({list[-1][0][1]}/{scale_factor}, {list[-1][0][2]}/{scale_factor}, '{list[-1][0][3]}')"
         return(eval(components_placed))
 
 
 set_pixel_size(0.0076, 0.01)
 set_render_resolution(120)
+set_lef_scale(0.04*1000)
 components = place(def_file).place_components()
 scad_render_to_file(components, output_file ,file_header=f'$fn = {segments};\npx = {px};\nlayer = {layer};', include_orig_code=False)

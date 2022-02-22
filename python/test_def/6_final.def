@@ -1,0 +1,195 @@
+VERSION 5.8 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+DESIGN test ;
+UNITS DISTANCE MICRONS 1000 ;
+DIEAREA ( 0 0 ) ( 102400 64000 ) ;
+ROW ROW_0 CoreSite 1024 1000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_1 CoreSite 1024 2000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_2 CoreSite 1024 3000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_3 CoreSite 1024 4000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_4 CoreSite 1024 5000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_5 CoreSite 1024 6000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_6 CoreSite 1024 7000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_7 CoreSite 1024 8000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_8 CoreSite 1024 9000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_9 CoreSite 1024 10000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_10 CoreSite 1024 11000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_11 CoreSite 1024 12000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_12 CoreSite 1024 13000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_13 CoreSite 1024 14000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_14 CoreSite 1024 15000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_15 CoreSite 1024 16000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_16 CoreSite 1024 17000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_17 CoreSite 1024 18000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_18 CoreSite 1024 19000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_19 CoreSite 1024 20000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_20 CoreSite 1024 21000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_21 CoreSite 1024 22000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_22 CoreSite 1024 23000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_23 CoreSite 1024 24000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_24 CoreSite 1024 25000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_25 CoreSite 1024 26000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_26 CoreSite 1024 27000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_27 CoreSite 1024 28000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_28 CoreSite 1024 29000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_29 CoreSite 1024 30000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_30 CoreSite 1024 31000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_31 CoreSite 1024 32000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_32 CoreSite 1024 33000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_33 CoreSite 1024 34000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_34 CoreSite 1024 35000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_35 CoreSite 1024 36000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_36 CoreSite 1024 37000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_37 CoreSite 1024 38000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_38 CoreSite 1024 39000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_39 CoreSite 1024 40000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_40 CoreSite 1024 41000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_41 CoreSite 1024 42000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_42 CoreSite 1024 43000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_43 CoreSite 1024 44000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_44 CoreSite 1024 45000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_45 CoreSite 1024 46000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_46 CoreSite 1024 47000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_47 CoreSite 1024 48000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_48 CoreSite 1024 49000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_49 CoreSite 1024 50000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_50 CoreSite 1024 51000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_51 CoreSite 1024 52000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_52 CoreSite 1024 53000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_53 CoreSite 1024 54000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_54 CoreSite 1024 55000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_55 CoreSite 1024 56000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_56 CoreSite 1024 57000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_57 CoreSite 1024 58000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_58 CoreSite 1024 59000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_59 CoreSite 1024 60000 FS DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_60 CoreSite 1024 61000 N DO 98 BY 1 STEP 1024 0 ;
+ROW ROW_61 CoreSite 1024 62000 FS DO 98 BY 1 STEP 1024 0 ;
+TRACKS X 0 DO 101 STEP 1024 LAYER li1 ;
+TRACKS Y 1000 DO 64 STEP 1000 LAYER li1 ;
+TRACKS X 0 DO 101 STEP 1024 LAYER met1 ;
+TRACKS Y 1000 DO 64 STEP 1000 LAYER met1 ;
+TRACKS X 0 DO 101 STEP 1024 LAYER met2 ;
+TRACKS Y 1000 DO 64 STEP 1000 LAYER met2 ;
+TRACKS X 0 DO 101 STEP 1024 LAYER met3 ;
+TRACKS Y 1000 DO 64 STEP 1000 LAYER met3 ;
+TRACKS X 0 DO 101 STEP 1024 LAYER met4 ;
+TRACKS Y 1000 DO 64 STEP 1000 LAYER met4 ;
+TRACKS X 0 DO 101 STEP 1024 LAYER met5 ;
+TRACKS Y 1000 DO 64 STEP 1000 LAYER met5 ;
+GCELLGRID X 0 DO 6 STEP 15360 ;
+GCELLGRID Y 0 DO 5 STEP 15360 ;
+COMPONENTS 4 ;
+    - valve0 valve_20px_1 + PLACED ( 39936 34000 ) FS ;
+    - valve1 valve_20px_1 + PLACED ( 44032 31000 ) N ;
+    - valve2 valve_20px_1 + PLACED ( 49152 29000 ) N ;
+    - valve3 valve_20px_1 + PLACED ( 54272 26000 ) FS ;
+END COMPONENTS
+PINS 10 ;
+    - in_air0 + NET in_air0 + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met2 ( -70 -70 ) ( 70 70 )
+        + PLACED ( 41984 63930 ) N ;
+    - in_air1 + NET in_air1 + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met2 ( -70 -70 ) ( 70 70 )
+        + PLACED ( 46080 63930 ) N ;
+    - in_air2 + NET in_air2 + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met2 ( -70 -70 ) ( 70 70 )
+        + PLACED ( 51200 63930 ) N ;
+    - in_air3 + NET in_air3 + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met2 ( -70 -70 ) ( 70 70 )
+        + PLACED ( 56320 63930 ) N ;
+    - in_fluid + NET in_fluid + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met3 ( -150 -150 ) ( 150 150 )
+        + PLACED ( 150 36000 ) N ;
+    - out_air0 + NET out_air0 + DIRECTION OUTPUT + USE SIGNAL
+      + PORT
+        + LAYER met2 ( -70 -70 ) ( 70 70 )
+        + PLACED ( 41984 70 ) N ;
+    - out_air1 + NET out_air1 + DIRECTION OUTPUT + USE SIGNAL
+      + PORT
+        + LAYER met2 ( -70 -70 ) ( 70 70 )
+        + PLACED ( 46080 70 ) N ;
+    - out_air2 + NET out_air2 + DIRECTION OUTPUT + USE SIGNAL
+      + PORT
+        + LAYER met2 ( -70 -70 ) ( 70 70 )
+        + PLACED ( 51200 70 ) N ;
+    - out_air3 + NET out_air3 + DIRECTION OUTPUT + USE SIGNAL
+      + PORT
+        + LAYER met2 ( -70 -70 ) ( 70 70 )
+        + PLACED ( 56320 70 ) N ;
+    - out_fluid + NET out_fluid + DIRECTION OUTPUT + USE SIGNAL
+      + PORT
+        + LAYER met3 ( -150 -150 ) ( 150 150 )
+        + PLACED ( 102250 28000 ) N ;
+END PINS
+NETS 13 ;
+    - connect0 ( valve1 in_fluid ) ( valve0 out_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 43038 36000 0 ) ( 44032 * )
+      NEW met1 ( 44032 33000 ) ( * 36000 )
+      NEW met1 ( 44032 33000 ) ( 45026 * 0 ) ;
+    - connect1 ( valve2 in_fluid ) ( valve1 out_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 47134 33000 0 ) ( 49152 * )
+      NEW met1 ( 49152 31000 ) ( * 33000 )
+      NEW met1 ( 49152 31000 ) ( 50146 * 0 ) ;
+    - connect2 ( valve3 in_fluid ) ( valve2 out_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 52254 31000 0 ) ( 54272 * )
+      NEW met1 ( 54272 28000 ) ( * 31000 )
+      NEW met1 ( 54272 28000 ) ( 55266 * 0 ) ;
+    - in_air0 ( PIN in_air0 ) ( valve0 in_air ) + USE SIGNAL
+      + ROUTED met2 ( 41984 34000 ) ( * 35000 0 )
+      NEW met2 ( 39936 34000 ) ( 41984 * )
+      NEW met2 ( 39936 34000 ) ( * 63930 )
+      NEW met2 ( 39936 63930 ) ( 40960 * )
+      NEW met2 ( 40960 63000 ) ( * 63930 )
+      NEW met2 ( 40960 63000 ) ( 41984 * )
+      NEW met2 ( 41984 63000 ) ( * 63930 0 ) ;
+    - in_air1 ( PIN in_air1 ) ( valve1 in_air ) + USE SIGNAL
+      + ROUTED met2 ( 46080 34000 0 ) ( * 63930 0 ) ;
+    - in_air2 ( PIN in_air2 ) ( valve2 in_air ) + USE SIGNAL
+      + ROUTED met2 ( 51200 32000 0 ) ( * 63930 0 ) ;
+    - in_air3 ( PIN in_air3 ) ( valve3 in_air ) + USE SIGNAL
+      + ROUTED met2 ( 56320 26000 ) ( * 27000 0 )
+      NEW met2 ( 54272 26000 ) ( 56320 * )
+      NEW met2 ( 54272 26000 ) ( * 63930 )
+      NEW met2 ( 54272 63930 ) ( 55296 * )
+      NEW met2 ( 55296 63000 ) ( * 63930 )
+      NEW met2 ( 55296 63000 ) ( 56320 * )
+      NEW met2 ( 56320 63000 ) ( * 63930 0 ) ;
+    - in_fluid ( PIN in_fluid ) ( valve0 in_fluid ) + USE SIGNAL
+      + ROUTED met3 ( 0 36000 0 ) ( 30720 * )
+      NEW met1 ( 30720 36000 ) ( 40930 * 0 )
+      NEW met1 ( 30720 36000 ) M1M2_PR
+      NEW met2 ( 30720 36000 ) M2M3_PR_M ;
+    - out_air0 ( PIN out_air0 ) ( valve0 out_air ) + USE SIGNAL
+      + ROUTED met2 ( 41984 37000 0 ) ( * 38000 )
+      NEW met2 ( 41984 38000 ) ( 44032 * )
+      NEW met2 ( 44032 70 ) ( * 38000 )
+      NEW met2 ( 43008 70 ) ( 44032 * )
+      NEW met2 ( 43008 70 ) ( * 1000 )
+      NEW met2 ( 41984 1000 ) ( 43008 * )
+      NEW met2 ( 41984 70 0 ) ( * 1000 ) ;
+    - out_air1 ( PIN out_air1 ) ( valve1 out_air ) + USE SIGNAL
+      + ROUTED met2 ( 46080 70 0 ) ( * 32000 0 ) ;
+    - out_air2 ( PIN out_air2 ) ( valve2 out_air ) + USE SIGNAL
+      + ROUTED met2 ( 51200 70 0 ) ( * 30000 0 ) ;
+    - out_air3 ( PIN out_air3 ) ( valve3 out_air ) + USE SIGNAL
+      + ROUTED met2 ( 56320 29000 0 ) ( * 30000 )
+      NEW met2 ( 56320 30000 ) ( 58368 * )
+      NEW met2 ( 58368 70 ) ( * 30000 )
+      NEW met2 ( 57344 70 ) ( 58368 * )
+      NEW met2 ( 57344 70 ) ( * 1000 )
+      NEW met2 ( 56320 1000 ) ( 57344 * )
+      NEW met2 ( 56320 70 0 ) ( * 1000 ) ;
+    - out_fluid ( PIN out_fluid ) ( valve3 out_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 57374 28000 0 ) ( 61440 * )
+      NEW met3 ( 61440 28000 ) ( 102400 * 0 )
+      NEW met1 ( 61440 28000 ) M1M2_PR
+      NEW met2 ( 61440 28000 ) M2M3_PR_M ;
+END NETS
+END DESIGN
