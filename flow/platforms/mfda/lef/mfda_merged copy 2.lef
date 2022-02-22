@@ -1,0 +1,225 @@
+VERSION 5.7 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+
+MACRO valve_20px_0
+  CLASS CORE ;
+  ORIGIN 0 0 ;
+  FOREIGN valve_20px_0 0 0 ;
+  SIZE 136 BY 80 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 10 16 18 24 ;
+    END
+  END in_air
+  PIN out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 72 62 80 70 ;
+    END
+  END out_air
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 65 17 71 23 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 118 16 126 24 ;
+    END
+  END out_fluid
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END valve_20px_0
+
+MACRO pump_40px_0
+  CLASS CORE ;
+  ORIGIN 0 0 ;
+  FOREIGN pump_40px_0 0 0 ;
+  SIZE 80 BY 140 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_air_valve1
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 10 23 24 37 ;
+    END
+  END in_air_valve1
+  PIN out_air_valve1
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 56 23 70 37 ;
+    END
+  END out_air_valve1
+  PIN in_air_dc
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 10 63 24 77 ;
+    END
+  END in_air_dc
+  PIN out_air_dc
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 56 63 70 77 ;
+    END
+  END out_air_dc
+  PIN in_air_valve2
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 10 103 24 117 ;
+    END
+  END in_air_valve2
+  PIN out_air_valve2
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 56 103 70 117 ;
+    END
+  END out_air_valve2
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 33 10 47 20 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 33 120 47 130 ;
+    END
+  END out_fluid
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END pump_40px_0
+
+MACRO pinhole_300px_0
+  CLASS PAD ;
+  ORIGIN 0 0 ;
+  FOREIGN pinhole_300px_0 0 0 ;
+  SIZE 137 BY 314 ;
+  SYMMETRY X Y R90 ;
+  SITE PadSite ;
+  PIN in
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 61.5 300 75.5 314 ;
+    END
+  END in
+  PIN out
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 61.5 0 75.5 14 ;
+    END
+  END out
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END pinhole_300px_0
+
+MACRO serpentine_140px_0
+  CLASS CORE ;
+  ORIGIN  0.000000  0.000000 ;
+  FOREIGN serpentine_140px_0 0 0 ;
+  SIZE 160 BY 160 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 10 10 24 24 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 136 136 150 150 ;
+    END
+  END out_fluid
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_140px_0
+
+MACRO serpentine_280px_0
+  CLASS CORE ;
+  ORIGIN  0.000000  0.000000 ;
+  FOREIGN serpentine_280px_0 0 0 ;
+  SIZE 300 BY 300 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 10 10 24 24 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 276 10 290 24 ;
+    END
+  END out_fluid
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_280px_0
+
+MACRO route_test
+  CLASS CORE ;
+  ORIGIN 0 0 ;
+  FOREIGN route_test 0 0 ;
+  SIZE 120 BY 72 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 17 17 31 31 ;
+    END
+  END in
+  PIN out
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89 103 31 31 ;
+    END
+  END out
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END route_test
+
+END LIBRARY

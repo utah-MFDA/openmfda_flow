@@ -3,16 +3,16 @@ This program is licensed under the BSD-3 license. See the LICENSE file for detai
 Components of this program may be licensed under more restrictive licenses which must be honored.
 [INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda.tlef
 [INFO ODB-0223]     Created 11 technology layers
-[INFO ODB-0224]     Created 1 technology vias
+[INFO ODB-0224]     Created 25 technology vias
 [INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda.tlef
 [INFO ODB-0222] Reading LEF file: ./platforms/mfda/lef/mfda_merged.lef
-[INFO ODB-0225]     Created 6 library cells
+[INFO ODB-0225]     Created 7 library cells
 [INFO ODB-0226] Finished LEF file:  ./platforms/mfda/lef/mfda_merged.lef
 [INFO ODB-0127] Reading DEF file: ./results/mfda/test/base/2_3_floorplan_tdms.def
 [INFO ODB-0128] Design: test
-[INFO ODB-0130]     Created 2 pins.
-[INFO ODB-0131]     Created 2 components and 4 component-terminals.
-[INFO ODB-0133]     Created 3 nets and 4 connections.
+[INFO ODB-0130]     Created 10 pins.
+[INFO ODB-0131]     Created 4 components and 16 component-terminals.
+[INFO ODB-0133]     Created 13 nets and 16 connections.
 [INFO ODB-0134] Finished DEF file: ./results/mfda/test/base/2_3_floorplan_tdms.def
 No macros found: Skipping macro_placement
-        1.66 real         1.57 user         0.05 sys
+        1.43 real         1.29 user         0.06 sys

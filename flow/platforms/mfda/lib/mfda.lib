@@ -44,4 +44,16 @@
         slew_lower_threshold_pct_rise : 20.000000000;
         slew_upper_threshold_pct_fall : 80.000000000;
         slew_upper_threshold_pct_rise : 80.000000000;
+
+        cell("route_test") {
+            pin ("in") {
+                capacitance : 0.0;
+                direction : "input";
+            }
+            pin ("out") {
+                capacitance : 0.0;
+                direction : "output";
+
+            }
+        }
     }
