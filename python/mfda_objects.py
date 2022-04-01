@@ -5,7 +5,8 @@ from solid.utils import *
 routing_scadfile = import_scad('routing_181220.scad')
 component_scadfile = import_scad('components_010421.scad')
 output_file = 'test.scad'
-def_file = '3_place copy.def'
+placement_def_file = '3_place copy.def'
+routing_def_file = '6_final copy 16.def'
 
 class set_pixel_size:
     """
@@ -115,8 +116,58 @@ class place:
             components_placed = components_placed + f"component_scadfile.{list[-1][0][0]}({list[-1][0][1]}/1000, {list[-1][0][2]}/1000, '{list[-1][0][3]}')"
         return(eval(components_placed))
 
+class route:
+    """
+    This class takes a .def file with routing information and creates a SCAD model of the routing channels
+    """
+    def __init__(self, def_file) -> None:
+        self.file = def_file
+
+    def get_components(self):
+        f = open(self.file)
+        index, flag = 0, 0
+        list = []
+        index_found = []
+        for line in f:
+            list.append(line.strip().split('\n'))
+            line.strip().split('\n')
+            index += 1
+            if flag < 2:
+                if 'NETS' in line:
+                    flag += 1
+                    index_found.append(index)
+            else:
+                break
+        f.close()
+
+        if flag == 2:
+            list = list[index_found[0]:index_found[1]-1]
+            replace_list = ['- ', '+ ', 'NEW ', ';']
+            for i in range(0, len(list)):
+                for char in replace_list:
+                    list[i][0] = list[i][0].replace(char, '')
+                list[i][0] = list[i][0].strip().split('\n')
+            return(list)
+        else:
+            return(list) # return the same for now but can add error later
+
+    def perform_routing(self):
+#        list = self.get_components()
+#        components_placed = str()
+#        for i in range(0, len(list)-1):
+#            if list[i][0][0][0:4] == 'serp':
+#                components_placed = components_placed + serpentine_channel(float(list[i][0][1])/1000, float(list[i][0][2])/1000, 0, 14, 7, int(list[i][0][0][11:14])).routing() + " + "
+#            else:
+#                components_placed = components_placed + f"component_scadfile.{list[i][0][0]}({list[i][0][1]}/1000, {list[i][0][2]}/1000, '{list[i][0][3]}') + "
+#        if list[-1][0][0][0:4] == 'serp':
+#            components_placed = components_placed + serpentine_channel(float(list[-1][0][1])/1000, float(list[-1][0][2])/1000, 0, 14, 7, int(list[-1][0][0][11:14])).routing()
+#        else:
+#            components_placed = components_placed + f"component_scadfile.{list[-1][0][0]}({list[-1][0][1]}/1000, {list[-1][0][2]}/1000, '{list[-1][0][3]}')"
+#        return(eval(components_placed))
 
 set_pixel_size(0.0076, 0.01)
 set_render_resolution(120)
-components = place(def_file).place_components()
+components = place(placement_def_file).place_components()
+routing = route(routing_def_file).get_components()
+print(routing)
 scad_render_to_file(components, output_file ,file_header=f'$fn = {segments};\npx = {px};\nlayer = {layer};', include_orig_code=False)
