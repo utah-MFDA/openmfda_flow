@@ -142,7 +142,7 @@ class route:
 
         if flag == 2:
             list = list[index_found[0]:index_found[1]-1]
-            replace_list = ['- ', '+ ', 'NEW ', ';']
+            replace_list = ['- ', '+ ', '( ', ') ', ';']
             for i in range(0, len(list)):
                 for char in replace_list:
                     list[i][0] = list[i][0].replace(char, '')
@@ -152,18 +152,18 @@ class route:
             return(list) # return the same for now but can add error later
 
     def perform_routing(self):
-#        list = self.get_components()
-#        components_placed = str()
-#        for i in range(0, len(list)-1):
-#            if list[i][0][0][0:4] == 'serp':
-#                components_placed = components_placed + serpentine_channel(float(list[i][0][1])/1000, float(list[i][0][2])/1000, 0, 14, 7, int(list[i][0][0][11:14])).routing() + " + "
-#            else:
-#                components_placed = components_placed + f"component_scadfile.{list[i][0][0]}({list[i][0][1]}/1000, {list[i][0][2]}/1000, '{list[i][0][3]}') + "
-#        if list[-1][0][0][0:4] == 'serp':
-#            components_placed = components_placed + serpentine_channel(float(list[-1][0][1])/1000, float(list[-1][0][2])/1000, 0, 14, 7, int(list[-1][0][0][11:14])).routing()
-#        else:
-#            components_placed = components_placed + f"component_scadfile.{list[-1][0][0]}({list[-1][0][1]}/1000, {list[-1][0][2]}/1000, '{list[-1][0][3]}')"
-#        return(eval(components_placed))
+        list = self.get_components()
+        components_placed = str()
+        for i in range(0, len(list)-1):
+            if list[i][0][0][0:4] == 'serp':
+                components_placed = components_placed + serpentine_channel(float(list[i][0][1])/1000, float(list[i][0][2])/1000, 0, 14, 7, int(list[i][0][0][11:14])).routing() + " + "
+            else:
+                components_placed = components_placed + f"component_scadfile.{list[i][0][0]}({list[i][0][1]}/1000, {list[i][0][2]}/1000, '{list[i][0][3]}') + "
+        if list[-1][0][0][0:4] == 'serp':
+            components_placed = components_placed + serpentine_channel(float(list[-1][0][1])/1000, float(list[-1][0][2])/1000, 0, 14, 7, int(list[-1][0][0][11:14])).routing()
+        else:
+            components_placed = components_placed + f"component_scadfile.{list[-1][0][0]}({list[-1][0][1]}/1000, {list[-1][0][2]}/1000, '{list[-1][0][3]}')"
+        return(eval(components_placed))
 
 set_pixel_size(0.0076, 0.01)
 set_render_resolution(120)
