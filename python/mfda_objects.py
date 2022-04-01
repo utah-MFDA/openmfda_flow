@@ -153,17 +153,10 @@ class route:
 
     def perform_routing(self):
         list = self.get_components()
-        components_placed = str()
+        components_routed = str()
         for i in range(0, len(list)-1):
-            if list[i][0][0][0:4] == 'serp':
-                components_placed = components_placed + serpentine_channel(float(list[i][0][1])/1000, float(list[i][0][2])/1000, 0, 14, 7, int(list[i][0][0][11:14])).routing() + " + "
-            else:
-                components_placed = components_placed + f"component_scadfile.{list[i][0][0]}({list[i][0][1]}/1000, {list[i][0][2]}/1000, '{list[i][0][3]}') + "
-        if list[-1][0][0][0:4] == 'serp':
-            components_placed = components_placed + serpentine_channel(float(list[-1][0][1])/1000, float(list[-1][0][2])/1000, 0, 14, 7, int(list[-1][0][0][11:14])).routing()
-        else:
-            components_placed = components_placed + f"component_scadfile.{list[-1][0][0]}({list[-1][0][1]}/1000, {list[-1][0][2]}/1000, '{list[-1][0][3]}')"
-        return(eval(components_placed))
+            components_routed = components_routed + f"routing_scadfile.{list[i][0][0]}({list[i][0][1]}/1000, {list[i][0][2]}/1000, '{list[i][0][3]}') + "
+        return(eval(components_routed))
 
 set_pixel_size(0.0076, 0.01)
 set_render_resolution(120)
