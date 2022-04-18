@@ -18,8 +18,7 @@ if {![info exists standalone] || $standalone} {
   }
 
   # Read design files
-  #read_def $::env(RESULTS_DIR)/4_cts.def
-  read_def $::env(RESULTS_DIR)/3_place.def
+  read_def $::env(RESULTS_DIR)/2_place.def
 } else {
   puts "Starting detailed routing"
 }
@@ -59,6 +58,10 @@ detailed_route -output_drc $::env(REPORTS_DIR)/5_route_drc.rpt \
                -output_maze $::env(RESULTS_DIR)/maze.log \
                -verbose 1 \
                {*}$additional_args
+
+report_wire_length -net {*} \
+                   -file $env(RESULTS_DIR)/wire_length.csv \
+                   -verbose
 
 write_def $::env(RESULTS_DIR)/5_route.def
 

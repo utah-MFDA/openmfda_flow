@@ -41,7 +41,7 @@ proc find_macros {} {
 
 # Set res and cap
 source $::env(PLATFORM_DIR)/setRC.tcl
-set_dont_use $::env(DONT_USE_CELLS)
+# set_dont_use $::env(DONT_USE_CELLS)
 
 if {[find_macros] != ""} {
   global_placement -density $::env(PLACE_DENSITY) \

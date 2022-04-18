@@ -14,8 +14,8 @@ if {![info exists standalone] || $standalone} {
   }
 
   # Read design files
-  read_def $::env(RESULTS_DIR)/2_floorplan.def
-  read_sdc $::env(RESULTS_DIR)/2_floorplan.sdc
+  read_def $::env(RESULTS_DIR)/1_floorplan.def
+  read_sdc $::env(RESULTS_DIR)/1_floorplan.sdc
   if [file exists $::env(PLATFORM_DIR)/derate.tcl] {
     source $::env(PLATFORM_DIR)/derate.tcl
   }
@@ -26,7 +26,7 @@ if {![info exists standalone] || $standalone} {
 
 # Set res and cap
 source $::env(PLATFORM_DIR)/setRC.tcl
-set_dont_use $::env(DONT_USE_CELLS)
+# set_dont_use $::env(DONT_USE_CELLS)
 
 # set fastroute layer reduction
 if {[info exist env(FASTROUTE_TCL)]} {
@@ -67,6 +67,6 @@ source $::env(SCRIPTS_DIR)/report_metrics.tcl
 report_metrics "global place" false
 
 if {![info exists standalone] || $standalone} {
-  write_def $::env(RESULTS_DIR)/3_1_place_gp.def
+  write_def $::env(RESULTS_DIR)/2_1_place_gp.def
   exit
 }

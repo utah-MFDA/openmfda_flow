@@ -13,7 +13,7 @@ export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
 
 # # Dont use cells to ease congestion
 # # Specify at least one filler cell if none
-export DONT_USE_CELLS =
+# export DONT_USE_CELLS =
 
 #--------------------------------------------------------
 # Floorplan
