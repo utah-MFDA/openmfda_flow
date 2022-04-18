@@ -14,9 +14,8 @@ if {![info exists standalone] || $standalone} {
   }
 
   # Read design files
-  #read_def $::env(RESULTS_DIR)/3_3_place_resized.def
-  read_def $::env(RESULTS_DIR)/3_2_place_iop.def
-  read_sdc $::env(RESULTS_DIR)/2_floorplan.sdc
+  read_def $::env(RESULTS_DIR)/2_2_place_iop.def
+  read_sdc $::env(RESULTS_DIR)/1_floorplan.sdc
   if [file exists $::env(PLATFORM_DIR)/derate.tcl] {
     source $::env(PLATFORM_DIR)/derate.tcl
   }
@@ -31,7 +30,7 @@ set_placement_padding -global \
     -right $::env(CELL_PAD_IN_SITES_DETAIL_PLACEMENT)
 detailed_placement
 optimize_mirroring
-utl::info FLW 12 "Placement violations [check_placement -verbose]."
+#utl::info FLW 12 "Placement violations [check_placement -verbose]."
 
 estimate_parasitics -placement
 
@@ -40,6 +39,6 @@ report_metrics "detailed place"
 
 if {![info exists standalone] || $standalone} {
   # write output
-  write_def $::env(RESULTS_DIR)/3_4_place_dp.def
+  write_def $::env(RESULTS_DIR)/2_3_place_dp.def
   exit
 }

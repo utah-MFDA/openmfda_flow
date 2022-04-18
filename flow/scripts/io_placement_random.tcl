@@ -14,7 +14,7 @@ if {![info exists standalone] || $standalone} {
   }
 
   # Read design files
-  read_def $::env(RESULTS_DIR)/2_1_floorplan.def
+  read_def $::env(RESULTS_DIR)/1_1_floorplan.def
 } else {
   puts "Starting random IO placement"
 }
@@ -29,6 +29,6 @@ place_pins -hor_layer $::env(IO_PLACER_H) \
 
 if {![info exists standalone] || $standalone} {
   # write output
-  write_def $::env(RESULTS_DIR)/2_2_floorplan_io.def
+  write_def $::env(RESULTS_DIR)/1_2_floorplan_io.def
   exit
 }

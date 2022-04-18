@@ -26,7 +26,7 @@ UNITS
   DATABASE MICRONS 1000 ;
 END UNITS
 
-MANUFACTURINGGRID 0.0005 ;
+MANUFACTURINGGRID 0.005 ;
 
 PROPERTYDEFINITIONS
   LAYER LEF58_TYPE STRING ;
@@ -35,14 +35,8 @@ END PROPERTYDEFINITIONS
 SITE CoreSite
   CLASS CORE ;
   SYMMETRY Y ;
-  SIZE 1.024 BY 1 ;
+  SIZE 25 BY 25 ;
 END CoreSite
-
-SITE PadSite
-  CLASS PAD ;
-  SYMMETRY Y ;
-  SIZE 1 BY 1 ;
-END PadSite
 
 LAYER li1
   TYPE ROUTING ;
@@ -69,30 +63,20 @@ END mcon
 LAYER met1
   TYPE ROUTING ;
   DIRECTION HORIZONTAL ;
-  PITCH 1 ;
-  MINWIDTH 0.14 ;
-  WIDTH 0.14 ;                     # Met1 1
-  SPACING 0.14 ;                 # Met1 2
+  MINWIDTH 0.1 ;
+  WIDTH 0.1 ;
 END met1
 
 LAYER via
   TYPE CUT ;
-  WIDTH 0.15 ;                  # Via 1a
-  SPACING 0.17 ;                # Via 2
-  ENCLOSURE BELOW 0.055 0.085 ; # Via 4a / Via 5a
-  ENCLOSURE ABOVE 0.055 0.085 ; # Met2 4 / Met2 5
-
-  ANTENNADIFFAREARATIO PWL ( ( 0 6 ) ( 0.0125 6 ) ( 0.0225 6.81 ) ( 22.5 816 ) ) ;
-  DCCURRENTDENSITY AVERAGE 0.29 ; # mA per via Iavg_max at Tj = 90oC
+  WIDTH 0.1 ;
 END via
 
 LAYER met2
   TYPE ROUTING ;
   DIRECTION VERTICAL ;
-  PITCH 1 ;
-  MINWIDTH 0.14 ;
-  WIDTH 0.14 ;                        # Met2 1
-  SPACING 0.14 ;                   # Met2 2
+  MINWIDTH 0.1 ;
+  WIDTH 0.1 ;
 END met2
 
 # ******** Layer via2, type routing, number 44 **************
@@ -255,11 +239,11 @@ END L1M1_PR_C
 # Plus via rule, metals are along the prefered direction
 VIA M1M2_PR DEFAULT
   LAYER via ;
-  RECT -0.075 -0.075 0.075 0.075 ;
+    RECT -0.05 -0.05 0.05 0.05 ;
   LAYER met1 ;
-  RECT -0.16 -0.13 0.16 0.13 ;
+    RECT -0.05 -0.05 0.05 0.05 ;
   LAYER met2 ;
-  RECT -0.13 -0.16 0.13 0.16 ;
+    RECT -0.05 -0.05 0.05 0.05 ;
 END M1M2_PR
 
 VIARULE M1M2_PR GENERATE

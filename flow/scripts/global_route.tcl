@@ -15,9 +15,8 @@ if {![info exists standalone] || $standalone} {
 
   # Read design files
   # Read SDC and derating files
-  #read_def $env(RESULTS_DIR)/4_cts.def
-  read_def $env(RESULTS_DIR)/3_place.def
-  read_sdc $env(RESULTS_DIR)/2_floorplan.sdc
+  read_def $env(RESULTS_DIR)/2_place.def
+  read_sdc $env(RESULTS_DIR)/2_place.sdc
   if [file exists $env(PLATFORM_DIR)/derate_final.tcl] {
     source $env(PLATFORM_DIR)/derate_final.tcl
     puts "derate_final.tcl sourced"
@@ -40,7 +39,9 @@ if {[info exist env(FASTROUTE_TCL)]} {
 
 global_route -guide_file $env(RESULTS_DIR)/route.guide \
                -congestion_iterations 100 \
-               -verbose 2
+               -verbose
+
+#set_routing_alpha -net in_air2 0.0
 
 # Set res and cap
 if [file exists $env(PLATFORM_DIR)/setRC.tcl] {

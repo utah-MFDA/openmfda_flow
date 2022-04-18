@@ -333,59 +333,13 @@ $(WRAPPED_LIBS):
 	sed 's/library(\(.*\))/library(\1_mod)/g' $(filter %$(notdir $(@:_mod.lib=.lib)),$(WRAP_LIBS)) | sed 's/cell(\(.*\))/cell(\1_mod)/g' > $@
 
 # ==============================================================================
-#  ______   ___   _ _____ _   _ _____ ____ ___ ____
-# / ___\ \ / / \ | |_   _| | | | ____/ ___|_ _/ ___|
-# \___ \\ V /|  \| | | | | |_| |  _| \___ \| |\___ \
-#  ___) || | | |\  | | | |  _  | |___ ___) | | ___) |
-# |____/ |_| |_| \_| |_| |_| |_|_____|____/___|____/
-#
-synth: versions.txt \
-       $(RESULTS_DIR)/1_synth.v \
-       $(RESULTS_DIR)/1_synth.sdc
-# # ==============================================================================
-
-
-# # Run Synthesis using yosys
-# #-------------------------------------------------------------------------------
-# SYNTH_SCRIPT ?= $(SCRIPTS_DIR)/synth.tcl
-
-# $(SYNTH_STOP_MODULE_SCRIPT):
-# 	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
-# 	($(TIME_CMD) $(YOSYS_CMD) $(YOSYS_FLAGS) -c $(HIER_REPORT_SCRIPT)) 2>&1 | tee $(LOG_DIR)/1_1_yosys_hier_report.log
-
-# ifeq ($(SYNTH_HIERARCHICAL), 1)
-# $(RESULTS_DIR)/1_1_yosys.v: $(SYNTH_STOP_MODULE_SCRIPT)
-# endif
-
-# $(RESULTS_DIR)/1_1_yosys.v: $(DONT_USE_LIBS) $(WRAPPED_LIBS) $(DONT_USE_SC_LIB) $(DFF_LIB_FILE) $(VERILOG_FILES) $(CACHED_NETLIST) $(LATCH_MAP_FILE) $(ADDER_MAP_FILE)
-# 	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
-# 	($(TIME_CMD) $(YOSYS_CMD) $(YOSYS_FLAGS) -c $(SYNTH_SCRIPT)) 2>&1 | tee $(LOG_DIR)/1_1_yosys.log
-
-$(RESULTS_DIR)/1_synth.v: $(VERILOG_FILES)
-	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
-	cp $< $@
-
-$(RESULTS_DIR)/1_synth.sdc: $(SDC_FILE)
-	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
-	cp $< $@
-
-clean_synth:
-	rm -f  $(RESULTS_DIR)/1_*.v $(RESULTS_DIR)/1_synth.sdc
-	rm -f  $(REPORTS_DIR)/synth_*
-	rm -f  $(LOG_DIR)/1_*
-	rm -f  $(SYNTH_STOP_MODULE_SCRIPT)
-	rm -rf _tmp_yosys-abc-*
-
-
-# ==============================================================================
 #  _____ _     ___   ___  ____  ____  _        _    _   _
 # |  ___| |   / _ \ / _ \|  _ \|  _ \| |      / \  | \ | |
 # | |_  | |  | | | | | | | |_) | |_) | |     / _ \ |  \| |
 # |  _| | |__| |_| | |_| |  _ <|  __/| |___ / ___ \| |\  |
 # |_|   |_____\___/ \___/|_| \_\_|   |_____/_/   \_\_| \_|
 #
-floorplan: $(RESULTS_DIR)/2_floorplan.def \
-           $(RESULTS_DIR)/2_floorplan.sdc
+floorplan: $(RESULTS_DIR)/1_floorplan.def
 # ==============================================================================
 
 ifneq ($(FOOTPRINT),)
@@ -394,56 +348,44 @@ else ifneq ($(FOOTPRINT_TCL),)
 IS_CHIP = 1
 endif
 
+# Initialize
+#-------------------------------------------------------------------------------
+$(RESULTS_DIR)/$(DESIGN_NAME).v: $(VERILOG_FILES)
+	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	cp $< $@
+
+$(RESULTS_DIR)/$(DESIGN_NAME).sdc: $(SDC_FILE)
+	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	cp $< $@
+
 # STEP 1: Translate verilog to def
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/2_1_floorplan.def: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/1_synth.sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL)
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/floorplan.tcl -metrics $(LOG_DIR)/2_1_floorplan.json) 2>&1 | tee $(LOG_DIR)/2_1_floorplan.log
-
+$(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL)
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/floorplan.tcl -metrics $(LOG_DIR)/1_1_floorplan.json) 2>&1 | tee $(LOG_DIR)/1_1_floorplan.log
 
 # STEP 2: IO Placement (random)
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/2_2_floorplan_io.def: $(RESULTS_DIR)/2_1_floorplan.def $(IO_CONSTRAINTS)
+$(RESULTS_DIR)/1_2_floorplan_io.def: $(RESULTS_DIR)/1_1_floorplan.def $(IO_CONSTRAINTS)
 ifndef IS_CHIP
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/io_placement_random.tcl -metrics $(LOG_DIR)/2_2_floorplan_io.json) 2>&1 | tee $(LOG_DIR)/2_2_floorplan_io.log
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/io_placement_random.tcl -metrics $(LOG_DIR)/1_2_floorplan_io.json) 2>&1 | tee $(LOG_DIR)/1_2_floorplan_io.log
 else
 	cp $< $@
 endif
 
-# # comment_out_start STEP 3: Timing Driven Mixed Sized Placement
-# #-------------------------------------------------------------------------------
-# $(RESULTS_DIR)/2_3_floorplan_tdms.def: $(RESULTS_DIR)/2_2_floorplan_io.def $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/1_synth.sdc $(LIB_FILES)
-ifeq ($(MACRO_PLACEMENT),)
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/tdms_place.tcl -metrics $(LOG_DIR)/2_3_tdms.json) 2>&1 | tee $(LOG_DIR)/2_3_tdms_place.log
-else
-	$(info [INFO][FLOW] Using manual macro placement file $(MACRO_PLACEMENT))
-	cp $< $@
-endif
-
-# STEP 4: Macro Placement
+# STEP 3: Macro Placement
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/2_4_floorplan_macro.def: $(RESULTS_DIR)/2_2_floorplan_io.def $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/1_synth.sdc $(MACRO_PLACEMENT)
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/macro_place.tcl -metrics $(LOG_DIR)/2_4_mplace.json) 2>&1 | tee $(LOG_DIR)/2_4_mplace.log
+$(RESULTS_DIR)/1_3_floorplan_macro.def: $(RESULTS_DIR)/1_2_floorplan_io.def $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(MACRO_PLACEMENT)
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/macro_place.tcl -metrics $(LOG_DIR)/1_3_mplace.json) 2>&1 | tee $(LOG_DIR)/1_3_mplace.log
 
-# # comment_out_start STEP 5: Tapcell and Welltie insertion
-# #-------------------------------------------------------------------------------
-# $(RESULTS_DIR)/2_5_floorplan_tapcell.def: $(RESULTS_DIR)/2_4_floorplan_macro.def $(TAPCELL_TCL)
-# 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/tapcell.tcl -metrics $(LOG_DIR)/2_5_tapcell.json) 2>&1 | tee $(LOG_DIR)/2_5_tapcell.log
-
-
-# # STEP 6: PDN generation
-# #-------------------------------------------------------------------------------
-# $(RESULTS_DIR)/2_6_floorplan_pdn.def: $(RESULTS_DIR)/2_5_floorplan_tapcell.def $(PDN_CFG) $(PDN_TCL)
-# comment_out_end	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/pdn.tcl -metrics $(LOG_DIR)/2_6_pdn.json) 2>&1 | tee $(LOG_DIR)/2_6_pdn.log
-
-$(RESULTS_DIR)/2_floorplan.def: $(RESULTS_DIR)/2_4_floorplan_macro.def
+$(RESULTS_DIR)/1_floorplan.def: $(RESULTS_DIR)/1_3_floorplan_macro.def
 	cp $< $@
 
-$(RESULTS_DIR)/2_floorplan.sdc: $(RESULTS_DIR)/2_1_floorplan.def
+#$(RESULTS_DIR)/1_floorplan.sdc: $(RESULTS_DIR)/1_floorplan.sdc
 
 clean_floorplan:
-	rm -f $(RESULTS_DIR)/2_*floorplan*.def $(RESULTS_DIR)/2_floorplan.sdc $(RESULTS_DIR)/2_floorplan.v
-	rm -f $(REPORTS_DIR)/2_*
-	rm -f $(LOG_DIR)/2_*
+	rm -f $(RESULTS_DIR)/1_*floorplan*.def $(RESULTS_DIR)/1_floorplan.sdc $(RESULTS_DIR)/1_floorplan.v
+	rm -f $(REPORTS_DIR)/1_*
+	rm -f $(LOG_DIR)/1_*
 
 # ==============================================================================
 #  ____  _        _    ____ _____
@@ -452,83 +394,42 @@ clean_floorplan:
 # |  __/| |___ / ___ \ |___| |___
 # |_|   |_____/_/   \_\____|_____|
 #
-place: $(RESULTS_DIR)/3_place.def \
-       $(RESULTS_DIR)/3_place.sdc
+place: $(RESULTS_DIR)/2_place.def \
+	   $(RESULTS_DIR)/2_place.sdc
 # ==============================================================================
 
 # STEP 1: Global placement + IO placement (not random)
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/3_1_place_gp.def: $(RESULTS_DIR)/2_floorplan.def $(RESULTS_DIR)/2_floorplan.sdc $(LIB_FILES)
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/global_place.tcl -metrics $(LOG_DIR)/3_1_place_gp.json) 2>&1 | tee $(LOG_DIR)/3_1_place_gp.log
+$(RESULTS_DIR)/2_1_place_gp.def: $(RESULTS_DIR)/1_floorplan.def $(RESULTS_DIR)/1_floorplan.sdc $(LIB_FILES)
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/global_place.tcl -metrics $(LOG_DIR)/2_1_place_gp.json) 2>&1 | tee $(LOG_DIR)/2_1_place_gp.log
 
 # STEP 2: IO placement (non-random)
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/3_2_place_iop.def: $(RESULTS_DIR)/3_1_place_gp.def $(IO_CONSTRAINTS)
+$(RESULTS_DIR)/2_2_place_iop.def: $(RESULTS_DIR)/2_1_place_gp.def $(IO_CONSTRAINTS)
 ifndef IS_CHIP
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/io_placement.tcl -metrics $(LOG_DIR)/3_2_place_iop.json) 2>&1 | tee $(LOG_DIR)/3_2_place_iop.log
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/io_placement.tcl -metrics $(LOG_DIR)/2_2_place_iop.json) 2>&1 | tee $(LOG_DIR)/2_2_place_iop.log
 else
 	cp $< $@
 endif
 
-# STEP 3: Resizing & Buffering
+# STEP 3: Detail placement
 #-------------------------------------------------------------------------------
-# $(RESULTS_DIR)/3_3_place_resized.def: $(RESULTS_DIR)/3_2_place_iop.def $(RESULTS_DIR)/2_floorplan.sdc
-# 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/resize.tcl -metrics $(LOG_DIR)/3_3_resizer.json) 2>&1 | tee $(LOG_DIR)/3_3_resizer.log
+$(RESULTS_DIR)/2_3_place_dp.def: $(RESULTS_DIR)/2_2_place_iop.def
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/detail_place.tcl -metrics $(LOG_DIR)/2_3_opendp.json) 2>&1 | tee $(LOG_DIR)/2_3_opendp.log
 
-# clean_resize:
-# 	rm -f $(RESULTS_DIR)/3_3_place_resized.def
-
-# STEP 4: Detail placement
-#-------------------------------------------------------------------------------
-$(RESULTS_DIR)/3_4_place_dp.def: $(RESULTS_DIR)/3_2_place_iop.def
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/detail_place.tcl -metrics $(LOG_DIR)/3_4_opendp.json) 2>&1 | tee $(LOG_DIR)/3_4_opendp.log
-
-$(RESULTS_DIR)/3_place.def: $(RESULTS_DIR)/3_4_place_dp.def
+$(RESULTS_DIR)/2_place.def: $(RESULTS_DIR)/2_3_place_dp.def
 	cp $< $@
 
-$(RESULTS_DIR)/3_place.sdc: $(RESULTS_DIR)/2_floorplan.sdc
+$(RESULTS_DIR)/2_place.sdc: $(RESULTS_DIR)/1_floorplan.sdc
 	cp $< $@
 
 # Clean Targets
 #-------------------------------------------------------------------------------
 clean_place:
-	rm -f $(RESULTS_DIR)/3_*place*.def
-	rm -f $(RESULTS_DIR)/3_place.sdc
-	rm -f $(REPORTS_DIR)/3_*
-	rm -f $(LOG_DIR)/3_*
-
-
-# ==============================================================================
-#   ____ _____ ____
-#  / ___|_   _/ ___|
-# | |     | | \___ \
-# | |___  | |  ___) |
-#  \____| |_| |____/
-#
-# comment_out_start cts: $(RESULTS_DIR)/4_cts.def \
-#      $(RESULTS_DIR)/4_cts.sdc
-# # ==============================================================================
-
-# # Run TritonCTS
-# # ------------------------------------------------------------------------------
-# $(RESULTS_DIR)/4_1_cts.def: $(RESULTS_DIR)/3_place.def $(RESULTS_DIR)/3_place.sdc
-# 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/cts.tcl -metrics $(LOG_DIR)/4_1_cts.json) 2>&1 | tee $(LOG_DIR)/4_1_cts.log
-
-# # Filler cell insertion
-# # ------------------------------------------------------------------------------
-# $(RESULTS_DIR)/4_2_cts_fillcell.def: $(RESULTS_DIR)/4_1_cts.def
-# 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/fillcell.tcl -metrics $(LOG_DIR)/4_2_cts_fillcell.json) 2>&1 | tee $(LOG_DIR)/4_2_cts_fillcell.log
-
-# $(RESULTS_DIR)/4_cts.sdc: $(RESULTS_DIR)/4_cts.def
-
-# $(RESULTS_DIR)/4_cts.def: $(RESULTS_DIR)/4_2_cts_fillcell.def
-# 	cp $< $@
-
-# clean_cts:
-# 	rm -rf $(RESULTS_DIR)/4_*cts*.def $(RESULTS_DIR)/4_cts.sdc $(RESULTS_DIR)/4_cts.v
-# 	rm -f  $(REPORTS_DIR)/4_*
-# comment_out_end	rm -f  $(LOG_DIR)/4_*
-
+	rm -f $(RESULTS_DIR)/2_*place*.def
+	rm -f $(RESULTS_DIR)/2_place.sdc
+	rm -f $(REPORTS_DIR)/2_*
+	rm -f $(LOG_DIR)/2_*
 
 # ==============================================================================
 #  ____   ___  _   _ _____ ___ _   _  ____
@@ -541,22 +442,20 @@ route: $(RESULTS_DIR)/5_route.def \
        $(RESULTS_DIR)/5_route.sdc
 # ==============================================================================
 
-
 # STEP 1: Run global route 
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/route.guide: $(RESULTS_DIR)/3_place.def $(FASTROUTE_TCL) $(PRE_GLOBAL_ROUTE)
+$(RESULTS_DIR)/route.guide: $(RESULTS_DIR)/2_place.def $(RESULTS_DIR)/2_place.sdc $(FASTROUTE_TCL) $(PRE_GLOBAL_ROUTE)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/global_route.tcl -metrics $(LOG_DIR)/5_1_fastroute.json) 2>&1 | tee $(LOG_DIR)/5_1_fastroute.log
-
 
 # STEP 2: Run detailed route
 #-------------------------------------------------------------------------------
 ifeq ($(USE_WXL),)
 $(RESULTS_DIR)/5_route.def: $(RESULTS_DIR)/route.guide
 endif
-$(RESULTS_DIR)/5_route.def: $(RESULTS_DIR)/3_place.def
+$(RESULTS_DIR)/5_route.def: $(RESULTS_DIR)/2_place.def
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/detail_route.tcl -metrics $(LOG_DIR)/5_2_TritonRoute.json) 2>&1 | tee $(LOG_DIR)/5_2_TritonRoute.log
 
-$(RESULTS_DIR)/5_route.sdc: $(RESULTS_DIR)/3_place.sdc
+$(RESULTS_DIR)/5_route.sdc: $(RESULTS_DIR)/2_place.sdc
 	cp $< $@
 
 clean_route:
@@ -703,7 +602,7 @@ clean:
 	@echo "  clean_synth clean_floorplan clean_place clean_cts clean_route clean_finish"
 	@echo
 
-clean_all: clean_synth clean_floorplan clean_place clean_cts clean_route clean_finish clean_metadata
+clean_all: clean_floorplan clean_place clean_route clean_finish clean_metadata
 	rm -rf $(OBJECTS_DIR)
 
 nuke: clean_test clean_issues
