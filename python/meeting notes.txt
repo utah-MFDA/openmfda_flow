@@ -1,7 +1,0 @@
-MEETING 1/5/2021
-
-1. naming convention
-2. parameterization
-    a. file naming
-        component_size_otherinformation
-3. serpentine 
