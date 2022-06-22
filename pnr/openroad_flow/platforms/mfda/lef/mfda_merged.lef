@@ -175,6 +175,12 @@ MACRO pump_40px_0
         RECT 74.5 24.5 75.5 25.5 ;
     END
   END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 74.5 24.5 75.5 175.5 ;
+    LAYER met2 ;
+      RECT 24.5 49.5 125.5 150.5 ;
+  END
   PROPERTY CatenaDesignType "deviceLevel" ;
 END pump_40px_0
 
@@ -251,9 +257,9 @@ MACRO pump_40px_1
   END out_fluid
   OBS
     LAYER met1 ;
-      RECT 25 50 175 100 ;
+      RECT 24.5 74.5 175.5 75.5 ;
     LAYER met2 ;
-      RECT 50 25 150 125 ;
+      RECT 49.5 24.5 150.5 125.5 ;
   END
   PROPERTY CatenaDesignType "deviceLevel" ;
 END pump_40px_1
@@ -560,57 +566,5 @@ MACRO valve_20px_0
   END
   PROPERTY CatenaDesignType "deviceLevel" ;
 END valve_20px_0
-
-MACRO pinhole_300px_0
-  CLASS PAD ;
-  ORIGIN 0 0 ;
-  FOREIGN pinhole_300px_0 0 0 ;
-  SIZE 137 BY 314 ;
-  SYMMETRY X Y R90 ;
-  SITE PadSite ;
-  PIN in
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER met2 ;
-        RECT 61.5 300 75.5 314 ;
-    END
-  END in
-  PIN out
-    DIRECTION OUTPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER met2 ;
-        RECT 61.5 0 75.5 14 ;
-    END
-  END out
-  PROPERTY CatenaDesignType "deviceLevel" ;
-END pinhole_300px_0
-
-MACRO route_test
-  CLASS CORE ;
-  ORIGIN 0 0 ;
-  FOREIGN route_test 0 0 ;
-  SIZE 4.096 BY 2 ;
-  SYMMETRY X Y ;
-  SITE CoreSite ;
-  PIN in
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER li1 ;
-        RECT 0.744 0.72 1.304 1.28 ;
-    END
-  END in
-  PIN out
-    DIRECTION OUTPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER li1 ;
-        RECT 2.792 0.72 3.352 1.28 ;
-    END
-  END out
-  PROPERTY CatenaDesignType "deviceLevel" ;
-END route_test
 
 END LIBRARY

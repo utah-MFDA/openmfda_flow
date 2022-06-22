@@ -968,6 +968,10 @@ module pinhole_325px_0(xpos, ypos, zpos, orientation){
 //pinhole_325px_0 (0, 320, 100, "top");
 //pinhole_325px_0 (320, 0, 100, "right");
 
+module empty_obj(str_obj){
+    
+}
+
 ////////////////////////// NEEDS FIX /////////////////////////////////////////
 
 module valve_20px_0(xpos, ypos, orientation){

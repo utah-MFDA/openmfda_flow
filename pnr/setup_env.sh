@@ -2,12 +2,13 @@
 
 # Directory paths
 export OPENROAD_FLOW_DIR=openroad_flow
-export PYTHON_DIR=python
-export SCAD_DIR=scad
+export SCAD_FLOW_DIR=scad_flow
+export SCAD_DIR=$SCAD_FLOW_DIR/scad
 
 # Tool commands
-export OPENROAD_EXE= # Put binary path here
-export KLAYOUT_CMD= # Put binary path here
+export OPENROAD_EXE=# Put binary path here
+export KLAYOUT_CMD=# Put binary path here
+export TIME_CMD=/usr/bin/time
 
 # SCAD file paths
 export SCAD_ROUTING=$SCAD_DIR/routing_181220.scad

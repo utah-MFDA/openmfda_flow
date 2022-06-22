@@ -3,9 +3,10 @@
 # ==============================================================================
 
 # Add design paths here
-
+# DESIGN_CONFIG = ./designs/mfda/smart_toilet/config.mk
+# DESIGN_CONFIG = ./designs/mfda/route_test/config.mk
 # Default design
-DESIGN_CONFIG ?= ./designs/mfda/$(DESIGN)/config.mk
+DESIGN_CONFIG ?= ./designs/mfda/test/config.mk
 
 # Global setting for Floorplan
 export PLACE_PINS_ARGS ?=
