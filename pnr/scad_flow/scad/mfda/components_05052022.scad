@@ -790,6 +790,117 @@ module serpentine_200px_0(xpos, ypos, zpos, orientation){
 //serpentine_200px_0(0, 0, 0, "FS");
 //serpentine_200px_0(0, 0, 0, "S");
 
+module serpentine_200px_3(xpos, ypos, zpos, orientation){
+    
+    // Sub-modules
+    module obj(){
+        translate([18*px+25*px, 18*px, 0]){      
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [-25*px, 0, lpv*layer],
+                pf = [
+                        ["+x", 25*px, 0],
+                        ["+yx", [200*px, 25*px], [1, 0]],
+                        ["+yx", [-200*px, 25*px], [1, 0]],
+                        ["+yx", [200*px, 25*px], [1, 0]],
+                        ["+yx", [-200*px, 25*px], [1, 0]],
+                        ["+yx", [200*px, 25*px], [1, 0]],
+                        ["+yx", [-200*px, 25*px], [1, 0]],
+                        ["+yx", [200*px, 25*px], [1, 0]],
+                        ["+yz", [-200*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [7*25*px, 0, 2*lpv*layer],
+                pf = [
+                        ["+yx", [200*px, -25*px], [1, 0]],
+                        ["+yx", [-200*px, -25*px], [1, 0]],
+                        ["+yx", [200*px, -25*px], [1, 0]],
+                        ["+yx", [-200*px, -25*px], [1, 0]],
+                        ["+yx", [200*px, -25*px], [1, 0]],
+                        ["+yx", [-200*px, -25*px], [1, 0]],
+                        ["+yx", [200*px, -25*px], [1, 0]],
+                        ["+yz", [-200*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [0, 0, 3*lpv*layer],
+                pf = [
+                        ["+yx", [200*px, 25*px], [1, 0]],
+                        ["+yx", [-200*px, 25*px], [1, 0]],
+                        ["+yx", [200*px, 25*px], [1, 0]],
+                        ["+yx", [-200*px, 25*px], [1, 0]],
+                        ["+yx", [200*px, 25*px], [1, 0]],
+                        ["+yx", [-200*px, 25*px], [1, 0]],
+                        ["+yx", [200*px, 25*px], [1, 0]],
+                        ["+yz", [-200*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [7*25*px, 0, 4*lpv*layer],
+                pf = [
+                        ["+yx", [200*px, -25*px], [1, 0]],
+                        ["+yx", [-200*px, -25*px], [1, 0]],
+                        ["+yx", [200*px, -25*px], [1, 0]],
+                        ["+yx", [-200*px, -25*px], [1, 0]],
+                        ["+yx", [200*px, -25*px], [1, 0]],
+                        ["+yx", [-200*px, -25*px], [1, 0]],
+                        ["+yx", [200*px, -25*px], [1, 0]],
+                        ["+yx", [-200*px, -25*px], [1, 0]]
+                        ]
+            );
+        }
+        
+    }
+    
+    if (orientation == "N"){
+        translate([xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+        if (orientation == "FN"){
+        mirror([1, 0, 0])
+        translate([-10*25*px - xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "FS"){
+        mirror([0, 1, 0])
+        translate([xpos*px, -10*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "S"){
+        mirror([0, 1, 0])
+        mirror([1, 0, 0])
+        translate([-10*25*px - xpos*px, -10*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    
+}
+
+// Test
+//serpentine_200px_3(0, 0, 0, "N");
+//serpentine_200px_3(0, 0, 0, "FN");
+//serpentine_200px_3(0, 0, 0, "FS");
+//serpentine_200px_3(0, 0, 0, "S");
+
 module serpentine_300px_0(xpos, ypos, zpos, orientation){
     
     // Sub-modules
@@ -847,6 +958,469 @@ module serpentine_300px_0(xpos, ypos, zpos, orientation){
 //serpentine_300px_0(0, 0, 0, "FN");
 //serpentine_300px_0(0, 0, 0, "FS");
 //serpentine_300px_0(0, 0, 0, "S");
+
+module serpentine_300px_1(xpos, ypos, zpos, orientation){
+    
+    // Sub-modules
+    module obj(){
+        translate([18*px+25*px, 18*px, 0]){     
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [0, 0, lpv*layer],
+                pf = [
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [11*25*px, 0, 2*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]]
+                        ]
+            );
+        }
+        
+    }
+    
+    if (orientation == "N"){
+        translate([xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+        if (orientation == "FN"){
+        mirror([1, 0, 0])
+        translate([-14*25*px - xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "FS"){
+        mirror([0, 1, 0])
+        translate([xpos*px, -14*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "S"){
+        mirror([0, 1, 0])
+        mirror([1, 0, 0])
+        translate([-14*25*px - xpos*px, -14*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    
+}
+
+// Test
+//serpentine_300px_1(0, 0, 0, "N");
+//serpentine_300px_1(0, 0, 0, "FN");
+//serpentine_300px_1(0, 0, 0, "FS");
+//serpentine_300px_1(0, 0, 0, "S");
+
+module serpentine_300px_2(xpos, ypos, zpos, orientation){
+    
+    // Sub-modules
+    module obj(){
+        translate([18*px+25*px, 18*px, 0]){     
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [-25*px, 0, lpv*layer],
+                pf = [
+                        ["+x", 25*px, 0],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [11*25*px, 0, 2*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [0, 0, 3*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px+14*px], [1, 0]]
+                        ]
+            );
+        }
+        
+    }
+    
+    if (orientation == "N"){
+        translate([xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+        if (orientation == "FN"){
+        mirror([1, 0, 0])
+        translate([-15*25*px - xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "FS"){
+        mirror([0, 1, 0])
+        translate([xpos*px, -14*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "S"){
+        mirror([0, 1, 0])
+        mirror([1, 0, 0])
+        translate([-15*25*px - xpos*px, -14*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    
+}
+
+// Test
+//serpentine_300px_2(0, 0, 0, "N");
+//serpentine_300px_2(350, 0, 0, "FN");
+//serpentine_300px_2(2*350, 0, 0, "FS");
+//serpentine_300px_2(3*350, 0, 0, "S");
+
+module serpentine_300px_3(xpos, ypos, zpos, orientation){
+    
+    // Sub-modules
+    module obj(){
+        translate([18*px+25*px, 18*px, 0]){     
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [0, 0, lpv*layer],
+                pf = [
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [11*25*px, 0, 2*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [0, 0, 3*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [11*25*px, 0, 4*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]]
+                        ]
+            );
+        }
+        
+    }
+    
+    if (orientation == "N"){
+        translate([xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+        if (orientation == "FN"){
+        mirror([1, 0, 0])
+        translate([-14*25*px - xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "FS"){
+        mirror([0, 1, 0])
+        translate([xpos*px, -14*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "S"){
+        mirror([0, 1, 0])
+        mirror([1, 0, 0])
+        translate([-14*25*px - xpos*px, -14*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    
+}
+
+// Test
+//serpentine_300px_3(0, 0, 0, "N");
+//serpentine_300px_3(0, 0, 0, "FN");
+//serpentine_300px_3(0, 0, 0, "FS");
+//serpentine_300px_3(0, 0, 0, "S");
+
+module serpentine_300px_4(xpos, ypos, zpos, orientation){
+    
+    // Sub-modules
+    module obj(){
+        translate([18*px+25*px, 18*px, 0]){     
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [-25*px, 0, lpv*layer],
+                pf = [
+                        ["+x", 25*px, 0],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [11*25*px, 0, 2*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [0, 0, 3*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [11*25*px, 0, 4*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yx", [-300*px, -25*px], [1, 0]],
+                        ["+yx", [300*px, -25*px], [1, 0]],
+                        ["+yz", [-300*px, lpv*layer], [1, 2]]
+                        ]
+            );
+            routing(
+                dimm = [
+                        [[0, 0], [0, 14*px], [0, 10*layer]],
+                        [[0, 14*px], [0, 0], [0, 10*layer]],
+                        [[0, 14*px], [0, 14*px], [0, 0]]
+                        ],
+                p0 = [0, 0, 5*lpv*layer],
+                pf = [
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px], [1, 0]],
+                        ["+yx", [300*px, 25*px], [1, 0]],
+                        ["+yx", [-300*px, 25*px+14*px], [1, 0]]
+                        ]
+            );
+        }
+        
+    }
+    
+    if (orientation == "N"){
+        translate([xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+        if (orientation == "FN"){
+        mirror([1, 0, 0])
+        translate([-15*25*px - xpos*px, ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "FS"){
+        mirror([0, 1, 0])
+        translate([xpos*px, -14*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "S"){
+        mirror([0, 1, 0])
+        mirror([1, 0, 0])
+        translate([-15*25*px - xpos*px, -14*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    
+}
+
+// Test
+//serpentine_300px_4(0, 0, 0, "N");
+//serpentine_300px_4(0, 0, 0, "FN");
+//serpentine_300px_4(0, 0, 0, "FS");
+//serpentine_300px_4(0, 0, 0, "S");
+
 
 module diffmix_25px_0(xpos, ypos, zpos, orientation){
       
@@ -916,10 +1490,83 @@ module diffmix_25px_0(xpos, ypos, zpos, orientation){
 }
 
 // Test
-//diffmix_25px_0(0, 0, "N");
-//diffmix_25px_0(0, 0, "FN");
-//diffmix_25px_0(0, 0, "FS");
-//diffmix_25px_0(0, 0, "S");
+//diffmix_25px_0(0, 0, 0, "N");
+//diffmix_25px_0(0, 0, 0, "FN");
+//diffmix_25px_0(0, 0, 0, "FS");
+//diffmix_25px_0(50, 0, 0, "S");
+
+module junction_25px_0(xpos, ypos, zpos, orientation){
+      
+    // Channel Dimensions
+    hchan = 10*layer;
+    Wchan = 14*px;
+
+    dim  = [
+            [[0,0],[-Wchan/2,Wchan/2],[0,hchan]], // 0
+            [[-Wchan/2,Wchan/2],[0,0],[0,hchan]], // 1
+                    
+           ];
+    
+    module obj(){
+        pi_0 = [-7*px, 25*px, 0];
+        pf_0 = [Wchan+11*px, 0, 0];
+        connect_0 = [
+                     ["+x", pf_0, 0]
+                    ];
+        routing(pi_0, connect_0, dim);
+        
+        pi_1 = [-7*px, 0*px, 0];
+        pf_1 = [Wchan, 0, 0];
+        connect_1 = [
+                     ["+x", pf_1, 0]
+                    ];
+        routing(pi_1, connect_1, dim);
+
+        pi_2 = [18*px, 25*px, 0];
+        pf_2 = [Wchan, 0, 0];
+        connect_2 = [
+                     ["+x", pf_2, 0]
+                    ];
+        routing(pi_2, connect_2, dim);
+  
+        pi_3 = [0, 0, 0];
+        pf_3 = [35.4*px, 0, 0];
+        connect_3 = [
+                     ["+x", pf_3, 0]
+                    ];
+        rotate(45)
+        routing(pi_3, connect_3, dim);  
+        
+    }
+    
+    if (orientation == "FN"){
+        translate([25*px + xpos*px, 25*px + ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "N"){
+        mirror()
+        translate([-2*25*px - xpos*px, 25*px + ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "S"){
+        mirror([0, 1, 0])
+        translate([25*px + xpos*px, -2*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    if (orientation == "FS"){
+        mirror()
+        mirror([0, 1, 0])
+        translate([-2*25*px - xpos*px, -2*25*px - ypos*px, zpos*layer])
+        obj();
+    }
+    
+}
+
+// Test
+//junction_25px_0(0, 0, 0, "N");
+//junction_25px_0(0, 0, 0, "FN");
+//junction_25px_0(0, 0, 0, "FS");
+//junction_25px_0(50, 50, 0, "S");
 
 module pinhole_325px_0(xpos, ypos, zpos, orientation){
     
@@ -967,6 +1614,135 @@ module pinhole_325px_0(xpos, ypos, zpos, orientation){
 //pinhole_325px_0 (-320, 0, 100, "left");
 //pinhole_325px_0 (0, 320, 100, "top");
 //pinhole_325px_0 (320, 0, 100, "right");
+
+module interconnect_32channel(xpos, ypos, zpos){
+    gasket_side_length = 40*px;
+    gasket_aperture_length = 20*px;
+    gasket_height = 1*layer;
+
+    gasket_grid = [2, 2];
+    block_gasket_offset = 155*px;
+    block_height_default = 200*layer;
+    block_long_side = 600*px;
+    block_short_side = 399*px;
+    gasket_offset = 60*px;
+
+    pedestal_x = 780*px;
+    pedestal_y = 380*px;
+    pedestal_height = 100*px;
+
+    channel_width_thick = 20 * px;
+    channel_width_default = 12*px;
+
+    module zchan(l, xy = channel_width_default) {
+        color("lightblue")
+        translate([-xy / 2, -xy / 2, 0]) {
+            if (l < 0)
+                mirror([0, 0, 1])
+            cube([xy, xy, -l]);
+            else
+            cube([xy, xy, l]);
+        }
+    }
+
+    module gasket(
+        gasket_side_length=gasket_side_length, 
+        aperture_side_length=gasket_aperture_length, 
+        height=gasket_height
+        ){
+
+            gasket_width = (gasket_side_length - aperture_side_length)/2;
+            difference(){
+                cube([gasket_side_length, gasket_side_length, height]);
+                translate([gasket_width, gasket_width, 0])
+                    cube([aperture_side_length, aperture_side_length, height]);
+        }
+    }
+
+    module interconnect(
+        gasket_grid=gasket_grid,
+        gasket_side_length=gasket_side_length, 
+        aperture_side_length=gasket_aperture_length, 
+        gasket_height=gasket_height,
+        gasket_offset = gasket_offset,
+        block_gasket_offset=block_gasket_offset,
+        block_height=block_height_default,
+        block_long_side=block_long_side,
+        block_short_side=block_short_side,
+        ccim=false, // Flag to use the CCIM type of microgasket (SIM is the default)
+        for_interface_chip=false // Interface chips are printed upside down for the burning layers to not clog entrance channels, also the gasket grid is displayed transparent
+        ){
+        gasket_group_x_lenght = gasket_grid[1] * gasket_side_length + (gasket_grid[1]-1) * gasket_offset;
+        gasket_group_y_lenght = gasket_grid[0] * gasket_side_length + (gasket_grid[0]-1) * gasket_offset;
+        x_centering_offset = gasket_group_x_lenght/2;
+        y_centering_offset = gasket_group_y_lenght/2;
+        if (ccim){
+            cube([1, 1, 1]); // This section should implement an interconnect structure that uses SSIMs instead of SIMs (see 2018 paper for reference)
+        }
+        else {
+            flip_angle = for_interface_chip ? 180:0;
+            diff_interface_blocks = for_interface_chip ? 0:50*layer;
+            rotate([flip_angle, 0, 0]){
+                // Gasket grid
+                translate([-x_centering_offset, -y_centering_offset, 0]){
+                    for (row=[0:gasket_grid[1]-1]){
+                        for (col=[0:gasket_grid[0]-1]){
+                            translate([(gasket_side_length + gasket_offset)*row, (gasket_side_length + gasket_offset)*col, 0])
+                            if (for_interface_chip){
+                                %gasket(gasket_side_length=gasket_side_length, aperture_side_length=aperture_side_length, height=gasket_height);
+                            }
+                            else {
+                                gasket(gasket_side_length=gasket_side_length, aperture_side_length=aperture_side_length, height=gasket_height);
+                            }
+                        }
+                    }
+                }
+                // Right block
+                translate([x_centering_offset + block_gasket_offset, -block_long_side/2, -pedestal_height])
+                    cube([block_short_side, block_long_side, block_height - diff_interface_blocks]);
+                // Left block
+                translate([-x_centering_offset - block_gasket_offset - block_short_side, -block_long_side/2, -pedestal_height])
+                    cube([block_short_side, block_long_side, block_height - diff_interface_blocks]);
+            }
+        }
+    }
+
+    module corner_connections(){
+        for (row=[0.5, 1.5]) {
+            for (col=[-0.5, -1.5, -2.5, -3.5]) {
+                x_offset_outchan = col*gasket_side_length + col*gasket_offset;
+                y_offset_outchan = row*gasket_side_length + row*gasket_offset;
+                translate([x_offset_outchan, y_offset_outchan, 0])
+                    zchan(pedestal_height+gasket_height, xy=channel_width_thick);
+            }
+        }
+    }
+
+    module obj(){
+        difference(){
+            translate([-pedestal_x/2, -pedestal_y/2, 0])
+                cube([pedestal_x, pedestal_y, pedestal_height]);
+            corner_connections();
+            translate([4*(gasket_side_length+gasket_offset), 0, 0]){
+                corner_connections();
+            }
+            translate([0, -2*(gasket_side_length+gasket_offset), 0]){
+                corner_connections();
+            }
+            translate([4*(gasket_side_length+gasket_offset), -2*(gasket_side_length+gasket_offset), 0]){
+                corner_connections();
+            }
+        }
+
+        translate([0, 0, pedestal_height])
+            interconnect(gasket_grid=[4, 8], for_interface_chip=false);
+        }
+
+    translate([xpos*px, ypos*px, zpos*layer]){
+        obj();
+    }
+        
+}
 
 module empty_obj(str_obj){
     

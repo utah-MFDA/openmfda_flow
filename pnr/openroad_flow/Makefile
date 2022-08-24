@@ -4,7 +4,10 @@
 
 # Add design paths here
 # DESIGN_CONFIG = ./designs/mfda/smart_toilet/config.mk
+DESIGN_CONFIG = ./designs/mfda_30px/smart_toilet/config.mk
 # DESIGN_CONFIG = ./designs/mfda/route_test/config.mk
+# DESIGN_CONFIG = ./designs/mfda/pcr/config.mk
+# DESIGN_CONFIG = ./designs/mfda/pcr_spread_io/config.mk
 # Default design
 DESIGN_CONFIG ?= ./designs/mfda/test/config.mk
 

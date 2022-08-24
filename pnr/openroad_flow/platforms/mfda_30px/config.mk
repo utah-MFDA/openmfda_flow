@@ -3,10 +3,10 @@
 #-----------------------------------------------------
 # Tech/Libs
 # ----------------------------------------------------
-export TECH_LEF = $(PLATFORM_DIR)/lef/mfda.tlef
-export SC_LEF = $(PLATFORM_DIR)/lef/mfda_merged.lef
+export TECH_LEF = $(PLATFORM_DIR)/lef/mfda_30px.tlef
+export SC_LEF = $(PLATFORM_DIR)/lef/mfda_30px_merged.lef
 
-export LIB_FILES = $(PLATFORM_DIR)/lib/mfda.lib \
+export LIB_FILES = $(PLATFORM_DIR)/lib/mfda_30px.lib \
                      $(ADDITIONAL_LIBS)
 export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                      $(ADDITIONAL_GDS)
@@ -31,7 +31,7 @@ export IO_PLACER_V = met2
 # Place
 # --------------------------------------------------------
 
-export PLACE_PINS_ARGS = -min_distance 6 -min_distance_in_tracks
+export PLACE_PINS_ARGS = -min_distance 5 -min_distance_in_tracks
 
 # Cell padding in SITE widths to ease rout-ability.  Applied to both sides
 export CELL_PAD_IN_SITES_GLOBAL_PLACEMENT ?= 0
@@ -45,7 +45,7 @@ export PLACE_DENSITY ?= 1
 
 # FastRoute options
 export MIN_ROUTING_LAYER = met1
-export MAX_ROUTING_LAYER = met8
+export MAX_ROUTING_LAYER = met9
 
 # Define fastRoute tcl
 export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
