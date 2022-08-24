@@ -5,8 +5,12 @@ SHELL      	= /bin/bash
 # Default target when invoking without specific target.
 .DEFAULT_GOAL := all
 
+# Design platform and name to explore
+PLATFORM = mfda_30px
+DESIGN = smart_toilet
+
 # Import the SCAD configuration
-include $(SCAD_FLOW_DIR)/config.mk
+include $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
 
 # OpenROAD place and route
 or_pnr:
@@ -20,7 +24,7 @@ scad_pnr:
 	$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/scad_pnr.py $(SCAD_ARGS)
 
 scad_clean:
-	rm -rf results
+	rm -rf $(RESULTS_DIR)
 
 # ALL
 all: or_pnr scad_pnr
