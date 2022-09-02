@@ -7,8 +7,8 @@ export SCAD_DIR=$SCAD_FLOW_DIR/scad
 export SCAD_FLOW_DESIGN_DIR=$SCAD_FLOW_DIR/designs
 
 # Tool commands
-export OPENROAD_EXE=/Users/danielwakeham/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad # Put binary path here
-export KLAYOUT_CMD=/Applications/klayout.app/Contents/MacOS/klayout # Put binary path here
+export OPENROAD_EXE= # Put binary path here
+export KLAYOUT_CMD= # Put binary path here
 export TIME_CMD=/usr/bin/time
 
 # SCAD file paths
