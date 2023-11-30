@@ -1,0 +1,3 @@
+[submodule "tools/slicer"]
+	path = tools/slicer
+	url = https://github.com/utah-MFDA/OpenGL-STL-slicer.git
