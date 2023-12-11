@@ -1,10 +1,12 @@
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/utah-MFDA/openmfda_flow/main)
+
 # Microfluidic Design Automation (MFDA)
 
-The central idea for this project is to create an automation 
+The central idea for this project is to create an automation
 tool for microfluidic design using a combination of open-source
 electronic design automation (EDA) and SCAD tools. This project
 uses the OpenROAD EDA tool for 2D place and route with standard
-compnents found in their respective platforms found in 
+compnents found in their respective platforms found in
 /pnr/openroad_flow/platforms. The supported cells include
 basic valves, pumps, and various sizes of resistive channels.
 After 2D PNR, a Python-based tool which includes the
@@ -18,7 +20,7 @@ Dr. Nordin.
 ## Geting Started
 
 The first thing to do after cloning the repo is to download and
-install the OpenROAD software found in the following repo 
+install the OpenROAD software found in the following repo
 https://github.com/The-OpenROAD-Project/OpenROAD. Another
 tool used for 2D visualization is KLayout which can be
 downloaded at https://www.klayout.de. Once the repo has been
