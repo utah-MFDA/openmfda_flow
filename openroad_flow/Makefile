@@ -4,12 +4,12 @@
 
 # Add design paths here
 # DESIGN_CONFIG = ./designs/mfda/smart_toilet/config.mk
-DESIGN_CONFIG = ./designs/mfda_30px/smart_toilet/config.mk
+# DESIGN_CONFIG = ./designs/mfda_30px/smart_toilet/config.mk
 # DESIGN_CONFIG = ./designs/mfda/route_test/config.mk
 # DESIGN_CONFIG = ./designs/mfda/pcr/config.mk
 # DESIGN_CONFIG = ./designs/mfda/pcr_spread_io/config.mk
 # Default design
-DESIGN_CONFIG ?= ./designs/mfda/test/config.mk
+DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
 
 # Global setting for Floorplan
 export PLACE_PINS_ARGS ?=
@@ -186,7 +186,7 @@ $(OBJECTS_DIR)/klayout_tech.lef: $(TECH_LEF)
 	@mkdir -p $(OBJECTS_DIR)
 	sed '/OR_DEFAULT/d' $< > $@
 
- $(OBJECTS_DIR)/klayout.lyt: $(KLAYOUT_TECH_FILE) $(OBJECTS_DIR)/klayout_tech.lef
+$(OBJECTS_DIR)/klayout.lyt: $(KLAYOUT_TECH_FILE) $(OBJECTS_DIR)/klayout_tech.lef
 	sed 's,<lef-files>.*</lef-files>,$(foreach file, $(OBJECTS_DIR)/klayout_tech.lef $(SC_LEF) $(ADDITIONAL_LEFS),<lef-files>$(abspath $(file))</lef-files>),g' $< > $@
 
 $(OBJECTS_DIR)/klayout_wrap.lyt: $(KLAYOUT_TECH_FILE) $(OBJECTS_DIR)/klayout_tech.lef
@@ -317,7 +317,7 @@ route: $(RESULTS_DIR)/3_route.def \
        $(RESULTS_DIR)/3_route.sdc
 # ==============================================================================
 
-# STEP 1: Run global route 
+# STEP 1: Run global route
 #-------------------------------------------------------------------------------
 $(RESULTS_DIR)/route.guide: $(RESULTS_DIR)/2_place.def $(RESULTS_DIR)/2_place.sdc $(FASTROUTE_TCL) $(PRE_GLOBAL_ROUTE)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/global_route.tcl -metrics $(LOG_DIR)/3_1_fastroute.json) 2>&1 | tee $(LOG_DIR)/3_1_fastroute.log

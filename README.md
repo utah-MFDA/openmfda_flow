@@ -7,7 +7,8 @@ tool for microfluidic design using a combination of open-source
 electronic design automation (EDA) and SCAD tools. This project
 uses the OpenROAD EDA tool for 2D place and route with standard
 compnents found in their respective platforms found in
-/pnr/openroad_flow/platforms. The supported cells include
+/
+openroad_flow/platforms. The supported cells include
 basic valves, pumps, and various sizes of resistive channels.
 After 2D PNR, a Python-based tool which includes the
 SolidPython package parses through the EDA results and connects
@@ -25,7 +26,7 @@ https://github.com/The-OpenROAD-Project/OpenROAD. Another
 tool used for 2D visualization is KLayout which can be
 downloaded at https://www.klayout.de. Once the repo has been
 cloned and the mentioned tools downloaded. The next step is to
-update the binaries in /pnr/setup_env.sh and source the setup.
+update the binaries in /setup_env.sh and source the setup.
 In /pnr:
 
 ```
@@ -37,7 +38,7 @@ source setup_env.sh
 To complete a flow, the following steps are taken:
 
 1. Start by creating a new design with this path structure
-    - pnr/openroad_flow/designs/(platform)/(design name)
+    - openroad_flow/designs/(platform)/(design name)
 2. Within the folder above, three files need to be generated:
    ./config.mk, ./constraint.sdc, and ./io_constraints.tcl.
    Designs are included for reference.
@@ -52,19 +53,19 @@ To complete a flow, the following steps are taken:
       the MF chip are physically located. If using the
       flushing chip automatically generated in the flow, the
       I/Os must be configured such as in
-      /pnr/openroad_flow/designs/mfda/smart_toilet/io_constraints.tcl
+      /openroad_flow/designs/mfda/smart_toilet/io_constraints.tcl
       for correct allignment with the flushing chip. Otherwise,
       the I/Os must be placed at the edge of the device and
       pinholes will automatically added for tubing.
 3. The chips are described using Verilog HDL netlist scripting.
    The netlist description is structured like
-   /pnr/openroad_flow/designs/src/(design)/(design).v.
+   /openroad_flow/designs/src/(design)/(design).v.
    This netlist describes the I/Os, what components are used,
    and how they are all connected.
-4. In /pnr/openroad_flow/Makefile, the *DESIGN_CONFIG* variable
+4. In /openroad_flow/Makefile, the *DESIGN_CONFIG* variable
    must be the path to the /config.mk file described in step 2.
 5. The 3D configuration is setup in this path structure,
-   /pnr/scad_flow/designs/(platform)/(design name). Within
+   /scad_flow/designs/(platform)/(design name). Within
    this folder are two files: ./config.mk and the optional file
    ./dimm.csv.
    - ./config.mk - This file contains several variable that
@@ -86,7 +87,7 @@ To complete a flow, the following steps are taken:
      layers.
 6. After all the files are added for the design with the
    parameters specified, the entire flow can be completed through
-   the Makefile in /pnr/Makefile
+   the Makefile in /Makefile
    ```
    cd pnr
    make
