@@ -1,5 +1,7 @@
+
 # Shell setup for make
 SHELL      	= /bin/bash
+
 .SHELLFLAGS	= -o pipefail -c
 
 # Default target when invoking without specific target.
@@ -9,12 +11,17 @@ SHELL      	= /bin/bash
 PLATFORM = mfda_30px
 DESIGN = smart_toilet
 
+OPENROAD_FLOW_DIR=openroad_flow
+SCAD_FLOW_DIR=scad_flow
+SCAD_DIR=${SCAD_FLOW_DIR}/scad
+SCAD_FLOW_DESIGN_DIR=${SCAD_FLOW_DIR}/designs
+
 # Import the SCAD configuration
 include $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
 
 # OpenROAD place and route
 or_pnr:
-	cd $(OPENROAD_FLOW_DIR) && $(MAKE) 
+	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
 
 or_nuke:
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE) nuke
