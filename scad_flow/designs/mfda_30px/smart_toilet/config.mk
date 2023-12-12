@@ -14,7 +14,7 @@ export DESIGN_VARIANT = base
 # Path to the def file form OpenROAD flow
 DEF_FILE		= $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
 # Path to results dir
-DESIGN_RESULTS	= $(RESULTS_DIR)/$(PLATFORM)/$(DESIGN)/$(DESIGN_VARIANT)
+DESIGN_RESULTS	= $(SCAD_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)
 # mm/px value
 PX_VAL 			= 0.0076
 # mm/layer value
@@ -31,7 +31,7 @@ YBULK_VAL		= 1590
 ZBULK_VAL		= 280
 # chip min and max x values in pixels
 XCHIP_VALS		= 0 2550
-# chip min and max y values in pixels	
+# chip min and max y values in pixels
 YCHIP_VALS		= 0 1590
 # scale the .def file uses for dimensions
 DEF_SCALE_VAL	= 1000
@@ -48,7 +48,7 @@ SCAD_ARGS =\
 			--px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL)	\
 			--ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS)						\
 			--def_scale $(DEF_SCALE_VAL) --pitch $(PITCH) --res $(RES_VAL)
-			
+
 ifdef DIMM_FILE
 SCAD_ARGS +=\
 			--dimm_file "$(DIMM_FILE)"
