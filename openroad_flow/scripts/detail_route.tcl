@@ -27,7 +27,8 @@ set_thread_count $::env(NUM_CORES)
 
 set additional_args ""
 if { ![info exists ::env(USE_WXL)]} {
-  append additional_args " -guide $::env(RESULTS_DIR)/route.guide"
+    #append additional_args " -guide $::env(RESULTS_DIR)/route.guide"
+    read_guides $::env(RESULTS_DIR)/route.guide
 }
 if { [info exists ::env(dbProcessNode)]} {
   append additional_args " -db_process_node $::env(dbProcessNode)"
