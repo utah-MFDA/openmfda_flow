@@ -43,6 +43,11 @@ scad_clean:
 ${DESIGN}.${PLATFORM}.zip: or_pnr scad_pnr
     7z a -tzip ${OR_RESULTS} ${SCAD_RESULTS}
 
+include $(wildcard *.deps)
+
+%.stl: %.scad
+	openscad -m make -o $@ -d $@.deps $<
+
 # ALL
 all: or_pnr scad_pnr ${DESIGN}.${PLATFORM}.zip
 clean_all: or_nuke scad_clean
