@@ -1,19 +1,25 @@
-FROM debian@sha256:ab2b95aa8d7d6d54866b92c322cf0693933c1ae8038652f24ddfda1d1763a45a as debian-base
+FROM ubuntu@sha256:149d67e29f765f4db62aa52161009e99e389544e25a8f43c8c89d4a445a7ca37 as ubuntu-base
 RUN apt-get update
-RUN apt-get install -y python3-pip openscad time
+# Base dependencies
+RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y openscad time tzdata 7zip
+# Install openroad from package
+ADD https://github.com/Precision-Innovations/OpenROAD/releases/download/2023-12-12/openroad_2.0_amd64-ubuntu22.04-2023-12-12.deb /tmp/openroad.deb
+RUN apt install -y /tmp/openroad.deb
+RUN rm /tmp/openroad.deb
+# Install klayout from package
+ADD https://www.klayout.org/downloads/Ubuntu-22/klayout_0.28.14-1_amd64.deb /tmp/klayout.deb
+RUN apt-get install -y /tmp/klayout.deb
+RUN rm /tmp/klayout.deb
+# Python package installation
+RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y python3-pip python3
 RUN python3 -m pip install --no-cache-dir notebook jupyterlab
-ADD https://github.com/Precision-Innovations/OpenROAD/releases/download/2023-12-01/openroad_2.0_amd64-debian11-2023-12-01.deb /tmp/
-RUN apt install -y /tmp/openroad_2.0_amd64-debian11-2023-12-01.deb
-RUN rm /tmp/openroad_2.0_amd64-debian11-2023-12-01.deb
-ADD https://www.klayout.org/downloads/Ubuntu-20/klayout_0.28.14-1_amd64.deb /tmp/
-RUN apt-get install -y /tmp/klayout_0.28.14-1_amd64.deb
-RUN rm /tmp/klayout_0.28.14-1_amd64.deb
-RUN apt-get clean
-RUN mkdir -p /usr/local/share
 COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install -f /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
+RUN apt remove -y python3-pip
+RUN apt autoremove -y
+RUN apt-get clean
 
-FROM debian-base
+FROM ubuntu-base
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ENV USER ${NB_USER}
