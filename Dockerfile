@@ -17,6 +17,7 @@ COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
 RUN apt remove -y python3-pip
 RUN apt autoremove -y
+RUN apt install -y make
 RUN apt-get clean
 
 FROM ubuntu-base
