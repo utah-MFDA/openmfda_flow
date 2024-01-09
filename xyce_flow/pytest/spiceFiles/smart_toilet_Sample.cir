@@ -1,0 +1,36 @@
+* Converted from verilog for microfluidic simulation
+
+YPressurePump soln1 soln1_0 soln1_0c pressurePump pressure=100k 
+YChannel soln1_channel soln1_0 soln1_0c soln1_1 soln1_1c length=7.65m
+
+YPressurePump soln2 soln2_0 soln2_0c pressurePump pressure=100k 
+YChannel soln2_channel soln2_0 soln2_0c soln2_1 soln2_1c length=3.24m
+
+YPressurePump soln3 soln3_0 soln3_0c pressurePump pressure=100k chemConcentration=100m 
+YChannel soln3_channel soln3_0 soln3_0c soln3_1 soln3_1c length=5.71m
+
+
+YChannel out_ch 0 out_chC outc0 length=5.9m
+YChannel connect1 connect1_0 connect1_1 connect1_0c connect1_1c length=1.18m
+YChannel connect2 connect2_0 connect2_1 connect2_0c connect2_1c length=1.18m
+YChannel connect3 connect3_0 connect3_1 connect3_0c connect3_1c length=2.15m
+YChannel connect4 connect4_0 connect4_1 connect4_0c connect4_1c length=3.27m
+YChannel connect5 connect5_0 connect5_1 connect5_0c connect5_1c length=15.05m
+YChannel connect6 connect6_0 connect6_1 connect6_0c connect6_1c length=4.41m
+YChannel connect7 connect7_0 connect7_1 connect7_0c connect7_1c length=2.68m
+Yserpentine_50px_0  soln2_1 connect1_0 soln2_1c connect1_0c 
+Yserpentine_150px_0  connect1_1 connect2_0 connect1_1c connect2_0c 
+Ydiffmix_25px_0  soln1_1 connect2_1 connect3_0 soln1_1c connect2_1c connect3_0c 
+Yserpentine_300px_0  soln3_1 connect4_0 soln3_1c connect4_0c 
+Yserpentine_300px_0  connect4_1 connect5_0 connect4_1c connect5_0c 
+Yserpentine_300px_0  connect5_1 connect6_0 connect5_1c connect6_0c 
+Yserpentine_300px_0  connect6_1 connect8 connect6_1c connect8c 
+Ydiffmix_25px_0  connect3_1 connect6_2 connect7_0 connect3_1c connect6_2c connect7_0c 
+Yserpentine_300px_0  connect7_1 out_ch connect7_1c out_chC 
+
+
+.tran 0.1m 1m
+.print tran V(out_chC)
+.end
+
+*.tran 0.1ms 1ms

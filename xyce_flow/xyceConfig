@@ -1,0 +1,7 @@
+
+{
+"xyce_command":
+"/usr/local/xyce_dev/bin/Xyce",
+"library_files":
+["/mfda_simulation/component_library/VerilogA/MFlibrary/xyce_lib/MFlibrary/libMFlibrary.so"]
+}
