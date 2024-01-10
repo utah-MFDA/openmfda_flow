@@ -28,6 +28,8 @@ include $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
 
 DESIGN_CONFIG = ${OPENROAD_FLOW_DIR}/designs/${PLATFORM}/${DESIGN}/config.mk
 
+include $(XYCE_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
+
 # OpenROAD place and route
 or_pnr:
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
@@ -41,6 +43,9 @@ scad_pnr:
 
 scad_clean:
 	rm -rf $(RESULTS_DIR)
+
+# XYCE Run 
+# Here we need to include the commands to run XYCE- I need to work on this with Brady
 
 ${DESIGN}.${PLATFORM}.zip: or_pnr scad_pnr
     7z a -tzip ${OR_RESULTS} ${SCAD_RESULTS}
