@@ -13,6 +13,7 @@ DESIGN = smart_toilet
 
 OPENROAD_FLOW_DIR ?= openroad_flow
 SCAD_FLOW_DIR ?= scad_flow
+XYCE_FLOW_DIR ?=xyce_flow
 
 export SCAD_DIR ?= ${SCAD_FLOW_DIR}/scad
 export SCAD_FLOW_DESIGN_DIR ?= ${SCAD_FLOW_DIR}/designs
@@ -20,6 +21,7 @@ export SCAD_FLOW_DESIGN_DIR ?= ${SCAD_FLOW_DIR}/designs
 # This does not change the output directory in openroad.
 OR_RESULTS = ${OPENROAD_FLOW_DIR}/results
 SCAD_RESULTS = ${SCAD_FLOW_DIR}/results
+XYCE_RESULTS = ${XYCE_FLOW_DIR}/results
 
 # Import the SCAD configuration
 include $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
