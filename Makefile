@@ -41,7 +41,7 @@ scad_clean:
 	rm -rf $(RESULTS_DIR)
 
 ${DESIGN}.${PLATFORM}.zip: or_pnr scad_pnr
-    7z a -tzip ${OR_RESULTS} ${SCAD_RESULTS}
+	7z a -t zip $@ ${OR_RESULTS} ${SCAD_RESULTS}
 
 include $(wildcard *.deps)
 
@@ -50,6 +50,6 @@ include $(wildcard *.deps)
 
 # ALL
 all: or_pnr scad_pnr ${DESIGN}.${PLATFORM}.zip
-clean_all: or_nuke scad_clean
+clean: or_nuke scad_clean
 
-.PHONY: clean_all all scad_clean scad_pnr or_nuke or_pnr
+.PHONY: clean all scad_clean scad_pnr or_nuke or_pnr

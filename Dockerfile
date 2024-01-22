@@ -15,6 +15,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y python3-pip pyt
 RUN python3 -m pip install --no-cache-dir notebook jupyterlab
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
+ADD https://github.com/Xyce/Xyce/archive/refs/tags/Release-7.7.0.tar.gz xyce.tar.gz
 RUN apt remove -y python3-pip
 RUN apt autoremove -y
 RUN apt install -y make

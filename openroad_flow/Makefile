@@ -14,6 +14,8 @@ DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
 # Global setting for Floorplan
 export PLACE_PINS_ARGS ?=
 
+export SPDLOG_LEVEL ?= error
+
 # If we are running headless use offscreen rendering for save_image
 ifndef DISPLAY
 export QT_QPA_PLATFORM ?= offscreen
