@@ -1,11 +1,15 @@
 
+OPENROAD_EXE := openroad
+KLAYOUT_CMD := klayout
+TIME_CMD :=  time
+export
 # Shell setup for make
 SHELL      	= /bin/bash
 
 .SHELLFLAGS	= -o pipefail -c
 
 # Default target when invoking without specific target.
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL:= all
 
 # Design platform and name to explore
 PLATFORM = mfda_30px
@@ -13,7 +17,6 @@ DESIGN = smart_toilet
 
 OPENROAD_FLOW_DIR ?= openroad_flow
 SCAD_FLOW_DIR ?= scad_flow
-XYCE_FLOW_DIR ?=xyce_flow
 
 export SCAD_DIR ?= ${SCAD_FLOW_DIR}/scad
 export SCAD_FLOW_DESIGN_DIR ?= ${SCAD_FLOW_DIR}/designs
@@ -21,18 +24,15 @@ export SCAD_FLOW_DESIGN_DIR ?= ${SCAD_FLOW_DIR}/designs
 # This does not change the output directory in openroad.
 OR_RESULTS = ${OPENROAD_FLOW_DIR}/results
 SCAD_RESULTS = ${SCAD_FLOW_DIR}/results
-XYCE_RESULTS = ${XYCE_FLOW_DIR}/results
 
 # Import the SCAD configuration
 include $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
 
-DESIGN_CONFIG = ${OPENROAD_FLOW_DIR}/designs/${PLATFORM}/${DESIGN}/config.mk
-
-include $(XYCE_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
+DESIGN_CONFIG = ./designs/${PLATFORM}/${DESIGN}/config.mk
 
 # OpenROAD place and route
 or_pnr:
-	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
+	$(MAKE) -C  $(OPENROAD_FLOW_DIR)
 
 or_nuke:
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE) nuke
@@ -45,10 +45,10 @@ scad_clean:
 	rm -rf $(RESULTS_DIR)
 
 # XYCE Run 
-# Here we need to include the commands to run XYCE- I need to work on this with Brady
+# Here we need to include the commands to run XYCE- I need to work on this with #Brady
 
 ${DESIGN}.${PLATFORM}.zip: or_pnr scad_pnr
-    7z a -tzip ${OR_RESULTS} ${SCAD_RESULTS}
+	7z a -tzip ${OR_RESULTS} ${SCAD_RESULTS}
 
 include $(wildcard *.deps)
 
@@ -57,6 +57,6 @@ include $(wildcard *.deps)
 
 # ALL
 all: or_pnr scad_pnr ${DESIGN}.${PLATFORM}.zip
-clean_all: or_nuke scad_clean
+clean: or_nuke scad_clean
 
-.PHONY: clean_all all scad_clean scad_pnr or_nuke or_pnr
+.PHONY: clean all scad_clean scad_pnr or_nuke or_pnr
