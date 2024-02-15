@@ -478,7 +478,8 @@ class route:
             else:
                 lengths[net[0]] += (int(net[4])-int(net[2]))/def_scale_*px_
         for pin in pins:
-            lengths[pin[0][0]] += z_bdim_ - (int(pin[0][1])-1)*lpv_*layer_+bottom_layer_
+            if pin[0][0] in lengths:
+                lengths[pin[0][0]] += z_bdim_ - (int(pin[0][1])-1)*lpv_*layer_+bottom_layer_
 
         df = pd.DataFrame(lengths, index=['length (mm)'])
         df.to_csv(os.path.join(output_dir, design + "_lengths.csv"))

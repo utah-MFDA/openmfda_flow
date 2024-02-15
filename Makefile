@@ -1,4 +1,4 @@
-
+LAYER_HEIGHT = 1
 # Shell setup for make
 SHELL      	= /bin/bash
 
@@ -24,32 +24,45 @@ SCAD_RESULTS = ${SCAD_FLOW_DIR}/results
 # Import the SCAD configuration
 include $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
 
-DESIGN_CONFIG = ${OPENROAD_FLOW_DIR}/designs/${PLATFORM}/${DESIGN}/config.mk
+DESIGN_CONFIG = ./designs/${PLATFORM}/${DESIGN}/config.mk
 
 # OpenROAD place and route
-or_pnr:
+pnr: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
+
+$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def:
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
 
 or_nuke:
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE) nuke
 
 # SCAD pnr
-scad_pnr:
-	$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/scad_pnr.py $(SCAD_ARGS)
+render: ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad
+
+${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
+	$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/scad_pnr.py $(SCAD_ARGS) \
+		--def_file $< \
+		--design "$(DESIGN)" \
+		--results_dir "$(SCAD_RESULTS)/${DESIGN}/${DESIGN_VARIANT}"
 
 scad_clean:
-	rm -rf $(RESULTS_DIR)
+	rm -rf $(SCAD_RESULTS)
 
-${DESIGN}.${PLATFORM}.zip: or_pnr scad_pnr
-	7z a -t zip $@ ${OR_RESULTS} ${SCAD_RESULTS}
+${DESIGN}.${PLATFORM}.zip: ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.stl ${SCAD_RESULTS}/${DESIGN}/$(DESIGN_VARIANT)/${DESIGN}.slices
+	7z a -tzip $@ ${OR_RESULTS} ${SCAD_RESULTS}
 
 include $(wildcard *.deps)
 
-%.stl: %.scad
+%.stl: %.scad ${SCAD_RESULTS}/${DESIGN}/$(DESIGN_VARIANT)/${DESIGN}.slices
 	openscad -m make -o $@ -d $@.deps $<
 
+slice: ${SCAD_RESULTS}/${DESIGN}/$(DESIGN_VARIANT)/${DESIGN}.slices
+
+%.slices: %.stl
+	xvfb-run python3 tools/slicer/pyqt5/app_qt.py $< ${LAYER_HEIGHT} $@
+
 # ALL
-all: or_pnr scad_pnr ${DESIGN}.${PLATFORM}.zip
+all: ${DESIGN}.${PLATFORM}.zip
+
 clean: or_nuke scad_clean
 
-.PHONY: clean all scad_clean scad_pnr or_nuke or_pnr
+.PHONY: clean all scad_clean render or_nuke pnr
