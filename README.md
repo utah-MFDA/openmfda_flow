@@ -18,24 +18,98 @@ be viewed and rendered in any SCAD software such as OpenSCAD
 required for the 3D printing technology developed at BYU under
 Dr. Nordin.
 
-## Geting Started
+# Setup
 
-The first thing to do after cloning the repo is to download and
-install the OpenROAD software found in the following repo
-https://github.com/The-OpenROAD-Project/OpenROAD. Another
-tool used for 2D visualization is KLayout which can be
-downloaded at https://www.klayout.de. Once the repo has been
-cloned and the mentioned tools downloaded. The next step is to
-update the binaries in /setup_env.sh and source the setup.
-In /pnr:
+## Submodules
+
+This repository contains submodule links to design kits and tools. Make sure to run `git submodule update --init --recursive` after cloning or updating to ensure that the submodules are up to date.
+
+## Prerequisites
+The following external tools are required.
+- OpenROAD
+- KLayout
+- python3
+- make
+
+The OpenROAD tool can be downloaded at https://github.com/The-OpenROAD-Project/OpenROAD.
+
+KLayout can be downloaded at https://www.klayout.de.
+
+By default, the tools are invoked using the $PATH search variable. Environment variables can be set to specify a specific location for the tools.
+
+## Python environment
+
+Python package dependencies can be installed using the system package manager, or using a virtual environment.
+
+To create a virtual environment and install the tool dependencies, run the following commands.
 
 ```
-source setup_env.sh
+python3 -m venv env
+source env/bin/activate
+pip3 install -r requirements.txt
 ```
 
-## General Flow
+This will create a directory `env` containing the python environment and libraries. To activate the environment you will need to run `source env/bin/activate` before using the flow.
 
-To complete a flow, the following steps are taken:
+For more information about virtual environments, see https://docs.python.org/3/library/venv.html
+
+# Running the flow
+
+Once configured (as demonstrated in the next section), the flow is invoked with the `make` command.
+
+## Specifying the design
+The design being operated on is specified using the `DESIGN` variable, matching the design name used during configuration. This can be set by:
+- The design can be specified when invoking `make`, for example `make DESIGN=demo`.
+- The design can be specified once in an environment variable `export DESIGN=demo`, then subsequent invocations using `make -e`.
+- The `DESIGN` variable can be set in the `Makefile` in the root of the directory.
+
+## Running the flow
+To run the complete flow, invoke `make` (with the design variable specified as shown in the previous section). This will run all steps in the flow and generate a .zip archive containing all output files.
+
+To run placement and routing, invoke `make pnr`
+
+To generate the device 3D model, invoke `make render`
+
+To generate sliced files for printing, invoke `make slice`
+
+To remove all generated files, invoke `make clean`
+
+# Configuration
+
+## Quick start configuration
+
+Place your verilog netlist in the root directory of the flow.
+
+Create a copy of the `demo_configure.py` script or create a new file with the following.
+
+```
+from openmfda_flow import *
+
+verilog_file = "demo.v"
+design_name = "demo"
+platform = "mfda_30px"
+pins = [[None for i in range(0,8)] for j in range(0,4)]
+pins[0][1] = "soln1"
+pins[0][2] = "soln2"
+pins[0][3] = "soln3"
+pins[1][7] = "out"
+
+generate_config(verilog_file, design_name, pin_names=pins, platform=platform)
+```
+
+Modify your copy, specifying the `verilog_file` and `design_name`.
+
+For each input/output pins from your verilog file, add an entry in the array in row/column format. This will assign the pin to the port of the interface.
+
+Invoke your script like `python3 demo_configure.py`, which will generate configuration files.
+
+After the configuration is created, the flow can be run by invoking `make DESIGN=demo`.
+
+Once configured, verilog design and configuration files can be modified as described in the next section. Verilog files are located in `openroad_flow/designs/src/{DESIGN}`
+
+## Manual configuration
+
+To manually configure a flow, the following steps are taken:
 
 1. Start by creating a new design with this path structure
     - openroad_flow/designs/(platform)/(design name)
@@ -89,6 +163,5 @@ To complete a flow, the following steps are taken:
    parameters specified, the entire flow can be completed through
    the Makefile in /Makefile
    ```
-   cd pnr
-   make
+   make DESIGN=demo
    ```
