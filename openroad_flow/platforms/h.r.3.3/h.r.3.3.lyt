@@ -64,7 +64,7 @@
    <special-routing-suffix-string/>
    <special-routing-datatype-string>0</special-routing-datatype-string>
    <via-cellname-prefix>VIA_</via-cellname-prefix>
-   <lef-files>lef/h.r.3.3.lef</lef-files>
+   <lef-files>lef/h.r.3.3_merged.lef</lef-files>
    <read-lef-with-def>true</read-lef-with-def>
    <macro-resolution-mode>default</macro-resolution-mode>
    <separate-groups>false</separate-groups>

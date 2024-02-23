@@ -4,7 +4,7 @@
 # Tech/Libs
 # ----------------------------------------------------
 export TECH_LEF = $(PLATFORM_DIR)/lef/h.r.3.3.tlef
-export SC_LEF = $(PLATFORM_DIR)/lef/h.r.3.3.lef
+export SC_LEF = $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
 
 export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      $(ADDITIONAL_LIBS)
