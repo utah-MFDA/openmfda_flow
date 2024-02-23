@@ -5,18 +5,12 @@ OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 
 # Add design paths here
-# DESIGN_CONFIG = ./designs/mfda/smart_toilet/config.mk
-# DESIGN_CONFIG = ./designs/mfda_30px/smart_toilet/config.mk
-# DESIGN_CONFIG = ./designs/mfda/route_test/config.mk
-# DESIGN_CONFIG = ./designs/mfda/pcr/config.mk
-# DESIGN_CONFIG = ./designs/mfda/pcr_spread_io/config.mk
+# DESIGN_CONFIG = ./designs/h.r.3.3/smart_toilet/config.mk
 # Default design
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
 
 # Global setting for Floorplan
 export PLACE_PINS_ARGS ?=
-
-export SPDLOG_LEVEL ?= error
 
 # If we are running headless use offscreen rendering for save_image
 ifndef DISPLAY

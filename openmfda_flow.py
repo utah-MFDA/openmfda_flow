@@ -6,7 +6,29 @@ import subprocess
 def default_pin_names():
     return [[f"pin_{i}_{j}" for i in range(0,8)] for j in range(0,4)]
 
-def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px"):
+def copy_defaults(input_verilog, io_file, top, design_name, platform):
+    verilog_path = f"openroad_flow/designs/src/{design_name}"
+    sdc_filename = f"openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
+    io_filename = f"openroad_flow/designs/{platform}/{design_name}/io_constraints.tcl"
+    make_filename = f"openroad_flow/designs/{platform}/{design_name}/config.mk"
+    scad_make_filename = f"scad_flow/designs/{platform}/{design_name}/config.mk"
+    scad_dimm_filename = f"scad_flow/designs/{platform}/{design_name}/dimm.csv"
+    os.makedirs(f"openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
+    os.makedirs(f"openroad_flow/designs/src/{design_name}", exist_ok=True)
+    os.makedirs(f"scad_flow/designs/{platform}/{design_name}", exist_ok=True)
+    print("Copy design netlists")
+    for filename in input_verilog:
+        shutil.copy(filename, verilog_path)
+    shutil.copy(io_file, io_filename)
+    print("Writing SDC constraints")
+    write_sdc_constraints(sdc_filename, top_name=design_name)
+    print("Writing makefile configuration")
+    write_make_config(make_filename, input_verilog, design_name, platform=platform)
+    print("Writing SCAD configuration")
+    write_scad_make(scad_make_filename, design_name, platform=platform)
+
+
+def generate_config(input_file, design_name, pin_names=None, platform="h.r.3.3"):
     verilog_name = os.path.basename(input_file)
     verilog_filename = f"openroad_flow/designs/src/{design_name}/{verilog_name}"
     sdc_filename = f"openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
@@ -28,12 +50,12 @@ def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px
     print("Writing SDC constraints")
     write_sdc_constraints(sdc_filename, top_name=design_name)
     print("Writing makefile configuration")
-    write_make_config(make_filename, verilog_name, design_name, platform=platform)
+    write_make_config(make_filename, [verilog_name], design_name, platform=platform)
     print("Writing SCAD configuration")
     write_scad_make(scad_make_filename, design_name, platform=platform)
     print("Done")
 
-def run_flow(design_name, platform="mfda_30px"):
+def run_flow(design_name, platform="h.r.3.3"):
     subprocess.run(["pwd"],
                    stdout=None, stderr=None, check=True)
 
@@ -52,15 +74,16 @@ def write_pin_constraints(io_filename, pin_names, layer):
 ################ SDC constraints ################
 def write_sdc_constraints(sdc_filename, top_name="top"):
     with open(sdc_filename, "w") as f:
-        print("current_design {top_name}", file=f)
+        print(f"current_design {top_name}", file=f)
 
 ################ config.mk ################
-def write_make_config(make_filename, verilog_name, design_name, platform="mfda_30px"):
+def write_make_config(make_filename, verilog_files, design_name, platform="h.r.3.3"):
+    files = " ".join("./designs/src/$(DESIGN_NICKNAME)/" + f for f in verilog_files)
     with open(make_filename, "w") as f:
         print(f"""export DESIGN_NAME     	= {design_name}
 export PLATFORM    		= {platform}
 
-export VERILOG_FILES 	= ./designs/src/{design_name}/{verilog_name}
+export VERILOG_FILES 	= {files}
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc
 
 export DIE_AREA    	 	= 0 0 2550 1590
@@ -69,7 +92,7 @@ export CORE_AREA   	 	= 0 0 2550 1590
 export IO_CONSTRAINTS	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/io_constraints.tcl""", file=f)
 
 ################ SCAD files ################
-def write_scad_make(scad_make_filename, design_name, dimm_file=None, platform="mfda_30px"):
+def write_scad_make(scad_make_filename, design_name, dimm_file=None, platform="h.r.3.3"):
     with open(scad_make_filename, "w") as f:
         print(f"""
 #------------------------------------------------------------------------------
@@ -134,13 +157,20 @@ endif""", file=f)
 #         for e in graph.edges:
 #             print(graph.edges[e]["wire"],",20,20,15", sep="", file=f)
 if __name__ == "__main__":
-    verilog_file = "demo.v"
-    design_name = "demo"
-    platform = "mfda_30px"
-    pins = [[None for i in range(0,8)] for j in range(0,4)]
-    pins[0][1] = "soln1"
-    pins[0][2] = "soln2"
-    pins[0][3] = "soln3"
-    pins[3][6] = "out"
-    generate_config(verilog_file, design_name, pin_names=pins, platform=platform)
-    run_flow(design_name, platform=platform)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--design')
+    parser.add_argument('-t', '--top', default='top')
+    parser.add_argument('-p', '--platform', default='h.r.3.3')
+    parser.add_argument('-i', '--io', default='./io_constraints.tcl')
+    parser.add_argument('files', nargs='+')
+
+    args = parser.parse_args()
+
+    verilog_files = args.files
+    io_files = args.io
+    design_name = args.design
+    platform = args.platform
+    top = args.top
+    copy_defaults(verilog_files, io_files, top=top, design_name=design_name, platform=platform)
+    # run_flow(design_name, platform=platform)
