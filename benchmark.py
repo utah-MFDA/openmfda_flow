@@ -7,7 +7,7 @@ from openmfda_flow import *
 
 parser = argparse.ArgumentParser(prog="benchmark")
 parser.add_argument("name", default="benchmark")
-parser.add_argument("--platform", default="mfda_30px")
+parser.add_argument("--platform", default="h.r.3.3")
 parser.add_argument("--size", default=40, type=int)
 parser.add_argument("--min_in", default=3, type=int)
 parser.add_argument("--max_in", default=6, type=int)
@@ -126,7 +126,7 @@ with open(scad_dimm_filename, "w") as f:
 
 verilog_file = "demo.v"
 design_name = "demo"
-platform = "mfda_30px"
+platform = "h.r.3.3"
 
 pins = [[None for i in range(0,8)] for j in range(0,4)]
 pins[0][1] = "soln1"

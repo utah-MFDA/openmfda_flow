@@ -8,8 +8,9 @@ SHELL      	= /bin/bash
 .DEFAULT_GOAL := all
 
 # Design platform and name to explore
-PLATFORM = mfda_30px
-DESIGN = smart_toilet
+PLATFORM = h.r.3.3
+DESIGN = demo
+
 
 OPENROAD_FLOW_DIR ?= openroad_flow
 SCAD_FLOW_DIR ?= scad_flow
@@ -52,7 +53,7 @@ ${DESIGN}.${PLATFORM}.zip: ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}
 
 include $(wildcard *.deps)
 
-%.stl: %.scad ${SCAD_RESULTS}/${DESIGN}/$(DESIGN_VARIANT)/${DESIGN}.slices
+%.stl: %.scad
 	openscad -m make -o $@ -d $@.deps $<
 
 slice: ${SCAD_RESULTS}/${DESIGN}/$(DESIGN_VARIANT)/${DESIGN}.slices
