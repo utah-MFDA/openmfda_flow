@@ -6,7 +6,7 @@ import subprocess
 def default_pin_names():
     return [[f"pin_{i}_{j}" for i in range(0,8)] for j in range(0,4)]
 
-def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px"):
+def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px", global_place_args={}):
     verilog_name = os.path.basename(input_file)
     verilog_filename = f"openroad_flow/designs/src/{design_name}/{verilog_name}"
     sdc_filename = f"openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
@@ -14,6 +14,8 @@ def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px
     make_filename = f"openroad_flow/designs/{platform}/{design_name}/config.mk"
     scad_make_filename = f"scad_flow/designs/{platform}/{design_name}/config.mk"
     scad_dimm_filename = f"scad_flow/designs/{platform}/{design_name}/dimm.csv"
+
+    gp_args_filename = f"openroad_flow/designs/{platform}/{design_name}/global_place_args.tcl"
 
     os.makedirs(f"openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
     os.makedirs(f"openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
@@ -27,17 +29,20 @@ def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px
     write_pin_constraints(io_filename, pin_names, "met9")
     print("Writing SDC constraints")
     write_sdc_constraints(sdc_filename, top_name=design_name)
+    print("Writing global place configuration")
+    write_replace_args(gp_args_filename, global_place_args)
     print("Writing makefile configuration")
     write_make_config(make_filename, verilog_name, design_name, platform=platform)
     print("Writing SCAD configuration")
     write_scad_make(scad_make_filename, design_name, platform=platform)
     print("Done")
 
-def run_flow(design_name, platform="mfda_30px"):
+def run_flow(design_name, platform="mfda_30px", stdout=False):
     subprocess.run(["pwd"],
                    stdout=None, stderr=None, check=True)
-
-    subprocess.run(["make", "-e", f"DESIGN={design_name}", "-e", f"PLATFORM={platform}"],
+    run_cmd = f"make -e DESIGN={design_name} -e PLATFORM={platform}"
+    print(run_cmd)
+    subprocess.run(run_cmd.split(),
                    stdout=None, stderr=None, check=True)
     # todo make archive
 
@@ -127,7 +132,142 @@ ifdef DIMM_FILE
 SCAD_ARGS +=\
 			--dimm_file "$(DIMM_FILE)"
 endif""", file=f)
+        
+def check_replace_args(replace_arg):
+    if 'bin' in replace_arg:
+        
+        replace_arg['bin'] = str(replace_arg['bin'])
+    else:
+        replace_arg['bin'] = '24'
+        
+    if 'density' in replace_arg:
+        
+        replace_arg['density'] = str(replace_arg['density'])
+    else:
+        replace_arg['density'] = '0.95'
 
+    if 'init_density_coef' in replace_arg:
+
+        replace_arg['init_density_coef'] = str(replace_arg['init_density_coef'])
+    else:
+        replace_arg['init_density_coef'] = '8e-5'
+
+    if 'init_wire_coef' in replace_arg:
+        
+        replace_arg['init_wire_coef'] = str(replace_arg['init_wire_coef'])
+    else:
+        replace_arg['init_wire_coef'] = '0.25'
+
+    if 'max_phi' in replace_arg:
+        
+        replace_arg['max_phi'] = str(replace_arg['max_phi']) 
+    else:
+        replace_arg['max_phi'] = '1.04'
+
+    if 'min_phi' in replace_arg:
+        
+        replace_arg['min_phi'] = str(replace_arg['min_phi'])
+    else:
+        replace_arg['min_phi'] = '0.95'
+
+    if 'overflow' in replace_arg:
+        if replace['overflow'] < 0:
+            print("WARNING: overflow set below 0! Set overflow = 0.1")
+            replace['overflow'] = 0.1
+
+        replace_arg['overflow'] = str(replace_arg['overflow'])
+    else:
+        replace_arg['overflow'] = '0.1'
+
+    if 'init_place_max_iter' in replace_arg:
+        pass
+    else:
+        replace_arg['init_place_max_iter'] = '20'
+
+    if 'fanout' in replace_arg:
+        if replace['fanout'] < 1:
+            print('WARNING: fanout set below 1! Set fanout = 1')
+            replace['fanout'] = 1
+
+        replace_arg['fanout'] = str(replace_arg['fanout'])
+    else:
+        replace_arg['fanout'] = '20'
+
+    
+        
+
+def write_replace_args(replace_args_filename, replace_arg={}):
+    if replace_arg == None:
+        print("WARNING: replace_arg set to None! Set to empty dictionary")
+    
+    check_replace_args(replace_arg)
+    bs = '/'
+    fb = '{'
+    bb = '}'
+    
+    with open(replace_args_filename, "w") as f:        
+        print(f"""
+# does not work
+set skip_initial_placement 0
+
+# does not work
+set incremental 0
+
+# Set bin grid's counts. Default: Defined by internal algorithm. [64,128,256,512,..., int]
+set bin_grid_count {replace_arg['bin']}
+
+# density is set differently
+set density {replace_arg['density']}
+
+# Set initial density penalty. Default: 8e-5 [1e-6 - 1e6, float]
+set init_density_penalty {replace_arg['init_density_coef']}
+
+# Set initial wirelength coefficient. Default: 0.25 [unlimited, float]
+set init_wirelength_coef {replace_arg['init_wire_coef']}
+
+# Set pcof_min(µ_k Lower Bound). Default: 0.95 [0.95-1.05, float]
+set min_phi_coef {replace_arg['min_phi']}
+
+# Set pcof_max(µ_k Upper Bound). Default: 1.05 [1.00-1.20, float]
+set max_phi_coef {replace_arg['max_phi']}
+
+# Set target overflow for termination condition. Default: 0.1 [0-1, float]
+set overflow {replace_arg['overflow']}
+
+# Set maximum iterations in initial place. Default: 20 [0-, int]
+set initial_place_max_iter {replace_arg['init_place_max_iter']}
+
+# Set net escape condition in initial place when 'fanout >= initial_place_max_fanout'. Default: 200 [1-, int]
+set initial_place_max_fanout {replace_arg['fanout']}
+
+set global_place_args {fb}{bb}
+
+if {fb}$skip_initial_placement{bb} {fb}
+	set global_place_args "$global_place_args -skip_initial_place"
+{bb}
+
+if {fb}$incremental{bb} {fb}
+	set global_place_args "$global_place_args -incremental"
+{bb}
+
+
+
+
+set global_place_args "$global_place_args {bs}
+    -bin_grid_count $bin_grid_count {bs}
+    -init_density_penalty $init_density_penalty {bs}
+    -init_wirelength_coef $init_wirelength_coef {bs}
+    -min_phi_coef $min_phi_coef {bs}
+    -max_phi_coef $max_phi_coef {bs}
+    -overflow $overflow {bs}
+    -initial_place_max_iter $initial_place_max_iter {bs}
+    -initial_place_max_fanout $initial_place_max_fanout"
+
+puts $global_place_args
+ 
+#set ::env(GLOBAL_PLACEMENT_ARGS)
+""", file=f)
+        
 # ################ dimm csv file ################
 # def write_dimm_file(scad_dimm_filename, wires):
 #     with open(scad_dimm_filename, "w") as f:

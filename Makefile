@@ -8,8 +8,8 @@ SHELL      	= /bin/bash
 .DEFAULT_GOAL := all
 
 # Design platform and name to explore
-PLATFORM = mfda_30px
-DESIGN = smart_toilet
+PLATFORM ?= mfda_30px
+DESIGN ?= smart_toilet
 
 OPENROAD_FLOW_DIR ?= openroad_flow
 SCAD_FLOW_DIR ?= scad_flow
@@ -25,6 +25,9 @@ SCAD_RESULTS = ${SCAD_FLOW_DIR}/results
 include $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
 
 DESIGN_CONFIG = ./designs/${PLATFORM}/${DESIGN}/config.mk
+
+# relative to openroad make
+export GLOBAL_PLACEMENT_ARGS_PATH = ./designs/$(PLATFORM)/$(DESIGN)/global_place_args.tcl
 
 # OpenROAD place and route
 pnr: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def

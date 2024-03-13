@@ -45,7 +45,7 @@ if {[info exist ::env(PLACE_DENSITY_LB_ADDON)]} {
   set place_density [expr $place_density_lb + $::env(PLACE_DENSITY_LB_ADDON) + 0.01]
   if {$place_density > 1.0} {
     set place_density 1.0
-  }
+  } 
 } else {
   set place_density $::env(PLACE_DENSITY)
 }
@@ -55,6 +55,19 @@ global_placement -routability_driven -density $place_density \
     -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     -pad_right $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     $::env(GLOBAL_PLACEMENT_ARGS)
+} elseif {[info exist ::env(GLOBAL_PLACEMENT_ARGS_PATH)]} {
+  source $::env(GLOBAL_PLACEMENT_ARGS_PATH)
+  global_placement -routability_driven -density $place_density \
+    -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
+    -pad_right $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
+    -bin_grid_count $bin_grid_count \
+    -init_density_penalty $init_density_penalty \
+    -init_wirelength_coef $init_wirelength_coef \
+    -min_phi_coef $min_phi_coef \
+    -max_phi_coef $max_phi_coef \
+    -overflow $overflow \
+    -initial_place_max_iter $initial_place_max_iter \
+    -initial_place_max_fanout $initial_place_max_fanout
 } else {
 global_placement -routability_driven -density $place_density \
     -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \

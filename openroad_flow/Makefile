@@ -5,8 +5,8 @@ OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 
 # Add design paths here
-# DESIGN_CONFIG = ./designs/mfda/smart_toilet/config.mk
-# DESIGN_CONFIG = ./designs/mfda_30px/smart_toilet/config.mk
+# DESIGN_CONFIG = ./designs/mfda/$(DESIGN)/config.mk
+# DESIGN_CONFIG = ./designs/mfda_30px/$(DESIGN)/config.mk
 # DESIGN_CONFIG = ./designs/mfda/route_test/config.mk
 # DESIGN_CONFIG = ./designs/mfda/pcr/config.mk
 # DESIGN_CONFIG = ./designs/mfda/pcr_spread_io/config.mk
@@ -275,11 +275,13 @@ clean_floorplan:
 #
 place: $(RESULTS_DIR)/2_place.def \
 	   $(RESULTS_DIR)/2_place.sdc
+
+$(GLOBAL_PLACEMENT_ARGS_PATH):
 # ==============================================================================
 
 # STEP 1: Global placement + IO placement (not random)
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/2_1_place_gp.def: $(RESULTS_DIR)/1_floorplan.def $(RESULTS_DIR)/1_floorplan.sdc $(LIB_FILES)
+$(RESULTS_DIR)/2_1_place_gp.def: $(RESULTS_DIR)/1_floorplan.def $(RESULTS_DIR)/1_floorplan.sdc $(LIB_FILES) $(GLOBAL_PLACEMENT_ARGS_PATH)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/global_place.tcl -metrics $(LOG_DIR)/2_1_place_gp.json) 2>&1 | tee $(LOG_DIR)/2_1_place_gp.log
 
 # STEP 2: IO placement (non-random)
