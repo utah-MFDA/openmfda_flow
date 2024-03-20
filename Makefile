@@ -32,7 +32,11 @@ export GLOBAL_PLACEMENT_ARGS_PATH = ./designs/$(PLATFORM)/$(DESIGN)/global_place
 # OpenROAD place and route
 pnr: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
 
-$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def:
+designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
+
+designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py:
+
+$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
 
 or_nuke:

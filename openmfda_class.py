@@ -65,7 +65,7 @@ class OpenMFDA:
     def run_flow_render(self):
         of.run_flow_ow_slice(self.design_name, platform=self.platform)
     
-    def sync_w_remote(self, remote_dir):
+    def sync_remote(self, remote_dir):
         # sync files with server
         local_paths = ["designs","openroad_flow","scad_flow","xyce_flow","Makefile","requirements.txt","openmfda_flow.py","main.py"]
 
@@ -77,9 +77,31 @@ class OpenMFDA:
         print(rs_cmd)
         subprocess.run(rs_cmd.split())
 
+    def sync_w_remote_outputs(self, remote_dir, local_path='', relative_path=True, or_logs=True, or_reports=True):
+
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+
+        result_out = [ 
+            "openroad_flow/results/",  
+            "scad_flow/results/"
+            ]
+
+        if or_logs:
+            result_out.append("openroad_flow/logs/")
+
+        if or_reports:
+            result_out.append("openroad_flow/reports/")
+
+        if relative_path:
+            local_path = f"{dir_path}/{local_path}"
+
+        for x in result_out:
+
+            rs_cmd = f"rsync -av -e ssh mfda_remote:{remote_dir}/{x} {local_path}/{x}".split()
+            subprocess.run(rs_cmd)
 
     def run_remote(self, design, platform, remote_env_home, remote_dir):
-        self.sync_w_remote(remote_dir=remote_dir)
+        self.sync_remote(remote_dir=remote_dir)
 
         # send run command remotely
         main_args = f'--design {design} --platform {platform}'
@@ -92,7 +114,10 @@ class OpenMFDA:
         sshr    = ['ssh', 'mfda_remote', f'"source {srccmd} ; {sshcmd}"']
 
         subprocess.run([f'ssh mfda_remote "{srccmd} ; {sshcmd}"'], 
-            shell=True)
+            shell=True,
+            check=True)
+
+        self.sync_w_remote_outputs(remote_dir)
 
     def run_flow_render(self):
         pass

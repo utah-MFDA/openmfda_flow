@@ -14,21 +14,22 @@ def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px
         dir_path = os.path.dirname(os.path.realpath(__file__))       
         input_file = f'{dir_path}/designs/{platform}/{design_name}/'+input_file
     else:
-        pass
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        
     verilog_name = os.path.basename(input_file)
-    verilog_filename = f"openroad_flow/designs/src/{design_name}/{verilog_name}"
-    sdc_filename = f"openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
-    io_filename = f"openroad_flow/designs/{platform}/{design_name}/io_constraints.tcl"
-    make_filename = f"openroad_flow/designs/{platform}/{design_name}/config.mk"
-    scad_make_filename = f"scad_flow/designs/{platform}/{design_name}/config.mk"
-    scad_dimm_filename = f"scad_flow/designs/{platform}/{design_name}/dimm.csv"
+    verilog_filename = f"{dir_path}/openroad_flow/designs/src/{design_name}/{verilog_name}"
+    sdc_filename = f"{dir_path}/openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
+    io_filename = f"{dir_path}/openroad_flow/designs/{platform}/{design_name}/io_constraints.tcl"
+    make_filename = f"{dir_path}/openroad_flow/designs/{platform}/{design_name}/config.mk"
+    scad_make_filename = f"{dir_path}/scad_flow/designs/{platform}/{design_name}/config.mk"
+    scad_dimm_filename = f"{dir_path}/scad_flow/designs/{platform}/{design_name}/dimm.csv"
 
-    gp_args_filename = f"openroad_flow/designs/{platform}/{design_name}/global_place_args.tcl"
+    gp_args_filename = f"{dir_path}/openroad_flow/designs/{platform}/{design_name}/global_place_args.tcl"
 
-    os.makedirs(f"openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
-    os.makedirs(f"openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
-    os.makedirs(f"openroad_flow/designs/src/{design_name}", exist_ok=True)
-    os.makedirs(f"scad_flow/designs/{platform}/{design_name}", exist_ok=True)
+    os.makedirs(f"{dir_path}/openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
+    os.makedirs(f"{dir_path}/openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
+    os.makedirs(f"{dir_path}/openroad_flow/designs/src/{design_name}", exist_ok=True)
+    os.makedirs(f"{dir_path}/scad_flow/designs/{platform}/{design_name}", exist_ok=True)
     print("Copy design netlist")
     shutil.copy(input_file, verilog_filename)
     if pin_names is None:
