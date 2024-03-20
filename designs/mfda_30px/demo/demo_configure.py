@@ -15,5 +15,5 @@ gp_args['bin'] = 24
 gp_args['max_phi'] = 1.06
 
 generate_config(verilog_file, design_name, pin_names=pins, platform=platform, global_place_args=gp_args, design_dir=True)
-run_flow(design_name, platform=platform)
+run_flow(design_name, platform=platform, make_arg=['pnr', 'render'])
 

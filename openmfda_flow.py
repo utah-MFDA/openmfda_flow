@@ -3,12 +3,15 @@ import os
 import shutil
 import subprocess
 
+# path for python file
+
+
 def default_pin_names():
     return [[f"pin_{i}_{j}" for i in range(0,8)] for j in range(0,4)]
 
 def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px", global_place_args={}, design_dir=False):
     if design_dir:
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+        dir_path = os.path.dirname(os.path.realpath(__file__))       
         input_file = f'{dir_path}/designs/{platform}/{design_name}/'+input_file
     else:
         pass
@@ -42,13 +45,17 @@ def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px
     write_scad_make(scad_make_filename, design_name, platform=platform)
     print("Done")
 
-def run_flow(design_name, platform="mfda_30px", stdout=False):
+def run_flow(design_name, platform="mfda_30px", stdout=False, make_arg='all'):
     subprocess.run(["pwd"],
                    stdout=None, stderr=None, check=True)
-    run_cmd = f"make -e DESIGN={design_name} -e PLATFORM={platform}"
-    print(run_cmd)
-    subprocess.run(run_cmd.split(),
-                   stdout=None, stderr=None, check=True)
+    if isinstance(make_arg, str):
+        make_arg=[make_arg]
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    for arg in make_arg:
+        run_cmd = f"cd {dir_path} && make {arg} -e DESIGN={design_name} -e PLATFORM={platform}"
+        print(run_cmd)
+        subprocess.run(run_cmd,
+                    stdout=None, stderr=None, shell=True, check=True)
     # todo make archive
 
 ################ Generate pin constraints ################

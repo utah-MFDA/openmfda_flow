@@ -64,8 +64,8 @@ class OpenMFDA:
 
     def run_flow_render(self):
         of.run_flow_ow_slice(self.design_name, platform=self.platform)
-        
-    def run_remote(self, remote_dir="MFDA_flow"):
+    
+    def sync_w_remote(self, remote_dir):
         # sync files with server
         local_paths = ["designs","openroad_flow","scad_flow","xyce_flow","Makefile","requirements.txt","openmfda_flow.py","main.py"]
 
@@ -78,22 +78,31 @@ class OpenMFDA:
         subprocess.run(rs_cmd.split())
 
 
-        design = 'demo'
-        platform = 'mfda_30px'
+    def run_remote(self, design, platform, remote_env_home, remote_dir):
+        self.sync_w_remote(remote_dir=remote_dir)
 
         # send run command remotely
         main_args = f'--design {design} --platform {platform}'
         
         mainpy = f"'{remote_dir}/main.py'"
-        srccmd = f"'mfda_env/bin/activate'"
+        srccmd = f"'{remote_env_home}/bin/activate'"
 
         sshcmd = f'python3 {mainpy} {main_args}'
 
         sshr    = ['ssh', 'mfda_remote', f'"source {srccmd} ; {sshcmd}"']
 
         subprocess.run([f'ssh mfda_remote "{srccmd} ; {sshcmd}"'], 
-            stdout=subprocess.PIPE,
             shell=True)
 
     def run_flow_render(self):
         pass
+
+
+if __name__ == "__main__":
+
+    design    = 'demo'
+    plat      = 'mfda_30px'
+    py_remote = '~/mfda_env'
+    remote_dir= "MFDA_flow"
+
+    test = OpenMFDA().run_remote(design, plat, py_remote, remote_dir)

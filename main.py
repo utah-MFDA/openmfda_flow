@@ -9,10 +9,11 @@ def main(design, platform):
     
     dir_path = os.path.dirname(os.path.realpath(__file__))
     sys.path.insert(0, f'{dir_path}/designs/{platform}/{design}')
-    importlib.import_module(py_call)
+    #design_sc = importlib.import_module(py_call)
 
-    design_sc = map(__import__, py_call)
-    design_sc()
+    #design_sc = map(__import__, py_call)
+    #design_sc
+    exec(open(f"{dir_path}/designs/{platform}/{design}/{py_call}.py").read())
 
 if __name__ == "__main__":
 
