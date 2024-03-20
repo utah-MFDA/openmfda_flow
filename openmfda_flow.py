@@ -6,7 +6,12 @@ import subprocess
 def default_pin_names():
     return [[f"pin_{i}_{j}" for i in range(0,8)] for j in range(0,4)]
 
-def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px", global_place_args={}):
+def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px", global_place_args={}, design_dir=False):
+    if design_dir:
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        input_file = f'{dir_path}/designs/{platform}/{design_name}/'+input_file
+    else:
+        pass
     verilog_name = os.path.basename(input_file)
     verilog_filename = f"openroad_flow/designs/src/{design_name}/{verilog_name}"
     sdc_filename = f"openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
@@ -267,6 +272,7 @@ puts $global_place_args
  
 #set ::env(GLOBAL_PLACEMENT_ARGS)
 """, file=f)
+
         
 # ################ dimm csv file ################
 # def write_dimm_file(scad_dimm_filename, wires):
