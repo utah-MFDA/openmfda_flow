@@ -7,8 +7,8 @@
 
 A ssh config Host entry will look like this:
 ```
-Hostname mfda_remote
-    Host server_address
+Host mfda_remote
+    Hostname server_address
     User user_name
     Port 22 # not needed unless ssh is configured to listen on a different port
 ```  
