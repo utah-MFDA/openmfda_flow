@@ -124,7 +124,8 @@ class OpenMFDA:
             rs_cmd = f"rsync -av -e ssh mfda_remote:{remote_dir}/{x} {local_path}/{x}".split()
 
             if osplt.system() == "Windows":
-                wsl_cmd(rs_cmd)
+                print("WSL cmd: "+wsl_cmd(' '.join(rs_cmd)))
+                os.system(wsl_cmd(' '.join(rs_cmd)))
             elif osplt.system() == "Linux":
                 subprocess.run(rs_cmd)
             else:
