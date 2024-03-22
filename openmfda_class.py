@@ -9,7 +9,68 @@ import openmfda_flow as of
 
 class OpenMFDA:
     
+    class Platform:
+        def __init__(self):
+            self.core_site = [0,0]
+            self.die_area  = [0,0]
+            self.layer_per_via = 20
+            self.bulk_total_layers = 280
+
+        def set_core_area(self, new_core_area):
+            if len(new_core_area)==2:
+                self.core_site=new_core_area
+            elif len(new_core_area)==4:
+                self.core_site=new_core_area
+            else:
+                raise ValueError(f"Expecting list of len 2 or 4 {len(new_core_area)} passed")
+        
+        def get_core_site_mk(self):
+            if len(self.core_site)==2:
+                return f"0 0 {self.core_site[0]} {self.core_site[1]}"
+            if len(self.core_site)==4:
+                return ' '.join(self.core_site)
+
+        def set_die_area(self, new_core_area):
+            if len(new_core_area)==2:
+                self.core_site=new_core_area
+            elif len(new_core_area)==4:
+                self.core_site=new_core_area
+            else:
+                raise ValueError(f"Expecting list of len 2 or 4 {len(new_core_area)} passed")
+        
+        def get_die_area_mk(self):
+            if len(self.core_site)==2:
+                return f"0 0 {self.core_site[0]} {self.core_site[1]}"
+            if len(self.core_site)==4:
+                return ' '.join(self.core_site)
+
+        def set_xbulk(self, xbulk):
+            self.die_area[2]=self.die_area[0]+xbulk
+            self.core_site[2]=self.core_site[0]+xbulk
+        
+        def set_ybulk(self, ybulk):
+            self.die_area[3]=self.die_area[1]+ybulk
+            self.core_site[3]=self.core_site[1]+ybulk
+
+        def set_zbulk(self, zbulk):
+            self.zbulk = zbulk
     
+        def set_layers_per_via(self, lpv):
+            self.layer_per_via = lpv
+
+        def get_xbulk(self):
+            return self.die_area[0]-self.die_area[2]
+        def get_ybulk(self):
+            return self.die_area[1]-self.die_area[3]
+        def get_zbulk(self):
+            return self.zbulk
+
+        def get_xchip(self):
+            return ' '.join(self.die_area[0],self.die_area[2])
+        def get_ychip(self):
+            return ' '.join(self.die_area[1],self.die_area[3]) 
+
+
     def __init__(self, design_name=None, verilog_file=None, platform=None):
         self.pins = [[None for i in range(0,8)] for j in range(0,4)]
         self.cells = None

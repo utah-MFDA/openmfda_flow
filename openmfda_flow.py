@@ -3,13 +3,16 @@ import os
 import shutil
 import subprocess
 
+#sys.path.insert(0,os.path.dirname(os.path.realpath(__file__)))
+#from openmfda_class import OpenMFDA
 # path for python file
 
 
 def default_pin_names():
     return [[f"pin_{i}_{j}" for i in range(0,8)] for j in range(0,4)]
 
-def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px", global_place_args={}, design_dir=False):
+def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px", global_place_args={}, design_dir=False, platform_config=None):
+    
     if design_dir:
         dir_path = os.path.dirname(os.path.realpath(__file__))       
         input_file = f'{dir_path}/designs/{platform}/{design_name}/'+input_file
@@ -41,9 +44,23 @@ def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px
     print("Writing global place configuration")
     write_replace_args(gp_args_filename, global_place_args)
     print("Writing makefile configuration")
-    write_make_config(make_filename, verilog_name, design_name, platform=platform)
+    if platform_config==None:
+        write_make_config(make_filename, verilog_name, design_name, platform=platform)
+    elif isinstance(platform_config, dict):
+        write_make_config(make_filename, verilog_name, design_name, platform=platform, platform_dict=platform_config)
+    #elif isinstance(plaform_config, openmfda_class.OpenMFDA.Platform):
+    #    write_make_config(make_filename, verilog_name, design_name, platform=platform, platform_class=platform_config)
+    else:
+        raise ValueError("platform_config is not a valid input")
     print("Writing SCAD configuration")
-    write_scad_make(scad_make_filename, design_name, platform=platform)
+    if platform_config==None:
+        write_scad_make(scad_make_filename, design_name, platform=platform)
+    elif isinstance(platform_config, dict):
+        write_scad_make(scad_make_filename, design_name, platform=platform, platform_dict=platform_config)
+    #elif isinstance(plaform_config, openmfda_class.OpenMFDA.Platform):
+    #    write_scad_make(scad_make_filename, design_name, platform=platform, platform_class=platform_config)
+    else:
+        raise ValueError("platform_config is not a valid input")
     print("Done")
 
 def run_flow(design_name, platform="mfda_30px", stdout=False, make_arg='all'):
@@ -73,7 +90,18 @@ def write_sdc_constraints(sdc_filename, top_name="top"):
         print("current_design {top_name}", file=f)
 
 ################ config.mk ################
-def write_make_config(make_filename, verilog_name, design_name, platform="mfda_30px"):
+def write_make_config(make_filename, verilog_name, design_name, platform="mfda_30px", platform_dict=None, platform_class=None):
+    if platform_dict is not None and platform_class is not None:
+        raise ValueError("Cannot pass both platform_disc and platform class")
+    elif platform_dict is not None:
+        die_area = ' '.join(platform_dict['Die_area'])
+        core_area= ' '.join(platform_dict['Core_area'])
+    elif platform_class is not None:
+        die_area = platform_class.get_die_area_mk()
+        core_area= platform_class.get_die_area_mk()
+    else:
+        die_area ='0 0 2550 1590'
+        core_area='0 0 2550 1590'
     with open(make_filename, "w") as f:
         print(f"""export DESIGN_NAME     	= {design_name}
 export PLATFORM    		= {platform}
@@ -81,13 +109,42 @@ export PLATFORM    		= {platform}
 export VERILOG_FILES 	= ./designs/src/{design_name}/{verilog_name}
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc
 
-export DIE_AREA    	 	= 0 0 2550 1590
-export CORE_AREA   	 	= 0 0 2550 1590
+export DIE_AREA    	 	= {die_area}
+export CORE_AREA   	 	= {core_area}
 
 export IO_CONSTRAINTS	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/io_constraints.tcl""", file=f)
 
 ################ SCAD files ################
-def write_scad_make(scad_make_filename, design_name, dimm_file=None, platform="mfda_30px"):
+def write_scad_make(scad_make_filename, design_name, dimm_file=None, platform="mfda_30px", platform_dict=None, platform_class=None):
+    if platform_dict is not None and platform_class is not None:
+        raise ValueError("Cannot pass both platform_disc and platform class")
+    elif platform_dict is not None:
+        if 'xbulk' in platform_dict:
+            xbulk = platform_dict['xbulk']
+            xchip = '0 '+str(platform_dict['xbulk'])
+        else:
+            xbulk = platform_dict['Die_area'][2]
+            xchip = '0 '+str(platform_dict['Die_area'][2])
+        if 'ybulk' in platform_dict:
+            ybulk = platform_dict['ybulk']
+            ychip = '0 '+str(platform_dict['ybulk'])
+        else:
+            ybulk = platform_dict['Die_area'][3]
+            ychip = '0 '+str(platform_dict['Die_area'][3])
+        zbulk = platform_dict['zbulk']
+        
+    elif platform_class is not None:
+        xbulk = platform_class.get_xbulk()
+        ybulk = platform_class.get_ybulk()
+        zbulk = platform_class.get_zbulk()
+        xchip = platform_class.get_xchip()
+        ychip = platform_class.get_ychip()
+    else:
+        xbulk = 2550
+        ybulk = 1590
+        zbulk = 280
+        xchip = '0 2550'
+        ychip = '0 1590'
     with open(scad_make_filename, "w") as f:
         print(f"""
 #------------------------------------------------------------------------------
@@ -115,15 +172,15 @@ BOT_LAYER_VAL	= 20
 # layers/via value
 LPV_VAL			= 20
 # bulk x value in pixels
-XBULK_VAL		= 2550
+XBULK_VAL		= {xbulk}
 # bulk y value in pixels
-YBULK_VAL		= 1590
+YBULK_VAL		= {ybulk}
 # bulk z value in layers
-ZBULK_VAL		= 280
+ZBULK_VAL		= {zbulk}
 # chip min and max x values in pixels
-XCHIP_VALS		= 0 2550
+XCHIP_VALS		= {xchip}
 # chip min and max y values in pixels
-YCHIP_VALS		= 0 1590
+YCHIP_VALS		= {ychip}
 # scale the .def file uses for dimensions
 DEF_SCALE_VAL	= 1000
 # PNR pitch of platform
