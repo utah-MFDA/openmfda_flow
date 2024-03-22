@@ -4,21 +4,21 @@ import subprocess
 import platform as osplt
 from pathlib import PureWindowsPath, PurePosixPath
 
-import openmfda_flow as of
+import openmfda_flow.openmfda_flow as of
 
 
 class OpenMFDA:
     
     class Platform:
         def __init__(self):
-            self.core_site = [0,0]
-            self.die_area  = [0,0]
+            self.core_site = [0, 0, 2550, 1590]
+            self.die_area  = [0, 0, 2550, 1590]
             self.layer_per_via = 20
             self.bulk_total_layers = 280
 
         def set_core_area(self, new_core_area):
             if len(new_core_area)==2:
-                self.core_site=new_core_area
+                self.core_site=[0,0]+new_core_area
             elif len(new_core_area)==4:
                 self.core_site=new_core_area
             else:
@@ -32,9 +32,9 @@ class OpenMFDA:
 
         def set_die_area(self, new_core_area):
             if len(new_core_area)==2:
-                self.core_site=new_core_area
+                self.die_area=[0,0]+new_core_area
             elif len(new_core_area)==4:
-                self.core_site=new_core_area
+                self.die_area=new_core_area
             else:
                 raise ValueError(f"Expecting list of len 2 or 4 {len(new_core_area)} passed")
         
@@ -53,7 +53,7 @@ class OpenMFDA:
             self.core_site[3]=self.core_site[1]+ybulk
 
         def set_zbulk(self, zbulk):
-            self.zbulk = zbulk
+            self.bulk_total_layers = zbulk
     
         def set_layers_per_via(self, lpv):
             self.layer_per_via = lpv
@@ -63,7 +63,7 @@ class OpenMFDA:
         def get_ybulk(self):
             return self.die_area[1]-self.die_area[3]
         def get_zbulk(self):
-            return self.zbulk
+            return self.bulk_total_layers
 
         def get_xchip(self):
             return ' '.join(self.die_area[0],self.die_area[2])
@@ -77,6 +77,7 @@ class OpenMFDA:
         self.design_name = design_name
         self.verilog_file = verilog_file
         self.platform = platform
+        self.platform_config = self.Platform() 
         self.replace_arg = {}
 
     def import_verilog_file(self, verilog_file):
@@ -85,8 +86,8 @@ class OpenMFDA:
     def set_verilog_file(self, verilog_file):
         self.verilog_file = verilog_file
 
-    def set_platform(self, platform):
-        self.platform = platform
+    #def set_platform(self, platform):
+    #    self.platform = platform
 
     def set_design_name(self, design_name):
         self.design_name = design_name
@@ -96,6 +97,12 @@ class OpenMFDA:
 
     def add_cell(self, cell, ports):
         pass
+
+    def set_die_area(self, new_die_area):
+        self.platform_config.set_die_area(new_die_area)
+
+    def set_core_area(self, new_core_area):
+        self.platform_config.set_core_area(new_core_area)
 
     def set_replace_arg(self, arg, value):
         if arg == 'placement_density' or arg == 'density':
@@ -107,23 +114,35 @@ class OpenMFDA:
         elif arg == 'init_wire_coef' or arg == 'init_wirelength_coef':
             self.replace_arg['init_wire_coef'] = value
         elif arg == 'max_phi':
-            self.replace['max_phi'] = value
+            self.replace_arg['max_phi'] = value
         elif arg == 'min_phi':
-            self.replace['min_phi'] = value
+            self.replace_arg['min_phi'] = value
         elif arg == 'overflow':
-            self.replace['overflow'] = value
+            self.replace_arg['overflow'] = value
         elif arg == 'fanout':
-            self.replace['fanout'] = value
+            self.replace_arg['fanout'] = value
         
     
     def build(self):
-        of.generate_config(self.verilog_file, self.design_name, pin_names=self.pins, platform=self.platform)
-        replace_file = f"openroad_flow/designs/{self.platform}/{self.design_name}/global_place_args.tcl"
-        of.write_replace_args(replace_file, self.replace_arg)
+        of.generate_config(self.verilog_file, self.design_name, pin_names=self.pins, global_place_args=self.replace_arg, design_dir=True, platform=self.platform)
+        #replace_file = f"openroad_flow/designs/{self.platform}/{self.design_name}/global_place_args.tcl"
+        #of.write_replace_args(replace_file, self.replace_arg)
     
     def run_flow(self, mk_targets='all'):
         of.run_flow(self.design_name, platform=self.platform, make_arg=mk_targets)
         
+    def run_flow_remote(self, remote_pyenv_home, remote_dir, mk_targets='all', win_root_drive='C:', wsl_root=None):
+        self.run_remote(
+            design=self.design_name,
+            platform=self.platform,
+            remote_env_home=remote_pyenv_home,
+            remote_dir=remote_dir,
+            win_drive=win_root_drive,
+            wsl_root=wsl_root,
+            make_only=True,
+            make_targets=mk_targets
+        )
+
 
     #def run_flow_render(self):
     #    of.run_flow_ow_slice(self.design_name, platform=self.platform)
@@ -132,11 +151,13 @@ class OpenMFDA:
         # sync files with server
         local_paths = ["designs","openroad_flow","scad_flow","xyce_flow","Makefile","requirements.txt","openmfda_flow.py","main.py", "src"]
 
-        dir_path = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
+        dir_path = os.path.dirname(
+                os.path.normpath(
+                        os.path.realpath(__file__)+'/../../').replace('\\', '/'))
 
         cmd_paths = ' '.join([f"{dir_path}/{x}" for x in local_paths])
 
-        rs_cmd = f"rsync -av -e ssh {cmd_paths} mfda_remote:~/MFDA_flow"
+        rs_cmd = f"rsync -avh -e ssh {cmd_paths} mfda_remote:~/MFDA_flow --delete"
 
         if osplt.system() == "Windows":
             wsl_cmd = 'wsl ~ -e bash -c'
@@ -156,23 +177,21 @@ class OpenMFDA:
         local_path='', 
         relative_path=True, 
         or_logs=True, 
-        or_reports=True,
-        or_make_only=False,
+        or_reports=True, 
         wsl_root_dir='/mnt/c', 
         win_root_drive='C:'):
 
-        dir_path = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
+        dir_path = os.path.dirname(
+                os.path.normpath(
+                    os.path.realpath(__file__)+'/../../').replace('\\', '/'))
 
         if osplt.system() == "Windows":
             dir_path = dir_path.replace(win_root_drive, wsl_root_dir)
 
         result_out = [ 
             "openroad_flow/results/",  
-            "scad_flow/results/",
+            "scad_flow/results/"
             ]
-
-        if not or_make_only:
-            result_out.append("openroad/designs")
 
         if or_logs:
             result_out.append("openroad_flow/logs/")
@@ -196,7 +215,7 @@ class OpenMFDA:
             else:
                 subprocess.run(rs_cmd)
 
-    def run_remote(self, design, platform, remote_env_home, remote_dir, win_drive="C:", wsl_root=None):
+    def run_remote(self, design, platform, remote_env_home, remote_dir, win_drive="C:", wsl_root=None, make_only=False, make_targets=['all']):
         # Assuming convention
         if wsl_root==None:
             print("Assuming root for WSL system, you can be explicit by setting wsl_root argument")
@@ -207,6 +226,11 @@ class OpenMFDA:
         # send run command remotely
         main_args = f'--design {design} --platform {platform}'
         
+        if make_only:
+            targets = ' '.join(make_targets)
+            main_args += f' --make_only True --make_targets {targets}'
+
+
         if osplt.system() == "Windows":
             remote_env_home.replace('\~', '~')
 

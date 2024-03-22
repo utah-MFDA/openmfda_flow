@@ -3,3 +3,4 @@ env
 openroad_flow/designs/*/demo
 scad_flow/designs/*/demo
 __pycache__
+openmfda_flow.egg-info
