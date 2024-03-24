@@ -73,3 +73,20 @@ all: ${DESIGN}.${PLATFORM}.zip
 clean: or_nuke scad_clean
 
 .PHONY: clean all scad_clean render or_nuke pnr
+
+HR_3_3_GITURL = https://github.com/utah-MFDA/h.r.3.3_pdk
+HR_3_3_LOCDIR = .h.r.3.3_pdk
+
+update_lib_h_r_3_3:
+	git clone $(HR_3_3_GITURL).git $(HR_3_3_LOCDIR)
+	cd $(HR_3_3_LOCDIR)/Components/ && make build_lef
+	cd $(HR_3_3_LOCDIR)/Components/ && make build_scad
+	# create LEF backup and cp new library
+	cp openroad_flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef openroad_flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef.backup
+	cp $(HR_3_3_LOCDIR)/Components/HR3.3_merged.lef openroad_flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef
+	# create SCAD backup and cp new library
+	cp scad_flow/scad/h.r.3.3/components_05052022.scad scad_flow/scad/h.r.3.3/components_05052022.scad.backup
+	cp $(HR_3_3_LOCDIR)/Components/scad_build/HR3.3_merged.scad scad_flow/scad/h.r.3.3/components_05052022.scad
+
+clean_h_r_3_3:
+	rm -rf $(HR_3_3_LOCDIR)
