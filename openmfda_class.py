@@ -1,6 +1,8 @@
 
 import os
 import subprocess
+import platform as osplt
+from pathlib import PureWindowsPath, PurePosixPath
 
 import openmfda_flow as of
 
@@ -65,21 +67,42 @@ class OpenMFDA:
     def run_flow_render(self):
         of.run_flow_ow_slice(self.design_name, platform=self.platform)
     
-    def sync_remote(self, remote_dir):
+    def sync_remote(self, remote_dir, wsl_root_dir='/mnt/c', win_root_drive='C:'):
         # sync files with server
         local_paths = ["designs","openroad_flow","scad_flow","xyce_flow","Makefile","requirements.txt","openmfda_flow.py","main.py"]
 
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+        dir_path = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
 
         cmd_paths = ' '.join([f"{dir_path}/{x}" for x in local_paths])
 
         rs_cmd = f"rsync -av -e ssh {cmd_paths} mfda_remote:~/MFDA_flow"
-        print(rs_cmd)
-        subprocess.run(rs_cmd.split())
 
-    def sync_w_remote_outputs(self, remote_dir, local_path='', relative_path=True, or_logs=True, or_reports=True):
+        if osplt.system() == "Windows":
+            wsl_cmd = 'wsl ~ -e bash -c'
+            win_cmd  = f'{wsl_cmd} "{rs_cmd.replace(win_root_drive, wsl_root_dir)}"'
+            print(win_cmd)
+            os.system(win_cmd)
+        elif osplt.system() == "Linux":
+            print(rs_cmd)
+            subprocess.run(rs_cmd.split())
+        else: # assumes a linux system
+            print(platform.system())
+            print(rs_cmd)
+            subprocess.run(rs_cmd.split())
 
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+    def sync_w_remote_outputs(self, 
+        remote_dir, 
+        local_path='', 
+        relative_path=True, 
+        or_logs=True, 
+        or_reports=True, 
+        wsl_root_dir='/mnt/c', 
+        win_root_drive='C:'):
+
+        dir_path = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
+
+        if osplt.system() == "Windows":
+            dir_path = dir_path.replace(win_root_drive, wsl_root_dir)
 
         result_out = [ 
             "openroad_flow/results/",  
@@ -95,29 +118,56 @@ class OpenMFDA:
         if relative_path:
             local_path = f"{dir_path}/{local_path}"
 
+        wsl_cmd = lambda rs : f'wsl ~ -e bash -c "{rs}"'
+
         for x in result_out:
-
             rs_cmd = f"rsync -av -e ssh mfda_remote:{remote_dir}/{x} {local_path}/{x}".split()
-            subprocess.run(rs_cmd)
 
-    def run_remote(self, design, platform, remote_env_home, remote_dir):
-        self.sync_remote(remote_dir=remote_dir)
+            if osplt.system() == "Windows":
+                print("WSL cmd: "+wsl_cmd(' '.join(rs_cmd)))
+                os.system(wsl_cmd(' '.join(rs_cmd)))
+            elif osplt.system() == "Linux":
+                subprocess.run(rs_cmd)
+            else:
+                subprocess.run(rs_cmd)
+
+    def run_remote(self, design, platform, remote_env_home, remote_dir, win_drive="C:", wsl_root=None):
+        # Assuming convention
+        if wsl_root==None:
+            print("Assuming root for WSL system, you can be explicit by setting wsl_root argument")
+            wsl_root=f"/mnt/{win_drive[0]}"
+
+        self.sync_remote(remote_dir=remote_dir, win_root_drive=win_drive, wsl_root_dir=wsl_root)
 
         # send run command remotely
         main_args = f'--design {design} --platform {platform}'
         
-        mainpy = f"'{remote_dir}/main.py'"
-        srccmd = f"'{remote_env_home}/bin/activate'"
+        if osplt.system() == "Windows":
+            remote_env_home.replace('\~', '~')
 
-        sshcmd = f'python3 {mainpy} {main_args}'
+        mainpy = f"{remote_dir}/main.py"
+        srccmd = f"source {remote_env_home}/bin/activate"
 
-        sshr    = ['ssh', 'mfda_remote', f'"source {srccmd} ; {sshcmd}"']
+        pycmd = f'python3 {mainpy} {main_args}'
 
-        subprocess.run([f'ssh mfda_remote "{srccmd} ; {sshcmd}"'], 
-            shell=True,
-            check=True)
+        sshcmd= [f'ssh mfda_remote "{srccmd} ; {pycmd}"']
 
-        self.sync_w_remote_outputs(remote_dir)
+        if osplt.system() == "Windows":
+            sshcmd[0] =sshcmd[0].replace('"', "'")
+            print("ssh cmd: "+sshcmd[0])
+            wsl_cmd = f'wsl ~ -e bash -c "{sshcmd[0]}"'
+            print("WSL cmd: "+wsl_cmd)
+            os.system(wsl_cmd)
+        elif osplt.system() == "Linux":
+            subprocess.run(sshcmd, 
+                shell=True,
+                check=True)
+        else:
+            subprocess.run(sshcmd, 
+                shell=True,
+                check=True)
+
+        self.sync_w_remote_outputs(remote_dir, win_root_drive=win_drive, wsl_root_dir=wsl_root)
 
     def run_flow_render(self):
         pass
