@@ -59,6 +59,60 @@ def run_flow(design_name, platform="mfda_30px", stdout=False, make_arg='all'):
                     stdout=None, stderr=None, shell=True, check=True)
     # todo make archive
 
+def sync_remote(remote_dir):
+    # sync files with server
+    local_paths = ["designs","openroad_flow","scad_flow","xyce_flow","Makefile","requirements.txt","openmfda_flow.py","main.py"]
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    cmd_paths = ' '.join([f"{dir_path}/{x}" for x in local_paths])
+
+    rs_cmd = f"rsync -av -e ssh {cmd_paths} mfda_remote:~/MFDA_flow"
+    print(rs_cmd)
+    subprocess.run(rs_cmd.split())
+
+def sync_w_remote_outputs(remote_dir, local_path='', relative_path=True, or_logs=True, or_reports=True):
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    result_out = [ 
+        "openroad_flow/results/",  
+        "scad_flow/results/"
+        ]
+
+    if or_logs:
+        result_out.append("openroad_flow/logs/")
+
+    if or_reports:
+        result_out.append("openroad_flow/reports/")
+
+    if relative_path:
+        local_path = f"{dir_path}/{local_path}"
+
+    for x in result_out:
+
+        rs_cmd = f"rsync -av -e ssh mfda_remote:{remote_dir}/{x} {local_path}/{x}".split()
+        subprocess.run(rs_cmd)
+
+def run_remote(design, platform, remote_env_home, remote_dir):
+    sync_remote(remote_dir=remote_dir)
+
+    # send run command remotely
+    main_args = f'--design {design} --platform {platform}'
+    
+    mainpy = f"'{remote_dir}/main.py'"
+    srccmd = f"'{remote_env_home}/bin/activate'"
+
+    sshcmd = f'python3 {mainpy} {main_args}'
+
+    #sshr    = ['ssh', 'mfda_remote', f'"source {srccmd} ; {sshcmd}"']
+
+    subprocess.run([f'ssh mfda_remote "{srccmd} ; {sshcmd}"'], 
+        shell=True,
+        check=True)
+
+    sync_w_remote_outputs(remote_dir)
+
 ################ Generate pin constraints ################
 def write_pin_constraints(io_filename, pin_names, layer):
     with open(io_filename, "w") as f:
