@@ -18,9 +18,9 @@ def test_exec_remote():
     pos_root   = '/mnt/c'
 
     if platform.system() == "Linux":
-        test = OpenMFDA().run_remote(design, plat, py_remote, remote_dir)
+        test = run_remote(design, plat, py_remote, remote_dir)
     elif platform.system() == "Windows":
-        test = OpenMFDA().run_remote(design, plat, py_remote, remote_dir, win_drive=root_drive, wsl_root=pos_root)
+        test = run_remote(design, plat, py_remote, remote_dir, win_drive=root_drive, wsl_root=pos_root)
 
 if __name__ == "__main__":
 
