@@ -1,0 +1,12 @@
+Standard_Cell,Cross Section,Param1,Param2,Param3
+valve_20px_1,2,L=0.243,,
+serpentine_25px_0,1,L=0.38,,
+serpentine_50px_0,1,L=1.14,,
+serpentine_75px_0,1,L=2.28,,
+serpentine_100px_0,1,L=3.8,,
+serpentine_150px_0,1,L=7.98,,
+serpentine_200px_0,1,L=13.68,,
+serpentine_300px_0,1,L=29.64,,
+serpentine_300px_1,1,L=59.28,,
+serpentine_300px_2,1,L=88.92,,
+diffmix_25px_0,2,L1=0.190,L2=0.269,L3=0.190

@@ -1,0 +1,4 @@
+OutputFile,Chemical,Outlets
+smart_toilet_H2O.cir,H2O,outc0
+smart_toilet_Sample.cir,Sample,outc0
+smart_toilet_Tag.cir,Tag,outc0

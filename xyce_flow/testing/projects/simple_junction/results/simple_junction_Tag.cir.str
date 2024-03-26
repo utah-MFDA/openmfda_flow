@@ -1,0 +1,20 @@
+* Converted from verilog for microfluidic simulation
+
+YPressurePump soln1 soln1_0 soln1_0c  pressure=100k 
+Ychannel soln1_channel soln1_0 soln1_0c soln1_1 soln1_1c length=7.65m
+
+YPressurePump soln2 soln2_0 soln2_0c  pressure=100k chemConcentration=100m 
+Ychannel soln2_channel soln2_0 soln2_0c soln2_1 soln2_1c length=3.24m
+
+
+Ychannel output0 out_ch 0 out_chC outc0 length=5.9m
+Ychannel connect1 connect1_0 connect1_1 connect1_0c connect1_1c length=1.18m
+Ydiffmix_25px_0 mix1 soln1_1 soln2_1 connect1_0 soln1_1c soln2_1c connect1_0c 
+Yserpentine_300px_0 serp11 connect1_1 out_ch connect1_1c out_chC 
+
+
+.tran 0.1m 1m
+.print tran V(out_chC)
+.end
+
+*.tran 0.1ms 1ms

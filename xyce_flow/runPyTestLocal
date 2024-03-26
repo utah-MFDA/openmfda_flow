@@ -1,0 +1,2 @@
+ 
+PYTHONPATH=. python3 -m pytest -rP testing_local/test_local_xyce.py > test_output_local
