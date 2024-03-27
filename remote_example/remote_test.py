@@ -8,9 +8,12 @@ sys.path.insert(0, f'{dir_path}/..')
 from openmfda_flow import *
 
 def test_exec_remote():
+    # design and platform to run
     design    = 'demo'
     plat      = 'mfda_30px'
+    # environment on the server
     py_remote = '~/mfda_env'
+    # directory to put files on the server in home
     remote_dir= "MFDA_flow"
 
     # windows specific args
