@@ -9,8 +9,9 @@ pins[0][2] = "soln2"
 pins[0][3] = "soln3"
 pins[1][7] = "out"
 
+
 gp_args = {}
-gp_args['density'] = 0.88
+gp_args['density'] = 0.90
 gp_args['bin'] = 24
 gp_args['max_phi'] = 1.06
 

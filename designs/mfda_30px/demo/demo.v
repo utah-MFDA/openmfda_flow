@@ -8,11 +8,9 @@ module demo (
 input   soln1, soln2, soln3;
 output  out;
 
-
 wire    connect0,  connect1,  connect2,  connect3,  connect4,  connect5,  connect6;
 //,  connect7,  connect8,  connect9,
 //        connect10, connect11, connect12;
-
 
 // Specification
 serpentine_50px_0   serp0   (.in_fluid(soln2), .out_fluid(connect0));

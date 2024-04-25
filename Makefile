@@ -38,7 +38,7 @@ designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
 
 designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py:
 
-$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py
+$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
 
 or_nuke:
@@ -46,9 +46,14 @@ or_nuke:
 
 simulate: $(XYCE_RESULTS)/$(PLATFORM)/$(DESIGN)/$(DESIGN)_xyceOut.csv
 
-$(XYCE_RESULTS)/$(PLATFORM)/$(DESIGN)/$(DESIGN)_xyceOut.csv: $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/simulation.config
+FINAL_V=$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.v
+
+$(XYCE_RESULTS)/$(PLATFORM)/$(DESIGN)/$(DESIGN)_xyceOut.csv: $(FINAL_V) $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/simulation.config
+	#cp designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v
+	cp $< $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v
 	$(TIME_CMD) python3 $(XYCE_FLOW_DIR)/runMFDASim.py $(XYCE_ARGS) \
 		--design $(DESIGN) \
+		--sim_config $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/simulation.config \
 		--netlist $(DESIGN).v \
 		--sim_dir $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN) \
 		--output_dir $(XYCE_FLOW_DIR)/results/$(PLATFORM)/$(DESIGN) \
@@ -65,8 +70,10 @@ $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/simulation.config:
 render: ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad
 
 ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
-	$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/scad_pnr.py $(SCAD_ARGS) 
+	#$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/scad_pnr.py $(SCAD_ARGS) 
+	$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/generator_v2.py $(SCAD_ARGS) \
 		--def_file $< \
+		--tlef openroad_flow/platforms/$(PLATFORM)/lef/$(PLATFORM).tlef \
 		--design "$(DESIGN)" \
 		--results_dir "$(SCAD_RESULTS)/${DESIGN}/${DESIGN_VARIANT}"
 

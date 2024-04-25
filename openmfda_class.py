@@ -70,6 +70,88 @@ class OpenMFDA:
         def get_ychip(self):
             return ' '.join(self.die_area[1],self.die_area[3]) 
 
+    class Simulator:
+
+        def __init__(self):
+            self.input = []
+            self.chem  = []
+            
+            self.pressure_probes = []
+            self.flow_probes = []
+            #self.concentration_probe = []
+
+            self.eval_probes = []
+
+        def add_input(self, port, device, value, chemistry=None):
+
+            if list(value.keys())[0] == "pressure":
+                port_input_type = "pressure"
+            elif list(value.keys())[0] == "flow rate"
+                port_input_type = "flow_rate"
+            else:
+                raise ValueError("Not a valid input type, must be flow rate or pressure")
+
+            self.input.append({'port':port, 'device':device, 'input_type':port_input_type, 'input_value':value}) 
+            if chemistry is not None:
+                if isinstance(chemistry, dict)
+                    self.chem.append({
+                        'port':port,
+                        'chem':list(chemistry.keys())[0],
+                        'concentration':list(chemistry.values())[0]
+                        })
+        
+        def add_probe(self, probe_type, wire):
+            if probe_type == 'pressure':
+                pressure_probes.append(wire)
+            elif probe_type == 'flow':
+                flow_probes.append(wire)
+            else:
+                raise ValueError("probe_type must be 'pressure' or 'flow'")
+
+        def add_eval(self, chemistry, wire, target_concentration, time=None):
+            self.eval_probes.append({
+                'chem':chemistry,
+                'wire':wire,
+                'concentration':target_concentration,
+                'time':time
+                }
+
+
+        def write_sim_config(self, out_dir, out_file='simulation.config'):
+            with open(f'{out_dir}/{out_file}', 'w+') as of:
+                of.write('\n\n# input devices')
+                for ins in self.input:
+                    in_p = ins['port']
+                    in_d = ins['device']
+                    in_t = ins['input_type']
+                    in_v = ins['input_value']
+                    of.write(f'input {in_p} {in_d} {in_t}={in_v}')
+
+                of.write('\n# chemical definitions')
+                for ch in self.chem:
+                    ch_p = chem['port']
+                    ch_ch = chem['chem']
+                    ch_con = chem['concentration']
+                    of.write(f'chem {ch_p} {ch_ch} {ch_con}')
+
+                of.write('\n# pressure probes')
+                for pr in self.pressure_probes:
+                    of.write('probe pressure {pr}')
+
+                of.write('\n# flow probes')
+                for fl in self.flow_probes:
+                    of.write('probe flow {fl}')
+
+                of.write('\n# eval probes')
+                for ev in self.eval_probes:
+                    ev_ch = ev['chemistry']
+                    ev_t = ev['time']
+                    ev_w = ev['wire']
+                    ev_con = ev['concentration']
+
+                    of.write('eval {ev_ch} {ev_t} {ev_w} {ev_con}')
+
+
 
     def __init__(self, design_name=None, verilog_file=None, platform=None):
         self.pins = [[None for i in range(0,8)] for j in range(0,4)]
@@ -78,6 +160,7 @@ class OpenMFDA:
         self.verilog_file = verilog_file
         self.platform = platform
         self.replace_arg = {}
+        self.simulation_config = self.Simulator()
 
     def import_verilog_file(self, verilog_file):
         self.verilog_file = verilog_file
@@ -114,7 +197,23 @@ class OpenMFDA:
             self.replace['overflow'] = value
         elif arg == 'fanout':
             self.replace['fanout'] = value
-        
+    
+
+    #def add_probe(self, probe_type, wire):
+    def add_probe(self, probe_type, wire):
+        self.simulation_config.add_probe(probe_type, wire)
+
+    #def add_input(self, port, device, value, chemistry=None):
+    def add_input(self, port, device, value, chemistry=None):
+        self.simulation_config.add_input(port, device, value, chemistry)
+
+    #def add_eval(self, chemistry, wire, target_concentration, time=None):
+    def add_eval(self, chemistry, wire, target_concentration, time=None):
+        self.simulation_config.add_eval(chemistry, wire, target_concentration, time)
+
+    #def write_sim_config(self, out_dir, out_file='simulation.config'):
+    def write_sim_config(self, out_dir, out_file='simulation.config'):
+        self.simulation_config.write_sim_config(self, out_dir, out_file)
     
     def build(self):
         of.generate_config(self.verilog_file, self.design_name, pin_names=self.pins, platform=self.platform)

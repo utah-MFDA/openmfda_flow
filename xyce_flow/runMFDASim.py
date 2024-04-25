@@ -12,7 +12,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # local imports
-from V2Va_Parser import Verilog2Xyce
+#from V2Va_Parser import Verilog2Xyce
+
 
 from SimulationXyce import SimulationXyce
 
@@ -65,7 +66,9 @@ xyceFiles
     - location for xyce files to be generated
 """
 def runSimulation(
-        verilogFile, 
+        design,
+        verilogFile,
+        sim_config, 
         workDir, 
         libraryFile,
         isLocalXyce,
@@ -89,13 +92,14 @@ def runSimulation(
     # hard coded simulation directory in docker image
 
 
-    sim_config     = workDir+"/simulation.config"
+    #sim_config     = workDir+"/simulation.config"
 
     ###### extra argument handling #####
     
     # default definitions
     _main_plot_results = False
-    xyceFiles = 'spiceList' 
+    #xyceFiles = 'spiceList' 
+    xyceFiles = 'spice_files.csv' 
     
     if ('plot' in extra_args) and (extra_args['plot'].lower() in ['true', '1']):
         _main_plot_results = True
@@ -142,6 +146,7 @@ def runSimulation(
         overwrite=False
         """
         arcName = convertToCir_from_config(
+            design      =design,
             verilogFile =verilogFile,
             sim_config  =sim_config,
             wd          =workDir, 
@@ -157,13 +162,15 @@ def runSimulation(
     if _local_xyce:
         #simRunComm     = "python3 "+docker_PyWD+"/xyceRun.py --list "+xyceFiles
         if verilog_2_xyce_relative:
-            result_wd = f"{workDir}/{verilog_2_xyce_extras_loc}"
+            result_wd = workDir
+            #result_wd = f"{workDir}/{verilog_2_xyce_extras_loc}"
         else:
             result_wd = verilog_2_xyce_extras_loc
 
         runLocalXyce(xyce_files = xyceFiles, workDir=result_wd, config_file=_xyce_run_config)
 
-        results_prn_wd = result_wd+'/results'
+        #results_prn_wd = result_wd+'/results'
+        results_prn_wd = result_wd#+'/results'
 
     else:
         
@@ -211,12 +218,15 @@ def runSimulation(
         results_prn_wd = result_wd+"/results"
 
     # generate report
-    rfiles    = pd.read_csv(workDir+"/spiceFiles/spiceList")["OutputFile"]
-    chem_list = pd.read_csv(workDir+"/spiceFiles/spiceList")["Chemical"]
+    #rfiles    = pd.read_csv(workDir+"/spiceFiles/spiceList")["OutputFile"]
+    #chem_list = pd.read_csv(workDir+"/spiceFiles/spiceList")["Chemical"]
+
+    rfiles    = pd.read_csv(workDir+"/spice_files.csv")["OutputFile"]
+    chem_list = pd.read_csv(workDir+"/spice_files.csv")["Chemical"]
 
 
     for i, f in enumerate(rfiles):
-        rfiles[i] = f+".prn"
+        rfiles[i] = f#+".prn"
 
     print("Result files")
     print(rfiles)
@@ -244,12 +254,15 @@ def runSimulation(
             wd=workDir, 
             results_dir=results_prn_wd, 
             design_name=design_name)
+        if output_dir is not None:
+            print("Moving eval to "+output_dir)
+            shutil.move(results_prn_wd+'/Chem_Eval.csv', f'{output_dir}/Chem_Eval.csv')
 
     if _main_plot_results:    
         plot_xyce_results_list(df)
 
     if output_dir is not None:
-        print("moving results to "+output_dir)
+        print("Moving results to "+output_dir)
         os.makedirs(output_dir,exist_ok=True)
         shutil.move(csv_out, output_dir+'/'+os.path.basename(csv_out))
 
@@ -316,6 +329,7 @@ def convertToCir(verilogFile, wd, libFile, configFile, preRouteSim, overwrite=Fa
         return None
 
 def convertToCir_from_config(
+        design,
         verilogFile,
         sim_config,
         wd, 
@@ -326,6 +340,16 @@ def convertToCir_from_config(
         overwrite=False,
         noarchive=False):
 
+
+    from writeSpice import generate_cir_main
+    
+    generate_cir_main(
+        design=design,
+        verilog_file=f'{wd}/{verilogFile}',
+        config_file=sim_config,
+        length_file=length_file,
+        out_file=f"{wd}/{design}"
+    )
     # locate nessary files
     #files = getSimFiles(verilogFile, wd)
     
@@ -341,20 +365,20 @@ def convertToCir_from_config(
     _sim.parse_config_file(sim_config)
     
 
-    Verilog2Xyce.Verilog2Xyce_from_config(
-        inputVerilogFile  = vFile,
-        configFile        = configFile,
-        solnInputList     = _sim.getInputChemList(),
-        #simEvalList       = _sim.getEvaluation(),
-        remoteTestPath    = "",
-        libraryFile       = libFile,
-        devList           = _sim.getDeviceList(),
-        length_file       = len_file,
-        simTimesList      = _sim.getSimulationTimes(),
-        simProbeList      = _sim.getProbeList(),
-        preRouteSim       = preRouteSim,
-        outputVerilogFile = None,
-        runScipt          = True)
+    #Verilog2Xyce.Verilog2Xyce_from_config(
+    #    inputVerilogFile  = vFile,
+    #    configFile        = configFile,
+    #    solnInputList     = _sim.getInputChemList(),
+    #    #simEvalList       = _sim.getEvaluation(),
+    #    remoteTestPath    = "",
+    #    libraryFile       = libFile,
+    #    devList           = _sim.getDeviceList(),
+    #    length_file       = len_file,
+    #    simTimesList      = _sim.getSimulationTimes(),
+    #    simProbeList      = _sim.getProbeList(),
+    #    preRouteSim       = preRouteSim,
+    #    outputVerilogFile = None,
+    #    runScipt          = True)
     
     if noarchive:
         return None
@@ -440,11 +464,16 @@ def runRemoteXyce(simStartComm, dockerContainer, simDockerPyWD):
     for data in stream:
         print(data.decode())
 
-def runLocalXyce(xyce_files, workDir, xyce_run_location=os.path.dirname(os.path.realpath(__file__))+'/xyce_run', config_file=None):
+
+local_file_path = os.path.dirname(os.path.realpath(__file__))
+
+def runLocalXyce(xyce_files, workDir, xyce_run_location=f'{local_file_path}/xyce_run', 
+                 config_file=None):
 
     simRunComm = "python3 "+xyce_run_location+"/xyceRun.py "+\
-        "--list "+xyce_files+" "\
-        "--workdir "+workDir+" "
+        "--list "+f'{workDir}/{xyce_files}'+" "\
+        "--workdir "+'./'+" "
+        #"--workdir "+workDir+" "
         #"--no_result_dir"
     if config_file is not None:
         simRunComm += " --config "+config_file
@@ -514,11 +543,12 @@ def load_xyce_results_file(rFile):
     #print(str(r_df))
     return r_df
 
-def change_r_node_ref(df, rFile, chem):
+def change_r_node_ref(df, rFile, node_file, chem):
     
     df_nodes = list(df)
 
-    node_dict = json.load(open(rFile.replace('.prn','.nodes')))
+    #node_dict = json.load(open(rFile.replace('.prn','.nodes')))
+    node_dict = json.load(open(node_file))
 
     for node in df_nodes:
         print("---"+node+"---")
@@ -530,14 +560,17 @@ def change_r_node_ref(df, rFile, chem):
                 node_key = list(node_dict.keys())[list(node_dict.values()).index(int(node_num))]
 
                 node_name = '_'.join(node_key.split('_')[:-1])
-                if '_' in node_name_k: 
+                #if '_' in node_name_k: 
+                    #node_name_k = node_key.split('_')[-1]
+                if '_' in node_name: 
                     node_name_k = node_key.split('_')[-1]
                 else:
                     node_name_k = node_key
 
                 print(node_name+' : '+node_name_k)
 
-                if node_name_k.lower()[-1] == 'c':
+                if len(node_name_k) >= 4 and node_name_k.lower() == 'chem':
+                    node_name = '_'.join(node_name.split('_')[:-1])
                     new_node = 'C_'+str(chem)+'('+node_name+')'
                 elif node_name_k[-2:] == 'c0':
                     new_node = 'C_'+str(chem)+'('+node_name+')'
@@ -568,16 +601,24 @@ def load_xyce_results(rDir, rlist=None, chem_list=None):
         for ind, rFile in enumerate(rlist):
 
             print(rDir+"/"+rFile)
-            temp_df = pd.read_table(rDir+"/"+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
+            #temp_df = pd.read_table(rDir+"/"+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
+            temp_df = pd.read_table(rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
             
             if chem_list is not None:
-                temp_df = change_r_node_ref(temp_df, rDir+"/../"+rFile, chem_list[ind])
+                #temp_df = change_r_node_ref(temp_df, rDir+"/../"+rFile, chem_list[ind])
+                temp_df = change_r_node_ref(temp_df, rFile, rFile.replace('.prn', '.str.nodes'), chem_list[ind])
 
             #r_df = pd.append([temp_df])
+            # remove duplicate columns
+            if ind > 0:
+                for t_col in temp_df.columns.tolist():
+                    if t_col in r_df[0].columns.tolist():
+                        temp_df = temp_df.drop(t_col, axis=1) 
             if not ind:
                 r_df.append(temp_df)
             else:
-                r_df.append(temp_df.drop('TIME', axis=1))
+                #r_df.append(temp_df.drop('TIME', axis=1))
+                r_df.append(temp_df)
             #print(str(r_df))
         r_df = pd.concat(r_df, axis=1)
         
@@ -656,7 +697,7 @@ def evaluate_results(wd, results_dir, design_name, sim_obj=None, ev_file=None, s
 
     for ev_chem in ev_chem_list:
 
-        rFile = results_dir+'/'+design_name+'_chemOut.csv'
+        rFile = results_dir+'/'+design_name+'_xyceOut.csv'
         #temp_df = pd.read_table(rFile, skipfooter=1, index_col=0, delim_whitespace=True)
         temp_df = pd.read_csv(rFile)
 
@@ -668,8 +709,10 @@ def evaluate_results(wd, results_dir, design_name, sim_obj=None, ev_file=None, s
                 row_time_ind = temp_df['TIME'][temp_df['TIME'] == eval_obj.getTime()].index[0]
 
                 # get chemical value
-                #chem_name = 'C_'+eval_obj.getChem()+'('+eval_obj.getNode()+')'
-                chem_name = eval_obj.getChem()+'('+eval_obj.getNode()+')'
+                chem_name = 'C_'+eval_obj.getChem()+'('+eval_obj.getNode()+')'
+                print("eval: "+chem_name)
+                #chem_name = eval_obj.getChem()+'('+eval_obj.getNode()+')'
+                #print(temp_df.columns.tolist())
                 prn_val = temp_df[chem_name][row_time_ind]
 
                 exp_val = eval_obj.getValue()
@@ -717,15 +760,16 @@ if __name__ == "__main__":
     )
 
     parser.add_argument('--netlist',   metavar='<netlist_file>', type=str, required=True)
-    parser.add_argument('--sim_dir',   metavar='<sim_dir>' , type=str, required=True)
-    parser.add_argument('--lib',       metavar='<lib>'       , type=str, required=True)
+    parser.add_argument('--sim_config',metavar='<sim_config>' , type=str, required=True)
+    parser.add_argument('--sim_dir',   metavar='<sim_dir>'    , type=str, required=True)
+    parser.add_argument('--lib',       metavar='<lib>'        , type=str, required=True)
     
     # included with the parser
     parser.add_argument('--cir_config',metavar='<cir_config>', type=str, required=True)
     
     parser.add_argument('--output_dir',metavar='<output_dir>', type=str, default=None)
     
-    parser.add_argument('--design', metavar='<design>', type=str)
+    parser.add_argument('--design', metavar='<design>', type=str, required=True)
     parser.add_argument('--length_file', metavar='<length_file>', type=str, default=None)
 
     parser.add_argument('--docker_image', metavar='<image>', type=str)
@@ -737,7 +781,8 @@ if __name__ == "__main__":
     parser.add_argument('--convert_verilog', metavar='<convert_verilog>', type=str, default='True')
     
     parser.add_argument('--plot', type=str, default='False')
-    parser.add_argument('--eval_file', type=str, default=None)
+    #parser.add_argument('--eval_file', type=str, default=None)
+    parser.add_argument('--eval_result', type=str, default='False')
     parser.add_argument('--local_xyce', type=str, default='False')
 
     parser.add_argument('--xyce_run_config', type=str, default=None)
@@ -747,6 +792,7 @@ if __name__ == "__main__":
     ex_args = {
         'plot':args.plot,
         #'eval_file':args.eval_file,
+        'eval_result':args.eval_result,
         'xyce_run_config':args.xyce_run_config
         }
 
@@ -754,7 +800,9 @@ if __name__ == "__main__":
 
     
     runSimulation(
-        verilogFile    = args.netlist, 
+        design         = args.design,
+        verilogFile    = args.netlist,
+        sim_config     = args.sim_config,
         workDir        = args.sim_dir, 
         libraryFile    = args.lib,
         isLocalXyce    = args.local_xyce,

@@ -1,6 +1,8 @@
 
 import os
 import subprocess
+import shutil
+
 import platform as osplt
 from pathlib import PureWindowsPath, PurePosixPath
 
@@ -70,6 +72,127 @@ class OpenMFDA:
         def get_ychip(self):
             return ' '.join(self.die_area[1],self.die_area[3]) 
 
+    class Simulator:
+
+        def __init__(self):
+            self.input = []
+            self.chem  = []
+            
+            self.pressure_probes = []
+            self.flow_probes = []
+            #self.concentration_probe = []
+
+            self.eval_probes = []
+            
+            self.analysis_list = []
+
+        def add_input(self, port, device, value, chemistry=None):
+
+            if list(value.keys())[0] == "pressure":
+                port_input_type = "pressure"
+                in_value = value["pressure"]
+            elif list(value.keys())[0] == "flow rate":
+                port_input_type = "flow_rate"
+                in_value = value["flow rate"]
+            else:
+                raise ValueError("Not a valid input type, must be flow rate or pressure")
+
+            self.input.append({'port':port, 'device':device, 'input_type':port_input_type, 
+                               'input_value':in_value}) 
+            if chemistry is not None:
+                if isinstance(chemistry, dict):
+                    self.chem.append({
+                        'port':port,
+                        'chem':list(chemistry.keys())[0],
+                        'concentration':list(chemistry.values())[0]
+                        })
+        
+        def add_probe(self, probe_type, wire, device=None):
+            if probe_type == 'pressure' and device==None:
+                self.pressure_probes.append([wire])
+            elif probe_type == 'pressure':
+                self.pressure_probes.addend([wire, device])
+            elif probe_type == 'flow':
+                self.flow_probes.append([wire, device])
+            else:
+                raise ValueError("probe_type must be pressure or flow")
+
+        def add_eval(self, chemistry, wire, target_concentration, time=None):
+            self.eval_probes.append({
+                'chem':chemistry,
+                'wire':wire,
+                'concentration':target_concentration,
+                'time':time
+                })
+        def add_analysis(self, analysis_type, param1, param2=None, param3=None,
+                         param4=None, param5=None):
+            params = [param1, param2, param3, param4, param5]
+            self.analysis_list.append({'type':analysis_type,
+                                       'params':[x for x in params if x != None]})
+
+        def to_string_probes(self):
+            o_str = ''
+            for ip in self.input:
+                o_str += str(ip)+'\n'
+            for cp in self.chem:
+                o_str += str(cp)+'\n'
+            for pp in self.pressure_probes:
+                o_str += 'pressure probe '+str(pp)+'\n'
+            for ep in self.eval_probes:
+                o_str += 'flow probe '+str(ep)+'\n'
+            return o_str
+
+        def to_string_analysis(self):
+            o_str = ''
+            for a in self.analysis_list:
+                o_str = str(a)+'\n'
+            return o_str
+
+        def write_sim_config(self, out_dir, out_file='simulation.config'):
+            with open(f'{out_dir}/{out_file}', 'w+') as of:
+                #print("writing simulation config")
+                of.write('\n\n# Analysis to perform\n')
+                for a in self.analysis_list:
+                    at = a['type']
+                    p  = ' '.join(a['params'])
+                    of.write(f'{at} {p}\n')
+
+
+                of.write('\n\n# input devices\n')
+                for ins in self.input:
+                    in_p = ins['port']
+                    in_d = ins['device']
+                    in_t = ins['input_type']
+                    in_v = ins['input_value']
+                    of.write(f'input {in_p} {in_d} {in_t}={in_v}\n')
+
+                of.write('\n\n# chemical definitions\n')
+                for ch in self.chem:
+                    ch_p = chem['port']
+                    ch_ch = chem['chem']
+                    ch_con = chem['concentration']
+                    of.write(f'chem {ch_p} {ch_ch} {ch_con}\n')
+
+                of.write('\n\n# pressure probes')
+                for pr in self.pressure_probes:
+                    if len(pr) == 1:
+                        of.write(f'probe pressure {pr[0]}\n')
+                    elif len(pr) == 2:
+                        of.write(f'probe pressureNone {pr[0]} {pr[1]}\n')
+
+                of.write('\n\n# flow probes')
+                for fl in self.flow_probes:
+                    of.write(f'probe flow {fl[0]} {fl[1]}\n')
+
+                of.write('\n\n# eval probes\n')
+                for ev in self.eval_probes:
+                    ev_ch = ev['chemistry']
+                    ev_t = ev['time']
+                    ev_w = ev['wire']
+                    ev_con = ev['concentration']
+
+                    of.write(f'eval {ev_ch} {ev_t} {ev_w} {ev_con}\n')
+
 
     def __init__(self, design_name=None, verilog_file=None, platform=None):
         self.pins = [[None for i in range(0,8)] for j in range(0,4)]
@@ -79,6 +202,7 @@ class OpenMFDA:
         self.platform = platform
         self.platform_config = self.Platform() 
         self.replace_arg = {}
+        self.simulation_config = self.Simulator()
 
     def import_verilog_file(self, verilog_file):
         self.verilog_file = verilog_file
@@ -122,9 +246,45 @@ class OpenMFDA:
         elif arg == 'fanout':
             self.replace_arg['fanout'] = value
         
+    #def add_probe(self, probe_type, wire):
+    def add_probe(self, probe_type, wire):
+        self.simulation_config.add_probe(probe_type, wire)
+
+    #def add_input(self, port, device, value, chemistry=None):
+    def add_input(self, port, device, value, chemistry=None):
+        self.simulation_config.add_input(port, device, value, chemistry)
+
+    #def add_eval(self, chemistry, wire, target_concentration, time=None):
+    def add_eval(self, chemistry, wire, target_concentration, time=None):
+        self.simulation_config.add_eval(chemistry, wire, target_concentration, time)
+
+    def add_analysis(self, analysis_type, param1, param2=None, param3=None,
+                     param4=None, param5=None):
+        self.simulation_config.add_analysis(analysis_type, param1, param2, param3, param4, param5)
+
+    #def write_sim_config(self, out_dir, out_file='simulation.config'):
+    def write_sim_config(self, out_dir, out_file='simulation.config'):
+        self.simulation_config.write_sim_config(out_dir, out_file)
     
+    def to_string_probes(self):
+        return self.simulation_config.to_string_probes()
+
+    def generate_xyce_configs(self):
+        dir_path = os.path.dirname(
+            os.path.normpath(
+                os.path.realpath(__file__)+'/../../'))  
+        xyce_run_dir = f'{dir_path}/xyce_flow/designs/{self.platform}/{self.design_name}'
+        netlist_file = f'{dir_path}/designs/{self.platform}/{self.design_name}/{self.verilog_file}'
+
+        print("Writing Xyce configuration")
+        os.makedirs(xyce_run_dir, exist_ok=True)
+
+        shutil.copy(netlist_file, xyce_run_dir+'/'+self.verilog_file)
+        self.write_sim_config(xyce_run_dir)
+
     def build(self):
         of.generate_config(self.verilog_file, self.design_name, pin_names=self.pins, global_place_args=self.replace_arg, design_dir=True, platform=self.platform)
+        self.generate_xyce_configs()
         #replace_file = f"openroad_flow/designs/{self.platform}/{self.design_name}/global_place_args.tcl"
         #of.write_replace_args(replace_file, self.replace_arg)
     
