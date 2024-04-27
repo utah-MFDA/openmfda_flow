@@ -1,0 +1,1 @@
+current_design mnacidpro_3

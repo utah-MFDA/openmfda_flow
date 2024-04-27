@@ -10,6 +10,7 @@ export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      $(ADDITIONAL_LIBS)
 export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                      $(ADDITIONAL_GDS)
+export GENERAL_MAP_FILE = $(PLATFORM_DIR)/lib/common.v
 
 # # Dont use cells to ease congestion
 # # Specify at least one filler cell if none

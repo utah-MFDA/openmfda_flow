@@ -1,0 +1,1 @@
+current_design kinase_activity

@@ -3,6 +3,7 @@
 # ==============================================================================
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
+YOSYS_CMD ?= yosys
 
 # Add design paths here
 # DESIGN_CONFIG = ./designs/h.r.3.3/smart_toilet/config.mk
@@ -206,6 +207,47 @@ $(WRAPPED_LIBS):
 	sed 's/library(\(.*\))/library(\1_mod)/g' $(filter %$(notdir $(@:_mod.lib=.lib)),$(WRAP_LIBS)) | sed 's/cell(\(.*\))/cell(\1_mod)/g' > $@
 
 # ==============================================================================
+#  ______   ___   _ _____ _   _ _____ ____ ___ ____
+# / ___\ \ / / \ | |_   _| | | | ____/ ___|_ _/ ___|
+# \___ \\ V /|  \| | | | | |_| |  _| \___ \| |\___ \
+#  ___) || | | |\  | | | |  _  | |___ ___) | | ___) |
+# |____/ |_| |_| \_| |_| |_| |_|_____|____/___|____/
+#
+.PHONY: synth
+synth: versions.txt \
+       $(RESULTS_DIR)/1_synth.v \
+       $(RESULTS_DIR)/1_synth.sdc
+
+.PHONY: synth-report
+synth-report: synth
+	$(UNSET_AND_MAKE) do-synth-report
+
+.PHONY: do-synth-report
+do-synth-report:
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/synth_metrics.tcl) 2>&1 | tee -a $(LOG_DIR)/1_1_yosys.log
+
+# ==============================================================================
+SYNTH_SCRIPT ?= $(SCRIPTS_DIR)/synth_basic.tcl
+$(SYNTH_STOP_MODULE_SCRIPT):
+	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	($(TIME_CMD) $(YOSYS_CMD) $(YOSYS_FLAGS) -c $(HIER_REPORT_SCRIPT)) 2>&1 | tee $(LOG_DIR)/1_0_yosys_hier_report.log
+
+$(RESULTS_DIR)/1_0_yosys.v: $(VERILOG_FILES)
+	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	($(TIME_CMD) $(YOSYS_CMD) $(YOSYS_FLAGS) -c $(SYNTH_SCRIPT)) 2>&1 | tee $(LOG_DIR)/1_0_yosys.log
+
+# Initialize
+#-------------------------------------------------------------------------------
+$(RESULTS_DIR)/$(DESIGN_NAME).v: $(RESULTS_DIR)/1_0_yosys.v
+	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	cp $< $@
+
+$(RESULTS_DIR)/$(DESIGN_NAME).sdc: $(SDC_FILE)
+	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	cp $< $@
+
+
+# ==============================================================================
 #  _____ _     ___   ___  ____  ____  _        _    _   _
 # |  ___| |   / _ \ / _ \|  _ \|  _ \| |      / \  | \ | |
 # | |_  | |  | | | | | | | |_) | |_) | |     / _ \ |  \| |
@@ -220,16 +262,6 @@ IS_CHIP = 1
 else ifneq ($(FOOTPRINT_TCL),)
 IS_CHIP = 1
 endif
-
-# Initialize
-#-------------------------------------------------------------------------------
-$(RESULTS_DIR)/$(DESIGN_NAME).v: $(VERILOG_FILES)
-	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
-	cp $< $@
-
-$(RESULTS_DIR)/$(DESIGN_NAME).sdc: $(SDC_FILE)
-	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
-	cp $< $@
 
 # STEP 1: Translate verilog to def
 #-------------------------------------------------------------------------------
