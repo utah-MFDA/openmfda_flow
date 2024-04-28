@@ -1,7 +1,7 @@
-export DESIGN_NAME     	= mnacidpro_3
+export DESIGN_NAME     	= mnacidpro_2
 export PLATFORM    		= h.r.3.3
 
-export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/mnacidpro_3.v ./designs/src/$(DESIGN_NICKNAME)/mnacidpro.v
+export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/mnacidpro_2.v ./designs/src/$(DESIGN_NICKNAME)/mnacidpro.v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc
 
 export DIE_AREA    	 	= 0 0 2550 1590
