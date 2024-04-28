@@ -35,12 +35,14 @@ proj.set_replace_arg('max_phi', 1.04)
 proj.set_die_area([0, 0, 2550, 1590])
 proj.set_core_area([0, 0, 2550, 1590])
 
-proj.add_input('soln1', 'pressurePump', {'pressure': '69k'})
-proj.add_input('soln2', 'pressurePump', {'pressure': '69k'})
-proj.add_input('soln3', 'pressurePump', {'pressure': '69k'})
+proj.add_input('soln1', 'pressurePump', {'pressure': '69k'}, {'H2O':'10m'})
+proj.add_input('soln2', 'pressurePump', {'pressure': '69k'}, {'Tag':'10m'})
+proj.add_input('soln3', 'pressurePump', {'pressure': '69k'}, {'Sample':'10m'})
 
 proj.add_probe('pressure', 'connect2')
 proj.add_probe('pressure', 'connect6')
+
+proj.add_eval('H2O', 'out', '9.8m', '0')
 
 proj.add_analysis('transient','0.1ms','1ms')
 
