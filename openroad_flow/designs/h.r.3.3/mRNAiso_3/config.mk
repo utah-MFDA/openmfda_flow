@@ -1,7 +1,7 @@
-export DESIGN_NAME     	= mRNAiso
+export DESIGN_NAME     	= mRNAiso_3
 export PLATFORM    		= h.r.3.3
 
-export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/mRNAiso_4.v
+export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/mRNAiso_3.v ./designs/src/$(DESIGN_NICKNAME)/mRNAiso.v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc
 
 export DIE_AREA    	 	= 0 0 2550 1590

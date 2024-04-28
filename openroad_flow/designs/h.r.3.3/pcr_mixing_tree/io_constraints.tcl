@@ -5,4 +5,4 @@ place_pin -pin_name primer -layer met9 -location { 1320 930 } -pin_size {1 1}
 place_pin -pin_name beosynucletide_triphosphate -layer met9 -location { 1410 930 } -pin_size {1 1}
 place_pin -pin_name amplitag_dna -layer met9 -location { 1500 930 } -pin_size {1 1}
 place_pin -pin_name lambda_dna -layer met9 -location { 1590 930 } -pin_size {1 1}
-place_pin -pin_name results -layer met9 -location { 1590 840 } -pin_size {1 1}
+place_pin -pin_name result -layer met9 -location { 1590 840 } -pin_size {1 1}

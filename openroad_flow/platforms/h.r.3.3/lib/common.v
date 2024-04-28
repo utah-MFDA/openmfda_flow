@@ -7,5 +7,5 @@ module mixer(input a, b, output c);
 endmodule
 
 module chamber(input in, output out);
-  serpentine_50px_3 thing(.in_fluid(in), .out_fluid(out));
+  serpentine_50px_0 thing(.in_fluid(in), .out_fluid(out));
 endmodule
