@@ -45,3 +45,8 @@ spiceFiles
 spice_files.csv
 
 designs/*/*/*.cir*
+testing/*/*/*.cir*
+testing/*/*.cir*
+testing_local/*/*/*.cir*
+testing_local/*/*.cir*
+*.v.uncommented

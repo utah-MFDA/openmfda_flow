@@ -119,7 +119,7 @@ class OpenMFDA:
 
         def add_eval(self, chemistry, wire, target_concentration, time=None):
             self.eval_probes.append({
-                'chem':chemistry,
+                'chemistry':chemistry,
                 'wire':wire,
                 'concentration':target_concentration,
                 'time':time
@@ -168,10 +168,10 @@ class OpenMFDA:
 
                 of.write('\n\n# chemical definitions\n')
                 for ch in self.chem:
-                    ch_p = chem['port']
-                    ch_ch = chem['chem']
-                    ch_con = chem['concentration']
-                    of.write(f'chem {ch_p} {ch_ch} {ch_con}\n')
+                    ch_p = ch['port']
+                    ch_ch = ch['chem']
+                    ch_con = ch['concentration']
+                    of.write(f'chem {ch_ch} {ch_p} {ch_con}\n')
 
                 of.write('\n\n# pressure probes')
                 for pr in self.pressure_probes:
@@ -195,7 +195,7 @@ class OpenMFDA:
 
 
     def __init__(self, design_name=None, verilog_file=None, platform=None):
-        self.pins = [[None for i in range(0,8)] for j in range(0,4)]
+        self.pins = [[{'name':None, 'layer':None} for i in range(0,8)] for j in range(0,4)]
         self.cells = None
         self.design_name = design_name
         self.verilog_file = verilog_file
@@ -216,8 +216,8 @@ class OpenMFDA:
     def set_design_name(self, design_name):
         self.design_name = design_name
     
-    def set_pin(self, pin, name):
-        self.pins[pin[0]][pin[1]] = name
+    def set_pin(self, pin, name, layer='met9'):
+        self.pins[pin[0]][pin[1]] = {'name':name,'layer':layer}
 
     def add_cell(self, cell, ports):
         pass
@@ -283,7 +283,7 @@ class OpenMFDA:
         self.write_sim_config(xyce_run_dir)
 
     def build(self):
-        of.generate_config(self.verilog_file, self.design_name, pin_names=self.pins, global_place_args=self.replace_arg, design_dir=True, platform=self.platform)
+        of.generate_config(self.verilog_file, self.design_name, pins=self.pins, global_place_args=self.replace_arg, design_dir=True, platform=self.platform)
         self.generate_xyce_configs()
         #replace_file = f"openroad_flow/designs/{self.platform}/{self.design_name}/global_place_args.tcl"
         #of.write_replace_args(replace_file, self.replace_arg)

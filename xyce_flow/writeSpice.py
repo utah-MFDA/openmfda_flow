@@ -146,7 +146,9 @@ def generate_time_lines(spice_config_class):
 def write_time_lines(spice_config_class):
     pass
 
-def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None, sim_type=None, length_list=None, chem_list=None, out_file=None, add_prn_to_list=False):
+def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None, 
+    sim_type=None, length_list=None, chem_list=None, out_file=None, 
+    add_prn_to_list=False, basename_only=False, pcell_file=None):
     
     dev = "dev"
 
@@ -169,18 +171,40 @@ def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None
         no_lengths = False
         len_df = get_length_list(length_list)
 
+    pc_dict = {}
+    if isinstance(pcell_file, str):
+        has_pcells = True
+        with open(pcell_file, 'r+') as pc_if:
+            import csv
+            pc_reader = csv.reader(pc_if)
+            for i, row in enumerate(pc_reader):
+                if i == 0:
+                    continue
+                else:
+                    pc_dict[row[0]] = {'pcell':row[1], 'params':row[2]}
+    else:
+        has_pcells = False
+
     output_file_list = []
 
     for chem, chem_node_dict in chem_list.items():
         
         chem_out_file = f'{out_file}_{chem}.cir.str'
 
-        output_file_entry = {
+        if basename_only:
+            output_file_entry = {
             'Chemical':chem,
             'spice_str_file':chem_out_file,
-            'spice_file':chem_out_file[:-4]}
-        if add_prn_to_list:
-            output_file_entry['OutputFile'] = chem_out_file[:-4]+'.prn'
+            'spice_file':os.path.basename(chem_out_file)[:-4]}
+            if add_prn_to_list:
+                output_file_entry['OutputFile'] = os.path.basename(chem_out_file)[:-4]+'.prn'
+        else:
+            output_file_entry = {
+                'Chemical':chem,
+                'spice_str_file':chem_out_file,
+                'spice_file':chem_out_file[:-4]}
+            if add_prn_to_list:
+                output_file_entry['OutputFile'] = chem_out_file[:-4]+'.prn'
 
 
         output_file_list.append(output_file_entry)
@@ -225,6 +249,7 @@ def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None
             
             elif in_netlist.nodes[node]['node_type'] == 'output':
                 # TODO check if output as dev
+                print(len_df)
                 wl = len_df.loc[node]["length (mm)"]
                 chem_nodes = f"{node}_0_chem {node}_1_chem "
 
@@ -249,6 +274,15 @@ def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None
                 comp_type = in_netlist.nodes[node]['node_type']
                 print(in_netlist[node])
                 if comp_type != "flow_probe" and comp_type != "pressure_probe":
+                    # changes to pcell definition
+                    # later appends params
+                    if has_pcells:
+                        is_pcell = False
+                        pcell_params = ''
+                        if comp_type in pc_dict:
+                            pcell_params = ' '+pc_dict[comp_type]['params']
+                            comp_type = pc_dict[comp_type]['pcell']
+                            is_pcell = True
                     comp_line = f"Y{comp_type} {node} "
                     chem_line = ''
                 else:
@@ -319,6 +353,8 @@ def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None
                     
                 if (comp_type != "flow_probe") and (comp_type != "pressure_probe"):
                     comp_line += ' '+chem_line
+                    if has_pcells and is_pcell:
+                        comp_line += ' '+pcell_params
                 elif comp_type == "flow_probe" or comp_type == "pressure_probe":
                     comp_line += " 0V"
                 c_of.write(comp_line+'\n')
@@ -369,7 +405,8 @@ def get_length_list(len_file):
         #    len_df = pd.read_execl(len_file, index_col=1)
     if len_df.shape[0] == 1:
         len_df = len_df.T
-
+    elif len_df.shape[1] == 2:
+        len_df = pd.read_csv(len_file, index_col=1)
 
     print(len_df.shape[0])
     print(len_df)
@@ -506,7 +543,8 @@ def visualize_netlist(in_cir):
 
             params = regex.finditer()
             
-def generate_cir_main(design, verilog_file, config_file, length_file, out_file):
+def generate_cir_main(design, verilog_file, config_file, length_file, out_file,
+    basename_only=False, pcell_file=None):
 
     import sys, os
     
@@ -521,6 +559,7 @@ def generate_cir_main(design, verilog_file, config_file, length_file, out_file):
     Xcl = SimulationXyce()
     Xcl.parse_config_file(config_file)
 
+    print(net_graph.keys())
     out_probes, netlist_graph_out = add_probes_to_device(Xcl.probes, net_graph[design]['netlist'])
 
     dev_lines, chem_args = generate_source_list(Xcl, has_chem=True)
@@ -537,7 +576,9 @@ def generate_cir_main(design, verilog_file, config_file, length_file, out_file):
         sims_time_lines=sim_lines,
         sim_type="transient",
         out_file=out_file,
-        add_prn_to_list=True)
+        add_prn_to_list=True,
+        basename_only=basename_only,
+        pcell_file=pcell_file)
 
     for spf in sp_files.iterrows():
         convert_nodes_2_numbers_xyce(spf[1]['spice_str_file'], cir_out=True)

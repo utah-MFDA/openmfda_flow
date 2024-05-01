@@ -9,9 +9,9 @@ import subprocess
 
 
 def default_pin_names():
-    return [[f"pin_{i}_{j}" for i in range(0,8)] for j in range(0,4)]
+    return [[{'name':f"pin_{i}_{j}", 'layer':'met9'} for i in range(0,8)] for j in range(0,4)]
 
-def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px", global_place_args={}, design_dir=False, platform_config=None):
+def generate_config(input_file, design_name, pins=None, platform="mfda_30px", global_place_args={}, design_dir=False, platform_config=None):
     dir_path = os.path.dirname(
             os.path.normpath(
                 os.path.realpath(__file__)+'/../../'))  
@@ -38,10 +38,12 @@ def generate_config(input_file, design_name, pin_names=None, platform="mfda_30px
     os.makedirs(f"{dir_path}/scad_flow/designs/{platform}/{design_name}", exist_ok=True)
     print("Copy design netlist")
     shutil.copy(input_file, verilog_filename)
-    if pin_names is None:
+    if pins is None:
         pin_names = default_pin_names()
     print("Writing pin constraints")
-    write_pin_constraints(io_filename, pin_names, "met9")
+    pin_names = [[x['name'] for x in r] for r in pins]
+    pin_layers = [[x['layer'] for x in r] for r in pins]
+    write_pin_constraints(io_filename, pin_names, pin_layers)
     print("Writing SDC constraints")
     write_sdc_constraints(sdc_filename, top_name=design_name)
     print("Writing global place configuration")
@@ -86,7 +88,7 @@ def write_pin_constraints(io_filename, pin_names, layer):
         for j, x in enumerate([960, 1050, 1140, 1230, 1320, 1410, 1500, 1590]):
             for i, y in enumerate([930, 840, 750, 660]):
                 if pin_names[i][j]:
-                    print(f"place_pin -pin_name {pin_names[i][j]} -layer {layer} -location {{ {x} {y} }} -pin_size {{1 1}}", file=f)
+                    print(f"place_pin -pin_name {pin_names[i][j]} -layer {layer[i][j]} -location {{ {x} {y} }} -pin_size {{1 1}}", file=f)
 
 ################ SDC constraints ################
 def write_sdc_constraints(sdc_filename, top_name="top"):
