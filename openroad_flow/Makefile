@@ -46,7 +46,7 @@ SHELL          = /bin/bash
 # - Setup in environment but can be changed here if running Makefile standalone
 #   from root Makefile (pnr/Makefile)
 export FLOW_HOME ?= .
-
+export GLOBAL_PLACEMENT_ARGS = -skip_nesterov_place
 #-------------------------------------------------------------------------------
 # Setup variables to point to other location for the following sub directory
 # - designs - default is under current directory

@@ -9,7 +9,7 @@ SHELL      	= /bin/bash
 
 # Design platform and name to explore
 PLATFORM = h.r.3.3
-DESIGN = demo
+DESIGN ?= demo
 
 
 OPENROAD_FLOW_DIR ?= openroad_flow

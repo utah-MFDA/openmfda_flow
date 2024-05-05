@@ -57,6 +57,7 @@ if { [info exists ::env(VIA_IN_PIN_MAX_LAYER)]} {
 detailed_route -output_drc $::env(REPORTS_DIR)/3_route_drc.rpt \
                -output_guide $::env(RESULTS_DIR)/output_guide.mod \
                -output_maze $::env(RESULTS_DIR)/maze.log \
+               -droute_end_iter 2 \
                -verbose 1 \
                {*}$additional_args
 
