@@ -232,14 +232,17 @@ $(SYNTH_STOP_MODULE_SCRIPT):
 	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
 	($(TIME_CMD) $(YOSYS_CMD) $(YOSYS_FLAGS) -c $(HIER_REPORT_SCRIPT)) 2>&1 | tee $(LOG_DIR)/1_0_yosys_hier_report.log
 
-$(RESULTS_DIR)/1_0_yosys.v: $(VERILOG_FILES)
+$(RESULTS_DIR)/1_synth.v: $(VERILOG_FILES)
 	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
-	($(TIME_CMD) $(YOSYS_CMD) $(YOSYS_FLAGS) -c $(SYNTH_SCRIPT)) 2>&1 | tee $(LOG_DIR)/1_0_yosys.log
+	($(TIME_CMD) $(YOSYS_CMD) $(YOSYS_FLAGS) -c $(SYNTH_SCRIPT)) 2>&1 | tee $(LOG_DIR)/1_synth.log
 
 # Initialize
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/$(DESIGN_NAME).v: $(RESULTS_DIR)/1_0_yosys.v
+$(RESULTS_DIR)/$(DESIGN_NAME).v: $(RESULTS_DIR)/1_synth.v
 	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
+	cp $< $@
+
+$(RESULTS_DIR)/1_synth.sdc: $(SDC_FILE)
 	cp $< $@
 
 $(RESULTS_DIR)/$(DESIGN_NAME).sdc: $(SDC_FILE)
