@@ -46,7 +46,7 @@ export PLACE_DENSITY ?= 1
 
 # FastRoute options
 export MIN_ROUTING_LAYER = met1
-export MAX_ROUTING_LAYER = met9
+export MAX_ROUTING_LAYER = met8
 
 # Define fastRoute tcl
 export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
