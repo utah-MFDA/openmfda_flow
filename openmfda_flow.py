@@ -18,7 +18,8 @@ def copy_defaults(input_verilog, io_file, top, design_name, platform):
     os.makedirs(f"scad_flow/designs/{platform}/{design_name}", exist_ok=True)
     print("Copy design netlists")
     for filename in input_verilog:
-        shutil.copy(filename, verilog_path)
+        os.symlink(filename, verilog_path)
+#        shutil.copy(filename, verilog_path)
     shutil.copy(io_file, io_filename)
     print("Writing SDC constraints")
     write_sdc_constraints(sdc_filename, top_name=design_name)
@@ -28,7 +29,7 @@ def copy_defaults(input_verilog, io_file, top, design_name, platform):
     write_scad_make(scad_make_filename, design_name, platform=platform)
 
 
-def generate_config(input_file, design_name, pin_names=None, platform="h.r.3.3"):
+def generate_config(input_file, design_name, pin_names=None, startx=960, starty=660, platform="h.r.3.3"):
     verilog_name = os.path.basename(input_file)
     verilog_filename = f"openroad_flow/designs/src/{design_name}/{verilog_name}"
     sdc_filename = f"openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
@@ -46,7 +47,7 @@ def generate_config(input_file, design_name, pin_names=None, platform="h.r.3.3")
     if pin_names is None:
         pin_names = default_pin_names()
     print("Writing pin constraints")
-    write_pin_constraints(io_filename, pin_names, "met9")
+    write_pin_constraints(io_filename, pin_names, "met9", startx=startx, starty=starty)
     print("Writing SDC constraints")
     write_sdc_constraints(sdc_filename, top_name=design_name)
     print("Writing makefile configuration")
@@ -64,12 +65,14 @@ def run_flow(design_name, platform="h.r.3.3"):
     # todo make archive
 
 ################ Generate pin constraints ################
-def write_pin_constraints(io_filename, pin_names, layer):
+def write_pin_constraints(io_filename, pin_names, layer, startx=960, starty=660):
     with open(io_filename, "w") as f:
-        for j, x in enumerate([960, 1050, 1140, 1230, 1320, 1410, 1500, 1590]):
-            for i, y in enumerate([930, 840, 750, 660]):
-                if pin_names[i][j]:
-                    print(f"place_pin -pin_name {pin_names[i][j]} -layer {layer} -location {{ {x} {y} }} -pin_size {{1 1}}", file=f)
+        for j, row in enumerate(pin_names):
+            for i, col in enumerate(row):
+                xpos = startx+i*90
+                ypos = starty+j*90
+                if pin_names[j][i]:
+                    print(f"place_pin -pin_name {col} -layer {layer} -location {{ {xpos} {ypos} }} -pin_size {{1 1}}", file=f)
 
 ################ SDC constraints ################
 def write_sdc_constraints(sdc_filename, top_name="top"):
