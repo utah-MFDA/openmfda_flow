@@ -4,7 +4,7 @@ from solid.utils import *
 import os
 import numpy as np
 import pandas as pd
-
+import def_parser
 
 class set_scale_parameters:
     """
@@ -117,10 +117,13 @@ class place:
     to openSCAD with the corresponding 3D components.
     """
     def __init__(self, def_file) -> None:
-        self.def_file = def_file
+        self.filename = def_file
+        self.def_file = def_parser.DefParser(def_file)
 
     def get_components(self):
-        f = open(self.def_file)
+        self.def_file.parse()
+    def get_components_old(self):
+        f = open(self.filename)
         index, flag = 0, 0
         list = []
         index_found = []
@@ -145,16 +148,16 @@ class place:
             return(list)
         else:
             return(list) # return the same for now but can add error later
-
     def place_components(self):
-        list = self.get_components()
-        components_placed = str()
-        for i in range(0, len(list)):
-            components_placed = components_placed + f"scad_std_cell.{list[i][1]}({list[i][2]}/{def_scale_}, {list[i][3]}/{def_scale_}, {bottom_layer_}/{layer_}, '{list[i][4]}') + "
-        components_placed = components_placed[0:-3]
-        if components_placed == "":
-            components_placed = f"scad_std_cell.empty_obj('NO COMPONENTS')"
-        return(eval(components_placed))
+        self.get_components()
+
+        components_placed = [f"scad_std_cell.{c.macro}({c.placed[0]}/{def_scale_}, {c.placed[1]}/{def_scale_}, {bottom_layer_}/{layer_}, '{c.orient}')" for c in self.def_file.components]
+        if len(components_placed) == 0:
+            components_placed_prg = " + ".join(components_placed)
+        else:
+            components_placed_prg = f"scad_std_cell.empty_obj('NO COMPONENTS')"
+
+        return(eval(components_placed_prg))
 
 
 class component_offset:
