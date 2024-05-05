@@ -30,6 +30,11 @@ DESIGN_CONFIG = ./designs/${PLATFORM}/${DESIGN}/config.mk
 # OpenROAD place and route
 pnr: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
 
+synth: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/1_synth.v
+
+$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/1_synth.v:
+	cd $(OPENROAD_FLOW_DIR) && $(MAKE) synth
+
 $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def:
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
 
