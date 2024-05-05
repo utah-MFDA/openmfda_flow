@@ -12,10 +12,10 @@ place_pin -pin_name m3 -layer met9 -location { 1140 660 } -pin_size {1 1}
 place_pin -pin_name m4 -layer met9 -location { 1230 660 } -pin_size {1 1}
 place_pin -pin_name m5 -layer met9 -location { 1320 660 } -pin_size {1 1}
 place_pin -pin_name m6 -layer met9 -location { 1410 660 } -pin_size {1 1}
-place_pin -pin_name k0 -layer met9 -location { 1500 750 } -pin_size {1 1}
+place_pin -pin_name k1 -layer met9 -location { 1500 750 } -pin_size {1 1}
 place_pin -pin_name k2 -layer met9 -location { 1590 750 } -pin_size {1 1}
-place_pin -pin_name k4 -layer met9 -location { 1680 750 } -pin_size {1 1}
-place_pin -pin_name k6 -layer met9 -location { 1770 750 } -pin_size {1 1}
+place_pin -pin_name k3 -layer met9 -location { 1680 750 } -pin_size {1 1}
+place_pin -pin_name k4 -layer met9 -location { 1770 750 } -pin_size {1 1}
 place_pin -pin_name c1 -layer met9 -location { 960 840 } -pin_size {1 1}
 place_pin -pin_name c2 -layer met9 -location { 1050 840 } -pin_size {1 1}
 place_pin -pin_name c3 -layer met9 -location { 1140 840 } -pin_size {1 1}
@@ -39,4 +39,3 @@ place_pin -pin_name c20 -layer met9 -location { 1230 1020 } -pin_size {1 1}
 place_pin -pin_name c21 -layer met9 -location { 1320 1020 } -pin_size {1 1}
 place_pin -pin_name c22 -layer met9 -location { 1410 1020 } -pin_size {1 1}
 place_pin -pin_name c23 -layer met9 -location { 1500 1020 } -pin_size {1 1}
-place_pin -pin_name c24 -layer met9 -location { 1590 1020 } -pin_size {1 1}
