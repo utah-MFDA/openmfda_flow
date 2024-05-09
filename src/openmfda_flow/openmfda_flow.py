@@ -11,7 +11,8 @@ import subprocess
 def default_pin_names():
     return [[{'name':f"pin_{i}_{j}", 'layer':'met9'} for i in range(0,8)] for j in range(0,4)]
 
-def generate_config(input_file, design_name, pins=None, platform="mfda_30px", global_place_args={}, design_dir=False, platform_config=None):
+def generate_config(input_file, design_name, pins=None, platform="mfda_30px", global_place_args={}, 
+                    design_dir=False, platform_config=None):
     dir_path = os.path.dirname(
             os.path.normpath(
                 os.path.realpath(__file__)+'/../../'))  
@@ -100,8 +101,8 @@ def write_make_config(make_filename, verilog_name, design_name, platform="mfda_3
     if platform_dict is not None and platform_class is not None:
         raise ValueError("Cannot pass both platform_disc and platform class")
     elif platform_dict is not None:
-        die_area = ' '.join(platform_dict['Die_area'])
-        core_area= ' '.join(platform_dict['Core_area'])
+        die_area = platform_dict['die_area']
+        core_area= platform_dict['core_site']
     elif platform_class is not None:
         die_area = platform_class.get_die_area_mk()
         core_area= platform_class.get_die_area_mk()
@@ -121,10 +122,10 @@ export CORE_AREA   	 	= {core_area}
 export IO_CONSTRAINTS	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/io_constraints.tcl""", file=f)
 
 ################ SCAD files ################
-def write_scad_make(scad_make_filename, design_name, dimm_file=None, platform="mfda_30px", platform_dict=None, platform_class=None):
-    if platform_dict is not None and platform_class is not None:
-        raise ValueError("Cannot pass both platform_disc and platform class")
-    elif platform_dict is not None:
+def write_scad_make(scad_make_filename, design_name, dimm_file=None, platform="mfda_30px", platform_dict=None):
+    #if platform_dict is not None and platform_class is not None:
+        #raise ValueError("Cannot pass both platform_disc and platform class")
+    if platform_dict is not None:
         if 'xbulk' in platform_dict:
             xbulk = platform_dict['xbulk']
             xchip = '0 '+str(platform_dict['xbulk'])
@@ -139,12 +140,12 @@ def write_scad_make(scad_make_filename, design_name, dimm_file=None, platform="m
             ychip = '0 '+str(platform_dict['Die_area'][3])
         zbulk = platform_dict['zbulk']
         
-    elif platform_class is not None:
-        xbulk = platform_class.get_xbulk()
-        ybulk = platform_class.get_ybulk()
-        zbulk = platform_class.get_zbulk()
-        xchip = platform_class.get_xchip()
-        ychip = platform_class.get_ychip()
+    #elif platform_class is not None:
+        #xbulk = platform_class.get_xbulk()
+        #ybulk = platform_class.get_ybulk()
+        #zbulk = platform_class.get_zbulk()
+        #xchip = platform_class.get_xchip()
+        #ychip = platform_class.get_ychip()
     else:
         xbulk = 2550
         ybulk = 1590

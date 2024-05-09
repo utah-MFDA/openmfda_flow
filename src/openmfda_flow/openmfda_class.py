@@ -30,7 +30,7 @@ class OpenMFDA:
             if len(self.core_site)==2:
                 return f"0 0 {self.core_site[0]} {self.core_site[1]}"
             if len(self.core_site)==4:
-                return ' '.join(self.core_site)
+                return f"{self.core_site[0]} {self.core_site[1]} {self.core_site[2]} {self.core_site[3]}"
 
         def set_die_area(self, new_core_area):
             if len(new_core_area)==2:
@@ -44,7 +44,8 @@ class OpenMFDA:
             if len(self.core_site)==2:
                 return f"0 0 {self.core_site[0]} {self.core_site[1]}"
             if len(self.core_site)==4:
-                return ' '.join(self.core_site)
+                #return ' '.join([str(x) for x in self.core_site])
+                return f"{self.core_site[0]} {self.core_site[1]} {self.core_site[2]} {self.core_site[3]}"
 
         def set_xbulk(self, xbulk):
             self.die_area[2]=self.die_area[0]+xbulk
@@ -68,9 +69,9 @@ class OpenMFDA:
             return self.bulk_total_layers
 
         def get_xchip(self):
-            return ' '.join(self.die_area[0],self.die_area[2])
+            return ' '.join([str(self.die_area[0]),str(self.die_area[2])])
         def get_ychip(self):
-            return ' '.join(self.die_area[1],self.die_area[3]) 
+            return ' '.join([str(self.die_area[1]),str(self.die_area[3])]) 
 
     class Simulator:
 
@@ -78,6 +79,7 @@ class OpenMFDA:
             self.input = []
             self.chem  = []
             
+            # simluation probes
             self.pressure_probes = []
             self.flow_probes = []
             self.concentration_probes = []
@@ -85,6 +87,9 @@ class OpenMFDA:
             self.eval_probes = []
             
             self.analysis_list = []
+            
+            # for is config file is defined instead
+            self.config_file = None
 
         def add_input(self, port, device, value, chemistry=None):
 
@@ -136,6 +141,18 @@ class OpenMFDA:
             self.analysis_list.append({'type':analysis_type,
                                        'params':[x for x in params if x != None]})
 
+        def set_sim_config_file(self, sim_config_file):
+            # check for probes + not compatible
+            if len(self.chem) == 0 and \
+                len(self.flow_probes) == 0 and \
+                len(self.pressure_probes) == 0 and \
+                len(self.concentration_probes) == 0 and \
+                len(self.analysis_list) == 0 and \
+                    isinstance(sim_config_file, str):
+                    self.config_file = sim_config_file
+            else:
+                raise InputError("Only probes or simulation config can be passed. Not both")
+
         def to_string_probes(self):
             o_str = ''
             for ip in self.input:
@@ -155,6 +172,14 @@ class OpenMFDA:
             return o_str
 
         def write_sim_config(self, out_dir, out_file='simulation.config'):
+
+            if isinstance(self.config_file, str):
+                if os.path.isfile(self.config_file):
+                    shutil.copyfile(self.config_file, f'{out_dir}/{out_file}')
+                    return
+                else:
+                    raise ValveError(f'Input simulation file is not a file or does not exist; Passed in {self.confg_file}')
+
             with open(f'{out_dir}/{out_file}', 'w+') as of:
                 #print("writing simulation config")
                 of.write('\n\n# Analysis to perform\n')
@@ -234,6 +259,18 @@ class OpenMFDA:
     def set_core_area(self, new_core_area):
         self.platform_config.set_core_area(new_core_area)
 
+    def generate_platform_config_dict(self):
+        export_plat = {}
+        export_plat['core_site'] = self.platform_config.get_core_site_mk()
+        export_plat['die_area']  = self.platform_config.get_die_area_mk()
+        export_plat['xbulk']     = self.platform_config.get_xbulk()
+        export_plat['ybulk']     = self.platform_config.get_ybulk()
+        export_plat['zbulk']     = self.platform_config.get_zbulk()
+        export_plat['xchip']     = self.platform_config.get_xchip()
+        export_plat['ychip']     = self.platform_config.get_ychip()
+
+        return export_plat
+
     def set_replace_arg(self, arg, value):
         if arg == 'placement_density' or arg == 'density':
             self.replace_arg['density'] = value
@@ -251,6 +288,9 @@ class OpenMFDA:
             self.replace_arg['overflow'] = value
         elif arg == 'fanout':
             self.replace_arg['fanout'] = value
+
+    def set_simulation_config_file(self, sim_config_file):
+        self.simulation_config.set_sim_config_file(sim_config_file)
         
     #def add_probe(self, probe_type, wire):
     def add_probe(self, probe_type, wire):
@@ -289,7 +329,8 @@ class OpenMFDA:
         self.write_sim_config(xyce_run_dir)
 
     def build(self):
-        of.generate_config(self.verilog_file, self.design_name, pins=self.pins, global_place_args=self.replace_arg, design_dir=True, platform=self.platform)
+        of.generate_config(self.verilog_file, self.design_name, pins=self.pins, global_place_args=self.replace_arg, 
+                        design_dir=True, platform=self.platform, platform_config=self.generate_platform_config_dict())
         self.generate_xyce_configs()
         #replace_file = f"openroad_flow/designs/{self.platform}/{self.design_name}/global_place_args.tcl"
         #of.write_replace_args(replace_file, self.replace_arg)

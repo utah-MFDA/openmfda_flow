@@ -77,11 +77,13 @@ def runSimulation(
         preRouteSim=False,
         dockerContainer=None,
         dockerWD=None,
-        verilog_2_xyce_extras_loc="spiceFiles",
+        #verilog_2_xyce_extras_loc="spiceFiles",
+        verilog_2_xyce_extras_loc=None,
         verilog_2_xyce_relative=True,
         #xyceFiles="spiceList",
         convert_v=True,
         output_dir=None,
+        pcell_file=None,
         extra_args={}):
 
     if verilogFile[-2:] == '.v':
@@ -110,6 +112,7 @@ def runSimulation(
     if (isLocalXyce.lower() in ['true', '1']):
         _local_xyce = True
         _noarchive = True # no docker archive created
+        convert_basename = False
         if 'xyce_run_config' in extra_args:
             _xyce_run_config=extra_args['xyce_run_config']
         else:
@@ -117,6 +120,7 @@ def runSimulation(
     elif (isLocalXyce.lower() in ['false', '0']):
         _local_xyce = False
         _noarchive = False
+        convert_basename = True
     else:
         raise InputError("--local_xyce much be false or true (0 or 1)")
 
@@ -155,6 +159,9 @@ def runSimulation(
             length_file =length_file,
             preRouteSim =preRouteSim,
             noarchive   =_noarchive,
+            gen_output_dir=verilog_2_xyce_extras_loc,
+            basename_only=convert_basename,
+            pcell_file  =pcell_file,
             )
 
 
@@ -171,6 +178,8 @@ def runSimulation(
 
         #results_prn_wd = result_wd+'/results'
         results_prn_wd = result_wd#+'/results'
+        load_wd   = ''
+        nodes_dir = ''
 
     else:
         
@@ -215,7 +224,14 @@ def runSimulation(
                     # overwrite pervious tar
                     OR_fileExists=True)
         
+
         results_prn_wd = result_wd+"/results"
+
+        if verilog_2_xyce_extras_loc != None:
+            workDir = workDir+'/'+verilog_2_xyce_extras_loc
+
+        nodes_dir = results_prn_wd+'/../'
+        load_wd   = results_prn_wd
 
     # generate report
     #rfiles    = pd.read_csv(workDir+"/spiceFiles/spiceList")["OutputFile"]
@@ -234,7 +250,7 @@ def runSimulation(
     print("Chemical list")
     print(chem_list)
 
-    df = load_xyce_results(results_prn_wd, rfiles, chem_list)
+    df = load_xyce_results(load_wd, nodes_dir, rfiles, chem_list)
 
     # export to csv
     if isinstance(df, list):
@@ -338,17 +354,28 @@ def convertToCir_from_config(
         length_file=None,
         preRouteSim=False, 
         overwrite=False,
-        noarchive=False):
+        noarchive=False,
+        gen_output_dir=None,
+        basename_only=False,
+        pcell_file=None):
 
 
     from writeSpice import generate_cir_main
     
+    if gen_output_dir==None:
+        of = f"{wd}/{design}"
+    else:
+        os.makedirs(f"{wd}/{gen_output_dir}", exist_ok=True)
+        of = f"{wd}/{gen_output_dir}/{design}"
+
     generate_cir_main(
         design=design,
         verilog_file=f'{wd}/{verilogFile}',
         config_file=sim_config,
         length_file=length_file,
-        out_file=f"{wd}/{design}"
+        out_file=of,
+        basename_only=basename_only,
+        pcell_file=None,
     )
     # locate nessary files
     #files = getSimFiles(verilogFile, wd)
@@ -591,7 +618,13 @@ def change_r_node_ref(df, rFile, node_file, chem):
 
 
 
-def load_xyce_results(rDir, rlist=None, chem_list=None):
+def load_xyce_results(rDir, nodes_dir, rlist=None, chem_list=None):
+
+    if rDir != '':
+        rDir += '/'
+    if nodes_dir != '':
+        nodes_dir += '/'
+
     if rlist is None:
         return load_xyce_results_file(rDir)
     else:
@@ -601,12 +634,13 @@ def load_xyce_results(rDir, rlist=None, chem_list=None):
         for ind, rFile in enumerate(rlist):
 
             print(rDir+"/"+rFile)
-            #temp_df = pd.read_table(rDir+"/"+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
-            temp_df = pd.read_table(rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
+            temp_df = pd.read_table(rDir+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
+            #temp_df = pd.read_table(rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
             
             if chem_list is not None:
                 #temp_df = change_r_node_ref(temp_df, rDir+"/../"+rFile, chem_list[ind])
-                temp_df = change_r_node_ref(temp_df, rFile, rFile.replace('.prn', '.str.nodes'), chem_list[ind])
+                temp_df = change_r_node_ref(temp_df,  rDir+rFile, nodes_dir+rFile.replace('.prn', '.str.nodes'), chem_list[ind])
+                #temp_df = change_r_node_ref(temp_df, rFile, rFile.replace('.prn', '.str.nodes'), chem_list[ind])
 
             #r_df = pd.append([temp_df])
             # remove duplicate columns
@@ -700,6 +734,8 @@ def evaluate_results(wd, results_dir, design_name, sim_obj=None, ev_file=None, s
         rFile = results_dir+'/'+design_name+'_xyceOut.csv'
         #temp_df = pd.read_table(rFile, skipfooter=1, index_col=0, delim_whitespace=True)
         temp_df = pd.read_csv(rFile)
+        if len(ev_chem_list[ev_chem]) == 0:
+            continue
 
         for eval_obj in ev_chem_list[ev_chem]:
 
@@ -768,7 +804,8 @@ if __name__ == "__main__":
     parser.add_argument('--cir_config',metavar='<cir_config>', type=str, required=True)
     
     parser.add_argument('--output_dir',metavar='<output_dir>', type=str, default=None)
-    
+    parser.add_argument('--pcell_file',metavar='<pcell_file>', type=str, default=None)
+
     parser.add_argument('--design', metavar='<design>', type=str, required=True)
     parser.add_argument('--length_file', metavar='<length_file>', type=str, default=None)
 
@@ -814,6 +851,7 @@ if __name__ == "__main__":
         #xyceFiles      = "spiceList",
         convert_v      = args.convert_verilog.lower() in ['true', '1'],
         output_dir     = args.output_dir,
+        pcell_file     = args.pcell_file,
         extra_args     = ex_args)
     
     """

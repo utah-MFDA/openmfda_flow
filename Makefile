@@ -38,7 +38,13 @@ designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
 
 designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py:
 
-$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
+OR_DESIGN_P = openroad_flow/designs/$(PLATFORM)/$(DESIGN)
+OR_PRE = $(OR_DESIGN_P)/config.mk $(OR_DESIGN_P)/constraint.sdc $(OR_DESIGN_P)/global_place_args.tcl $(OR_DESIGN_P)/io_constraints.tcl
+
+#ifdef $(PCELL_LEF)
+
+#$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
+$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(OR_PRE) #designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
 
 or_nuke:
@@ -57,10 +63,11 @@ $(XYCE_RESULTS)/$(PLATFORM)/$(DESIGN)/$(DESIGN)_xyceOut.csv: $(FINAL_V) $(XYCE_F
 		--netlist $(DESIGN).v \
 		--sim_dir $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN) \
 		--output_dir $(XYCE_FLOW_DIR)/results/$(PLATFORM)/$(DESIGN) \
-		--length_file $(SCAD_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/$(DESIGN)_lengths.csv \
+		--length_file $(SCAD_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/$(DESIGN)_length.csv \
 		--cir_config $(XYCE_FLOW_DIR)/V2Va_Parser/VMF_xyce.mfsp \
 		--lib $(XYCE_FLOW_DIR)/stdCellLib/StandardCellLibrary.csv \
-		--local_xyce True
+		--local_xyce True \
+		--eval_result True ## comment if no evals
 
 $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
 
