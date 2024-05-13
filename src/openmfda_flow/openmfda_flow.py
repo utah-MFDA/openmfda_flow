@@ -69,7 +69,7 @@ def generate_config(input_file, design_name, pins=None, platform="mfda_30px", gl
         raise ValueError("platform_config is not a valid input")
     print("Done")
 
-def run_flow(design_name, platform="mfda_30px", stdout=False, make_arg='all'):
+def run_flow(design_name, platform="mfda_30px", stdout=False, make_arg='all', skip_if_no_length_file=False):
     subprocess.run(["pwd"],
                    stdout=None, stderr=None, check=True)
     if isinstance(make_arg, str):
@@ -79,6 +79,11 @@ def run_flow(design_name, platform="mfda_30px", stdout=False, make_arg='all'):
     for arg in make_arg:
         run_cmd = f"cd {dir_path} && make {arg} -e DESIGN={design_name} -e PLATFORM={platform}"
         print(run_cmd)
+        if skip_if_no_length_file and \
+            arg == "simulate" and \
+            not isfile(f"scad_flow/results/{design}/base/{design}_lengths.csv"):
+            continue
+
         subprocess.run(run_cmd,
                     stdout=None, stderr=None, shell=True, check=True)
     # todo make archive

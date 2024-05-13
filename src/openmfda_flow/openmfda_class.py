@@ -335,8 +335,8 @@ class OpenMFDA:
         #replace_file = f"openroad_flow/designs/{self.platform}/{self.design_name}/global_place_args.tcl"
         #of.write_replace_args(replace_file, self.replace_arg)
     
-    def run_flow(self, mk_targets='all'):
-        of.run_flow(self.design_name, platform=self.platform, make_arg=mk_targets)
+    def run_flow(self, mk_targets='all', skip_if_no_length_file=False):
+        of.run_flow(self.design_name, platform=self.platform, make_arg=mk_targets, skip_if_no_length_file=skip_if_no_length_file)
         
     def run_flow_remote(self, remote_pyenv_home, remote_dir, mk_targets='all', win_root_drive='C:', wsl_root=None):
         self.run_remote(
@@ -356,7 +356,7 @@ class OpenMFDA:
     
     def sync_remote(self, remote_dir, wsl_root_dir='/mnt/c', win_root_drive='C:'):
         # sync files with server
-        local_paths = ["designs","openroad_flow","scad_flow","xyce_flow","Makefile","requirements.txt","openmfda_flow.py","main.py", "src"]
+        local_paths = ["designs","openroad_flow","scad_flow","xyce_flow","Makefile","requirements.txt","openmfda_flow.py","main.py", "src/openmfda_flow"]
 
         dir_path = os.path.dirname(
                 os.path.normpath(
@@ -434,8 +434,10 @@ class OpenMFDA:
         main_args = f'--design {design} --platform {platform}'
         
         if make_only:
-            targets = ' '.join(make_targets)
-            main_args += f' --make_only True --make_targets {targets}'
+            main_args += f' --make_only True'
+        
+        targets = ' '.join(make_targets)
+        main_args += f' --make_targets {targets}'
 
 
         if osplt.system() == "Windows":
@@ -444,7 +446,12 @@ class OpenMFDA:
         mainpy = f"{remote_dir}/main.py"
         srccmd = f"source {remote_env_home}/bin/activate"
 
-        pycmd = f'python3 {mainpy} {main_args}'
+        if make_only:
+            pycmd = f'python3 {mainpy} {main_args}'
+        else:
+            mainpy = f'designs/{platform}/{design}/{design}_configure.py'
+            main_args = ''
+            pycmd = f'cd {remote_dir} && python3 {mainpy} {main_args}'
 
         sshcmd= [f'ssh mfda_remote "{srccmd} ; {pycmd}"']
 
@@ -455,10 +462,10 @@ class OpenMFDA:
             print("WSL cmd: "+wsl_cmd)
             os.system(wsl_cmd)
         elif osplt.system() == "Linux":
-            subprocess.run(sshcmd, 
+            subprocess.run(sshcmd[0], 
                 shell=True,
                 check=True)
-        else:
+        else: # Macs are assumed to have ssh
             subprocess.run(sshcmd, 
                 shell=True,
                 check=True)

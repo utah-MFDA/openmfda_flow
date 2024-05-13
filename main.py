@@ -16,6 +16,8 @@ def main(design, platform, make_only=False, make_targets=None):
 
 
 def run_w_gen_config(design, platform):
+    import importlib
+
     py_call = f'{design}_configure'
     
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -24,7 +26,9 @@ def run_w_gen_config(design, platform):
 
     #design_sc = map(__import__, py_call)
     #design_sc
-    exec(open(f"{dir_path}/designs/{platform}/{design}/{py_call}.py").read())
+    #exec(open(f"{dir_path}/designs/{platform}/{design}/{py_call}.py").read())
+    
+    importlib.import_module(f"designs/{platform}/{design}/{py_call}".replace('/','.'))
 
 if __name__ == "__main__":
 
