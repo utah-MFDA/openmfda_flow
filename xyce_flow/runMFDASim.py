@@ -272,6 +272,7 @@ def runSimulation(
             design_name=design_name)
         if output_dir is not None:
             print("Moving eval to "+output_dir)
+            os.makedirs(output_dir, exist_ok=True)
             shutil.move(results_prn_wd+'/Chem_Eval.csv', f'{output_dir}/Chem_Eval.csv')
 
     if _main_plot_results:    
@@ -629,19 +630,11 @@ def load_xyce_results(rDir, nodes_dir, rlist=None, chem_list=None):
         return load_xyce_results_file(rDir)
     else:
         r_df = []
-        if rDir == '':
-            pass
-        else:
-            rDir =+ '/'
-        if nodes_dir == '':
-            pass
-        else:
-            nodes_dir =+ '/'
         #r_df = pd.DataFrame()
         # we assume in list generation the indexes did not shift
         for ind, rFile in enumerate(rlist):
 
-            print(rDir+rFile)
+            print(rDir+"/"+rFile)
             temp_df = pd.read_table(rDir+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
             #temp_df = pd.read_table(rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
             

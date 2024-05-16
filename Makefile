@@ -43,6 +43,7 @@ designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
 
 designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py:
 
+<<<<<<< HEAD
 ifdef $(TECH_LEF)
 export $(TECH_LEF)
 endif
@@ -82,6 +83,7 @@ OR_PRE = $(OR_DESIGN_P)/config.mk $(OR_DESIGN_P)/constraint.sdc $(OR_DESIGN_P)/g
 #$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
 $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(OR_PRE) $(PCELL_MERGE_LEF) #designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE) $(OR_MK_ARGS)
+
 
 or_nuke:
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE) nuke

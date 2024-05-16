@@ -1,3 +1,6 @@
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, f'{dir_path}/..')
+
 from openmfda_flow import *
 
 verilog_file = "demo.v"

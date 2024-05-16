@@ -3,8 +3,10 @@ import os
 import shutil
 import subprocess
 
-#sys.path.insert(0,os.path.dirname(os.path.realpath(__file__)))
-#from openmfda_class import OpenMFDA
+# only because we use platfrom a lot
+# osplt
+import platform as os_platform
+
 # path for python file
 
 
@@ -75,6 +77,108 @@ def run_flow(design_name, platform="mfda_30px", stdout=False, make_arg='all'):
         subprocess.run(run_cmd,
                     stdout=None, stderr=None, shell=True, check=True)
     # todo make archive
+
+def sync_remote(remote_dir, wsl_root_dir='/mnt/c', win_root_drive='C:'):
+        # sync files with server
+        local_paths = ["designs","openroad_flow","scad_flow","xyce_flow","Makefile","requirements.txt","openmfda_flow.py","main.py"]
+
+        dir_path = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
+
+        cmd_paths = ' '.join([f"{dir_path}/{x}" for x in local_paths])
+
+        rs_cmd = f"rsync -av -e ssh {cmd_paths} mfda_remote:~/MFDA_flow"
+
+        if os_platform.system() == "Windows":
+            wsl_cmd = 'wsl ~ -e bash -c'
+            win_cmd  = f'{wsl_cmd} "{rs_cmd.replace(win_root_drive, wsl_root_dir)}"'
+            print(win_cmd)
+            os.system(win_cmd)
+        elif os_platform.system() == "Linux":
+            print(rs_cmd)
+            subprocess.run(rs_cmd.split())
+        else: # assumes a linux system
+            print(platform.system())
+            print(rs_cmd)
+            subprocess.run(rs_cmd.split())
+
+def sync_w_remote_outputs( 
+        remote_dir, 
+        local_path='', 
+        relative_path=True, 
+        or_logs=True, 
+        or_reports=True, 
+        wsl_root_dir='/mnt/c', 
+        win_root_drive='C:'):
+
+        dir_path = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
+
+        if os_platform.system() == "Windows":
+            dir_path = dir_path.replace(win_root_drive, wsl_root_dir)
+
+        result_out = [ 
+            "openroad_flow/results/",  
+            "scad_flow/results/"
+            ]
+
+        if or_logs:
+            result_out.append("openroad_flow/logs/")
+
+        if or_reports:
+            result_out.append("openroad_flow/reports/")
+
+        if relative_path:
+            local_path = f"{dir_path}/{local_path}"
+
+        wsl_cmd = lambda rs : f'wsl ~ -e bash -c "{rs}"'
+
+        for x in result_out:
+            rs_cmd = f"rsync -av -e ssh mfda_remote:{remote_dir}/{x} {local_path}/{x}".split()
+
+            if os_platform.system() == "Windows":
+                print("WSL cmd: "+wsl_cmd(' '.join(rs_cmd)))
+                os.system(wsl_cmd(' '.join(rs_cmd)))
+            elif os_platform.system() == "Linux":
+                subprocess.run(rs_cmd)
+            else:
+                subprocess.run(rs_cmd)
+
+def run_remote(design, platform, remote_env_home, remote_dir, win_drive="C:", wsl_root=None):
+    # Assuming convention
+    if wsl_root==None:
+        print("Assuming root for WSL system, you can be explicit by setting wsl_root argument")
+        wsl_root=f"/mnt/{win_drive[0]}"
+
+    sync_remote(remote_dir=remote_dir, win_root_drive=win_drive, wsl_root_dir=wsl_root)
+
+    # send run command remotely
+    main_args = f'--design {design} --platform {platform}'
+    
+    if os_platform.system() == "Windows":
+        remote_env_home.replace('\~', '~')
+
+    mainpy = f"{remote_dir}/main.py"
+    srccmd = f"source {remote_env_home}/bin/activate"
+
+    pycmd = f'python3 {mainpy} {main_args}'
+
+    sshcmd= [f'ssh mfda_remote "{srccmd} ; {pycmd}"']
+
+    if os_platform.system() == "Windows":
+        sshcmd[0] =sshcmd[0].replace('"', "'")
+        print("ssh cmd: "+sshcmd[0])
+        wsl_cmd = f'wsl ~ -e bash -c "{sshcmd[0]}"'
+        print("WSL cmd: "+wsl_cmd)
+        os.system(wsl_cmd)
+    elif os_platform.system() == "Linux":
+        subprocess.run(sshcmd, 
+            shell=True,
+            check=True)
+    else:
+        subprocess.run(sshcmd, 
+            shell=True,
+            check=True)
+
+    sync_w_remote_outputs(remote_dir, win_root_drive=win_drive, wsl_root_dir=wsl_root)
 
 ################ Generate pin constraints ################
 def write_pin_constraints(io_filename, pin_names, layer):
