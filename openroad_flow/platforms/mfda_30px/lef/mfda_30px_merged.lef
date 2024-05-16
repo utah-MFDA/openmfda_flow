@@ -169,7 +169,7 @@ END serpentine_200px_0
 MACRO serpentine_200px_3
   CLASS CORE ;
   ORIGIN  0 0 ;
-  FOREIGN serpentine_200px_0 0 0 ;
+  FOREIGN serpentine_200px_3 0 0 ;
   SIZE 300 BY 300 ;
   SYMMETRY X Y ;
   SITE CoreSite ;
@@ -235,7 +235,7 @@ END serpentine_300px_0
 MACRO serpentine_300px_1
   CLASS CORE ;
   ORIGIN  0 0 ;
-  FOREIGN serpentine_300px_0 0 0 ;
+  FOREIGN serpentine_300px_1 0 0 ;
   SIZE 420 BY 420 ;
   SYMMETRY X Y ;
   SITE CoreSite ;
@@ -267,7 +267,7 @@ END serpentine_300px_1
 MACRO serpentine_300px_2
   CLASS CORE ;
   ORIGIN  0 0 ;
-  FOREIGN serpentine_300px_0 0 0 ;
+  FOREIGN serpentine_300px_2 0 0 ;
   SIZE 450 BY 420 ;
   SYMMETRY X Y ;
   SITE CoreSite ;
@@ -301,7 +301,7 @@ END serpentine_300px_2
 MACRO serpentine_300px_3
   CLASS CORE ;
   ORIGIN  0 0 ;
-  FOREIGN serpentine_300px_0 0 0 ;
+  FOREIGN serpentine_300px_3 0 0 ;
   SIZE 420 BY 420 ;
   SYMMETRY X Y ;
   SITE CoreSite ;

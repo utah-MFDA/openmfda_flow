@@ -24,12 +24,17 @@ XYCE_RESULTS = $(XYCE_FLOW_DIR)/results
 SCAD_RESULTS = ${SCAD_FLOW_DIR}/results
 
 # Import the SCAD configuration
+ifneq (,$(wildcard $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk))
 include $(SCAD_FLOW_DESIGN_DIR)/$(PLATFORM)/$(DESIGN)/config.mk
+endif
 
 DESIGN_CONFIG = ./designs/${PLATFORM}/${DESIGN}/config.mk
 
 # relative to openroad make
 export GLOBAL_PLACEMENT_ARGS_PATH = ./designs/$(PLATFORM)/$(DESIGN)/global_place_args.tcl
+
+
+DESIGN_VARIANT?=base
 
 # OpenROAD place and route
 pnr: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
@@ -38,12 +43,45 @@ designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
 
 designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py:
 
+ifdef $(TECH_LEF)
+export $(TECH_LEF)
+endif
+ifdef $(SC_LEF)
+export $(SC_LEF)
+endif
+
+PCELL_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_pcell_pre.lef
+
+ifdef PCELL_LEF
+PCELL_MERGE_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef
+export SC_LEF=platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef
+
+verilog_preparse: 
+
+pnr_pre: $(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/out_merge_pcell.lef
+
+#--pcell_lef $(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_pcellonly.lef 
+$(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/out_merge_pcell.lef:
+	mkdir -p $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)
+	python3 $(OPENROAD_FLOW_DIR)/verilog_preparser/verilog_param_preparse.py \
+		 --netlist designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v \
+		 --orig_lef $(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged.lef \
+		 --out_lef $(PCELL_MERGE_LEF) \
+		 --pcell_lef $(PCELL_LEF) \
+		 --out_lef_csv $(OPENROAD_FLOW_DIR)/logs/$(DESIGN)/$(DESIGN_VARIANT)/preparse.csv \
+		 --conversion_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)
+
+SCAD_PCELL_ARG=--pcell_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)/pcell_out_scad
+XYCE_PCELL_ARG=--pcell_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)/pcell_out_xyce
+endif
+
+
 OR_DESIGN_P = openroad_flow/designs/$(PLATFORM)/$(DESIGN)
 OR_PRE = $(OR_DESIGN_P)/config.mk $(OR_DESIGN_P)/constraint.sdc $(OR_DESIGN_P)/global_place_args.tcl $(OR_DESIGN_P)/io_constraints.tcl
 
 #$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
-$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(OR_PRE) #designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
-	cd $(OPENROAD_FLOW_DIR) && $(MAKE)
+$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(OR_PRE) $(PCELL_MERGE_LEF) #designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
+	cd $(OPENROAD_FLOW_DIR) && $(MAKE) $(OR_MK_ARGS)
 
 or_nuke:
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE) nuke
@@ -80,7 +118,8 @@ ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad: $(OR_RESULTS)/$(DESI
 		--def_file $< \
 		--tlef openroad_flow/platforms/$(PLATFORM)/lef/$(PLATFORM).tlef \
 		--design "$(DESIGN)" \
-		--results_dir "$(SCAD_RESULTS)/${DESIGN}/${DESIGN_VARIANT}"
+		--results_dir "$(SCAD_RESULTS)/${DESIGN}/${DESIGN_VARIANT}" \
+		$(SCAD_PCELL_ARG)
 
 scad_clean:
 	rm -rf $(SCAD_RESULTS)

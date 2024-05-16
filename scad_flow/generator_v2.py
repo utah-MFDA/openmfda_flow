@@ -612,7 +612,7 @@ routing_use = ['polychannel_v2', 'routing']
 def main(platform, design, def_file, results_dir, px, layer, 
          bttm_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, 
          def_scale, pitch, res, dimm_file, tlef, comp_file=None, 
-         pin_con_dir_f=None, transparent=False):
+         pin_con_dir_f=None, pcell_file=None, transparent=False):
     
     print("""
     --------------------------------
