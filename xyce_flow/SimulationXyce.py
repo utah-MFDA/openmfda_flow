@@ -89,7 +89,7 @@ class SimulationXyce:
             return self.probe_type
 
         def getDevice(self):
-            if device is None:
+            if self.device is None:
                 raise ValueError("No device in probe")
             return self.device
             
@@ -106,6 +106,7 @@ class SimulationXyce:
         self.probes['pressureNode'] = []
         self.probes['flow'] = []
         self.probes['concentration'] = []
+        self.probes['concentrationNode'] = []
 
     def parse_config_file(self, file):
         in_conf_f = open(file)
@@ -155,7 +156,7 @@ class SimulationXyce:
                         'flow', 
                         node=params[3], 
                         device=params[2]))
-                elif params[1] in [x.getChem() for ch in self.chem]:
+                elif (len(self.chem) > 0) and params[1] in [ch.getChem() for ch in self.chem.values()]:
                     self.probes['concentration'].append(self.Probe(
                         'concentration', 
                         node=params[2]))
@@ -165,6 +166,14 @@ class SimulationXyce:
                         node=params[3],
                         device=params[2]
                     ))
+                elif params[1] == "concentrationNode":
+                    self.probes['concentrationNode'].append(self.Probe(
+                        'concentrationNode',
+                        node=params[3],
+                        device=params[2]
+                    ))
+                else:
+                    raise ValueError(f'{params[1]} is not a valid node, use "pressure", "flow", "pressureNode", "concentrationNode" or declare the input chemical before this line. Line number {l_num+1}')
 
             elif key == 'eval':
                 if params[1] in self.eval:

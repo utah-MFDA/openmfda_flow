@@ -619,21 +619,35 @@ def change_r_node_ref(df, rFile, node_file, chem):
 
 
 def load_xyce_results(rDir, nodes_dir, rlist=None, chem_list=None):
+
+    if rDir != '':
+        rDir += '/'
+    if nodes_dir != '':
+        nodes_dir += '/'
+
     if rlist is None:
         return load_xyce_results_file(rDir)
     else:
         r_df = []
+        if rDir == '':
+            pass
+        else:
+            rDir =+ '/'
+        if nodes_dir == '':
+            pass
+        else:
+            nodes_dir =+ '/'
         #r_df = pd.DataFrame()
         # we assume in list generation the indexes did not shift
         for ind, rFile in enumerate(rlist):
 
-            print(rDir+"/"+rFile)
-            temp_df = pd.read_table(rDir+"/"+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
+            print(rDir+rFile)
+            temp_df = pd.read_table(rDir+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
             #temp_df = pd.read_table(rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
             
             if chem_list is not None:
                 #temp_df = change_r_node_ref(temp_df, rDir+"/../"+rFile, chem_list[ind])
-                temp_df = change_r_node_ref(temp_df,  rDir+rFile, nodes_dir+'/'+rFile.replace('.prn', '.str.nodes'), chem_list[ind])
+                temp_df = change_r_node_ref(temp_df,  rDir+rFile, nodes_dir+rFile.replace('.prn', '.str.nodes'), chem_list[ind])
                 #temp_df = change_r_node_ref(temp_df, rFile, rFile.replace('.prn', '.str.nodes'), chem_list[ind])
 
             #r_df = pd.append([temp_df])
