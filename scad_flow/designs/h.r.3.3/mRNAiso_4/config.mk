@@ -5,7 +5,7 @@
 # platform name from OpenROAD flow
 export PLATFORM = h.r.3.3
 # design name from OpenROAD flow
-export DESIGN = mRNAiso
+export DESIGN = mRNAiso_4
 # design variant from OpenROAD flow
 export DESIGN_VARIANT = base
 
