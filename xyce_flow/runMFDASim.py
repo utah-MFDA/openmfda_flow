@@ -272,6 +272,7 @@ def runSimulation(
             design_name=design_name)
         if output_dir is not None:
             print("Moving eval to "+output_dir)
+            os.makedirs(output_dir, exist_ok=True)
             shutil.move(results_prn_wd+'/Chem_Eval.csv', f'{output_dir}/Chem_Eval.csv')
 
     if _main_plot_results:    
