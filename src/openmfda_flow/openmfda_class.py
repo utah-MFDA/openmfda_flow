@@ -178,7 +178,7 @@ class OpenMFDA:
                     shutil.copyfile(self.config_file, f'{out_dir}/{out_file}')
                     return
                 else:
-                    raise ValveError(f'Input simulation file is not a file or does not exist; Passed in {self.confg_file}')
+                    raise ValueError(f'Input simulation file is not a file or does not exist; Passed in {self.config_file}')
 
             with open(f'{out_dir}/{out_file}', 'w+') as of:
                 #print("writing simulation config")
