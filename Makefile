@@ -1,9 +1,8 @@
 LAYER_HEIGHT = 1
 # Shell setup for make
 SHELL      	= /bin/bash
-
 .SHELLFLAGS	= -o pipefail -c
-
+TIME_CMD=/usr/bin/time --verbose
 # Default target when invoking without specific target.
 .DEFAULT_GOAL := all
 
@@ -48,7 +47,7 @@ ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad: $(OR_RESULTS)/$(DESI
 	$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/scad_pnr.py $(SCAD_ARGS) \
 		--def_file $< \
 		--design "$(DESIGN)" \
-		--results_dir "$(SCAD_RESULTS)/${DESIGN}/${DESIGN_VARIANT}"
+		--results_dir "$(SCAD_RESULTS)/${DESIGN}/${DESIGN_VARIANT}" 2>&1 | tee $@.log
 
 scad_clean:
 	rm -rf $(SCAD_RESULTS)

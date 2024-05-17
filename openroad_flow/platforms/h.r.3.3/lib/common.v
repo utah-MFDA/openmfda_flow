@@ -7,23 +7,23 @@ module mixer(inout a, b, inout y);
 endmodule
 
 module chamber(inout in, inout out);
-  serpentine_50px_0 thing(.in_fluid(in), .out_fluid(out));
+  serpentine_100px_0 thing(.in_fluid(in), .out_fluid(out));
 endmodule
 
 module serpentine(inout in, inout out);
-  serpentine_50px_0 thing(.in_fluid(in), .out_fluid(out));
+  serpentine_150px_0 thing(.in_fluid(in), .out_fluid(out));
 endmodule
 
 module filter(inout in, inout out);
-  serpentine_50px_0 thing(.in_fluid(in), .out_fluid(out));
+  serpentine_150px_0 thing(.in_fluid(in), .out_fluid(out));
 endmodule
 
 module heater(inout in, inout out);
-  serpentine_50px_0 thing(.in_fluid(in), .out_fluid(out));
+  serpentine_150px_0 thing(.in_fluid(in), .out_fluid(out));
 endmodule
 
 module detector(inout in, inout out);
-  serpentine_50px_0 thing(.in_fluid(in), .out_fluid(out));
+  serpentine_150px_0 thing(.in_fluid(in), .out_fluid(out));
 endmodule
 
 module dilutor(inout a, b, inout y);
@@ -31,7 +31,7 @@ module dilutor(inout a, b, inout y);
 endmodule
 
 module trap4(inout a, b, c, d);
-  wire j;
-  diffmix_25px_0 thing1(.a_fluid(a), .b_fluid(b), .out_fluid(j));
-  diffmix_25px_0 thing2(.a_fluid(j), .b_fluid(d), .out_fluid(c));
+  assign b = a;
+  assign d = c;
+  serpentine_50px thing1(.a_fluid(a), .b_fluid(d));
 endmodule

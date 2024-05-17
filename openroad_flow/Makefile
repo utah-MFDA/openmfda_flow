@@ -120,11 +120,11 @@ export NUM_CORES := $(NPROC)
 
 #-------------------------------------------------------------------------------
 # setup all commands used within this flow
-TIME_CMD = time -f "Elapsed time: %E[h:]min:sec. Average CPU: %P. Peak memory: %MKB."
-TIME_TEST = $(shell $(TIME_CMD) echo foo 2>/dev/null)
-ifeq (, $(strip $(TIME_TEST)))
-  TIME_CMD = time
-endif
+TIME_CMD=/usr/bin/time --verbose
+# TIME_TEST = $(shell $(TIME_CMD) echo foo 2>/dev/null)
+# ifeq (, $(strip $(TIME_TEST)))
+#   TIME_CMD = time
+# endif
 
 # The following determine the executable location for each tool used by this flow.
 # Priority is given to
