@@ -334,6 +334,44 @@ MACRO serpentine_300px_3
   PROPERTY CatenaDesignType "deviceLevel" ;
 END serpentine_300px_3
 
+MACRO serpentine_300px_4
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_300px_0 0 0 ;
+  SIZE 450 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met6 ;
+        RECT 419.5 29.5 420.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met2 ;
+      RECT 30 0 390 420 ;
+    LAYER met3 ;
+      RECT 60 0 390 420 ;
+    LAYER met4 ;
+      RECT 60 0 420 420 ;
+    LAYER met5 ;
+      RECT 60 0 420 420 ;
+    LAYER met6 ;
+      RECT 60 0 420 420 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_300px_4
+
 MACRO diffmix_25px_0
   CLASS CORE ;
   ORIGIN  0 0 ;
