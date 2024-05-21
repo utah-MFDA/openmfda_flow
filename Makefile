@@ -43,7 +43,6 @@ designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
 
 designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py:
 
-<<<<<<< HEAD
 ifdef $(TECH_LEF)
 export $(TECH_LEF)
 endif
@@ -55,7 +54,6 @@ PCELL_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_pcell_pre.l
 
 ifdef PCELL_LEF
 PCELL_MERGE_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef
-export SC_LEF=platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef
 
 verilog_preparse: 
 
@@ -71,6 +69,7 @@ $(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/out_merge_p
 		 --pcell_lef $(PCELL_LEF) \
 		 --out_lef_csv $(OPENROAD_FLOW_DIR)/logs/$(DESIGN)/$(DESIGN_VARIANT)/preparse.csv \
 		 --conversion_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)
+	export SC_LEF=platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef
 
 SCAD_PCELL_ARG=--pcell_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)/pcell_out_scad
 XYCE_PCELL_ARG=--pcell_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)/pcell_out_xyce
