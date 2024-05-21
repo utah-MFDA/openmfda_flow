@@ -1126,6 +1126,8 @@ module serpentine_200px_3(xpos, ypos, zpos, orientation)
     }
     
 }
+<<<<<<< HEAD
+=======
 module p_serpentine_0(xpos, ypos, zpos, orientation, L1, L2, turns,
     px=7.6e-3, layer=10e-3, lpv=20, chan_h=10, chan_w=14, shape="cube", pitch=30,
     no_obj=false, floor_area=false, chan_layers=1, rot=0, clr="RosyBrown")
@@ -1262,6 +1264,7 @@ module p_serpentine_1(xpos, ypos, zpos, orientation, L1, L2, turns,
             %cube([(L1+chan_w+pitch*2)*px, L2*px*(turns)+(chan_w+pitch*2)*px, layer/10]);
     }
 }
+>>>>>>> 118986fa5ec38a43c0a1b76399ed2f2ef2049c11
 module diffmix_25px_0(xpos, ypos, zpos, orientation)
 {
       
@@ -1583,4 +1586,7 @@ module interconnect_32channel(xpos, ypos, zpos)
     }
         
 }
+<<<<<<< HEAD
+=======
 
+>>>>>>> 118986fa5ec38a43c0a1b76399ed2f2ef2049c11

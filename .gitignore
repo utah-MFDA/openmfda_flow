@@ -1,8 +1,14 @@
 env
 *.zip
-openroad_flow/designs/*/demo
-scad_flow/designs/*/demo
+openroad_flow/designs/*
+xyce_flow/designs/*
+xyce_flow/results/*
+scad_flow/designs/*
 .ipynb_checkpoints
 __pycache__
 openmfda_flow.egg-info
 xyce_flow_old*
+
+chem_out.csv*
+length_out.csv*
+replace_vars.csv*
