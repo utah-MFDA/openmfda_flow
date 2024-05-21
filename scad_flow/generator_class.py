@@ -54,8 +54,8 @@ class Nets:
         r_len = 0
         for i, r in enumerate(self.route):
             if i == 0:
-                print(len(self.route))
-                print(self.route)
+                #print(len(self.route))
+                #print(self.route)
                 continue
             else:
                 r_lenx = abs(self.route[i-1][0] - self.route[i][0])**2
@@ -365,7 +365,7 @@ class NetBuilder:
 
     def import_tlef(self, tlef_f):
         
-        print(tlef_f)
+        #print(tlef_f)
         # get layers
         layer_re = r'LAYER\s*(?P<layer_name>\w*)\s*(?|(?:TYPE\s*(?P<type>(?:ROUTING|CUT))\s*;|DIRECTION\s*(?P<direction>(?:HORIZONTAL|VERTICAL))\s*;|MINWIDTH\s*(?P<minwidth>[\d.]*)\s*;|WIDTH\s*(?P<width>[\d.]*)\s*;)\s*)*END\s*(\w*)\s$' 
         layer_re = bytes(layer_re, 'utf-8')
