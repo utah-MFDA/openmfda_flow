@@ -1,0 +1,62 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.8, pytest-7.4.4, pluggy-1.3.0
+rootdir: /home/bg/Software/MFDA/Verilog_2_NX
+plugins: anyio-4.3.0
+collected 1 item
+
+tests/test_verilog_parse.py F                                            [100%]
+
+=================================== FAILURES ===================================
+_______________________________ test_build_lists _______________________________
+
+    def test_build_lists():
+    
+        from Verilog2NX import get_modules
+    
+        in_file = "tests/test_verilog.v"
+    
+>       get_modules(in_v=in_file)
+
+tests/test_verilog_parse.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+in_v = 'tests/test_verilog.v', debug = False
+
+    def get_modules(in_v, debug=False):
+    
+        # get modules
+        mod_re_b = bytes(module_reg, 'utf-8')
+    
+        with open(in_v, 'r+') as f:
+            data = mmap.mmap(f.fileno(), 0)
+            mo = regex.findall(mod_re_b, data, re.MULTILINE)
+    
+        mod_names= {}
+        mod_nets = {}
+    
+        mod_graphs = {} # place for nx graph mod_name : Graph()
+    
+        # get module names
+>       print(mo.groups('module_name'))
+E       AttributeError: 'list' object has no attribute 'groups'
+
+Verilog2NX.py:39: AttributeError
+=============================== warnings summary ===============================
+tests/test_verilog_parse.py::test_build_lists
+  /home/bg/Software/MFDA/Verilog_2_NX/Verilog2NX.py:58: DeprecationWarning: invalid escape sequence '\s'
+    mod_ports = regex.sub('\s', '', m.group('module_ports').decode('utf-8')).split(',')
+
+tests/test_verilog_parse.py::test_build_lists
+  /home/bg/Software/MFDA/Verilog_2_NX/Verilog2NX.py:108: DeprecationWarning: invalid escape sequence '\s'
+    ports = regex.sub('[\s;]','', v.group('in_ports')).split(',')
+
+tests/test_verilog_parse.py::test_build_lists
+  /home/bg/Software/MFDA/Verilog_2_NX/Verilog2NX.py:111: DeprecationWarning: invalid escape sequence '\s'
+    ports = regex.sub('[\s;]','', v.group('out_ports')).split(',')
+
+tests/test_verilog_parse.py::test_build_lists
+  /home/bg/Software/MFDA/Verilog_2_NX/Verilog2NX.py:114: DeprecationWarning: invalid escape sequence '\s'
+    connections = regex.sub('[\s;]','', v.group('wires')).split(',')
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 1 failed, 4 warnings in 0.21s =========================
