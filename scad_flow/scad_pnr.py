@@ -130,16 +130,15 @@ class place:
             orient = self.mapOrient[i.getOrient()]
             macro = i.getMaster().getName()
             x, y = i.getLocation()
-            yield f"scad_std_cell.{macro}({x}/{def_scale_}, {y}/{def_scale_}, {bottom_layer_}/{layer_}, '{orient}')"
+            yield scad_std_cell.__dict__[macro](x/def_scale_, y/def_scale_, bottom_layer_/layer_, orient)
 
     def place_components(self):
         components_placed = list(self.get_components())
-        if len(components_placed) == 0:
-            components_placed_prg = " + ".join(components_placed)
-        else:
-            components_placed_prg = f"scad_std_cell.empty_obj('NO COMPONENTS')"
-        return(eval(components_placed_prg))
 
+        if len(components_placed) > 0:
+            return reduce(operator.add, components_placed)
+        else:
+            return scad_std_cell.empty_obj('NO COMPONENTS')
 
 class component_offset:
     """
