@@ -5,6 +5,7 @@ import os
 import numpy as np
 import pandas as pd
 import def_parser
+import opendbpy as odb
 
 class set_scale_parameters:
     """
@@ -116,11 +117,24 @@ class place:
     found in the file as well as the placement location and transform that information
     to openSCAD with the corresponding 3D components.
     """
-    def __init__(self, def_file, def_parsed) -> None:
+    def __init__(self, db, def_file, def_parsed) -> None:
         self.def_file = def_parsed
+        self.db = db
+        self.mapOrient = {"R180": "S",
+                          "R0": "N",
+                          "MY": "FN",
+                          "MX": "FS"}
+    def get_components(self):
+        block = self.db.getChip().getBlock()
+        for i in block.getInsts():
+            name = i.getName()
+            orient = self.mapOrient[i.getOrient()]
+            macro = i.getMaster().getName()
+            x, y = i.getLocation()
+            yield f"scad_std_cell.{macro}({x}/{def_scale_}, {y}/{def_scale_}, {bottom_layer_}/{layer_}, '{orient}')"
 
     def place_components(self):
-        components_placed = [f"scad_std_cell.{c.macro}({c.placed[0]}/{def_scale_}, {c.placed[1]}/{def_scale_}, {bottom_layer_}/{layer_}, '{c.orient}')" for c in self.def_file.components]
+        components_placed = list(self.get_components())
         if len(components_placed) == 0:
             components_placed_prg = " + ".join(components_placed)
         else:
@@ -840,7 +854,7 @@ class scad_generation:
                     f1.write(line)
 
 
-def scad_pnr(platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, def_scale, pitch, res, dimm_file = None):
+def scad_pnr(db, platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, def_scale, pitch, res, dimm_file = None):
     """This function generates the entire SCAD flow by calling the classes above in their intended order."""
     def_parsed = def_parser.DefParser(def_file)
     def_parsed.parse()
@@ -872,7 +886,7 @@ def scad_pnr(platform, design, def_file, results_dir, px, layer, bottom_layer, l
     print("Initialization complete.")
 
     print(f"\nBuilding the design model for '{design}' from:\n'{def_file}'")
-    model = add_bulk(x_bdim_, y_bdim_, z_bdim_).bulk() - (route(def_file, def_parsed).perform_routing(results_dir, design, dimm_file, flatten = True) + place(def_file, def_parsed).place_components()
+    model = add_bulk(x_bdim_, y_bdim_, z_bdim_).bulk() - (route(def_file, def_parsed).perform_routing(results_dir, design, dimm_file, flatten = True) + place(db, def_file, def_parsed).place_components()
                     + pin_place(def_file, def_parsed).place_pinholes() + pin_place(def_file, def_parsed).place_pins(dimm_file) + add_marker.marker(x_bdim_-200*px_, y_bdim_-200*px, z_bdim_-80*layer_)) + interconnect_place(def_file, def_parsed).place_interconnect()
     print("Build complete\n")
 
@@ -897,6 +911,10 @@ if __name__ == "__main__":
                     help="The design name.")
     ap.add_argument('--def_file', metavar='<path>', dest='def_file', type=str,
                     help="Path to the .def file from OpenROAD flow.")
+    ap.add_argument('--lef_file', metavar='<path>', dest='lef_file', type=str,
+                    help="Path to the .lef file from OpenROAD flow.")
+    ap.add_argument('--tlef_file', metavar='<path>', dest='tlef_file', type=str,
+                    help="Path to the .tlef file from OpenROAD flow.")
     ap.add_argument('--results_dir', metavar='<path>', dest='results_dir', type=str,
                     help="Path where the results are generated.")
     ap.add_argument('--px', metavar='<value>', dest='px', type=float,
@@ -927,7 +945,13 @@ if __name__ == "__main__":
                     help="Optional .csv file with routing dimensions.", default = None)
     args = ap.parse_args()
 
-    scad_pnr(args.platform,
+    db = odb.dbDatabase.create()
+    odb.read_lef(db, args.tlef_file)
+    odb.read_lef(db, args.lef_file)
+    odb.read_def(db, args.def_file)
+
+    scad_pnr(db,
+             args.platform,
              args.design,
              args.def_file,
              args.results_dir,
