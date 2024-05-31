@@ -116,47 +116,15 @@ class place:
     found in the file as well as the placement location and transform that information
     to openSCAD with the corresponding 3D components.
     """
-    def __init__(self, def_file) -> None:
-        self.filename = def_file
-        self.def_file = def_parser.DefParser(def_file)
+    def __init__(self, def_file, def_parsed) -> None:
+        self.def_file = def_parsed
 
-    def get_components(self):
-        self.def_file.parse()
-    def get_components_old(self):
-        f = open(self.filename)
-        index, flag = 0, 0
-        list = []
-        index_found = []
-        for line in f:
-            list.append(line.strip())
-            index += 1
-            if flag < 2:
-                if 'COMPONENTS' in line:
-                    flag += 1
-                    index_found.append(index)
-            else:
-                break
-        f.close()
-
-        if flag == 2:
-            list = list[index_found[0]:index_found[1]-1]
-            replace_list = ['- ', '+ ', 'PLACED ', '( ', ') ', ';']
-            for i in range(0, len(list)):
-                for char in replace_list:
-                    list[i] = list[i].replace(char, '')
-                list[i] = list[i].strip().split(' ')
-            return(list)
-        else:
-            return(list) # return the same for now but can add error later
     def place_components(self):
-        self.get_components()
-
         components_placed = [f"scad_std_cell.{c.macro}({c.placed[0]}/{def_scale_}, {c.placed[1]}/{def_scale_}, {bottom_layer_}/{layer_}, '{c.orient}')" for c in self.def_file.components]
         if len(components_placed) == 0:
             components_placed_prg = " + ".join(components_placed)
         else:
             components_placed_prg = f"scad_std_cell.empty_obj('NO COMPONENTS')"
-
         return(eval(components_placed_prg))
 
 
@@ -296,13 +264,18 @@ class route:
     """
     This class takes a .def file with routing information and creates a SCAD model of the routing channels.
     """
-    def __init__(self, def_file) -> None:
+    def __init__(self, def_file, def_parsed) -> None:
         self.def_file = def_file
+        self.def_parsed = def_parsed
 
     def snap_to_grid(self, value):
         snap_value = round(int(value)/pitch_/def_scale_) * pitch_ * def_scale_
         return(f"{snap_value}")
 
+    def get_routing_new(self):
+        pass
+
+    # TODO remove
     def get_routing(self):
         f = open(self.def_file)
         index, flag = 0, 0
@@ -349,24 +322,24 @@ class route:
                         routes[i][star_index] = routes[i][star_index-2]
                     if 'PIN' in routes[index_found[j]]:
                         routes[i].append('PIN')
-            i = 0
-            length = len(routes)
-            while i < length:
-                if routes[i][0] == '-':
-                    del routes[i]
-                    i = 0
-                    length = len(routes)
-                else:
-                    i += 1
+            new_routes = []
+            for route in routes:
+                if route[0] != '-' and route[1].isnumeric():
+                    new_routes.append(route)
+            routes = new_routes
             for net in routes:
-                if (len(net) == 6 and net[5] != 'PIN') or len(net) == 7:
-                    net[2] = self.snap_to_grid(net[2])
-                    net[3] = self.snap_to_grid(net[3])
-                    net[4] = self.snap_to_grid(net[4])
-                    net[5] = self.snap_to_grid(net[5])
-                else:
-                    net[2] = self.snap_to_grid(net[2])
-                    net[3] = self.snap_to_grid(net[3])
+                try:
+                    if (len(net) == 6 and net[5] != 'PIN') or len(net) == 7:
+                        net[2] = self.snap_to_grid(net[2])
+                        net[3] = self.snap_to_grid(net[3])
+                        net[4] = self.snap_to_grid(net[4])
+                        net[5] = self.snap_to_grid(net[5])
+                    else:
+                        net[2] = self.snap_to_grid(net[2])
+                        net[3] = self.snap_to_grid(net[3])
+                except:
+                    print(net)
+                    raise
             i = 0
             length = len(routes)
             while i < length:
@@ -391,6 +364,7 @@ class route:
         Options: 'one_length'
         """
         routes = self.get_routing()
+
         if target == 'one_length': # Targets routes that are one grid unit in length for flattening
             one_length_routes = []
             for route in routes:
@@ -489,7 +463,7 @@ class route:
 
 
     def get_ports(self):
-        place_components    = place(self.def_file).get_components()
+        place_components    = place(self.def_file, self.def_parsed).get_components()
         inst                = [component[0] for component in place_components]
         placement           = [component[1:5] for component in place_components]
         inst_placement      = {key: value for key, value in zip(inst, placement)}
@@ -550,7 +524,7 @@ class route:
         routing     = str()
         if flatten:
             routes = self.flatten_routes(routes, 'one_length')
-        self.report_route_lengths(routes, pin_place(self.def_file).get_pins(), output_dir, design)
+        self.report_route_lengths(routes, pin_place(self.def_file, self.def_parsed).get_pins(), output_dir, design)
         for route in routes:
             if (route[4][0] == 'M'):
                 p0 =    [int(route[2])/def_scale_*px_,
@@ -609,13 +583,15 @@ class pin_place:
     """
     This class takes a .def file with pin information and places pins or pinholes accordingly.
     """
-    def __init__(self, def_file) -> None:
+    def __init__(self, def_file, def_parsed) -> None:
         self.def_file = def_file
+        self.def_parsed = def_parsed
 
     def snap_to_grid(self, value):
         snap_value = round(int(value)/pitch_/def_scale_) * pitch_ * def_scale_
         return(f"{snap_value}")
 
+    #TODO remove
     def get_pins(self):
         f = open(self.def_file)
         index, flag = 0, 0
@@ -666,10 +642,15 @@ class pin_place:
                     length = len(list)
                 else:
                     i += 1
+            good = []
             for pin in list:
-                pin[0][2] = self.snap_to_grid(pin[0][2])
-                pin[0][3] = self.snap_to_grid(pin[0][3])
-            return(list)
+                try:
+                    pin[0][2] = self.snap_to_grid(pin[0][2])
+                    pin[0][3] = self.snap_to_grid(pin[0][3])
+                    good.append(pin)
+                except:
+                    continue
+            return(good)
         else:
             pass # add error later
 
@@ -760,11 +741,12 @@ class interconnect_place:
     """
     If pins are found inside of the boundary of the chip, this will place an interconnect for use with the interconnect module.
     """
-    def __init__(self, def_file) -> None:
+    def __init__(self, def_file, def_parsed) -> None:
         self.def_file = def_file
+        self.def_parsed = def_parsed
 
     def place_interconnect(self):
-        list                = pin_place(self.def_file).get_pins()
+        list                = pin_place(self.def_file, self.def_parsed).get_pins()
         interconnect_placed = str()
         xpos                = floor(x_bdim_/px_/2)
         ypos                = floor(y_bdim_/px_/2)
@@ -860,6 +842,8 @@ class scad_generation:
 
 def scad_pnr(platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, def_scale, pitch, res, dimm_file = None):
     """This function generates the entire SCAD flow by calling the classes above in their intended order."""
+    def_parsed = def_parser.DefParser(def_file)
+    def_parsed.parse()
 
     print("------------------------------")
     print("SCAD Place and Route begin")
@@ -888,8 +872,8 @@ def scad_pnr(platform, design, def_file, results_dir, px, layer, bottom_layer, l
     print("Initialization complete.")
 
     print(f"\nBuilding the design model for '{design}' from:\n'{def_file}'")
-    model = add_bulk(x_bdim_, y_bdim_, z_bdim_).bulk() - (route(def_file).perform_routing(results_dir, design, dimm_file, flatten = True) + place(def_file).place_components()
-                    + pin_place(def_file).place_pinholes() + pin_place(def_file).place_pins(dimm_file) + add_marker.marker(x_bdim_-200*px_, y_bdim_-200*px, z_bdim_-80*layer_)) + interconnect_place(def_file).place_interconnect()
+    model = add_bulk(x_bdim_, y_bdim_, z_bdim_).bulk() - (route(def_file, def_parsed).perform_routing(results_dir, design, dimm_file, flatten = True) + place(def_file, def_parsed).place_components()
+                    + pin_place(def_file, def_parsed).place_pinholes() + pin_place(def_file, def_parsed).place_pins(dimm_file) + add_marker.marker(x_bdim_-200*px_, y_bdim_-200*px, z_bdim_-80*layer_)) + interconnect_place(def_file, def_parsed).place_interconnect()
     print("Build complete\n")
 
     print(f"Rendering build for '{design}'")
