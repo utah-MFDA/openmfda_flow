@@ -441,10 +441,10 @@ class route:
         return(routes)
 
     def get_nets(self):
-        list = self.get_routing()
+        lines = self.get_routing()
         nets_repeat = []
         nets = []
-        for line in list:
+        for line in lines:
             nets_repeat.append(line[0])
         [nets.append(net) for net in nets_repeat if net not in nets]
         return(nets)
@@ -684,10 +684,10 @@ class pin_place:
     def get_pins(self):
         f = open(self.def_file)
         index, flag = 0, 0
-        list = []
+        stuff = []
         index_found = []
         for line in f:
-            list.append(line.strip().split('\n'))
+            stuff.append(line.strip().split('\n'))
             index += 1
             if flag < 2:
                 if 'PINS' in line:
@@ -697,42 +697,42 @@ class pin_place:
                 break
         f.close()
         if flag == 2:
-            list        = list[index_found[0]:index_found[1]-1]
+            stuff        = stuff[index_found[0]:index_found[1]-1]
             replace_list = ['+ ', '( ', ') ', ' )', ';', 'LAYER ', 'FIXED ', 'PLACED ', 'NET ', 'DIRECTION ', 'INPUT ', 'OUTPUT ', 'USE ', 'SIGNAL', 'met', ' N', ' FN', ' S', ' FS']
-            for element in list:
+            for element in stuff:
                 for char in replace_list:
                     element[0] = element[0].replace(char, '')
                 element[0] = element[0].strip().split(' ')
             i = 0
-            length = len(list)
+            length = len(stuff)
             while i < length:
-                if list[i][0][0] == 'PORT':
-                    del list[i]
+                if stuff[i][0][0] == 'PORT':
+                    del stuff[i]
                     i = 0
-                    length = len(list)
+                    length = len(stuff)
                 else:
                     i += 1
             index       = 0
             index_found = []
-            for pin in list:
+            for pin in stuff:
                 if pin[0][0] == '-':
                     index_found.append(index)
                 index += 1
             index_found.append(index)
             for i in range(0, len(index_found)-1):
-                list[index_found[i]+2][0].insert(0, list[index_found[i]+1][0][0])
-                list[index_found[i]+2][0].insert(0, list[index_found[i]][0][1])
+                stuff[index_found[i]+2][0].insert(0, stuff[index_found[i]+1][0][0])
+                stuff[index_found[i]+2][0].insert(0, stuff[index_found[i]][0][1])
             i = 0
-            length = len(list)
+            length = len(stuff)
             while i < length:
-                if list[i][0][0] == '-' or len(list[i][0]) > 4:
-                    del list[i]
+                if stuff[i][0][0] == '-' or len(stuff[i][0]) > 4:
+                    del stuff[i]
                     i = 0
-                    length = len(list)
+                    length = len(stuff)
                 else:
                     i += 1
             good = []
-            for pin in list:
+            for pin in stuff:
                 try:
                     pin[0][2] = self.snap_to_grid(pin[0][2])
                     pin[0][3] = self.snap_to_grid(pin[0][3])
@@ -757,9 +757,9 @@ class pin_place:
             return(net_params_keys)
 
     def get_nets(self):
-        list = self.get_pins()
+        stuff = self.get_pins()
         nets = []
-        for line in list:
+        for line in stuff:
             nets.append(line[0][0])
         return(nets)
 
@@ -793,14 +793,14 @@ class pin_place:
         px_ = self.params.px_
         bottom_layer_ = self.params.bottom_layer_
         layer_ = self.params.layer_
-        list = self.get_pins()
+        stuff = self.get_pins()
         pinholes_placed = []
-        for i in range(0, len(list)):
-            x1 = int(list[i][0][1])
+        for i in range(0, len(stuff)):
+            x1 = int(stuff[i][0][1])
             x1s = (x1-1)*lpv_+bottom_layer_/layer_
-            x2 = int(list[i][0][2])
+            x2 = int(stuff[i][0][2])
             x2s = x2/def_scale_
-            x3 = int(list[i][0][3])
+            x3 = int(stuff[i][0][3])
             x3s = x3/def_scale_
             yb = y_bdim_/px_
             xb = x_bdim_/px_
