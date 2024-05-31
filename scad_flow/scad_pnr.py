@@ -1,11 +1,11 @@
-from solid import *
-from solid import scad_render_to_file
-from solid.utils import *
+import operator
+import solid
+import solid.utils
 import os
 import numpy as np
 import pandas as pd
-import def_parser
 import opendbpy as odb
+from functools import reduce
 
 class set_scale_parameters:
     """
@@ -16,7 +16,7 @@ class set_scale_parameters:
     arguments, the arguments will be the number of pixels and the
     physical value will be the argument mutliplied by the pixel scalar.
     """
-    def __init__(self, px, layer) -> None:
+    def __init__(self, px, layer):
         global px_, layer_
         px_     = px
         layer_  = layer
@@ -27,7 +27,7 @@ class set_render_resolution:
     """
     This sets the render resoultion when exported to openSCAD.
     """
-    def __init__(self, res) -> None:
+    def __init__(self, res):
         global res_
         res_ = res
         print(f"Rendering fragment number set to: {res}")
@@ -39,7 +39,7 @@ class set_def_scale:
     if 1 pixel is equivalent to 0.5 units in the lef/def file then this value
     should be set to 0.5.
     """
-    def __init__(self, def_scale) -> None:
+    def __init__(self, def_scale):
         global def_scale_
         def_scale_ = def_scale
         print(f".def unit scale set to: {def_scale}")
@@ -49,7 +49,7 @@ class set_pitch:
     """
     This sets the pixel pitch of the PNR flow as determined by the platform.
     """
-    def __init__(self, pitch) -> None:
+    def __init__(self, pitch):
         global pitch_
         pitch_ = pitch
         print(f"The platform pitch is {pitch} pixels.")
@@ -59,7 +59,7 @@ class set_bottom_layer:
     """
     This sets the phyical location that the bottom routing layer is placed.
     """
-    def __init__(self, bottom_layer) -> None:
+    def __init__(self, bottom_layer) :
         global bottom_layer_
         bottom_layer_ = bottom_layer * layer_
         print(f"The bottom layer is set to: {bottom_layer} of {int(z_bdim_/layer_)} layers")
@@ -69,7 +69,7 @@ class set_layers_per_via:
     """
     This sets the multiple of layers per via.
     """
-    def __init__(self, lpv) -> None:
+    def __init__(self, lpv) :
         global lpv_
         lpv_ = lpv
         print(f"The number of layer per via is set to: {lpv} layers/via")
@@ -79,7 +79,7 @@ class set_bulk_dimensions:
     """
     This sets the dimensions of the bulk chip.
     """
-    def __init__(self, x_bdim, y_bdim, z_bdim) -> None:
+    def __init__(self, x_bdim, y_bdim, z_bdim) :
         global x_bdim_, y_bdim_, z_bdim_
         x_bdim_ = x_bdim * px_
         y_bdim_ = y_bdim * px_
@@ -91,7 +91,7 @@ class set_chip_dimensions:
     """
     This sets the dimensions of the chip.
     """
-    def __init__(self, x_cdim, y_cdim) -> None:
+    def __init__(self, x_cdim, y_cdim) :
         global x_cdim_, y_cdim_
         x_cdim_ = x_cdim
         y_cdim_ = y_cdim
@@ -102,7 +102,7 @@ class design_space_init:
     """
     This initializes the tensor of the design space.
     """
-    def __init__(self, xspace: int, yspace: int, num_layers: int) -> None:
+    def __init__(self, xspace: int, yspace: int, num_layers: int) :
         global design_space_, design_space_nets_
         self.xspace         = xspace
         self.yspace         = yspace
@@ -117,8 +117,7 @@ class place:
     found in the file as well as the placement location and transform that information
     to openSCAD with the corresponding 3D components.
     """
-    def __init__(self, db, def_file, def_parsed) -> None:
-        self.def_file = def_parsed
+    def __init__(self, db) :
         self.db = db
         self.mapOrient = {"R180": "S",
                           "R0": "N",
@@ -146,12 +145,12 @@ class component_offset:
     """
     Builds a tuple of the components and their layer offsets.
     """
-    def __init__(self, name: str, layer: list, coord_offset: list) -> None:
+    def __init__(self, name: str, layer: list, coord_offset: list) :
         self.name           = name
         self.layer          = layer
         self.coord_offset   = coord_offset
 
-    def build (self) -> Tuple[str, dict]:
+    def build (self) :
         output = {key: value for key, value in zip(self.layer, self.coord_offset)}
         return(self.name, output)
 
@@ -160,7 +159,7 @@ class design_space_place:
     """
     This fills the design space with the placed components.
     """
-    def __init__(self, place_list) -> None:
+    def __init__(self, place_list) :
         self.place_list = place_list
 
         valve_20_N  = component_offset('valve_20px_1', [1, 2], [[[25, 50], [75, 50]], [[50, 75], [50, 25]]]).build()
@@ -278,9 +277,9 @@ class route:
     """
     This class takes a .def file with routing information and creates a SCAD model of the routing channels.
     """
-    def __init__(self, def_file, def_parsed) -> None:
+    def __init__(self, def_file, db) :
         self.def_file = def_file
-        self.def_parsed = def_parsed
+        self.db = db
 
     def snap_to_grid(self, value):
         snap_value = round(int(value)/pitch_/def_scale_) * pitch_ * def_scale_
@@ -477,7 +476,7 @@ class route:
 
 
     def get_ports(self):
-        place_components    = place(self.def_file, self.def_parsed).get_components()
+        place_components    = place(self.def_file, self.db).get_components()
         inst                = [component[0] for component in place_components]
         placement           = [component[1:5] for component in place_components]
         inst_placement      = {key: value for key, value in zip(inst, placement)}
@@ -538,7 +537,7 @@ class route:
         routing     = str()
         if flatten:
             routes = self.flatten_routes(routes, 'one_length')
-        self.report_route_lengths(routes, pin_place(self.def_file, self.def_parsed).get_pins(), output_dir, design)
+        self.report_route_lengths(routes, pin_place(self.def_file, self.db).get_pins(), output_dir, design)
         for route in routes:
             if (route[4][0] == 'M'):
                 p0 =    [int(route[2])/def_scale_*px_,
@@ -577,7 +576,7 @@ class design_space_route:
     """
     This fills the design space with the routed nets and pins.
     """
-    def __init__(self, route_list) -> None:
+    def __init__(self, route_list) :
         self.route_list = route_list
 
         for route in self.route_list:
@@ -597,9 +596,9 @@ class pin_place:
     """
     This class takes a .def file with pin information and places pins or pinholes accordingly.
     """
-    def __init__(self, def_file, def_parsed) -> None:
+    def __init__(self, def_file, db) :
         self.def_file = def_file
-        self.def_parsed = def_parsed
+        self.db = db
 
     def snap_to_grid(self, value):
         snap_value = round(int(value)/pitch_/def_scale_) * pitch_ * def_scale_
@@ -755,15 +754,15 @@ class interconnect_place:
     """
     If pins are found inside of the boundary of the chip, this will place an interconnect for use with the interconnect module.
     """
-    def __init__(self, def_file, def_parsed) -> None:
+    def __init__(self, def_file, db) :
         self.def_file = def_file
-        self.def_parsed = def_parsed
+        self.db = db
 
     def place_interconnect(self):
-        list                = pin_place(self.def_file, self.def_parsed).get_pins()
+        list                = pin_place(self.def_file, self.db).get_pins()
         interconnect_placed = str()
-        xpos                = floor(x_bdim_/px_/2)
-        ypos                = floor(y_bdim_/px_/2)
+        xpos                = solid.utils.floor(x_bdim_/px_/2)
+        ypos                = solid.utils.floor(y_bdim_/px_/2)
         for i in range(0, len(list)):
             cond_x_left    = int(list[i][0][2]) <= (x_cdim_[0]+1) * def_scale_
             cond_x_right   = int(list[i][0][2]) >= (x_cdim_[1]-1) * def_scale_
@@ -782,13 +781,13 @@ class add_bulk:
     """
     This class creates the bulk chip.
     """
-    def __init__(self, x_dim, y_dim, z_dim) -> None:
+    def __init__(self, x_dim, y_dim, z_dim) :
         self.x_dim = x_dim
         self.y_dim = y_dim
         self.z_dim = z_dim
 
     def bulk(self):
-        bulk_chip = cube([self.x_dim, self.y_dim, self.z_dim])
+        bulk_chip = solid.cube([self.x_dim, self.y_dim, self.z_dim])
         return(bulk_chip)
 
 
@@ -808,7 +807,7 @@ class scad_generation:
     """
     This class generates the dependent scad files for the design.
     """
-    def __init__(self) -> None:
+    def __init__(self) :
         pass
 
     def generate_routing_scad(self, output_dir, platform, design):
@@ -856,8 +855,6 @@ class scad_generation:
 
 def scad_pnr(db, platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, def_scale, pitch, res, dimm_file = None):
     """This function generates the entire SCAD flow by calling the classes above in their intended order."""
-    def_parsed = def_parser.DefParser(def_file)
-    def_parsed.parse()
 
     print("------------------------------")
     print("SCAD Place and Route begin")
@@ -870,8 +867,8 @@ def scad_pnr(db, platform, design, def_file, results_dir, px, layer, bottom_laye
 
     print(f"Importing generated SCAD for design '{design}'")
     global scad_routing, scad_std_cell
-    scad_routing    = import_scad(f"{results_dir}/{design}_routing.scad")
-    scad_std_cell   = import_scad(f"{results_dir}/{design}_std_cells.scad")
+    scad_routing    = solid.import_scad(f"{results_dir}/{design}_routing.scad")
+    scad_std_cell   = solid.import_scad(f"{results_dir}/{design}_std_cells.scad")
     print(f"SCAD import for '{design}' complete\n")
 
     print(f"The design parameters for '{design}' are:")
@@ -886,13 +883,13 @@ def scad_pnr(db, platform, design, def_file, results_dir, px, layer, bottom_laye
     print("Initialization complete.")
 
     print(f"\nBuilding the design model for '{design}' from:\n'{def_file}'")
-    model = add_bulk(x_bdim_, y_bdim_, z_bdim_).bulk() - (route(def_file, def_parsed).perform_routing(results_dir, design, dimm_file, flatten = True) + place(db, def_file, def_parsed).place_components()
-                    + pin_place(def_file, def_parsed).place_pinholes() + pin_place(def_file, def_parsed).place_pins(dimm_file) + add_marker.marker(x_bdim_-200*px_, y_bdim_-200*px, z_bdim_-80*layer_)) + interconnect_place(def_file, def_parsed).place_interconnect()
+    model = add_bulk(x_bdim_, y_bdim_, z_bdim_).bulk() - (route(def_file, db).perform_routing(results_dir, design, dimm_file, flatten = True) + place(db).place_components()
+                    + pin_place(def_file, db).place_pinholes() + pin_place(def_file, db).place_pins(dimm_file) + add_marker.marker(x_bdim_-200*px_, y_bdim_-200*px, z_bdim_-80*layer_)) + interconnect_place(def_file, db).place_interconnect()
     print("Build complete\n")
 
     print(f"Rendering build for '{design}'")
     set_render_resolution(res)
-    scad_render_to_file(model, f"{results_dir}/{design}.scad", file_header=f"$fn = {res_};", include_orig_code=False)
+    solid.scad_render_to_file(model, f"{results_dir}/{design}.scad", file_header=f"$fn = {res_};", include_orig_code=False)
     print(f"Rendring complete\n")
 
     print("------------------------------")
