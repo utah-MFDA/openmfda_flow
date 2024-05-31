@@ -1,14 +1,19 @@
 # ==============================================================================
 # Uncomment or add the design to run
 # ==============================================================================
+PLATFORM ?= h.r.3.3
+DESIGN ?= demo
+
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
+export SCAD_DIR ?= ../scad_flow/scad
 
 # Add design paths here
 # DESIGN_CONFIG = ./designs/h.r.3.3/smart_toilet/config.mk
 # Default design
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
+RENDER_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/render.mk
 
 # Global setting for Floorplan
 export PLACE_PINS_ARGS ?=
@@ -75,6 +80,8 @@ endif
 
 $(info [INFO][FLOW] Using platform directory $(PLATFORM_DIR))
 include $(PLATFORM_DIR)/config.mk
+
+include $(RENDER_CONFIG)
 
 export FLOW_VARIANT ?= base
 
@@ -491,6 +498,42 @@ clean_finish:
 
 
 # ==============================================================================
+#  ____   ____    _    ____
+# / ___| / ___|  / \  |  _ \
+# \___ \| |     / _ \ | | | |
+#  ___) | |___ / ___ \| |_| |
+# |____/ \____/_/   \_\____/
+render: $(RESULTS_DIR)/$(DESIGN).scad
+slice: $(RESULTS_DIR)/$(DESIGN).slices
+zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
+# ==============================================================================
+# $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
+
+foo.txt:
+	touch $@
+$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def
+	mkdir -p "$(RESULTS_DIR)"
+	$(TIME_CMD) python3 ../scad_flow/scad_pnr.py $(SCAD_ARGS) \
+		--def_file $< \
+		--design "$(DESIGN)" \
+		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+
+%.stl: %.scad
+	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
+
+%.slices: %.stl
+	$(TIME_CMD) xvfb-run python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_HEIGHT} $@ 2>&1 | tee $@.log
+
+${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip: ${RESULTS_DIR}/${DESIGN}.slices
+	7z a -tzip $@ ${RESULTS_DIR}
+
+clean_render:
+	rm -rf $(RESULTS_DIR)/${DESIGN}.slices $(RESULTS_DIR)/${DESIGN}.stl $(RESULTS_DIR)/${DESIGN}.scad
+
+clean_zip:
+	rm -rf ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip
+
+# ==============================================================================
 #  __  __ ___ ____   ____
 # |  \/  |_ _/ ___| / ___|
 # | |\/| || |\___ \| |
@@ -507,10 +550,10 @@ clean:
 	@echo
 	@echo "Make clean disabled."
 	@echo "Use make clean_all or clean individual steps:"
-	@echo "  clean_synth clean_floorplan clean_place clean_cts clean_route clean_finish"
+	@echo "  clean_synth clean_floorplan clean_place clean_cts clean_route clean_render clean_zip clean_finish"
 	@echo
 
-clean_all: clean_floorplan clean_place clean_route clean_finish clean_metadata
+clean_all: clean_floorplan clean_place clean_route clean_finish clean_metadata clean_render clean_zip
 	rm -rf $(OBJECTS_DIR)
 
 nuke: clean_test clean_issues
@@ -536,5 +579,5 @@ $(foreach file,$(RESULTS_DEF),gui_$(file)): gui_%:
 # Utilities
 #-------------------------------------------------------------------------------
 include $(UTILS_DIR)/utils.mk
-export PRIVATE_DIR = ../../private_tool_scripts
--include $(PRIVATE_DIR)/private.mk
+#export PRIVATE_DIR = ../../private_tool_scripts
+#include $(PRIVATE_DIR)/private.mk
