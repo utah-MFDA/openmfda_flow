@@ -93,9 +93,11 @@ class Params():
         self.design_space_       = np.zeros((num_layers, ys, xs), dtype=np.bool_)
         self.design_space_nets_  = np.empty((num_layers, ys, xs), dtype=object)
 
+    def scale_value(self, x):
+        return self.px_*x/self.def_scale_
+
     def scale_point(self, point):
-        x, y = point
-        return (x/self.def_scale_*self.px_, y/self.def_scale_*self.px_)
+        return map(self.scale_value,point)
 
     def layer_number(self, layer):
         i = 0
@@ -239,20 +241,36 @@ class route:
         px_ = self.params.px_
         layer_ = self.params.layer_
         #TODO untangle
-        dimm = f"[[[0, 0], [-{wchan}/2*{px_}, {wchan}/2*{px_}], [0, {hchan}*{layer_}]],\n [[-{wchan}/2*{px_}, {wchan}/2*{px_}], [0, 0], [0, {hchan}*{layer_}]],\n [[-{xychan}/2*{px_}, {xychan}/2*{px_}], [-{xychan}/2*{px_}, {xychan}/2*{px_}], [0, 0]]]"
-        return dimm
+        return [
+            [
+                [0, 0],
+                [-wchan*px_/2, wchan*px_/2],
+                [0, hchan*layer_]
+            ],
+            [
+                [-wchan*px_/2, wchan*px_/2],
+                [0, 0],
+                [0, hchan*layer_]
+            ],
+            [
+                [-xychan*px_/2, xychan*px_/2],
+                [-xychan*px_/2, xychan*px_/2],
+                [0, 0]
+            ]
+        ]
 
     def add_channel(self, layer, net, start, end):
-        dimm_x, dimm_y, dimm_z = self.params.net_dimm(net)
-        dimm = self.generate_dimm(dimm_x, dimm_y, dimm_z)
-        height = self.params.layer_height(layer)
+        dimm = self.generate_dimm(*self.params.net_dimm(net))
+        dimm_x, dimm_y, dimm_z = self.params.scale_point(self.params.net_dimm(net))
         ax, ay = self.params.scale_point(start)
         if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
+            height = self.params.layer_height(end.getBottomLayer())
             via_height = self.params.layer_height(end.getTopLayer())
             p0 = [ax, ay, height]
             p1 = [ax, ay, via_height]
             connect_matrix = [["z", p1, 2]]
         else:
+            height = self.params.layer_height(layer)
             bx, by = self.params.scale_point(end)
             if ax == bx:
                 p0 = [ax, ay - 0.5 * dimm_x, height]
@@ -265,9 +283,9 @@ class route:
         return scad_routing.routing(p0, connect_matrix, dimm)
 
     def segment_length(self, layer, net, start, end):
-        height = self.params.layer_height(layer)
         ax, ay = self.params.scale_point(start)
         if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
+            height = self.params.layer_height(end.getBottomLayer())
             via_height = self.params.layer_height(end.getTopLayer())
             return via_height - height
         else:
@@ -344,10 +362,9 @@ class pin_place:
         else:
             return scad_std_cell.empty_obj('NO PINHOLES')
 
-    def generate_dimm(self, xychan):
+    def generate_dimm(self, xychan, ychan, zchan):
         px_ = self.params.px_
-        dimm = f"[[[-{xychan}/2*{px_}, {xychan}/2*{px_}], [-{xychan}/2*{px_}, {xychan}/2*{px_}], [0, 0]]]"
-        return(dimm)
+        return [[[-xychan*px_/2, xychan*px_/2], [-xychan*px_/2, xychan*px_/2], [0, 0]]]
 
     def place_interconnect(self):
         # TODO abstract dimension calculations
@@ -363,8 +380,8 @@ class pin_place:
 
         for term in self.db.getChip().getBlock().getBTerms():
             net = term.getNet()
-            dimm_x, dimm_y, dimm_z = self.params.net_dimm(net)
-            dimm = self.generate_dimm(dimm_x)
+            dimm = self.generate_dimm(*self.params.net_dimm(net))
+            dimm_x, dimm_y, dimm_z = self.params.scale_point(self.params.net_dimm(net))
             for pin in term.getBPins():
 
                 for box in pin.getBoxes():
