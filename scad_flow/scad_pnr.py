@@ -461,14 +461,10 @@ class scad_generation:
         """Generates the standard cell scad with the pixel and layers defined."""
         self.generate_routing_scad(scad_dir, output_dir, platform, design)
 
-        with open(os.path.join(output_dir, design + "_std_cells.scad"), "w") as f:
-            f.write(f"include<{design}_routing.scad>\n\n")
-
-        with open(os.path.join(output_dir, design + "_std_cells.scad"), "w") as f:
-            f.write(f"px = {px};\nlayer = {layer};\nlpv = {lpv};\n\n")
-
         with open(f"{scad_dir}/{platform}/components_05052022.scad") as f:
             with open(os.path.join(output_dir, design + "_std_cells.scad"), "w") as f1:
+                f1.write(f"include<{design}_routing.scad>\n\n")
+                f1.write(f"px = {px};\nlayer = {layer};\nlpv = {lpv};\n\n")
                 for line in f:
                     f1.write(line)
 
@@ -476,11 +472,9 @@ class scad_generation:
         """
         Generates the interconnect chip.
         """
-        with open(os.path.join(output_dir, design + "_interconnect.scad"), "w") as f:
-            f.write(f"px = {px};\nlayer = {layer};\n\n")
-
         with open(f"{scad_dir}/{platform}/flushing_interface_32.scad") as f:
             with open(os.path.join(output_dir, design + "_interconnect.scad"), "w") as f1:
+                f1.write(f"px = {px};\nlayer = {layer};\n\n")
                 for line in f:
                     f1.write(line)
 
