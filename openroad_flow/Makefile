@@ -299,8 +299,8 @@ $(RESULTS_DIR)/1_3_floorplan_macro.def: $(RESULTS_DIR)/1_2_floorplan_io.def $(RE
 $(RESULTS_DIR)/1_floorplan.def: $(RESULTS_DIR)/1_3_floorplan_macro.def
 	cp $< $@
 
-#$(RESULTS_DIR)/1_floorplan.sdc: $(RESULTS_DIR)/1_floorplan.sdc
-
+$(RESULTS_DIR)/1_floorplan.sdc: $(RESULTS_DIR)/1_synth.sdc
+	cp $< $@
 clean_floorplan:
 	rm -f $(RESULTS_DIR)/1_*floorplan*.def $(RESULTS_DIR)/1_floorplan.sdc $(RESULTS_DIR)/1_floorplan.v
 	rm -f $(REPORTS_DIR)/1_*
