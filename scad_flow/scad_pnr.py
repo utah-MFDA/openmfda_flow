@@ -1,3 +1,4 @@
+import math
 import operator
 import solid
 import solid.utils
@@ -98,6 +99,13 @@ class Params():
 
     def scale_point(self, point):
         return map(self.scale_value,point)
+
+    def scale_dimension(self, dimm):
+        x, y, z = dimm
+        x = self.px_*x
+        y = self.px_*y
+        z = z*self.layer_
+        return (x,y,z)
 
     def layer_number(self, layer):
         i = 0
@@ -216,53 +224,57 @@ class route:
 
     def segment_iter(self, wire):
         last = None
+        dimm_x, _, _ = self.params.net_dimm(wire.getNet())
+        # TODO This is not in the same units as the def file
+        dimm_x = self.params.def_scale_ * dimm_x
         for (opcode, layer, vals) in self.wire_iter(wire):
             if opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
                 last = None
             elif opcode == odb.dbWireDecoder.POINT or opcode == odb.dbWireDecoder.POINT_EXT:
                 (point, prop) = vals
-                if last != None:
+                if len(point) == 2:
+                    # By default, no extension means half the width.
+                    ext = dimm_x / 2
+                    point = (point[0], point[1], ext)
+                if last is not None:
                     yield (layer, last, point)
                 last = point
             elif opcode == odb.dbWireDecoder.TECH_VIA:
                 (via,) = vals
-                if last != None:
+                if last is not None:
                     yield (layer, last, via)
                 last = via
             elif opcode == odb.dbWireDecoder.VIA:
                 (via,) = vals
-                if last != None:
+                if last is not None:
                     yield (layer, last, via)
                 last = via
             else:
                 raise NotImplementedError()
 
     def generate_dimm(self, wchan, xychan, hchan):
-        px_ = self.params.px_
-        layer_ = self.params.layer_
-        #TODO untangle
         return [
             [
                 [0, 0],
-                [-wchan*px_/2, wchan*px_/2],
-                [0, hchan*layer_]
+                [-wchan/2, wchan/2],
+                [0, hchan]
             ],
             [
-                [-wchan*px_/2, wchan*px_/2],
+                [-wchan/2, wchan/2],
                 [0, 0],
-                [0, hchan*layer_]
+                [0, hchan]
             ],
             [
-                [-xychan*px_/2, xychan*px_/2],
-                [-xychan*px_/2, xychan*px_/2],
+                [-xychan/2, xychan/2],
+                [-xychan/2, xychan/2],
                 [0, 0]
             ]
         ]
 
     def add_channel(self, layer, net, start, end):
-        dimm = self.generate_dimm(*self.params.net_dimm(net))
-        dimm_x, dimm_y, dimm_z = self.params.scale_point(self.params.net_dimm(net))
-        ax, ay = self.params.scale_point(start)
+        dimm = self.generate_dimm(*self.params.scale_dimension(self.params.net_dimm(net)))
+        print(start, end)
+        ax, ay, aext = self.params.scale_point(start)
         if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
             height = self.params.layer_height(end.getBottomLayer())
             via_height = self.params.layer_height(end.getTopLayer())
@@ -271,29 +283,26 @@ class route:
             connect_matrix = [["z", p1, 2]]
         else:
             height = self.params.layer_height(layer)
-            bx, by = self.params.scale_point(end)
+            bx, by, bext = self.params.scale_point(end)
             if ax == bx:
-                p0 = [ax, ay - 0.5 * dimm_x, height]
-                p1 = [bx, by + 0.5 * dimm_x, height]
+                p0 = [ax, ay - aext, height]
+                p1 = [bx, by + bext, height]
                 connect_matrix = [["y", p1, 1]]
             else:
-                p0 = [ax - 0.5 * dimm_x, ay, height]
-                p1 = [bx + 0.5 * dimm_x, by, height]
+                p0 = [ax - aext, ay, height]
+                p1 = [bx + bext, by, height]
                 connect_matrix = [["x", p1, 0]]
         return scad_routing.routing(p0, connect_matrix, dimm)
 
     def segment_length(self, layer, net, start, end):
-        ax, ay = self.params.scale_point(start)
+        ax, ay, aext = self.params.scale_point(start)
         if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
             height = self.params.layer_height(end.getBottomLayer())
             via_height = self.params.layer_height(end.getTopLayer())
             return via_height - height
         else:
-            bx, by = self.params.scale_point(end)
-            if ax == bx:
-                return by - ay
-            else:
-                return bx - ax
+            bx, by, bext = self.params.scale_point(end)
+            return math.sqrt((by-ay)**2 + (bx-ax)**2)
 
     def report_route_lengths(self, output_dir, design):
         lengths = dict()
