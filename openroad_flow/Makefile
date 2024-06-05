@@ -234,6 +234,10 @@ do-synth-report:
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/synth_metrics.tcl) 2>&1 | tee -a $(LOG_DIR)/1_1_yosys.log
 
 # ==============================================================================
+.PHONY: clean_synth
+clean_synth:
+	rm -rf $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/1_synth.sdc
+	rm -rf $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc
 SYNTH_SCRIPT ?= $(SCRIPTS_DIR)/synth_basic.tcl
 $(SYNTH_STOP_MODULE_SCRIPT):
 	mkdir -p $(RESULTS_DIR) $(LOG_DIR) $(REPORTS_DIR)
@@ -528,7 +532,11 @@ ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip: ${RESULTS_DIR}/${DESIGN}.slices
 	7z a -tzip $@ ${RESULTS_DIR}
 
 clean_render:
-	rm -rf $(RESULTS_DIR)/${DESIGN}.slices $(RESULTS_DIR)/${DESIGN}.stl $(RESULTS_DIR)/${DESIGN}.scad
+	rm -rf $(RESULTS_DIR)/${DESIGN}.slices $(RESULTS_DIR)/${DESIGN}.stl
+	rm -rf $(RESULTS_DIR)/*.scad
+	rm -rf $(RESULTS_DIR)/${DESIGN}_lengths.csv
+	rm -rf $(RESULTS_DIR)/wire_length.csv
+	rm -rf $(RESULTS_DIR)/${DESIGN}.scad.log
 
 clean_zip:
 	rm -rf ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip
@@ -553,7 +561,7 @@ clean:
 	@echo "  clean_synth clean_floorplan clean_place clean_cts clean_route clean_render clean_zip clean_finish"
 	@echo
 
-clean_all: clean_floorplan clean_place clean_route clean_finish clean_metadata clean_render clean_zip
+clean_all: clean_synth clean_floorplan clean_place clean_route clean_finish clean_metadata clean_render clean_zip
 	rm -rf $(OBJECTS_DIR)
 
 nuke: clean_test clean_issues
