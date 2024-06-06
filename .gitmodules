@@ -2,7 +2,7 @@
 	path = tools/slicer
 	url = https://github.com/utah-MFDA/OpenGL-STL-slicer.git
 [submodule "pdks/h.r.3.3_pdk"]
-	path = pdks/h.r.3.3_pdk
+	path = openroad_flow/platforms/h.r.3.3/pdk
 	url = https://github.com/utah-MFDA/h.r.3.3_pdk.git
 [submodule "benchmarks"]
 	path = benchmarks
