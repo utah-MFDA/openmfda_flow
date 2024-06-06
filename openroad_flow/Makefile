@@ -7,8 +7,8 @@ export DESIGN ?= demo
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
-export SCAD_SCRIPT ?= ../scad_flow/scad_pnr.py
-export SCAD_DIR ?= ../scad_flow/scad/${PLATFORM}
+export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+export SCAD_DIR ?= ./platforms/${PLATFORM}/scad
 # Add design configure paths here
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
 
