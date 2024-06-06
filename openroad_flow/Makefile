@@ -2,18 +2,15 @@
 # Uncomment or add the design to run
 # ==============================================================================
 PLATFORM ?= h.r.3.3
-DESIGN ?= demo
+export DESIGN ?= demo
 
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
-export SCAD_DIR ?= ../scad_flow/scad
-
-# Add design paths here
-# DESIGN_CONFIG = ./designs/h.r.3.3/smart_toilet/config.mk
-# Default design
+export SCAD_SCRIPT ?= ../scad_flow/scad_pnr.py
+export SCAD_DIR ?= ../scad_flow/scad/${PLATFORM}
+# Add design configure paths here
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
-RENDER_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/render.mk
 
 # Global setting for Floorplan
 export PLACE_PINS_ARGS ?=
@@ -67,8 +64,6 @@ export SCRIPTS_DIR   ?= $(FLOW_HOME)/scripts
 export TEST_DIR      ?= $(FLOW_HOME)/test
 
 #-------------------------------------------------------------------------------
-# Include design and platform configuration
-include $(DESIGN_CONFIG)
 
 ifneq ($(wildcard $(PLATFORM_HOME)/$(PLATFORM)),)
   export PLATFORM_DIR = $(PLATFORM_HOME)/$(PLATFORM)
@@ -81,7 +76,8 @@ endif
 $(info [INFO][FLOW] Using platform directory $(PLATFORM_DIR))
 include $(PLATFORM_DIR)/config.mk
 
-include $(RENDER_CONFIG)
+# Include design and platform configuration
+include $(DESIGN_CONFIG)
 
 export FLOW_VARIANT ?= base
 
@@ -405,13 +401,12 @@ klayout_guides: $(RESULTS_DIR)/3_route.def $(OBJECTS_DIR)/klayout.lyt
 # |  _|  | || |\  || | ___) |  _  || || |\  | |_| |
 # |_|   |___|_| \_|___|____/|_| |_|___|_| \_|\____|
 #
-4_FINAL_FILE = $(RESULTS_DIR)/4_final.$(STREAM_SYSTEM_EXT)
 finish: $(LOG_DIR)/4_report.log \
         $(RESULTS_DIR)/4_final.v \
         $(RESULTS_DIR)/4_final.sdc \
         $(4_FINAL_FILE)
 # ==============================================================================
-
+4_FINAL_FILE = $(RESULTS_DIR)/4_final.$(STREAM_SYSTEM_EXT)
 ifneq ($(USE_FILL),)
 $(RESULTS_DIR)/4_1_fill.def: $(RESULTS_DIR)/3_route.def $(FILL_CONFIG)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/density_fill.tcl -metrics $(LOG_DIR)/4_density_fill.json) 2>&1 | tee $(LOG_DIR)/4_density_fill.log
@@ -513,13 +508,11 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
-foo.txt:
-	touch $@
 $(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def
 	mkdir -p "$(RESULTS_DIR)"
-	$(TIME_CMD) python3 ../scad_flow/scad_pnr.py $(SCAD_ARGS) \
+	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
-		--design "$(DESIGN)" \
+        --design ${DESIGN} \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 
 %.stl: %.scad

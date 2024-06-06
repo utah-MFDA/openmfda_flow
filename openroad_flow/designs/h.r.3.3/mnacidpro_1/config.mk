@@ -1,5 +1,4 @@
 export DESIGN_NAME     	= mnacidpro_1
-export PLATFORM    		= h.r.3.3
 
 export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/mnacidpro_1.v ./designs/src/$(DESIGN_NICKNAME)/mnacidpro.v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc

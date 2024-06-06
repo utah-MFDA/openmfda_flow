@@ -28,6 +28,10 @@ export PLACE_SITE = CoreSite
 export IO_PLACER_H = met3
 export IO_PLACER_V = met2
 
+# defaults specified here, override in local file as needed
+export DIE_AREA    	 	= 0 0 2550 1590
+export CORE_AREA   	 	= 0 0 2550 1590
+
 #---------------------------------------------------------
 # Place
 # --------------------------------------------------------
@@ -53,3 +57,34 @@ export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
 
 # KLayout technology file
 export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
+
+#------------------------------------------------------------------------------
+# PRINTER PARAMETERS
+#------------------------------------------------------------------------------s
+# mm/px value
+export PX_VAL 			= 0.0076
+# mm/layer value
+export LAYER_VAL		= 0.01
+# layer number for the bottom layer
+export BOT_LAYER_VAL	= 75
+# layers/via value
+export LPV_VAL			= 20
+# bulk x value in pixels
+export XBULK_VAL		= 2550
+# bulk y value in pixels
+export YBULK_VAL		= 1600
+# bulk z value in layers
+export ZBULK_VAL		= 230
+# chip min and max x values in pixels
+export XCHIP_VALS		= 325 2225
+# chip min and max y values in pixels
+export YCHIP_VALS		= 325 1275
+# render smoothness in scad render
+export RES_VAL			= 120
+export PITCH            = 30
+# Default SCAD script arguments
+SCAD_ARGS = --lef_file ${SC_LEF} --tlef_file ${TECH_LEF} \
+            --platform "$(PLATFORM)" \
+            --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
+            --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
+            --pitch $(PITCH) --res $(RES_VAL)

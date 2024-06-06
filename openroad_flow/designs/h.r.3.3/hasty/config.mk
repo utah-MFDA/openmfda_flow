@@ -1,5 +1,4 @@
 export DESIGN_NAME     	= hasty
-export PLATFORM    		= h.r.3.3
 
 export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/hasty.v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc

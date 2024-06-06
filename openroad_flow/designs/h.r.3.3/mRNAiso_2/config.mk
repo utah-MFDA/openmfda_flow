@@ -1,5 +1,4 @@
 export DESIGN_NAME     	= mRNAiso_2
-export PLATFORM    		= h.r.3.3
 
 export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/mRNAiso_2.v ./designs/src/$(DESIGN_NICKNAME)/mRNAiso.v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc

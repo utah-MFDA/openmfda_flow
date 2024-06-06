@@ -1,5 +1,4 @@
 export DESIGN_NAME     	= synthetic_2
-export PLATFORM    		= h.r.3.3
 
 export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/synthetic_2.v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc

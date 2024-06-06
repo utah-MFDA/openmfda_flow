@@ -1,5 +1,4 @@
 export DESIGN_NAME     	= kinase_activity
-export PLATFORM    		= h.r.3.3
 
 export VERILOG_FILES 	= ./designs/src/$(DESIGN_NICKNAME)/kinase_activity.v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc
