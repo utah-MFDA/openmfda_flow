@@ -459,7 +459,7 @@ class scad_generation:
         except FileExistsError:
             pass
 
-        with open(f"{scad_dir}/{platform}/routing_181220.scad") as f:
+        with open(f"{scad_dir}/routing_181220.scad") as f:
             with open(os.path.join(output_dir, design + "_routing.scad"), "w") as f1:
                 for line in f:
                     f1.write(line)
@@ -470,7 +470,7 @@ class scad_generation:
         """Generates the standard cell scad with the pixel and layers defined."""
         self.generate_routing_scad(scad_dir, output_dir, platform, design)
 
-        with open(f"{scad_dir}/{platform}/components_05052022.scad") as f:
+        with open(f"{scad_dir}/components_05052022.scad") as f:
             with open(os.path.join(output_dir, design + "_std_cells.scad"), "w") as f1:
                 f1.write(f"include<{design}_routing.scad>\n\n")
                 f1.write(f"px = {px};\nlayer = {layer};\nlpv = {lpv};\n\n")
@@ -481,14 +481,14 @@ class scad_generation:
         """
         Generates the interconnect chip.
         """
-        with open(f"{scad_dir}/{platform}/flushing_interface_32.scad") as f:
+        with open(f"{scad_dir}/flushing_interface_32.scad") as f:
             with open(os.path.join(output_dir, design + "_interconnect.scad"), "w") as f1:
                 f1.write(f"px = {px};\nlayer = {layer};\n\n")
                 for line in f:
                     f1.write(line)
 
 
-def scad_pnr(db, scad_dir, platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, def_scale, pitch, res, dimm_file = None):
+def scad_pnr(db, scad_dir, platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, pitch, res, dimm_file = None):
     """This function generates the entire SCAD flow by calling the classes above in their intended order."""
 
     print("------------------------------")
@@ -508,7 +508,7 @@ def scad_pnr(db, scad_dir, platform, design, def_file, results_dir, px, layer, b
 
     print(f"The design parameters for '{design}' are:")
     params = Params(db)
-    params.set_def_scale(def_scale)
+    params.set_def_scale(db.getTech().getDbUnitsPerMicron())
     params.set_pitch(pitch)
     params.set_scale_parameters(px, layer)
     params.set_bulk_dimensions(xbulk, ybulk, zbulk)
@@ -529,8 +529,9 @@ def scad_pnr(db, scad_dir, platform, design, def_file, results_dir, px, layer, b
     pinholes = pin_place(db, params).place_pinholes()
     interconnect, pins = pin_place(db, params).place_interconnect()
     marker = add_marker(params).marker()
-    negative = components + pinholes + pins + marker
-    model = bulk - routing + interconnect
+    negative = components + pinholes + pins + marker + solid.color("orange")(routing)
+    #model = bulk - negative  + solid.color("blue", alpha=0.1)(interconnect)
+    model = negative
     print("Build complete\n")
 
     route(db, params).report_route_lengths(results_dir, design)
@@ -582,8 +583,6 @@ if __name__ == "__main__":
                     help="Left and right endpoints of chip in multiples of pixels.")
     ap.add_argument('--ychip', metavar='<values>', dest='ychip', nargs = '+', type=int,
                     help="Bottom and top endpoints of chip in multiples of pixels.")
-    ap.add_argument('--def_scale', metavar='<value>', dest='def_scale', type=int,
-                    help="Multiplier used in the def file for unit precision.")
     ap.add_argument('--pitch', metavar='<value>', dest='pitch', type=int,
                     help="PNR pitch for the platform.")
     ap.add_argument('--res', metavar='<value>', dest='res', type=int,
@@ -612,7 +611,6 @@ if __name__ == "__main__":
              args.zbulk,
              args.xchip,
              args.ychip,
-             args.def_scale,
              args.pitch,
              args.res,
              args.dimm_file)
