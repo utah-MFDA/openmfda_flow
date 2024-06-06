@@ -7,14 +7,13 @@ def default_pin_names():
     return [[f"pin_{i}_{j}" for i in range(0,8)] for j in range(0,4)]
 
 def copy_defaults(input_verilog, io_file, top, design_name, platform):
-    verilog_path = f"openroad_flow/designs/src/{design_name}"
-    sdc_filename = f"openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
-    io_filename = f"openroad_flow/designs/{platform}/{design_name}/io_constraints.tcl"
-    make_filename = f"openroad_flow/designs/{platform}/{design_name}/config.mk"
-    scad_dimm_filename = f"scad_flow/designs/{platform}/{design_name}/dimm.csv"
-    os.makedirs(f"openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
-    os.makedirs(f"openroad_flow/designs/src/{design_name}", exist_ok=True)
-    os.makedirs(f"scad_flow/designs/{platform}/{design_name}", exist_ok=True)
+    verilog_path = f"flow/designs/src/{design_name}"
+    sdc_filename = f"flow/designs/{platform}/{design_name}/constraint.sdc"
+    io_filename = f"flow/designs/{platform}/{design_name}/io_constraints.tcl"
+    make_filename = f"flow/designs/{platform}/{design_name}/config.mk"
+    scad_dimm_filename = f"flow/designs/{platform}/{design_name}/dimm.csv"
+    os.makedirs(f"flow/designs/{platform}/{design_name}", exist_ok=True)
+    os.makedirs(f"flow/designs/src/{design_name}", exist_ok=True)
     print("Copy design netlists")
     for filename in input_verilog:
         os.symlink(filename, verilog_path)
@@ -27,16 +26,14 @@ def copy_defaults(input_verilog, io_file, top, design_name, platform):
 
 def generate_config(input_file, design_name, pin_names=None, startx=960, starty=660, platform="h.r.3.3"):
     verilog_name = os.path.basename(input_file)
-    verilog_filename = f"openroad_flow/designs/src/{design_name}/{verilog_name}"
-    sdc_filename = f"openroad_flow/designs/{platform}/{design_name}/constraint.sdc"
-    io_filename = f"openroad_flow/designs/{platform}/{design_name}/io_constraints.tcl"
-    make_filename = f"openroad_flow/designs/{platform}/{design_name}/config.mk"
-    scad_dimm_filename = f"scad_flow/designs/{platform}/{design_name}/dimm.csv"
+    verilog_filename = f"flow/designs/src/{design_name}/{verilog_name}"
+    sdc_filename = f"flow/designs/{platform}/{design_name}/constraint.sdc"
+    io_filename = f"flow/designs/{platform}/{design_name}/io_constraints.tcl"
+    make_filename = f"flow/designs/{platform}/{design_name}/config.mk"
+    scad_dimm_filename = f"flow/designs/{platform}/{design_name}/dimm.csv"
 
-    os.makedirs(f"openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
-    os.makedirs(f"openroad_flow/designs/{platform}/{design_name}", exist_ok=True)
-    os.makedirs(f"openroad_flow/designs/src/{design_name}", exist_ok=True)
-    os.makedirs(f"scad_flow/designs/{platform}/{design_name}", exist_ok=True)
+    os.makedirs(f"flow/designs/{platform}/{design_name}", exist_ok=True)
+    os.makedirs(f"flow/designs/src/{design_name}", exist_ok=True)
     print("Copy design netlist")
     shutil.copy(input_file, verilog_filename)
     if pin_names is None:
@@ -50,7 +47,7 @@ def generate_config(input_file, design_name, pin_names=None, startx=960, starty=
     print("Done")
 
 def run_flow(design_name, platform="h.r.3.3"):
-    subprocess.run(["pwd"],
+    subprocess.run(["cd flow"],
                    stdout=None, stderr=None, check=True)
 
     subprocess.run(["make", "-e", f"DESIGN={design_name}", "-e", f"PLATFORM={platform}"],
