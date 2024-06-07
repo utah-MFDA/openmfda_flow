@@ -319,8 +319,8 @@ def get_nets(in_def, tlef=None, tlef_property=None, report_len_file=None, debug=
 
         net_dev_reg = r'\(\s*(?P<dev>\w+)\s+(?P<port>\w+)\s*\)'
 
-        print(l.group('net'))
-        print(l.group('dev_groups'))
+        #print(l.group('net'))
+        #print(l.group('dev_groups'))
         devs = regex.finditer(bytes(net_dev_reg, 'utf-8'), l.group('dev_groups'))
 
         dev_list = []
@@ -431,7 +431,7 @@ def write_nets(o_file, net_list, shape='cube', size=[0.1, 0.1, 0.1], mode="w+"):
         #// routing {n.net}
         #// connect {dev1}, {p1} to {dev2}, {p2}
         #polychannel(""")
-        print(n)
+        #print(n)
 
         pc_route = []
         

@@ -1,0 +1,188 @@
+...                                                                      [100%]
+==================================== PASSES ====================================
+_______________________________ test_build_lists _______________________________
+----------------------------- Captured stdout call -----------------------------
+<_regex.Scanner object at 0x5584b8bda4f0>
+
+
+input   soln1, soln2, soln3;
+output  out;
+
+wire    connect0,  connect1,  connect2,  connect3,  connect4,  connect5,  connect6;
+
+// Specification
+serpentine_50px_0   serp0   (.in_fluid(soln2), .out_fluid(connect0));
+serpentine_150px_0  serp1   (.in_fluid(connect0), .out_fluid(connect1));
+
+diffmix_25px_0      mix0    (.a_fluid(soln1), .b_fluid(connect1), .out_fluid(connect2));
+
+serpentine_300px_2  serp2   (.in_fluid(soln3), .out_fluid(connect3));
+serpentine_300px_2  serp3   (.in_fluid(connect3), .out_fluid(connect4));
+serpentine_300px_2  serp4   (.in_fluid(connect4), .out_fluid(connect5));
+
+diffmix_25px_0      mix1    (.a_fluid(connect2), .b_fluid(connect5), .out_fluid(connect6));
+
+serpentine_300px_0  serp5  (.in_fluid(connect6), .out_fluid(out));
+
+
+{'demo': {'netlist': <networkx.classes.graph.Graph object at 0x7fba473ef1d0>, 'inputs': [], 'outputs': [], 'wires': []}}
+{'demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}}
+demo
+nodes:
+['soln1', 'soln2', 'soln3', 'out', 'connect0', 'connect1', 'connect2', 'connect3', 'connect4', 'connect5', 'connect6', 'serp0', 'serp1', 'mix0', 'serp2', 'serp3', 'serp4', 'mix1', 'serp5']
+edges:
+[('soln1', 'mix0'), ('soln2', 'serp0'), ('soln3', 'serp2'), ('out', 'serp5'), ('connect0', 'serp0'), ('connect0', 'serp1'), ('connect1', 'serp1'), ('connect1', 'mix0'), ('connect2', 'mix0'), ('connect2', 'mix1'), ('connect3', 'serp2'), ('connect3', 'serp3'), ('connect4', 'serp3'), ('connect4', 'serp4'), ('connect5', 'serp4'), ('connect5', 'mix1'), ('connect6', 'mix1'), ('connect6', 'serp5')]
+node: soln1
+{'node_type': 'input'}
+node: soln2
+{'node_type': 'input'}
+node: soln3
+{'node_type': 'input'}
+node: out
+{'node_type': 'output'}
+node: connect0
+{'node_type': 'wire'}
+node: connect1
+{'node_type': 'wire'}
+node: connect2
+{'node_type': 'wire'}
+node: connect3
+{'node_type': 'wire'}
+node: connect4
+{'node_type': 'wire'}
+node: connect5
+{'node_type': 'wire'}
+node: connect6
+{'node_type': 'wire'}
+node: serp0
+{'node_type': 'serpentine_50px_0'}
+node: serp1
+{'node_type': 'serpentine_150px_0'}
+node: mix0
+{'node_type': 'diffmix_25px_0'}
+node: serp2
+{'node_type': 'serpentine_300px_2'}
+node: serp3
+{'node_type': 'serpentine_300px_2'}
+node: serp4
+{'node_type': 'serpentine_300px_2'}
+node: mix1
+{'node_type': 'diffmix_25px_0'}
+node: serp5
+{'node_type': 'serpentine_300px_0'}
+____________________________ test_build_lists_subs _____________________________
+----------------------------- Captured stdout call -----------------------------
+<_regex.Scanner object at 0x5584b8e729c0>
+
+
+input   soln1, soln2, soln3;
+output  out;
+
+wire    connect0,  connect1,  connect2,  connect3,  connect4,  connect5,  connect6;
+
+// Specification
+serpentine_50px_0   serp0   (.in_fluid(soln2), .out_fluid(connect0));
+serpentine_150px_0  serp1   (.in_fluid(connect0), .out_fluid(connect1));
+
+diffmix_25px_0      mix0    (.a_fluid(soln1), .b_fluid(connect1), .out_fluid(connect2));
+
+//serpentine_300px_2  serp2   (.in_fluid(soln3), .out_fluid(connect3));
+//serpentine_300px_2  serp3   (.in_fluid(connect3), .out_fluid(connect4));
+//serpentine_300px_2  serp4   (.in_fluid(connect4), .out_fluid(connect5));
+
+sub_demo sub1 (.in_p(soln3), .out_p(connect5));
+
+diffmix_25px_0      mix1    (.a_fluid(connect2), .b_fluid(connect5), .out_fluid(connect6));
+
+serpentine_300px_0  serp5  (.in_fluid(connect6), .out_fluid(out));
+
+
+
+
+input in_p;
+output out_p;
+wire connect3, connect4;
+
+serpentine_300px_2  serps2   (.in_fluid(in_p), .out_fluid(connect3));
+serpentine_300px_2  serps3   (.in_fluid(connect3), .out_fluid(connect4));
+serpentine_300px_2  serps4   (.in_fluid(connect4), .out_fluid(out_p));
+
+
+
+{'demo': {'netlist': <networkx.classes.graph.Graph object at 0x7fba46d923d0>, 'inputs': [], 'outputs': [], 'wires': []}, 'sub_demo': {'netlist': <networkx.classes.graph.Graph object at 0x7fba473fe990>, 'inputs': [], 'outputs': [], 'wires': []}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+demo
+___________________________ test_build_lists_nosubs ____________________________
+----------------------------- Captured stdout call -----------------------------
+<_regex.Scanner object at 0x5584b8e4d730>
+
+
+input   soln1, soln2, soln3;
+output  out;
+
+wire    connect0,  connect1,  connect2,  connect3,  connect4,  connect5,  connect6;
+
+// Specification
+serpentine_50px_0   serp0   (.in_fluid(soln2), .out_fluid(connect0));
+serpentine_150px_0  serp1   (.in_fluid(connect0), .out_fluid(connect1));
+
+diffmix_25px_0      mix0    (.a_fluid(soln1), .b_fluid(connect1), .out_fluid(connect2));
+
+//serpentine_300px_2  serp2   (.in_fluid(soln3), .out_fluid(connect3));
+//serpentine_300px_2  serp3   (.in_fluid(connect3), .out_fluid(connect4));
+//serpentine_300px_2  serp4   (.in_fluid(connect4), .out_fluid(connect5));
+
+sub_demo sub1 (.in_p(soln3), .out_p(connect5));
+
+diffmix_25px_0      mix1    (.a_fluid(connect2), .b_fluid(connect5), .out_fluid(connect6));
+
+serpentine_300px_0  serp5  (.in_fluid(connect6), .out_fluid(out));
+
+
+
+
+input in_p;
+output out_p;
+wire connect3, connect4;
+
+serpentine_300px_2  serps2   (.in_fluid(in_p), .out_fluid(connect3));
+serpentine_300px_2  serps3   (.in_fluid(connect3), .out_fluid(connect4));
+serpentine_300px_2  serps4   (.in_fluid(connect4), .out_fluid(out_p));
+
+
+
+{'demo': {'netlist': <networkx.classes.graph.Graph object at 0x7fba46c82890>, 'inputs': [], 'outputs': [], 'wires': []}, 'sub_demo': {'netlist': <networkx.classes.graph.Graph object at 0x7fba46c83b10>, 'inputs': [], 'outputs': [], 'wires': []}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': False}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+{'demo': {'isSubmodule': False}, 'sub_demo': {'isSubmodule': True}}
+demo
+['in_p', 'out_p', 'connect3', 'connect4', 'serps2', 'serps3', 'serps4']
+{'connect3': 'sub1_connect3', 'connect4': 'sub1_connect4', 'serps2': 'sub1_serps2', 'serps3': 'sub1_serps3', 'serps4': 'sub1_serps4'}
+edge: ('sub1', 'soln3')
+edge: ('sub1', 'connect5')
+['soln1', 'soln2', 'soln3', 'out', 'connect0', 'connect1', 'connect2', 'connect3', 'connect4', 'connect5', 'connect6', 'serp0', 'serp1', 'mix0', 'mix1', 'serp5', 'sub1_serps2', 'sub1_serps4', 'sub1_connect3', 'sub1_connect4', 'sub1_serps3']
+3 passed in 7.97s
