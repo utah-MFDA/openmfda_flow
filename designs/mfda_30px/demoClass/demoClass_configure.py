@@ -23,14 +23,13 @@ proj.set_pin([1, 6], "out")
 #pins[0][3] = "soln3"
 #pins[1][7] = "out"
 
-gp_args = {}
-gp_args['density'] = 0.88
-gp_args['bin'] = 24
-gp_args['max_phi'] = 1.06
-
 proj.set_replace_arg('density', 0.88)
 proj.set_replace_arg('bin'    , 24)
 proj.set_replace_arg('max_phi', 1.04)
+#proj.set_replace_arg('min_phi', 1.04)
+#proj.set_replace_arg('init_density_coef', 1.04)
+#proj.set_replace_arg('init_wire_coef', 1.04)
+#proj.set_replace_arg('fanout', 1.04)
 
 proj.set_die_area([0, 0, 2550, 1590])
 proj.set_core_area([0, 0, 2550, 1590])
