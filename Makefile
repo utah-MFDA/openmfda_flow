@@ -43,7 +43,6 @@ designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
 
 designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py:
 
-<<<<<<< HEAD
 ifdef $(TECH_LEF)
 export $(TECH_LEF)
 endif
@@ -51,7 +50,7 @@ ifdef $(SC_LEF)
 export $(SC_LEF)
 endif
 
-PCELL_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_pcell_pre.lef
+#PCELL_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_pcell_pre.lef
 
 ifdef PCELL_LEF
 PCELL_MERGE_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef

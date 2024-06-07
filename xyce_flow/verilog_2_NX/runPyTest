@@ -1,0 +1,2 @@
+
+PYTHONPATH=. pytest -rP tests/test_verilog_parse.py > tests_output
