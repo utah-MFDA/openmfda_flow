@@ -210,6 +210,24 @@ $(WRAPPED_LIBS):
 	sed 's/library(\(.*\))/library(\1_mod)/g' $(filter %$(notdir $(@:_mod.lib=.lib)),$(WRAP_LIBS)) | sed 's/cell(\(.*\))/cell(\1_mod)/g' > $@
 
 # ==============================================================================
+#  _     ___ ____  ____      _    ______   __
+# | |   |_ _| __ )|  _ \    / \  |  _ \ \ / /
+# | |    | ||  _ \| |_) |  / _ \ | |_) \ V /
+# | |___ | || |_) |  _ <  / ___ \|  _ < | |
+# |_____|___|____/|_| \_\/_/   \_\_| \_\|_|
+# ==============================================================================
+
+# ifeq (,$(wildcard ${PLATFORM_DIR}/build.mk))
+# # Platform configuration may export these targets
+# 	include $PLATFORM_DIR/build.mk
+# 	LIBRARY_DEPS = build_lef build_va build_scad
+# else
+# 	LIBRARY_DEPS =
+# endif
+# .PHONY: library
+# library: $(LIBRARY_DEPS)
+
+# ==============================================================================
 #  ______   ___   _ _____ _   _ _____ ____ ___ ____
 # / ___\ \ / / \ | |_   _| | | | ____/ ___|_ _/ ___|
 # \___ \\ V /|  \| | | | | |_| |  _| \___ \| |\___ \
@@ -495,6 +513,25 @@ clean_finish:
 	rm -rf $(REPORTS_DIR)/4_*.rpt
 	rm -f  $(LOG_DIR)/4_*
 
+# ==============================================================================
+#  ____ ___ __  __ _   _ _        _  _____ ___ ___  _   _
+# / ___|_ _|  \/  | | | | |      / \|_   _|_ _/ _ \| \ | |
+# \___ \| || |\/| | | | | |     / _ \ | |  | | | | |  \| |
+#  ___) | || |  | | |_| | |___ / ___ \| |  | | |_| | |\  |
+# |____/___|_|  |_|\___/|_____/_/   \_\_| |___\___/|_| \_|
+# ==============================================================================
+# TODO add lengths
+simulate: $(RESULTS_DIR)/1_synth.v
+	mkdir -p $(RESULTS_DIR)/simulation
+	$(TIME_CMD) python3 ../tools/simulation/runMFDASim.py \
+		--output_dir $(RESULTS_DIR) \
+		--netlist $(RESULTS_DIR)/1_synth.v \
+		--sim_config $(SIMULATION_CONFIG) \
+		--design $(DESIGN) \
+		--sim_dir $(RESULTS_DIR)/simulation \
+		--cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp \
+		--local_xyce True \
+		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
 
 # ==============================================================================
 #  ____   ____    _    ____
