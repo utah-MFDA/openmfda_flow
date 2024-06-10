@@ -62,9 +62,9 @@ class OpenMFDA:
             self.layer_per_via = lpv
 
         def get_xbulk(self):
-            return self.die_area[0]-self.die_area[2]
+            return self.die_area[2]-self.die_area[0]
         def get_ybulk(self):
-            return self.die_area[1]-self.die_area[3]
+            return self.die_area[3]-self.die_area[1]
         def get_zbulk(self):
             return self.bulk_total_layers
 
