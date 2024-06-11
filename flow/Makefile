@@ -520,14 +520,14 @@ clean_finish:
 #  ___) | || |  | | |_| | |___ / ___ \| |  | | |_| | |\  |
 # |____/___|_|  |_|\___/|_____/_/   \_\_| |___\___/|_| \_|
 # ==============================================================================
-# TODO add lengths
-simulate: $(RESULTS_DIR)/1_synth.v
+simulate: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/wire_length.csv
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 ../tools/simulation/runMFDASim.py \
 		--output_dir $(RESULTS_DIR) \
 		--netlist $(RESULTS_DIR)/1_synth.v \
 		--sim_config $(SIMULATION_CONFIG) \
 		--design $(DESIGN) \
+		--length_file  $(RESULTS_DIR)/wire_length.csv \
 		--sim_dir $(RESULTS_DIR)/simulation \
 		--cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp \
 		--local_xyce True \
@@ -545,7 +545,7 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
-$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def
+$(RESULTS_DIR)/$(DESIGN).scad, $(RESULTS_DIR)/wire_length.csv: $(RESULTS_DIR)/4_final.def
 	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
