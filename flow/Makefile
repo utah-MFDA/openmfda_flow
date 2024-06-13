@@ -8,7 +8,8 @@ OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
 export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
-export SCAD_DIR ?= ./platforms/${PLATFORM}/scad
+export BUILD_PDK_LIBRARY ?=
+
 # Add design configure paths here
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
 
@@ -138,7 +139,7 @@ OPENROAD_ARGS            = -no_init $(OR_ARGS)
 OPENROAD_CMD             = $(OPENROAD_EXE) -exit $(OPENROAD_ARGS)
 OPENROAD_NO_EXIT_CMD     = $(OPENROAD_EXE) $(OPENROAD_ARGS)
 OPENROAD_GUI_CMD         = $(OPENROAD_EXE) -gui $(OR_ARGS)
-
+XYCE_CMD                = Xyce
 KLAYOUT_CMD             ?= $(shell command -v klayout)
 
 #-------------------------------------------------------------------------------
@@ -216,16 +217,8 @@ $(WRAPPED_LIBS):
 # | |___ | || |_) |  _ <  / ___ \|  _ < | |
 # |_____|___|____/|_| \_\/_/   \_\_| \_\|_|
 # ==============================================================================
-
-# ifeq (,$(wildcard ${PLATFORM_DIR}/build.mk))
-# # Platform configuration may export these targets
-# 	include $PLATFORM_DIR/build.mk
-# 	LIBRARY_DEPS = build_lef build_va build_scad
-# else
-# 	LIBRARY_DEPS =
-# endif
-# .PHONY: library
-# library: $(LIBRARY_DEPS)
+# Platform configuration may export these targets
+library: $(LIBRARY_DEPS)
 
 # ==============================================================================
 #  ______   ___   _ _____ _   _ _____ ____ ___ ____
@@ -520,18 +513,32 @@ clean_finish:
 #  ___) | || |  | | |_| | |___ / ___ \| |  | | |_| | |\  |
 # |____/___|_|  |_|\___/|_____/_/   \_\_| |___\___/|_| \_|
 # ==============================================================================
-simulate: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/wire_length.csv
+.PHONY: simulate clean_simulate
+simulate: $(RESULTS_DIR)/xyceOut.csv
+clean_simulate:
+	rm -rf $(RESULTS_DIR)/xyceOut.csv
+	rm -rf $(RESULTS_DIR)/simulation
+	rm -rf $(RESULTS_DIR)/simulation.log
+	rm -rf $(RESULTS_DIR)/xyce_run.config
+
+ifneq ($(SIMULATION_CONFIG),)
+$(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
+	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
+
+$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN).scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 ../tools/simulation/runMFDASim.py \
 		--output_dir $(RESULTS_DIR) \
 		--netlist $(RESULTS_DIR)/1_synth.v \
 		--sim_config $(SIMULATION_CONFIG) \
 		--design $(DESIGN) \
-		--length_file  $(RESULTS_DIR)/wire_length.csv \
 		--sim_dir $(RESULTS_DIR)/simulation \
 		--cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp \
 		--local_xyce True \
+		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
+		--length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
+endif
 
 # ==============================================================================
 #  ____   ____    _    ____
@@ -545,7 +552,7 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
-$(RESULTS_DIR)/$(DESIGN).scad, $(RESULTS_DIR)/wire_length.csv: $(RESULTS_DIR)/4_final.def
+$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
