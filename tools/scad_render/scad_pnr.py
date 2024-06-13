@@ -273,7 +273,6 @@ class route:
 
     def add_channel(self, layer, net, start, end):
         dimm = self.generate_dimm(*self.params.scale_dimension(self.params.net_dimm(net)))
-        print(start, end)
         ax, ay, aext = self.params.scale_point(start)
         if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
             height = self.params.layer_height(end.getBottomLayer())
@@ -308,7 +307,10 @@ class route:
         lengths = dict()
         for net in self.db.getChip().getBlock().getNets():
             total = 0
-            for layer, start, end in self.segment_iter(net.getWire()):
+            wire = net.getWire()
+            if wire is None:
+                continue
+            for layer, start, end in self.segment_iter(wire):
                 total += self.segment_length(layer, net, start, end)
             lengths[net.getName()] = total
 
@@ -320,6 +322,8 @@ class route:
         nets = block.getNets()
         for net in nets:
             wire = net.getWire()
+            if wire is None:
+                continue
             for (layer, start, end) in self.segment_iter(wire):
                 yield self.add_channel(layer, net, start, end)
 
@@ -452,43 +456,31 @@ class scad_generation:
     def __init__(self) :
         pass
 
-    def generate_routing_scad(self, scad_dir, output_dir, platform, design):
+    def generate_routing_scad(self, design, routing_file, output_dir):
         """Generates the routing scad and writes to the results directory."""
-        try:
-            os.makedirs(output_dir)
-        except FileExistsError:
-            pass
-
-        with open(f"{scad_dir}/routing_181220.scad") as f:
-            with open(os.path.join(output_dir, design + "_routing.scad"), "w") as f1:
+        os.makedirs(output_dir, exist_ok=True)
+        out_file = os.path.join(output_dir, design + "_routing.scad")
+        with open(routing_file) as f:
+            with open(out_file, "w") as f1:
                 for line in f:
                     f1.write(line)
+        return out_file
 
-
-    def generate_std_cell_scad(self, px, layer, lpv, scad_dir, output_dir, platform, design):
+    def generate_std_cell_scad(self, px, layer, lpv, design, component_file, output_dir):
 
         """Generates the standard cell scad with the pixel and layers defined."""
-        self.generate_routing_scad(scad_dir, output_dir, platform, design)
+        os.makedirs(output_dir, exist_ok=True)
+        out_file = os.path.join(output_dir, design + "_components.scad")
 
-        with open(f"{scad_dir}/components_05052022.scad") as f:
-            with open(os.path.join(output_dir, design + "_std_cells.scad"), "w") as f1:
-                f1.write(f"include<{design}_routing.scad>\n\n")
+        with open(component_file) as f:
+            with open(out_file, "w") as f1:
+                f1.write(f"use <{design}_routing.scad>\n")
                 f1.write(f"px = {px};\nlayer = {layer};\nlpv = {lpv};\n\n")
                 for line in f:
                     f1.write(line)
+        return out_file
 
-    def generate_interconnect_scad(self, px, layer, scad_dir, output_dir, platform, design):
-        """
-        Generates the interconnect chip.
-        """
-        with open(f"{scad_dir}/flushing_interface_32.scad") as f:
-            with open(os.path.join(output_dir, design + "_interconnect.scad"), "w") as f1:
-                f1.write(f"px = {px};\nlayer = {layer};\n\n")
-                for line in f:
-                    f1.write(line)
-
-
-def scad_pnr(db, scad_dir, platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, pitch, res, dimm_file = None):
+def scad_pnr(db, component_file, routing_file, platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, pitch, res, dimm_file = None):
     """This function generates the entire SCAD flow by calling the classes above in their intended order."""
 
     print("------------------------------")
@@ -496,14 +488,14 @@ def scad_pnr(db, scad_dir, platform, design, def_file, results_dir, px, layer, b
     print("------------------------------\n")
 
     print("Generating standard cell and routing SCAD...")
-    scad_generation().generate_std_cell_scad(px, layer, lpv, scad_dir, results_dir, platform, design)
-    scad_generation().generate_interconnect_scad(px, layer, scad_dir, results_dir, platform, design)
+    scad_routing_file = scad_generation().generate_routing_scad(design, routing_file, results_dir)
+    scad_std_file = scad_generation().generate_std_cell_scad(px, layer, lpv, design, component_file, results_dir)
     print("SCAD generation complete\n")
 
     print(f"Importing generated SCAD for design '{design}'")
     global scad_routing, scad_std_cell
-    scad_routing    = solid.import_scad(f"{results_dir}/{design}_routing.scad")
-    scad_std_cell   = solid.import_scad(f"{results_dir}/{design}_std_cells.scad")
+    scad_std_cell   = solid.import_scad(scad_std_file)
+    scad_routing    = solid.import_scad(scad_routing_file)
     print(f"SCAD import for '{design}' complete\n")
 
     print(f"The design parameters for '{design}' are:")
@@ -561,6 +553,10 @@ if __name__ == "__main__":
                     help="Path to the .def file from OpenROAD flow.")
     ap.add_argument('--lef_file', metavar='<path>', dest='lef_file', type=str,
                     help="Path to the .lef file from OpenROAD flow.")
+    ap.add_argument('--routing_file', metavar='<path>', dest='routing_file', type=str,
+                    help="Path to the scad routing definitions.")
+    ap.add_argument('--component_file', metavar='<path>', dest='component_file', type=str,
+                    help="Path to the scad component definitions.")
     ap.add_argument('--tlef_file', metavar='<path>', dest='tlef_file', type=str,
                     help="Path to the .tlef file from OpenROAD flow.")
     ap.add_argument('--results_dir', metavar='<path>', dest='results_dir', type=str,
@@ -595,9 +591,9 @@ if __name__ == "__main__":
     odb.read_lef(db, args.tlef_file)
     odb.read_lef(db, args.lef_file)
     odb.read_def(db, args.def_file)
-    scad_dir = os.environ['SCAD_DIR']
     scad_pnr(db,
-             scad_dir,
+             args.component_file,
+             args.routing_file,
              args.platform,
              args.design,
              args.def_file,
