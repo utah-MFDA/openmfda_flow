@@ -39,13 +39,19 @@ DESIGN_VARIANT?=base
 # OpenROAD place and route
 pnr: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
 
+pnr_replace: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/2_1_place_gp.def
+
 designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
 
 designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py:
 
+# used during initial testing
+#TECH_LEF = ./$(OPENROAD_FLOW_DIR)/platforms/mfda_30px/lef/mfda_30px_merged.tlef
 ifdef $(TECH_LEF)
 export $(TECH_LEF)
 endif
+
+# SC_LEF = ./../h.r.3.3_pdk_main/Components/h.r.3.3_merged.lef
 ifdef $(SC_LEF)
 export $(SC_LEF)
 endif
@@ -58,6 +64,7 @@ PCELL_MERGE_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merge
 verilog_preparse: 
 
 pnr_pre: $(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/out_merge_pcell.lef
+
 
 #--pcell_lef $(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_pcellonly.lef 
 $(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/out_merge_pcell.lef:
