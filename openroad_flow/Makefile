@@ -28,6 +28,8 @@ endif
 # export CORE_ASPECT_RATIO := 1
 # export CORE_MARGIN := 4
 
+run_replace: $(RESULTS_DIR)/2_1_place_gp.def
+
 # ==============================================================================
 #  ____  _____ _____ _   _ ____
 # / ___|| ____|_   _| | | |  _ \

@@ -4,7 +4,8 @@
 # Tech/Libs
 # ----------------------------------------------------
 ifndef TECH_LEF
-export TECH_LEF ?= $(PLATFORM_DIR)/lef/mfda_30px.tlef
+# export TECH_LEF ?= $(PLATFORM_DIR)/lef/mfda_30px.tlef
+export TECH_LEF ?= $(PLATFORM_DIR)/lef/mfda_30px_proto.tlef
 endif
 #export SC_LEF = $(PLATFORM_DIR)/lef/mfda_30px_merged_w_pcells.lef
 ifndef SC_LEF

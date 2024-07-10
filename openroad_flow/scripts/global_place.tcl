@@ -57,7 +57,7 @@ global_placement -routability_driven -density $place_density \
     $::env(GLOBAL_PLACEMENT_ARGS)
 } elseif {[info exist ::env(GLOBAL_PLACEMENT_ARGS_PATH)]} {
   source $::env(GLOBAL_PLACEMENT_ARGS_PATH)
-  global_placement -routability_driven -density $place_density \
+  global_placement -routability_driven -density $pl_density \
     -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     -pad_right $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     -bin_grid_count $bin_grid_count \
