@@ -1,4 +1,4 @@
-
+# fmt:off
 import os, sys
 
 import regex
@@ -12,6 +12,7 @@ import matplotlib
 #matplotlib.use("TkAgg")
 
 #module_reg = r"\s*module\s*(?P<module>\s*[a-zA-Z][\w]*)\s*\((?P<ports>[\s*\w*,]*)\)\s*;(?P<module_netlist>[\w*\s*,;\(\)\.]*?)endmodule"
+comm_remove= r'[ ]*\/\/.*$\n'
 module_reg = r"^[ ]*module\s*(?P<module_name>[a-zA-Z][\w]*)\s*\((?P<module_ports>[\s\w,]*)\)\s*;(?P<module_netlist>[\s\w.,\(\);\/]*?)endmodule"
 input_reg  = r"^[ ]*input\s*(?P<input_port>[\w*, \n]*);"
 output_reg = r"^[ ]*output\s*(?P<output_port>[\w*, \n]*);"
@@ -28,6 +29,8 @@ def get_modules(in_v, visual=False, debug=False, no_submodules=False):
 
     # get modules
     mod_re_b = bytes(module_reg, 'utf-8')
+
+    in_v = remove_comments(in_v)
 
     with open(in_v, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
@@ -67,19 +70,40 @@ def get_modules(in_v, visual=False, debug=False, no_submodules=False):
     for m in mo:
         mod_name = m.group('module_name').decode('utf-8')
         # remove ws and split by ,
-        mod_ports = regex.sub(r'\s', '', m.group('module_ports').decode('utf-8')).split(',')
+        mod_ports = [p.strip() for p in m.group('module_ports').decode('utf-8').split(',')]
+        #mod_ports = regex.sub(r'\s', '', m.group('module_ports').decode('utf-8')).split(',')
         
         # build out netlist
         mod_parsed_net = parse_net(m.group('module_netlist'), mod_names=mod_names, mod_graph=mod_graphs[mod_name]['netlist'])
         #print(mod_parsed_net)
     
         for p in mod_ports:
-            if p in mod_parsed_net['inputs']:
-                mod_net[mod_name]['ports'][p] = 'input'
-                mod_graph[mod_name]['inputs'].append(p)
-            elif p in mod_parsed_net['outputs']:
-                mod_net[mod_name]['ports'][p] = 'output'
-                mod_graph[mod_name]['outputs'].append(p)
+            print(p)
+            p_type = None
+            if len(p.split(' ')) == 2:
+                p_type = p.split(' ')[0]
+                p = p.split(' ')[1]
+                if p_type in ['output', 'input']:
+                    mod_parsed_net[p_type+'s'].append(p)
+                    mod_graphs[mod_name]['netlist'].nodes[p]['node_type'] = p_type
+            if p in mod_parsed_net['inputs'] or p_type == 'input':
+                mod_nets[mod_name]['ports'][p] = 'input'
+                mod_graphs[mod_name]['inputs'].append(p)
+                #mod_parsed_net[mod_name].nodes[p]['node_type'] = 'input'
+            elif p in mod_parsed_net['outputs'] or p_type == 'output':
+                mod_nets[mod_name]['ports'][p] = 'output'
+                mod_graphs[mod_name]['outputs'].append(p)
+                #mod_parsed_net[mod_name].nodes[p]['node_type'] = 'output'
+
+        if isinstance(mod_parsed_net['wires'][0], list):
+            join_list = []
+            for l_item in mod_parsed_net['wires']:
+                join_list.append(l_item)
+            mod_parsed_net['wires'] = join_list
+
+        print(mod_parsed_net)
+
+        
 
         mod_nets[mod_name]['wires'] = mod_parsed_net['wires']
         mod_nets[mod_name]['components'] = mod_parsed_net['components']
@@ -152,7 +176,7 @@ def graphs_2_just_components(in_netlist_dict, top_module, in_netlist=None, debug
                 if debug:
                     print("edge: "+str(e))
                 ge = top_graph.edges[e[0],e[1]]
-                
+
                 in_edges = list(sub_mod_netlist.edges(ge['port']))
                 in_comp =[]
                 for in_e in in_edges:
@@ -168,7 +192,7 @@ def graphs_2_just_components(in_netlist_dict, top_module, in_netlist=None, debug
                     sub_mod_netlist.remove_edge(in_e[0], in_e[1])
                 # remove port node
                 sub_mod_netlist.remove_node(ge['port'])
-                
+
                 # add edges
                 new_edges = []
                 for c in in_comp:
@@ -233,7 +257,7 @@ def parse_net(in_net, mod_names=None, mod_graph=None, debug=False):
             mod_graph.add_nodes_from([(x, {'node_type':'wire'}) for x in connections])
         else: # component
             cv = regex.match(comp_reg, v_str)
-            cp = regex.finditer(component_port_reg, cv.group('ports'), re.MULTILINE) 
+            cp = regex.finditer(component_port_reg, cv.group('ports'), re.MULTILINE)
             net_dict['components'][cv.group('name')] =  {
                 'component_type':cv.group('component'),
                 'ports':{}
@@ -245,31 +269,37 @@ def parse_net(in_net, mod_names=None, mod_graph=None, debug=False):
             comp_type = cv.group('component')
             if debug:
                 print(mod_names)
-            
+
             if isinstance(mod_names, dict):
-                
                 #if cv.group('name') in mod_names:
                 if cv.group('component') in mod_names:
                     #print(f"adding module: {comp_name}")
                     mod_names[comp_type]['isSubmodule'] = True
                     net_dict['components'][comp_name]['isModule'] = True
-                    mod_graph.add_nodes_from([(comp_name, {"node_type":"module", "mod_name":comp_type})])
+                    mod_graph.add_nodes_from([(comp_name,
+                        {"node_type":"module", "mod_name":comp_type}
+                    )])
                 else:
                     #print(f"adding component: {comp_name} of type {comp_type}")
                     net_dict['components'][comp_name]['isModule'] = False
-                    mod_graph.add_nodes_from([(comp_name, {"node_type":cv.group('component')} )])
+                    mod_graph.add_nodes_from([(comp_name,
+                        {"node_type":cv.group('component')}
+                    )])
                     #mod_graph[comp_name]['node_type'] = cv.group('component')
             else:
-                mod_graph.add_nodes_from([(cv.group('name'), {"node_type":cv.group('component')})])
+                mod_graph.add_nodes_from([(cv.group('name'),
+                    {"node_type":cv.group('component')}
+                )])
 
             for p in cp:
-                net_dict['components'][cv.group('name')]['ports'] = {
+                net_dict['components'][comp_name]['ports'] = {
                     'comp_port':p.group('component_port'),
                     'net_port':p.group('net_port')
                 }
+                nx.set_node_attributes(mod_graph, {comp_name: {p.group('component_port'):p.group('net_port')}})
+                # mod_graph[comp_name][p.group('component_port')] = p.group('net_port')
                 mod_graph.add_edge(cv.group('name'), p.group('net_port'), port=p.group('component_port'))
 
-    
     return net_dict
 
 # remember to call G[mod]['netlist']
@@ -285,6 +315,24 @@ def visual_all_graphs(net_graphs):
             nx.draw(G, with_labels=True, font_weight='bold')
             plt.show()
 
+def remove_comments(in_v):
+    # get modules
+    mod_re_b = bytes(comm_remove, 'utf-8')
+
+    with open(in_v, 'r+') as f:
+        data = mmap.mmap(f.fileno(), 0)
+        mo = regex.sub(mod_re_b, '', data, flags=re.MULTILINE)
+
+    f_str = mo.decode("utf-8")
+
+    #if write_output:
+    of_v = in_v+".uncommented"
+    of = open(in_v+".uncommented", 'w+')
+    of.write(f_str)
+
+    return of_v
+
 def main(in_v, out_dir):
     pass
 
+# fmt: on

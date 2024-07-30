@@ -84,6 +84,7 @@ def runSimulation(
         convert_v=True,
         output_dir=None,
         pcell_file=None,
+        wirelength_g_net=None,
         extra_args={}):
 
     if verilogFile[-2:] == '.v':
@@ -162,6 +163,7 @@ def runSimulation(
             gen_output_dir=verilog_2_xyce_extras_loc,
             basename_only=convert_basename,
             pcell_file  =pcell_file,
+            wirelength_g_net=wirelength_g_net
             )
 
 
@@ -190,7 +192,7 @@ def runSimulation(
 
         # default result directory
         result_wd = workDir+"/"+os.path.basename(arcName).replace('.tar','')
-        result_wd = workDir+"/results"
+        # result_wd = workDir+"/results"
 
         simRunComm     += " --workdir "+dockerWD+'/'+os.path.basename(arcName).replace('.tar','')
 
@@ -225,7 +227,8 @@ def runSimulation(
                     OR_fileExists=True)
         
 
-        results_prn_wd = result_wd+"/results"
+        # results_prn_wd = result_wd+"/results"
+        results_prn_wd = result_wd
 
         if verilog_2_xyce_extras_loc != None:
             workDir = workDir+'/'+verilog_2_xyce_extras_loc
@@ -349,20 +352,22 @@ def convertToCir_from_config(
         design,
         verilogFile,
         sim_config,
-        wd, 
-        libFile, 
+        wd,
+        libFile,
         configFile=None,
         length_file=None,
-        preRouteSim=False, 
+        preRouteSim=False,
         overwrite=False,
         noarchive=False,
         gen_output_dir=None,
         basename_only=False,
-        pcell_file=None):
+        pcell_file=None,
+        wirelength_g_net=None,
+    ):
 
 
     from writeSpice import generate_cir_main
-    
+
     if gen_output_dir==None:
         of = f"{wd}/{design}"
     else:
@@ -377,6 +382,7 @@ def convertToCir_from_config(
         out_file=of,
         basename_only=basename_only,
         pcell_file=None,
+        wl_graph_file=wirelength_g_net
     )
     # locate nessary files
     #files = getSimFiles(verilogFile, wd)
@@ -635,7 +641,11 @@ def load_xyce_results(rDir, nodes_dir, rlist=None, chem_list=None):
         for ind, rFile in enumerate(rlist):
 
             print(rDir+"/"+rFile)
-            temp_df = pd.read_table(rDir+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
+            try:
+                temp_df = pd.read_table(rDir+rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
+            except FileNotFoundError:
+                design_dir = (rDir+rFile).replace('/results/', '/xyce_flow/')
+                temp_df = pd.read_table(design_dir, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
             #temp_df = pd.read_table(rFile, skipfooter=1, index_col=0, delim_whitespace=True, engine='python')
             
             if chem_list is not None:
@@ -853,6 +863,7 @@ if __name__ == "__main__":
         convert_v      = args.convert_verilog.lower() in ['true', '1'],
         output_dir     = args.output_dir,
         pcell_file     = args.pcell_file,
+        wirelength_g_net=None,
         extra_args     = ex_args)
     
     """

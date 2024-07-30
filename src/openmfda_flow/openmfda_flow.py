@@ -111,6 +111,7 @@ def run_flow(
     platform="mfda_30px",
     stdout=False,
     make_arg="all",
+    make_pre="",
     skip_if_no_length_file=False,
 ):
     subprocess.run(["pwd"], stdout=None, stderr=None, check=True)
@@ -118,7 +119,7 @@ def run_flow(
         make_arg = [make_arg]
     dir_path = os.path.dirname(os.path.normpath(os.path.realpath(__file__) + "/../.."))
     for arg in make_arg:
-        run_cmd = f"cd {dir_path} && make {arg} -e DESIGN={design_name} -e PLATFORM={platform}"
+        run_cmd = f"cd {dir_path} && make {make_pre} {arg} -e DESIGN={design_name} -e PLATFORM={platform}"
         print(run_cmd)
         if (
             skip_if_no_length_file

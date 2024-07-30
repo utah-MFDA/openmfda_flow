@@ -120,6 +120,8 @@ $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/simulation.config:
 # SCAD pnr
 render: ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad
 
+SCAD_LEF = ./openroad_flow/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged.lef
+
 ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
 	#$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/scad_pnr.py $(SCAD_ARGS) 
 	$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/generator_v2.py $(SCAD_ARGS) \
@@ -127,7 +129,8 @@ ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad: $(OR_RESULTS)/$(DESI
 		--tlef openroad_flow/platforms/$(PLATFORM)/lef/$(PLATFORM).tlef \
 		--design "$(DESIGN)" \
 		--results_dir "$(SCAD_RESULTS)/${DESIGN}/${DESIGN_VARIANT}" \
-		$(SCAD_PCELL_ARG)
+		$(SCAD_PCELL_ARG) \
+		--lef_file $(SCAD_LEF)
 
 scad_clean:
 	rm -rf $(SCAD_RESULTS)

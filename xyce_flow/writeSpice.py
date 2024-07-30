@@ -1,7 +1,10 @@
-import networkx as nx 
+# fmt:off
+import networkx as nx
 import numpy as np
 import pandas as pd
-
+import re
+import csv
+import ast
 
 import SimulationXyce
 
@@ -71,6 +74,9 @@ def add_probes_to_device(probes, netlist_graph):
                         'device':p[dev],
                         'param':{'':'0'}})
                         ]
+                #new_probe_node = (f"", {
+                #    'node_type':'pressure_probe',
+                #    'device': p[dev]})
                 new_es = []
                 new_es.append((new_probe_nodes[0][0], p[dev]))
                 new_es.append((new_probe_nodes[0][0], new_probe_nodes[1][0]))
@@ -91,92 +97,109 @@ def add_probes_to_device(probes, netlist_graph):
             print(p)
             if isinstance(p, SimulationXyce.SimulationXyce.Probe):
                 dev_node = list(netlist_graph[p.getNode()].keys())[0]
-                if f'V({p.getNode()}_{dev_node}_chem)' not in probe_list:
-                    dev_node = list(netlist_graph[p.getNode()].keys())[0]
-                    probe_list.append(f'V({p.getNode()}_{dev_node}_chem)')
+                pr_node  = p.getNode()
             else:
                 dev_node = list(netlist_graph[p[node]].keys())[0]
-                if f'V({p[node]}_{dev_node}_chem)' not in probe_list:
-                    dev_node = list(netlist_graph[p[node]].keys())[0]
-                    probe_list.append(f'V({p[node]}_{dev_node}_chem)')
+                pr_node  = p[node]
+
+            # check for existing probes                
+            if f'V({pr_node}_{dev_node}_chem)' not in probe_list:
+                dev_node = list(netlist_graph[pr_node].keys())[0]
+                probe_list.append(f'V({pr_node}_{dev_node}_chem)')
 
     if 'concentrationNode' in probes:
         for p in probes['concentrationNode']:
                 # explicit chem node dev
                 if isinstance(p, SimulationXyce.SimulationXyce.Probe):
-                                        
-                    netlist_graph.nodes[p.getDevice()]["chem_connection"] ={"node":f"vchpr_{p.getNode()}_{p.getDevice()}_chem","oth_node":p.getNode()}
-                    #netlist_graph.nodes[p.getNode()]["chem_connection"]={"node":f"vchpr_{p.getNode()}_conn_chem","oth_node":p.getDevice()}
-                    if netlist_graph.nodes[p.getNode()]["node_type"] in "input" and \
-                        len(netlist_graph[p.getNode()]) > 1:
-                        chan_node = f"{p.getNode()}_channel_out_chem "
-                    elif netlist_graph.nodes[p.getNode()]["node_type"] == "output" and \
-                        len(netlist_graph[p.getNode()]) > 1:
-                        chan_node = f"{p.getNode()}_channel_in_chem "
-                    elif netlist_graph.nodes[p.getNode()]["node_type"] == "wire" and \
-                        len(netlist_graph[p.getNode()]) > 2:
-                        # which port
-                        if netlist_graph.edges[p.getDevice(), p.getNode()]["port"] == "out_fluid":
-                            chan_node = f"{p.getNode()}_channel_in "
-                        else:
-                            chan_node = f"{p.getNode()}_channel_out "
-                    elif "chem_connection" in netlist_graph.nodes[p.getNode()]:
-                        chan_node = f"vchpr_{p.getNode()}_conn_chem"
-                        netlist_graph.nodes[p.getNode()]["chem_connection"]={"node":chan_node,"oth_node":p.getDevice()}
-                    else:
-                        chan_node = f"vchpr_{p.getNode()}_conn_chem"
-
-                    new_probe_node = [
-                        (f"vchpr_{p.getNode()}_{p.getDevice()}_pr", {
-                        'node_type':'concentration_probe',
-                        'chem_pr_wires':[
-                            f"vchpr_{p.getNode()}_{p.getDevice()}_chem",
-                            chan_node] 
-                            }),
-                    ]
+                    pr_node  = p.getNode()
+                    dev_node = p.getDevice()
                 else:
-                    netlist_graph.nodes[p[dev]]["chem_connection"] ={"node":f"vchpr_{p[node]}_{p[dev]}_chem","oth_node":p[node]}
-                    #netlist_graph.nodes[p[node]]["chem_connection"]={"node":f"vchpr_{p[node]}_conn_chem","oth_node":p[dev]}
-                    print(netlist_graph.nodes[p[node]])
-                    if netlist_graph.nodes[p[node]]["node_type"] in "input" and \
-                        len(netlist_graph[p[node]]) > 1:
-                        chan_node = f"{p[node]}_channel_out_chem "
-                    elif netlist_graph.nodes[p[node]]["node_type"] == "output" and \
-                        len(netlist_graph[p[node]]) > 1:
-                        chan_node = f"{p[node]}_channel_in_chem "
-                    elif netlist_graph.nodes[p[node]]["node_type"] == "wire" and \
-                        len(netlist_graph[p[node]]) > 2:
-                        # which port
-                        if netlist_graph.edges[p.getDevice(), p[node]]["port"] == "out_fluid":
-                            chan_node = f"{p[node]}_channel_in "
-                        else:
-                            chan_node = f"{p[node]}_channel_out "
-                    elif "chem_connection" in netlist_graph.nodes[p[node]]:
-                        chan_node = f"vchpr_{p[node]}_conn_chem"
-                        netlist_graph.nodes[p[node]]["chem_connection"]={"node":chan_node,"oth_node":p.getDevice()}
-                    else:
-                        chan_node = f"vchpr_{p[node]}_conn_chem"
+                    pr_node = p[node]
+                    dev_node = p[dev]
+
+                if "chem_probe" not in netlist_graph.nodes[dev_node]:
+                    netlist_graph.nodes[dev_node]["chem_probe"] = []
+                # handled by downstream instructions
+                netlist_graph.nodes[dev_node]["chem_probe"].append([pr_node]) 
+                #netlist_graph.nodes[dev_node]["chem_connection"] ={"node":f"vchpr_{pr_node}_{dev_node}_chem","oth_node":pr_node}
+                ##netlist_graph.nodes[p.getNode()]["chem_connection"]={"node":f"vchpr_{p.getNode()}_conn_chem","oth_node":p.getDevice()}
+                #if netlist_graph.nodes[pr_node]["node_type"] in "input" and \
+                #    len(netlist_graph[pr_node]) > 1:
+                #    chan_node = f"{pr_node}_channel_out_chem "
+                #elif netlist_graph.nodes[pr_node]["node_type"] == "output" and \
+                #    len(netlist_graph[pr_node]) > 1:
+                #    chan_node = f"{pr_node}_in_chem "
+                #elif netlist_graph.nodes[pr_node]["node_type"] == "wire" and \
+                #    len(netlist_graph[pr_node]) > 2:
+                #    # which port
+                #    if netlist_graph.edges[dev_node, pr_node]["port"] == "out_fluid":
+                #        chan_node = f"{pr_node}_in "
+                #    else:
+                #        chan_node = f"{pr_node}_channel_out "
+                #elif "chem_connection" in netlist_graph.nodes[pr_node]:
+                #    chan_node = f"vchpr_{pr_node}_conn_chem"
+                #    netlist_graph.nodes[pr_node]["chem_connection"]={"node":chan_node,"oth_node":dev_node}
+                #else:
+                #    chan_node = f"vchpr_{pr_node}_conn_chem"
+
+                #new_probe_node = [
+                #    (f"vchpr_{pr_node}_{dev_node}_pr", {
+                #    'node_type':'concentration_probe',
+                #    'chem_pr_wires':[
+                #        f"vchpr_{pr_node}_{dev_node}_chem",
+                #        chan_node] 
+                #        }),
+                #]
+
+
+                #else:
+                #    netlist_graph.nodes[p[dev]]["chem_connection"] ={"node":f"vchpr_{p[node]}_{p[dev]}_chem","oth_node":p[node]}
+                #    #netlist_graph.nodes[p[node]]["chem_connection"]={"node":f"vchpr_{p[node]}_conn_chem","oth_node":p[dev]}
+                #    print(netlist_graph.nodes[p[node]])
+                #    if netlist_graph.nodes[p[node]]["node_type"] in "input" and \
+                #        len(netlist_graph[p[node]]) > 1:
+                #        chan_node = f"{p[node]}_channel_out_chem "
+                #    elif netlist_graph.nodes[p[node]]["node_type"] == "output" and \
+                #        len(netlist_graph[p[node]]) > 1:
+                #        chan_node = f"{p[node]}_in_chem "
+                #    elif netlist_graph.nodes[p[node]]["node_type"] == "wire" and \
+                #        len(netlist_graph[p[node]]) > 2:
+                #        # which port
+                #        if netlist_graph.edges[p.getDevice(), p[node]]["port"] == "out_fluid":
+                #            chan_node = f"{p[node]}_in "
+                #        else:
+                #            chan_node = f"{p[node]}_channel_out "
+                #    elif "chem_connection" in netlist_graph.nodes[p[node]]:
+                #        chan_node = f"vchpr_{p[node]}_conn_chem"
+                #        netlist_graph.nodes[p[node]]["chem_connection"]={"node":chan_node,"oth_node":p.getDevice()}
+                #    else:
+                #        chan_node = f"vchpr_{p[node]}_conn_chem"
                 # explicit chem node wire
-                    new_probe_node = [
-                        (f"vchpr_{p[node]}_{p[dev]}_pr", {
-                            'node_type':'concentration_probe',
-                            'chem_pr_wires':[
-                                f"vchpr_{p[node]}_{p[dev]}_chem",
-                                chan_node] 
-                                }),
-                    ]
+                #    new_probe_node = [
+                #        (f"vchpr_{p[node]}_{p[dev]}_pr", {
+                #            'node_type':'concentration_probe',
+                #            'chem_pr_wires':[
+                #                f"vchpr_{p[node]}_{p[dev]}_chem",
+                #                chan_node] 
+                #                }),
+                #    ]
                 #new_es = []
                 #new_es.append((new_probe_nodes[0][0], p[dev]))
                 #new_es.append((new_probe_nodes[0][0], new_probe_nodes[1][0]))
                 #new_es.append((new_probe_nodes[1][0], p[node]))
 
-                netlist_graph.add_nodes_from(new_probe_node)
+                # needed with above uncommented
+                #netlist_graph.add_nodes_from(new_probe_node)
+                
+                
                 #netlist_graph.add_edges_from(new_es)
                 # same as if in list
                 if isinstance(p, SimulationXyce.SimulationXyce.Probe):
-                    probe_list.append(f'V(vchpr_{p.getNode()}_{p.getDevice()}_chem)')
+                    #probe_list.append(f'V(vchpr_{p.getNode()}_{p.getDevice()}_chem)')
+                    probe_list.append(f'V({p.getNode()}_{p.getDevice()}_chem_pr)')
                 else:
-                    probe_list.append(f'V(vchpr_{p[node]}_{p[dev]}_chem)')
+                    #probe_list.append(f'V(vchpr_{p[node]}_{p[dev]}_chem)')
+                    probe_list.append(f'V({p[node]}_{p[dev]}_chem_pr)')
     
     return probe_list, netlist_graph
 
@@ -229,33 +252,431 @@ def generate_time_lines(spice_config_class):
 
     return out_lines
 
+
+def merge_wl_net(in_g, wl_g, node, wl_file=None, 
+    debug_node = False, debug_edge = False, debug_draw=False):
+
+    mapping = {}
+    print("Node:", node)
+    print(wl_g.nodes)
+    print(wl_g.edges)
+    print(wl_file)
+    print([n for n in wl_g.nodes if n in in_g.nodes and n != node])
+    for common_node in [n for n in wl_g.nodes if n in in_g.nodes]:
+        for prop in in_g.nodes[common_node].items():
+            wl_g.nodes[common_node][prop[0]] = in_g.nodes[common_node][prop[0]]
+
+    if wl_file is not None:
+        node_wl_dict = wl_file[node]
+    for n in list(wl_g.nodes):
+        if re.match(r'br_\d_\d', str(n)) is not None:
+            br_pt = True
+            mapping[n] = f"{node}_{n}"
+            wl_g.nodes[n]['virt_node'] = ''
+        else:
+            br_pt = False
+        if n not in node_wl_dict and not br_pt and n not in in_g.nodes:
+            print("Removing node:", n)
+            wl_g.remove_node(n)
+            continue
+        if len(str(n)) > 0 and \
+        (str(n)[0] in [str(i) for i in range(0,10)] and not br_pt):
+            wl_g.nodes[n]['route'] = None
+            wl_g.nodes[n]['node_type'] = 'wire'
+            wl_g.nodes[n]['chan_len'] = node_wl_dict[n]
+            for con_n in wl_g[n]:
+                #if re.match(r'br_\d_\d', str(n)) is not None:
+                wl_g.edges[(n, con_n)]['fl_net'] = {
+                    f"{node}_{con_n}"
+                }
+                wl_g.edges[(n, con_n)]['ch_net'] = {
+                    f"{node}_{con_n}_chem"
+                }
+            mapping[n] = f"{node}_{n}"
+    wl_g = nx.relabel_nodes(wl_g, mapping)
+
+    if in_g.nodes[node]['node_type'] in ['input', 'output']:
+        if len(wl_g[node]) == 1:
+            conn_node = list(wl_g[node])[0]
+            print("New input/output node:", conn_node)
+            # the regex if different now
+            if re.match(r'[\w_]+_br_\d_\d', str(conn_node)) is not None:
+                for conn_node2 in list(wl_g[conn_node]):
+                    wl_g.nodes[conn_node2]['node_type'] = wl_g.nodes[node]['node_type']
+                    wl_g.nodes[conn_node2]['input_node'] = node
+                wl_g.nodes[node]['virt_node'] = ''
+            else:
+                wl_g.nodes[conn_node]['node_type'] = wl_g.nodes[node]['node_type']
+                if wl_g.nodes[node]['node_type'] == 'input':
+                    wl_g.nodes[conn_node]['input_node'] = node 
+                wl_g.nodes[node]['virt_node'] = ''
+        #for conn_node in list(wl_g[node]):
+        #    conn_node = list(wl_g[node])[0]
+        #    wl_g.nodes[conn_node]['node_type'] = wl_g.nodes[node]['node_type']
+        #    wl_g.nodes[node]['virt_node'] = ''
+        else:
+            raise Exception(f"Too many nodes connected to {node}; nodes {in_g[node]}")
+
+    in_g.remove_node(node)
+    in_g = nx.compose(in_g, wl_g)
+    
+    
+    # write nodes and edges to terminal
+    #debug_node = True
+    #debug_draw = True
+    if debug_node:
+        print("Wirelength nodes: ")
+        for n in wl_g.nodes:
+            print(n)
+            print(wl_g.nodes[n])
+        print("Result nodes: ")
+        for n in in_g.nodes:
+            print(n)
+            print(in_g.nodes[n])
+    if debug_edge:
+        print("Wirelength edges: ")
+        for e in wl_g.edges:
+            print(e)
+            print(wl_g.get_edge_data(e[0], e[1]))
+        print("Result edges: ")
+        #for e in in_g.edges:
+        #    print(e)
+        #    print(in_g.nodes[n])
+    if debug_draw:
+        import matplotlib.pyplot as plt
+        nx.draw_spring(wl_g, with_labels=True)
+        plt.show()
+        nx.draw_spring(in_g, with_labels=True)
+        plt.show()
+
+    return in_g
+
+
+def generate_spice_nets(in_netlist, 
+                        # probes_list, 
+                        # source_lines, 
+                        length_list=None, 
+                        add_prn_to_list=False, 
+                        pcell_file=None,
+                        wl_graph=None
+                        ):
+
+    if length_list is None:
+        no_lengths = True
+    else:
+        no_lengths = False
+        len_df = get_length_list(length_list)
+    
+    if 'XYCE_WL_GRAPH' in os.environ:
+        from networkx.readwrite import json_graph
+        wl_graph_f = ''
+        if wl_graph is None:
+            wl_graph_f = length_list.replace('_length.csv', '_route_nets.json')
+        wl_graph = {}
+        print("Reading: ", wl_graph_f)
+        with open(wl_graph_f, 'r') as f:
+            json_f = json.load(f)
+            for r in json_f.items():
+                new_graph = json_graph.node_link_graph(r[1])
+                if len(new_graph.nodes) > 1:
+                    wl_graph[r[0]] = new_graph
+                #for wl_n in wl_graph.items():
+                #    merge_wl_net(in_netlist, wl_n[1], wl[0])
+        print("Loading graph:", wl_graph_f)
+        # unset variable
+        # os.environ.pop('XYCE_WL_GRAPH')
+
+
+    
+
+    def add_fl_net_2_edge(g, edge, net_name):
+        if 'fl_net' in g.edges[edge]:
+            if net_name == g.edges[edge]['fl_net']:
+                print(f"  Net {net_name} already added to {edge}")
+            else:
+                raise Exception(f"Conflicting net names adding {net_name}, already {g.edges[edge]['fl_net']}")
+        else:
+            g.edges[edge]['fl_net'] = net_name
+
+    def add_ch_net_2_edge(g, edge, net_name):
+        if 'ch_net' in g.edges[edge]:
+            if net_name == g.edges[edge]['ch_net']:
+                print(f"  Net {net_name} already added to {edge}")
+            else:
+                raise Exception(f"Conflicting net names adding {net_name}, already {g.edges[edge]['ch_net']}")
+        else:
+            g.edges[edge]['ch_net'] = net_name
+
+    for node in list(in_netlist.nodes):
+
+        ############# IF INPUT #############
+
+        if in_netlist.nodes[node]['node_type'] == 'input':
+            # and (not no_lengths):
+            if no_lengths:
+                wl = 0.01 
+            elif isinstance(len_df, pd.DataFrame):
+                wl = len_df.loc[node]["length (mm)"]
+            elif isinstance(len_df, dict):
+                wl = len_df[node] #["length (mm)"]
+            
+            if isinstance(wl, float):
+                in_netlist.nodes[node]['chan_len'] = wl
+                node_edges = list(in_netlist.edges(node))
+                
+                if len(node_edges) == 1:
+                    comp_node = list(in_netlist[node])[0]
+                    input_fluid_net = f"{node}_{comp_node}"
+                    input_chem_net  = f"{node}_{comp_node}_chem"
+                    add_fl_net_2_edge(in_netlist, node_edges[0], input_fluid_net)
+                    add_ch_net_2_edge(in_netlist, node_edges[0], input_chem_net)
+                    # in_netlist.edges[node_edges[0]]['fl_net'] = input_fluid_net
+                    # in_netlist.edges[node_edges[0]]['ch_net'] = input_chem_net
+                else:
+                    raise Exception(f"Too many nodes in input, {node_edges}. This will be handled by a net parser, the length file is invalid")
+            elif isinstance(wl, dict):
+                in_netlist = merge_wl_net(in_netlist, wl_graph[node], node, wl_file=len_df)
+            else:
+                pass
+                
+        ############# IF OUTPUT #############
+        
+        elif in_netlist.nodes[node]['node_type'] == 'output':
+            # TODO check if output as dev
+            #print(len_df)
+            if no_lengths:
+                wl = 0.01 
+            elif isinstance(len_df, pd.DataFrame):
+                wl = len_df.loc[node]["length (mm)"]
+            elif isinstance(len_df, dict):
+                wl = len_df[node] #["length (mm)"]
+            
+            if isinstance(wl, float):
+                in_netlist.nodes[node]['chan_len'] = wl
+                node_edges = list(in_netlist.edges(node))
+                
+                if len(node_edges) == 1:
+                    comp_node = list(in_netlist[node])[0]
+                    output_fluid_net = f"{node}_{comp_node}"
+                    output_chem_net  = f"{node}_{comp_node}_chem"
+                    add_fl_net_2_edge(in_netlist, node_edges[0], output_fluid_net)
+                    add_ch_net_2_edge(in_netlist, node_edges[0], output_chem_net)
+                    # in_netlist.edges[node_edges[0]]['fl_net'] = output_fluid_net
+                    # in_netlist.edges[node_edges[0]]['ch_net'] = output_chem_net
+                else:
+                    raise Exception(f"Too many nodes in input, {node_edges}. This will be handled by a net parser, the length file is invalid")
+            elif isinstance(wl, dict):
+                in_netlist = merge_wl_net(in_netlist, wl_graph[node], node, wl_file=len_df)
+            else:
+                pass
+
+        ############# IF WIRE #############
+
+        elif in_netlist.nodes[node]['node_type'] == 'wire':
+            # and (not no_lengths):
+            if no_lengths:
+                wl = 0.01
+            elif isinstance(len_df, pd.DataFrame):
+                wl = len_df.loc[node]["length (mm)"]
+            elif isinstance(len_df, dict):
+                print(len_df)
+                wl = len_df[node] #["length (mm)"]
+
+            if isinstance(wl, float):
+                in_netlist.nodes[node]['chan_len'] = wl
+                node_edges = list(in_netlist.edges(node))
+                
+                if len(node_edges) == 2:
+                    for comp_node in in_netlist[node]:
+                        print("comp node :", comp_node, "wire node: ", node)
+                        chan_fluid_net = f"{node}_{comp_node}"
+                        chan_chem_net  = f"{node}_{comp_node}_chem"
+                        add_fl_net_2_edge(in_netlist, (comp_node, node), chan_fluid_net)
+                        add_ch_net_2_edge(in_netlist, (comp_node, node), chan_chem_net)
+                        # in_netlist.edges[(node, comp_node)]['fl_net'] = chan_fluid_net
+                        # in_netlist.edges[(node, comp_node)]['ch_net'] = chan_chem_net
+                else:
+                    raise Exception(f"Too many nodes in input, {node_edges}. This will be handled by a net parser, the length file is invalid")
+            elif isinstance(wl, dict):
+                in_netlist = merge_wl_net(in_netlist, wl_graph[node], node, wl_file=len_df)
+            else:
+                pass
+    
+    return in_netlist
+
+
+def write_components_from_graph(in_g, of):
+
+    if isinstance(of, str):
+        of = open(of, 'w+')
+
+    in_nodes = []
+    out_nodes = []
+    wire_nodes = []
+    oth_nodes = []
+
+    new_probes = []
+    probe_2_write = []
+
+    chan_comp = 'Ychannel'
+
+    for n in in_g.nodes:
+        # these are handled by the graph wires
+        if 'virt_node' in in_g.nodes[n]:
+            continue
+        if in_g.nodes[n]['node_type'] == 'input':
+            in_nodes.append(n)
+        elif in_g.nodes[n]['node_type'] == 'output':
+            out_nodes.append(n)
+        elif in_g.nodes[n]['node_type'] == 'wire':
+            wire_nodes.append(n)
+        else:
+            oth_nodes.append(n)
+
+    print(in_nodes,'\n', out_nodes, '\n', wire_nodes, '\n', oth_nodes)
+
+    # write nodes
+    for i_n in in_nodes:
+        try:
+            e = list(in_g.edges(i_n))[0]
+            e_fl = in_g[e[0]][e[1]]['fl_net']
+            e_ch = in_g[e[0]][e[1]]['ch_net']
+        except KeyError:
+            raise KeyError(f"Net node properly made for edge {e}, node {i_n}")
+        if isinstance(e_fl, set):
+            e_fl = list(e_fl)[0]
+        if isinstance(e_ch, set):
+            e_ch = list(e_ch)[0]
+        wl = in_g.nodes[i_n]['chan_len']
+        if 'input_node' in in_g.nodes[i_n]:
+            i_n = in_g.nodes[i_n]['input_node']  # syncs up with pump nodes
+            of.write(f"{chan_comp} {i_n} {i_n}_in {e_fl} {i_n}_in_chem {e_ch} length={wl}\n")
+        else:
+            of.write(f"{chan_comp} {i_n} {i_n}_in {e_fl} {i_n}_in_chem {e_ch} length={wl}\n")
+
+    of.write('\n\n')
+
+    for w_n in wire_nodes:
+        e = list(in_g.edges(w_n))
+        e_fl1 = in_g[e[0][0]][e[0][1]]['fl_net']
+        e_ch1 = in_g[e[0][0]][e[0][1]]['ch_net']
+        e_fl2 = in_g[e[1][0]][e[1][1]]['fl_net']
+        e_ch2 = in_g[e[1][0]][e[1][1]]['ch_net']
+        if isinstance(e_fl1, set):
+            e_fl1 = list(e_fl1)[0]
+        if isinstance(e_fl2, set):
+            e_fl2 = list(e_fl2)[0]
+        if isinstance(e_ch1, set):
+            e_ch1 = list(e_ch1)[0]
+        if isinstance(e_ch2, set):
+            e_ch2 = list(e_ch2)[0]
+        wl = in_g.nodes[w_n]['chan_len']
+        of.write(f"{chan_comp} {w_n} {e_fl1} {e_fl2} {e_ch1} {e_ch2} length={wl}\n")
+
+    of.write('\n\n')
+
+    for o_n in out_nodes:
+        try:
+            e = list(in_g.edges(o_n))[0]
+            e_fl = in_g[e[0]][e[1]]['fl_net']
+            e_ch = in_g[e[0]][e[1]]['ch_net']
+        except KeyError:
+            raise KeyError(f"Net node properly made for edge {e}, node {o_n}")
+        if isinstance(e_fl, set):
+            e_fl = list(e_fl)[0]
+        if isinstance(e_ch, set):
+            e_ch = list(e_ch)[0] 
+        wl = in_g.nodes[o_n]['chan_len']
+        of.write(f"{chan_comp} {o_n} {e_fl} 0 {e_ch} {o_n}_out_chem length={wl}\n")
+
+    of.write('\n\n')
+
+    for oth_n in oth_nodes:
+        try:
+            es = list(in_g.edges(oth_n))
+            fl_wr = list([in_g.get_edge_data(e[0],e[1])['fl_net'] for e in es])
+            ch_wr = list([in_g.get_edge_data(e[0],e[1])['ch_net'] for e in es])
+        except KeyError:
+            raise KeyError(f"Net node properly made for edges {es}, node {oth_n}")
+        #print(fl_wr)
+        #print(ch_wr)
+        for ind, l_i in enumerate(fl_wr):
+            if isinstance(l_i, set):
+                fl_wr[ind] = list(l_i)[0]
+        for ind, l_i in enumerate(ch_wr):
+            if isinstance(l_i, set):
+                ch_wr[ind] = list(l_i)[0]      
+                #wire_reg = w + r"_\d_\d"
+        #print(fl_wr)
+        #print(ch_wr)
+        fl_wr = ' '.join(fl_wr)
+        ch_wr = ' '.join(ch_wr) + ' '
+
+        # directly replace the string
+        if "chem_probe" in in_g.nodes[oth_n]:
+            ch_wr = re.sub(r'[ ]+', ' ',ch_wr).split(' ')
+            for w in in_g.nodes[oth_n]["chem_probe"]:
+                #print(w, oth_n)
+                ch_wire = w[0] + "_" + oth_n + "_chem"
+                re_ch_wire = w[0] + "_" + oth_n + "_chem_pr"
+                for i, wr in enumerate(ch_wr):
+                    if wr == ch_wire:
+                        ch_wr[i] = re_ch_wire
+                # ch_wr = [re_ch_wire if ch_wire else item for item in ch_wr]
+                probe_2_write.append([
+                    'vch_'+w[0]+'_'+oth_n,
+                    ch_wire,
+                    re_ch_wire,
+                    '0V'
+                ])
+                #new_probes.append("V("+re_ch_wire_reg.strip()+')')
+                # ch_wr = ch_wr.replace(ch_wire_reg,re_ch_wire_reg)
+                print(ch_wr)
+            ch_wr = ' '.join(ch_wr)
+        
+        of.write(f"Y{in_g.nodes[oth_n]['node_type']} {oth_n} {fl_wr} {ch_wr}\n")
+
+    of.write('\n\n')
+    for pr in probe_2_write:
+        of.write(re.sub(r'[ ]+', ' ', ' '.join(pr)+'\n'))
+
+    of.write('\n\n')
+
+    return new_probes
+
+
+            
+
 def write_time_lines(spice_config_class):
     pass
 
 def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None, 
     sim_type=None, length_list=None, chem_list=None, out_file=None, 
-    add_prn_to_list=False, basename_only=False, pcell_file=None):
+    add_prn_to_list=False, basename_only=False, pcell_file=None, wl_graph=None):
     
     dev = "dev"
 
     conn_channel = 'Ychannel'
     
-    if out_file == None:
+    if out_file is None:
         out_file = 'out_spice'
     if out_file.split('.')[-1] == 'cir':
         out_file = '.'.join(out_file.split('.')[:-1])
     
-    if chem_list == None or len(chem_list)==0:
+    if chem_list is None or len(chem_list)==0:
         chem_list = {'':''}
         no_chems  = True
     else:
         no_chems = False
 
-    if length_list == None:
-        no_lengths = True
-    else:
-        no_lengths = False
-        len_df = get_length_list(length_list)
+    if 'XYCE_WL_GRAPH' in os.environ or wl_graph is not None:
+        if wl_graph is None:
+            wl_graph = length_list.replace('_length.csv', '_route_nets.json')
+    # if length_list == None:
+    #     no_lengths = True
+    # else:
+    #     no_lengths = False
+    #     len_df = get_length_list(length_list)
 
     pc_dict = {}
     if isinstance(pcell_file, str):
@@ -290,11 +711,15 @@ def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None
                 'spice_str_file':chem_out_file,
                 'spice_file':chem_out_file[:-4]}
             if add_prn_to_list:
-                output_file_entry['OutputFile'] = chem_out_file[:-4]+'.prn'
+                a, b = os.path.split(chem_out_file)
+                # output_file_entry['OutputFile'] = a + "/results/" + b[:-4]+'.prn'
+                output_file_entry['OutputFile'] = a + "/" + b[:-4]+'.prn'
 
 
         output_file_list.append(output_file_entry)
 
+        if not os.path.isdir(os.path.dirname(chem_out_file)):
+            os.mkdir(os.path.dirname(chem_out_file))
         c_of = open(chem_out_file, 'w+')
 
         c_of.write(f"* Simulation of device {dev}; chem: {chem}\n")
@@ -323,247 +748,318 @@ def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None
         wire_connections = {}
         probe_wires = [[],[]]
 
-        for node in in_netlist.nodes:
-            chem_nodes = ''
-            if in_netlist.nodes[node]['node_type'] == 'input':
-                # and (not no_lengths):
-                wl = len_df.loc[node]["length (mm)"]
-                chem_nodes=f'{node}_in_chem '
-                fluid_nodes=f'{node}_in '
-                # TODO is this for loop necessary
-                #for ind, conn_node in enumerate(in_netlist[node]):
-                conn_node = list(in_netlist[node])[0]
-                if len(in_netlist[node]) == 1:
-                    if "chem_connection" in in_netlist.nodes[node]:
-                        chem_nodes +=f"{in_netlist.nodes[node]['chem_connection']} "
-                    else:
-                        chem_nodes += f"{node}_{conn_node}_chem "
-                else:
-                    chem_nodes += f"{node}_channel_out_chem "
+        in_netlist_temp = copy.deepcopy(in_netlist)
+        in_netlist_ch = generate_spice_nets(in_netlist_temp, length_list)
 
-                if in_netlist.nodes[conn_node]["node_type"] == "wire" or \
-                    len(in_netlist[node]) > 1:
-                    fluid_nodes += f"{node}_channel_out "
-                else:    
-                    fluid_nodes += f"{node}_{conn_node} "
+        new_probes = write_components_from_graph(in_netlist_ch, c_of)
 
-
-                input_line = f"{conn_channel} {node} {fluid_nodes} {chem_nodes}length={wl}m"
-                c_of.write(input_line+'\n')
-            
-            elif in_netlist.nodes[node]['node_type'] == 'output':
-                # TODO check if output as dev
-                #print(len_df)
-                wl = len_df.loc[node]["length (mm)"]
-                chem_nodes=''
-                fluid_nodes=''
-                print(node, len(in_netlist[node]))
-                for ind, conn_node in enumerate(in_netlist[node]):
-                    if len(in_netlist[node]) == 1:
-                        if "chem_connection" in in_netlist.nodes[node] and \
-                            conn_node == in_netlist.nodes[node]["chem_connection"]["oth_node"]:
-                            chem_nodes +=f"{in_netlist.nodes[node]['chem_connection']['node']} "
-                        else:
-                            chem_nodes += f"{node}_{conn_node}_chem "
-                    elif ind == 0:
-                        chem_nodes += f"{node}_channel_in_chem "
-                    else:
-                        pass
-                        
-                    if len(in_netlist[node]) > 1 and \
-                        ind == 0:
-                        fluid_nodes += f"{node}_channel_in "
-                    elif ind == 0:    
-                        fluid_nodes += f"{node}_{conn_node} "
-                chem_nodes += f'{node}_out_chem '
-                output_line = f"{conn_channel} {node} {fluid_nodes} 0 {chem_nodes}length={wl}m"
-                c_of.write(output_line+'\n')
-
-            elif in_netlist.nodes[node]['node_type'] == 'wire':
-                # and (not no_lengths):
-                wl = len_df.loc[node]["length (mm)"]
-                chem_nodes=''
-                fluid_nodes=''
-                if len(in_netlist[node]) == 2:
-                    for ind, conn_node in enumerate(in_netlist[node]):
-                        # is a chemical node
-                        if "chem_connection" in in_netlist.nodes[node] and \
-                            conn_node == in_netlist.nodes[node]["chem_connection"]["oth_node"]:
-                            chem_nodes +=f"{in_netlist.nodes[node]['chem_connection']['node']} "
-                        # is a probe; TODO interaction of chem and conn nodes
-                        #elif in_netlist.nodes[conn_node]["node_type"] == "flow_probe" or \
-                            #in_netlist.nodes[conn_node]["node_type"] == "pressure_probe":
-                            #chem_nodes += f"{node}_{in_netlist.nodes[conn_node]['device']}_chem "
-                        else:
-                            chem_nodes += f"{node}_{conn_node}_chem "
-                        if in_netlist.nodes[conn_node]["node_type"] == "flow_probe" or \
-                            in_netlist.nodes[conn_node]["node_type"] == "pressure_probe":
-                            fluid_nodes += f"{node}_{in_netlist.nodes[conn_node]['device']}_pr "
-                        else:
-                            fluid_nodes += f"{node}_{conn_node} "
-                else:
-                    fluid_nodes = f'{node}_channel_in {node}_channel_out '
-                    chem_nodes  = f'{node}_channel_in_chem {node}_channel_out_chem '
-
-                wire_line = f"{conn_channel} {node} {fluid_nodes} {chem_nodes}length={wl}m"
-                c_of.write(wire_line+'\n')
-            elif in_netlist.nodes[node]['node_type'] == 'connection':
-                continue
-            #elif in_netlist.nodes[node]['node_type'] == 'flow_probe':
-            #    print()
-            #    vp_conn_nodes = in_netlist[node]
-            #    probe_line = f"{node}"
-
-            else: # is component
-                comp_type = in_netlist.nodes[node]['node_type']
-                print(in_netlist[node])
-                if comp_type != "flow_probe" and \
-                    comp_type != "pressure_probe" and \
-                    comp_type != "concentration_probe":
-                    # changes to pcell definition
-                    # later appends params
-                    if has_pcells:
-                        is_pcell = False
-                        pcell_params = ''
-                        if comp_type in pc_dict:
-                            pcell_params = ' '+pc_dict[comp_type]['params']
-                            comp_type = pc_dict[comp_type]['pcell']
-                            is_pcell = True
-                    comp_line = f"Y{comp_type} {node} "
-                    chem_line = ''
-                else:
-                    comp_line = f"{node} "
-                    chem_line = ''
-                # iterate through adjacent nodes
-                for n in in_netlist[node]:
-                    no_wire = (n not in wire_connections)
-                    zero_wire = (n in wire_connections) and (wire_connections[n] == 0)
-
-                    wire_edges = len(in_netlist[n])
-
-                    if in_netlist.nodes[n]["node_type"] == 'input':
-                        if wire_edges == 1:
-                            comp_line += f"{n}_{node} "
-                        else:
-                            comp_line += f"{n}_channel_in "
-                        #chem_line += f"{n}_{node}_chem "
-                    elif in_netlist.nodes[n]["node_type"] == 'output':
-                        if wire_edges == 1:
-                            comp_line += f"{n}_{node} "
-                        else:
-                            comp_line += f"{n}_channel_out "
-                        #chem_line += f"{n}_{node}_chem "
-                    elif in_netlist.nodes[n]["node_type"] == 'wire':
-                        #print(node)
-                        #if 'device' in in_netlist.nodes[node] and \
-                        #    in_netlist.nodes[node]["device"] in probe_wires[0]:
-                        #    n_dev = in_netlist.nodes[node]["device"]
-                        #    print(node,n_dev)
-                            #comp_line += f"{n}_{probe_wires[1][probe_wires[0].index(n_dev)][1]}"
-                        #    comp_line += f"{n}_{in_netlist.nodes[node]['device']}"
-                        #    n_dev = None
-                        #else:
-                        if wire_edges == 2:
-                            comp_line += f"{n}_{node} "
-                        else:
-                            # for components
-                            if in_netlist.edges[node, n]["port"] == "out_fluid":
-                                comp_line += f"{n}_channel_in "
-                            else:
-                                comp_line += f"{n}_channel_out "
-                            #chem_line += f"{n}_{node}_chem "
-                        #elif no_wire or zero_wire:
-                        #    wire_connections[n] = 1
-                        #    comp_line += f"{n}_{node} "
-                        #    chem_line += f"{n}_{node}_chem "
-                        #else:
-                        #    wire_connections[n] += 1
-                        #    comp_line += f"{n}_{node} "
-                        #    chem_line += f"{n}_{node}_chem "
-                    # adding probes
-                    elif in_netlist.nodes[n]["node_type"] == 'connection':
-                        comp_line += f"{n} "
-                        if in_netlist.nodes[n]['chem_wire'] not in wire_connections:
-                            wire_connections[in_netlist.nodes[n]['chem_wire']] = 1
-                            chem_line += f"{in_netlist.nodes[n]['chem_wire']}_{node}_chem "
-                            if comp_type != "flow_probe" and \
-                                comp_type != "pressure_probe":
-                                probe_wires[0].append(node)
-                                probe_wires[1].append([in_netlist.nodes[n]['chem_wire'],0])
-                                print(probe_wires)
-                        else:
-                            wire_connections[in_netlist.nodes[n]['chem_wire']] += 1
-                            chem_line += f"{in_netlist.nodes[n]['chem_wire']}_{node}_chem "
-                            if comp_type != "flow_probe" and comp_type != "pressure_probe":
-                                probe_wires[0].append(node)
-                                probe_wires[1].append([in_netlist.nodes[n]['chem_wire'],1])
-                                print(probe_wires)
-                    elif in_netlist.nodes[n]["node_type"] == 'flow_probe':
-                        if zero_wire:
-                            wire_connections[n] = 1
-                            comp_line += f"{n}_{node} "
-                            #chem_line += f"{n}_0_chem "
-                        else:
-                            wire_connections[n] += 1
-                            comp_line += f"{n}_{node} "
-                            #chem_line += f"{n}_1_chem "
-                    elif in_netlist.nodes[n]["node_type"] == 'pressure_probe':
-                        if zero_wire:
-                            wire_connections[n] = 1
-                            comp_line += f"{n}_{node} "
-                            #chem_line += f"{n}_0_chem "
-                        else:
-                            wire_connections[n] += 1
-                            comp_line += f"{n}_{node} "
-                            #chem_line += f"{n}_1_chem "
-                    elif in_netlist.nodes[n]["node_type"] == 'concentration_probe':
-                        # should not have connecting nodes
-                        pass
-                        
-                    else:
-                        raise Exception(f"{n} not of correct type")
-
-                    # chemical nodes
-                    # TODO test with other probes
-                    if in_netlist.nodes[n]["node_type"] == "input" or \
-                        in_netlist.nodes[n]["node_type"] == "output" or \
-                        in_netlist.nodes[n]["node_type"] == "wire":
-                        #chem_line += f"{n}_{node}_chem "
-
-                        if "chem_connection" in in_netlist.nodes[node] and \
-                            n == in_netlist.nodes[node]["chem_connection"]["oth_node"]:
-                            chem_line +=f"{in_netlist.nodes[node]['chem_connection']['node']} "
-                        else:
-                            if wire_edges == 2 and in_netlist.nodes[n]["node_type"] == "wire":
-                                chem_line += f"{n}_{node}_chem "
-                            elif wire_edges == 1 and in_netlist.nodes[n]["node_type"] in ["input", "output"]:
-                                chem_line += f"{n}_{node}_chem "
-                            else:
-                                if in_netlist.edges[node, n]["port"] == "out_fluid":
-                                    chem_line += f"{n}_channel_in_chem "
-                                else:
-                                    chem_line += f"{n}_channel_out_chem "
-                            #chem_line += f"{n}_{node}_chem "
-
-
-                print(comp_type)
-
-                if (comp_type != "flow_probe") and \
-                    (comp_type != "pressure_probe") and \
-                    (comp_type != "concentration_probe"):
-                    comp_line += ' '+chem_line
-                    if has_pcells and is_pcell:
-                        comp_line += ' '+pcell_params
-                elif comp_type == "concentration_probe":
-                    print(comp_type)
-                    for w in in_netlist.nodes[node]["chem_pr_wires"]:
-                        comp_line += f'{w} '
-                        pass
-                    comp_line += "0V "
-                elif comp_type == "flow_probe" or comp_type == "pressure_probe":
-                    comp_line += " 0V"
-                c_of.write(comp_line+'\n')
-                #raise Exception()
+        # for node in in_netlist.nodes:
+        #     chem_nodes = ''
+        #
+        #     ########### IF INPUT #############
+        #
+        #     if in_netlist.nodes[node]['node_type'] == 'input':
+        #         # and (not no_lengths):
+        #         wl = len_df.loc[node]["length (mm)"]
+        #         
+        #         if isinstance(wl, float):
+        #             in_netlist.nodes[node]['chan_len'] = wl
+        #             node_edges = list(in_netlist.edges(node))
+        #             
+        #             if len(node_edges) == 1:
+        #                 input_fluid_net = f"{node}_{in_netlist[node]}"
+        #                 input_chem_net  = f"{node}_{in_netlist[node]}_chem"
+        #                 in_netlist.edges[node_edges[0]]['fl_net'] = input_fluid_net
+        #                 in_netlist.edges[node_edges[0]]['ch_net'] = input_chem_net
+        #             else:
+        #                 raise Exception(f"Too many nodes in input, {node_edges}. This will be handled by a net parser, the length file is invalid")
+        #         else:
+        #             pass
+        #             
+        #         ##### for removal #####    
+        #         #chem_nodes=f'{node}_in_chem '
+        #         #fluid_nodes=f'{node}_in '
+        #         ## TODO is this for loop necessary
+        #         ##for ind, conn_node in enumerate(in_netlist[node]):
+        #         #conn_node = list(in_netlist[node])[0]
+        #         #if len(in_netlist[node]) == 1:
+        #         #    if "chem_connection" in in_netlist.nodes[node]:
+        #         #        chem_nodes +=f"{in_netlist.nodes[node]['chem_connection']} "
+        #         #    else:
+        #         #        chem_nodes += f"{node}_{conn_node}_chem "
+        #         #else:
+        #         #    chem_nodes += f"{node}_channel_out_chem "
+        #
+        #         #if in_netlist.nodes[conn_node]["node_type"] == "wire" or \
+        #         #    len(in_netlist[node]) > 1:
+        #         #    fluid_nodes += f"{node}_channel_out "
+        #         #else:    
+        #         #    fluid_nodes += f"{node}_{conn_node} "
+        #
+        #
+        #         #input_line = f"{conn_channel} {node} {fluid_nodes} {chem_nodes}length={wl}m"
+        #         #c_of.write(input_line+'\n')
+        #
+        #     ########### IF OUTPUT #############
+        #     
+        #     elif in_netlist.nodes[node]['node_type'] == 'output':
+        #         # TODO check if output as dev
+        #         #print(len_df)
+        #         wl = len_df.loc[node]["length (mm)"]
+        #         
+        #         if isinstance(wl, float):
+        #             in_netlist.nodes[node]['chan_len'] = wl
+        #             node_edges = list(in_netlist.edges(node))
+        #             
+        #             if len(node_edges) == 1:
+        #                 output_fluid_net = f"{node}_{in_netlist[node]}"
+        #                 output_chem_net  = f"{node}_{in_netlist[node]}_chem"
+        #                 in_netlist.edges[node_edges[0]]['fl_net'] = output_fluid_net
+        #                 in_netlist.edges[node_edges[0]]['ch_net'] = output_chem_net
+        #             else:
+        #                 raise Exception(f"Too many nodes in input, {node_edges}. This will be handled by a net parser, the length file is invalid")
+        #         else:
+        #             pass
+        #
+        #         ##### for removal #####
+        #         #chem_nodes=''
+        #         #fluid_nodes=''
+        #         #print(node, len(in_netlist[node]))
+        #         #for ind, conn_node in enumerate(in_netlist[node]):
+        #         #    if len(in_netlist[node]) == 1:
+        #         #        if "chem_connection" in in_netlist.nodes[node] and \
+        #         #            conn_node == in_netlist.nodes[node]["chem_connection"]["oth_node"]:
+        #         #            chem_nodes +=f"{in_netlist.nodes[node]['chem_connection']['node']} "
+        #         #        else:
+        #         #            chem_nodes += f"{node}_{conn_node}_chem "
+        #         #    elif ind == 0:
+        #         #        chem_nodes += f"{node}_in_chem "
+        #         #    else:
+        #         #        pass
+        #
+        #         #    if len(in_netlist[node]) > 1 and \
+        #         #        ind == 0:
+        #         #        fluid_nodes += f"{node}_in "
+        #         #    elif ind == 0:
+        #         #        fluid_nodes += f"{node}_{conn_node} "
+        #         #chem_nodes += f'{node}_out_chem '
+        #         #output_line = f"{conn_channel} {node} {fluid_nodes} 0 {chem_nodes}length={wl}m"
+        #         #c_of.write(output_line+'\n')
+        #
+        #     ########### IF WIRE #############
+        #
+        #     elif in_netlist.nodes[node]['node_type'] == 'wire':
+        #         # and (not no_lengths):
+        #         if no_lengths:
+        #             wl = 0.01
+        #         else:
+        #             wl = len_df.loc[node]["length (mm)"]
+        #
+        #         if isinstance(wl, float):
+        #             in_netlist.nodes[node]['chan_len'] = wl
+        #             node_edges = list(in_netlist.edges(node))
+        #             
+        #             if len(node_edges) == 2:
+        #                 for comp_node in in_netlist[node]:
+        #                     chan_fluid_net = f"{node}_{comp_node}"
+        #                     chan_chem_net  = f"{node}_{comp_node}_chem"
+        #                     in_netlist.edges[(node, comp_node)]['fl_net'] = chan_fluid_net
+        #                     in_netlist.edges[(node, comp_node)]['ch_net'] = chan_chem_net
+        #             else:
+        #                 raise Exception(f"Too many nodes in input, {node_edges}. This will be handled by a net parser, the length file is invalid")
+        #         else:
+        #             pass
+        #
+        #
+        #         #chem_nodes=''
+        #         #fluid_nodes=''
+        #         #if len(in_netlist[node]) == 2:
+        #         #    for ind, conn_node in enumerate(in_netlist[node]):
+        #         #        # is a chemical node
+        #         #        if "chem_connection" in in_netlist.nodes[node] and \
+        #         #            conn_node == in_netlist.nodes[node]["chem_connection"]["oth_node"]:
+        #         #            chem_nodes +=f"{in_netlist.nodes[node]['chem_connection']['node']} "
+        #         #        # is a probe; TODO interaction of chem and conn nodes
+        #         #        #elif in_netlist.nodes[conn_node]["node_type"] == "flow_probe" or \
+        #         #            #in_netlist.nodes[conn_node]["node_type"] == "pressure_probe":
+        #         #            #chem_nodes += f"{node}_{in_netlist.nodes[conn_node]['device']}_chem "
+        #         #        else:
+        #         #            chem_nodes += f"{node}_{conn_node}_chem "
+        #         #        if in_netlist.nodes[conn_node]["node_type"] == "flow_probe" or \
+        #         #            in_netlist.nodes[conn_node]["node_type"] == "pressure_probe":
+        #         #            fluid_nodes += f"{node}_{in_netlist.nodes[conn_node]['device']}_pr "
+        #         #        else:
+        #         #            fluid_nodes += f"{node}_{conn_node} "
+        #         #else:
+        #         #    fluid_nodes = f'{node}_in {node}_out '
+        #         #    chem_nodes  = f'{node}_in_chem {node}_out_chem '
+        #
+        #         #wire_line = f"{conn_channel} {node} {fluid_nodes} {chem_nodes}length={wl}m"
+        #         #c_of.write(wire_line+'\n')
+        #     elif in_netlist.nodes[node]['node_type'] == 'connection':
+        #         continue
+        #     #elif in_netlist.nodes[node]['node_type'] == 'flow_probe':
+        #     #    print()
+        #     #    vp_conn_nodes = in_netlist[node]
+        #     #    probe_line = f"{node}"
+        #
+        #     ########### IF COMPONENT #############
+        #
+        #     else: # is component
+        #         comp_type = in_netlist.nodes[node]['node_type']
+        #         print(in_netlist[node])
+        #         if comp_type != "flow_probe" and \
+        #             comp_type != "pressure_probe" and \
+        #             comp_type != "concentration_probe":
+        #             # changes to pcell definition
+        #             # later appends params
+        #             if has_pcells:
+        #                 is_pcell = False
+        #                 pcell_params = ''
+        #                 if comp_type in pc_dict:
+        #                     pcell_params = ' '+pc_dict[comp_type]['params']
+        #                     comp_type = pc_dict[comp_type]['pcell']
+        #                     is_pcell = True
+        #             comp_line = f"Y{comp_type} {node} "
+        #             chem_line = ''
+        #         else:  # not a probe
+        #             comp_line = f"{node} "
+        #             chem_line = ''
+        #
+        #
+        #         # iterate through adjacent nodes
+        #         for comp_net in in_netlist[node]:
+        #             # no_wire = (n not in wire_connections)
+        #             # zero_wire = (n in wire_connections) and (wire_connections[n] == 0)
+        #
+        #             wire_edges = len(in_netlist[comp_net])
+        #
+        #             if in_netlist.nodes[comp_net]["node_type"] == 'input':
+        #                 if wire_edges == 1:
+        #                     # comp_line += f"{comp_net}_{node} "
+        #                     in_netlist.edges[(comp_net, node)]['fl_net'] = f"{comp_net}_{node}"
+        #                     in_netlist.edges[(comp_net, node)]['ch_net'] = f"{comp_net}_{node}_chem"
+        #                 else:
+        #                     raise Exception(f"Too many nodes connected to input {in_netlist[comp_net]}")
+        #                     # comp_line += f"{comp_net}_in "
+        #                 
+        #             elif in_netlist.nodes[comp_net]["node_type"] == 'output':
+        #                 if wire_edges == 1:
+        #                     # comp_line += f"{comp_net}_{node}"
+        #                     in_netlist.edges[(comp_net, node)]['fl_net'] = f"{comp_net}_{node}"
+        #                     in_netlist.edges[(comp_net, node)]['ch_net'] = f"{comp_net}_{node}_chem"
+        #                 else:
+        #                     raise Exception(f"Too many nodes connected to input {in_netlist[comp_net]}")
+        #                     # comp_line += f"{comp_net}_out "
+        #
+        #             elif in_netlist.nodes[comp_net]["node_type"] == 'wire':
+        #
+        #                 if wire_edges == 2:
+        #                     comp_line += f"{comp_net}_{node} "
+        #                     in_netlist.edges[(comp_net, node)]['fl_net'] = f"{comp_net}_{node}"
+        #                     in_netlist.edges[(comp_net, node)]['ch_net'] = f"{comp_net}_{node}_chem"
+        #                 else:
+        #                     # for components
+        #                     raise Exception(f"Too many nodes connected to input {in_netlist[comp_net]}")
+        #                     # if in_netlist.edges[node, comp_net]["port"] == "out_fluid":
+        #                     #    comp_line += f"{comp_net}_in "
+        #                     # else:
+        #                     #    comp_line += f"{comp_net}_out "
+        #                 
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #             # adding probes
+        #             elif in_netlist.nodes[comp_net]["node_type"] == 'connection':
+        #                 comp_line += f"{comp_net} "
+        #                 if in_netlist.nodes[comp_net]['chem_wire'] not in wire_connections:
+        #                     wire_connections[in_netlist.nodes[comp_net]['chem_wire']] = 1
+        #                     chem_line += f"{in_netlist.nodes[comp_net]['chem_wire']}_{node}_chem "
+        #                     if comp_type != "flow_probe" and \
+        #                         comp_type != "pressure_probe":
+        #                         probe_wires[0].append(node)
+        #                         probe_wires[1].append([in_netlist.nodes[n]['chem_wire'],0])
+        #                         print(probe_wires)
+        #                 else:
+        #                     wire_connections[in_netlist.nodes[comp_net]['chem_wire']] += 1
+        #                     chem_line += f"{in_netlist.nodes[comp_net]['chem_wire']}_{node}_chem "
+        #                     if comp_type != "flow_probe" and comp_type != "pressure_probe":
+        #                         probe_wires[0].append(node)
+        #                         probe_wires[1].append([in_netlist.nodes[comp_net]['chem_wire'],1])
+        #                         print(probe_wires)
+        #             elif in_netlist.nodes[comp_net]["node_type"] == 'flow_probe':
+        #                 if zero_wire:
+        #                     wire_connections[comp_net] = 1
+        #                     comp_line += f"{comp_net}_{node} "
+        #                     #chem_line += f"{n}_0_chem "
+        #                 else:
+        #                     wire_connections[comp_net] += 1
+        #                     comp_line += f"{comp_net}_{node} "
+        #                     #chem_line += f"{n}_1_chem "
+        #             elif in_netlist.nodes[comp_net]["node_type"] == 'pressure_probe':
+        #                 if zero_wire:
+        #                     wire_connections[comp_net] = 1
+        #                     comp_line += f"{comp_net}_{node} "
+        #                     #chem_line += f"{n}_0_chem "
+        #                 else:
+        #                     wire_connections[comp_net] += 1
+        #                     comp_line += f"{comp_net}_{node} "
+        #                     #chem_line += f"{n}_1_chem "
+        #             elif in_netlist.nodes[comp_net]["node_type"] == 'concentration_probe':
+        #                 # should not have connecting nodes
+        #                 pass
+        #                 
+        #             else:
+        #                 raise Exception(f"{comp_net} not of correct type")
+        #
+        #             # chemical nodes
+        #             # TODO test with other probes
+        #             if in_netlist.nodes[comp_net]["node_type"] == "input" or \
+        #                 in_netlist.nodes[comp_net]["node_type"] == "output" or \
+        #                 in_netlist.nodes[comp_net]["node_type"] == "wire":
+        #                 #chem_line += f"{n}_{node}_chem "
+        #
+        #                 if "chem_connection" in in_netlist.nodes[node] and \
+        #                     comp_net == in_netlist.nodes[node]["chem_connection"]["oth_node"]:
+        #                     chem_line +=f"{in_netlist.nodes[node]['chem_connection']['node']} "
+        #                 else:
+        #                     if wire_edges == 2 and in_netlist.nodes[comp_net]["node_type"] == "wire":
+        #                         chem_line += f"{comp_net}_{node}_chem "
+        #                     elif wire_edges == 1 and in_netlist.nodes[comp_net]["node_type"] in ["input", "output"]:
+        #                         chem_line += f"{comp_net}_{node}_chem "
+        #                     else:
+        #                         if in_netlist.edges[node, comp_net]["port"] == "out_fluid":
+        #                             chem_line += f"{comp_net}_in_chem "
+        #                         else:
+        #                             chem_line += f"{comp_net}_out_chem "
+        #                     #chem_line += f"{n}_{node}_chem "
+        #
+        #
+        #         print(comp_type)
+        #
+        #         if (comp_type != "flow_probe") and \
+        #             (comp_type != "pressure_probe") and \
+        #             (comp_type != "concentration_probe"):
+        #             comp_line += ' '+chem_line
+        #             if has_pcells and is_pcell:
+        #                 comp_line += ' '+pcell_params
+        #         elif comp_type == "concentration_probe":
+        #             print(comp_type)
+        #             for w in in_netlist.nodes[node]["chem_pr_wires"]:
+        #                 comp_line += f'{w} '
+        #                 pass
+        #             comp_line += "0V "
+        #         elif comp_type == "flow_probe" or comp_type == "pressure_probe":
+        #             comp_line += " 0V"
+        #         c_of.write(comp_line+'\n')
+        #         #raise Exception()
+        #
 
         # add transient lines
         c_of.write('\n\n')
@@ -580,15 +1076,18 @@ def write_spice_file(in_netlist, probes_list, source_lines, sims_time_lines=None
 
             for st in sim_type:
                 if st == "transient":
-                    nl = '.print tran '+' '.join(probes_list)
+                    nl = re.sub(r'[ ]+', r' ', '.print tran '+' '.join(probes_list)+' '.join(new_probes))
                     c_of.write(nl+'\n')
                 elif st == "static":
-                    nl = '.print dc '+' '.join(probes_list)
+                    nl = re.sub(r'[ ]+', r' ', '.print dc '+' '.join(probes_list)+' '.join(new_probes))
                     c_of.write(nl+'\n')
                 else:
                     raise ValueError("sim_type must be transient or static")
         c_of.write('\n.end')
-        
+         
+    if 'XYCE_WL_GRAPH' in os.environ:
+        os.environ.pop('XYCE_WL_GRAPH')
+
     o_csv_col = ['Chemical', 'spice_str_file', 'spice_file']
     if add_prn_to_list:
         o_csv_col.append('OutputFile')
@@ -612,8 +1111,22 @@ def get_length_list(len_file):
         len_df = len_df.T
     elif len_df.shape[1] == 2:
         len_df = pd.read_csv(len_file, index_col=1)
+        len_df = {}
+        reader = csv.DictReader(open(len_file, 'r'))
+        for r in reader:
+            r['length (mm)'] = ast.literal_eval(r['length (mm)'])
+            print(r)
+            print(len(r))
+            if len(r['length (mm)']) > 1:
+                # possibly unsafe 
+                len_df[r['wire']] =r['length (mm)']
+            else:
+                len_df[r['wire']] = r['length (mm)']['']
+    elif len_df.shape[1] == 3:
+        len_df = pd.read_csv(len_file, index_col=2)
 
-    print(len_df.shape[0])
+    if isinstance(len_df, pd.DataFrame):
+        print(len_df.shape[0], len_df.shape[1])
     print(len_df)
 
     return len_df
@@ -749,7 +1262,7 @@ def visualize_netlist(in_cir):
             params = regex.finditer()
             
 def generate_cir_main(design, verilog_file, config_file, length_file, out_file,
-    basename_only=False, pcell_file=None):
+    basename_only=False, pcell_file=None, wl_graph_file=None):
 
     import sys, os
     
@@ -783,7 +1296,9 @@ def generate_cir_main(design, verilog_file, config_file, length_file, out_file,
         out_file=out_file,
         add_prn_to_list=True,
         basename_only=basename_only,
-        pcell_file=pcell_file)
+        pcell_file=pcell_file,
+        wl_graph=wl_graph_file
+                                )
 
     for spf in sp_files.iterrows():
         convert_nodes_2_numbers_xyce(spf[1]['spice_str_file'], cir_out=True)
