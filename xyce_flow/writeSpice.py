@@ -200,8 +200,8 @@ def add_probes_to_device(probes, netlist_graph):
 
                 # needed with above uncommented
                 #netlist_graph.add_nodes_from(new_probe_node)
-                
-                
+
+
                 #netlist_graph.add_edges_from(new_es)
                 # same as if in list
                 if isinstance(p, SimulationXyce.SimulationXyce.Probe):
@@ -263,14 +263,14 @@ def generate_time_lines(spice_config_class):
     return out_lines
 
 
-def merge_wl_net(in_g, wl_g, node, wl_file=None, 
+def merge_wl_net(in_g, wl_g, node, wl_file=None,
     debug_node = False, debug_edge = False, debug_draw=False):
 
     mapping = {}
     print("Node:", node)
     print(wl_g.nodes)
     print(wl_g.edges)
-    print(wl_file)
+    # print(wl_file)
     print([n for n in wl_g.nodes if n in in_g.nodes and n != node])
     for common_node in [n for n in wl_g.nodes if n in in_g.nodes]:
         for prop in in_g.nodes[common_node].items():
@@ -310,15 +310,23 @@ def merge_wl_net(in_g, wl_g, node, wl_file=None,
             conn_node = list(wl_g[node])[0]
             print("New input/output node:", conn_node)
             # the regex if different now
+            # Checks name if break point
             if re.match(r'[\w_]+_br_\d_\d', str(conn_node)) is not None:
                 for conn_node2 in list(wl_g[conn_node]):
+                    print(conn_node2)
                     wl_g.nodes[conn_node2]['node_type'] = wl_g.nodes[node]['node_type']
                     wl_g.nodes[conn_node2]['input_node'] = node
+                    # wl_g.edges[(conn_node2, )]['fl_net'] = {
+                    #     f"{node}_{con_n}"
+                    # }
+                    # wl_g.edges[(n, con_n)]['ch_net'] = {
+                    #     f"{node}_{con_n}_chem"
+                    # }
                 wl_g.nodes[node]['virt_node'] = ''
             else:
                 wl_g.nodes[conn_node]['node_type'] = wl_g.nodes[node]['node_type']
                 if wl_g.nodes[node]['node_type'] == 'input':
-                    wl_g.nodes[conn_node]['input_node'] = node 
+                    wl_g.nodes[conn_node]['input_node'] = node
                 wl_g.nodes[node]['virt_node'] = ''
         #for conn_node in list(wl_g[node]):
         #    conn_node = list(wl_g[node])[0]
@@ -329,11 +337,13 @@ def merge_wl_net(in_g, wl_g, node, wl_file=None,
 
     in_g.remove_node(node)
     in_g = nx.compose(in_g, wl_g)
-    
-    
+
     # write nodes and edges to terminal
-    #debug_node = True
-    #debug_draw = True
+
+    if node == 'soln2':
+        debug_node = True
+        debug_edge = True
+    # debug_draw = True
     if debug_node:
         print("Wirelength nodes: ")
         for n in wl_g.nodes:
@@ -362,11 +372,11 @@ def merge_wl_net(in_g, wl_g, node, wl_file=None,
     return in_g
 
 
-def generate_spice_nets(in_netlist, 
-                        # probes_list, 
-                        # source_lines, 
-                        length_list=None, 
-                        add_prn_to_list=False, 
+def generate_spice_nets(in_netlist,
+                        # probes_list,
+                        # source_lines,
+                        length_list=None,
+                        add_prn_to_list=False,
                         pcell_file=None,
                         wl_graph=None
                         ):
@@ -428,6 +438,10 @@ def generate_spice_nets(in_netlist,
                 wl = len_df.loc[node]["length (mm)"]
             elif isinstance(len_df, dict):
                 wl = len_df[node] #["length (mm)"]
+
+            if node == 'soln2':
+                print(wl)
+                #raise Exception()
 
             if isinstance(wl, float):
                 in_netlist.nodes[node]['chan_len'] = wl
@@ -545,7 +559,7 @@ def write_components_from_graph(in_g, of):
         else:
             oth_nodes.append(n)
 
-    print(in_nodes,'\n', out_nodes, '\n', wire_nodes, '\n', oth_nodes)
+    print("IN nodes", in_nodes,'\nOUT nodes', out_nodes, '\nCHAN nodes', wire_nodes, '\nCOMP nodes', oth_nodes)
 
     # write nodes
     for i_n in in_nodes:
@@ -561,8 +575,9 @@ def write_components_from_graph(in_g, of):
             e_ch = list(e_ch)[0]
         wl = in_g.nodes[i_n]['chan_len']
         if 'input_node' in in_g.nodes[i_n]:
+            inst_n = i_n  # instance captured so it is unique
             i_n = in_g.nodes[i_n]['input_node']  # syncs up with pump nodes
-            of.write(f"{chan_comp} {i_n} {i_n}_in {e_fl} {i_n}_in_chem {e_ch} length={wl}\n")
+            of.write(f"{chan_comp} {inst_n} {i_n}_in {e_fl} {i_n}_in_chem {e_ch} length={wl}\n")
         else:
             of.write(f"{chan_comp} {i_n} {i_n}_in {e_fl} {i_n}_in_chem {e_ch} length={wl}\n")
 
@@ -618,12 +633,30 @@ def write_components_from_graph(in_g, of):
                 fl_wr[ind] = list(l_i)[0]
         for ind, l_i in enumerate(ch_wr):
             if isinstance(l_i, set):
-                ch_wr[ind] = list(l_i)[0]      
+                ch_wr[ind] = list(l_i)[0]
                 #wire_reg = w + r"_\d_\d"
         #print(fl_wr)
         #print(ch_wr)
-        fl_wr = ' '.join(fl_wr)
-        ch_wr = ' '.join(ch_wr) + ' '
+        # organize the ports
+        #  TODO write to look at the module headers; this is hard coded
+        port_n = []
+        if len(fl_wr) == 2:
+            port_n.append(in_g.nodes[oth_n]['in_fluid'])
+            port_n.append(in_g.nodes[oth_n]['out_fluid'])
+        if len(fl_wr) == 3:
+            port_n.append(in_g.nodes[oth_n]['a_fluid'])
+            port_n.append(in_g.nodes[oth_n]['b_fluid'])
+            port_n.append(in_g.nodes[oth_n]['out_fluid'])
+
+        #  TODO move to edge writing
+        fl_wr_new = []
+        ch_wr_new = []
+        for pn in port_n:
+            fl_wr_new.append(f"{pn}_{oth_n}")
+            ch_wr_new.append(f"{pn}_{oth_n}_chem")
+
+        fl_wr = ' '.join(fl_wr_new)
+        ch_wr = ' '.join(ch_wr_new) + ' '
 
         # directly replace the string
         if "chem_probe" in in_g.nodes[oth_n]:
