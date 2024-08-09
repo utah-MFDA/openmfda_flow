@@ -13,6 +13,7 @@ import json
 import regex
 import mmap
 import copy
+import logging
 
 def add_probes_to_device(probes, netlist_graph):
 
@@ -52,15 +53,15 @@ def add_probes_to_device(probes, netlist_graph):
 
             netlist_graph.add_nodes_from(new_probe_nodes)
             netlist_graph.add_edges_from(new_es)
-            
+
             probe_list.append(f'I({flow_probe})')
-    
+
     if 'pressureNode' in probes:
         for p in probes['pressureNode']:
             if p in probes['flow']:
                 # we don't need to edit the netlist after flow probes have been placed
                 if isinstance(p, SimulationXyce.SimulationXyce.Probe):
-                    probe_list.append(f'V({p[node]}_{p[dev]}_pr)')
+                    probe_list.append(f'V({p.getNode()}_{p.getDevice()}_pr)')
                 else:
                     probe_list.append(f'V({p[node]}_{p[dev]}_pr)')
             else:
@@ -87,7 +88,7 @@ def add_probes_to_device(probes, netlist_graph):
                 netlist_graph.add_edges_from(new_es)
                 # same as if in list
                 if isinstance(p, SimulationXyce.SimulationXyce.Probe):
-                    probe_list.append(f'V({p[node]}_{p[dev]}_pr)')
+                    probe_list.append(f'V({p.getNode()}_{p.getDevice()}_pr)')
                 else:
                     probe_list.append(f'V({p[node]}_{p[dev]}_pr)')
 
@@ -96,9 +97,15 @@ def add_probes_to_device(probes, netlist_graph):
         for p in probes['concentration']:
             print(p)
             if isinstance(p, SimulationXyce.SimulationXyce.Probe):
+                if p.getNode() not in netlist_graph.nodes:
+                    logging.debug(f"Nodes in netlist:\n{netlist_graph.nodes}")
+                    raise KeyError(f"Probe for node {p.getNode()} not in netlist")
                 dev_node = list(netlist_graph[p.getNode()].keys())[0]
                 pr_node  = p.getNode()
             else:
+                if p[node] not in netlist_graph.nodes:
+                    logging.debug(f"Nodes in netlist:\n{netlist_graph.nodes}")
+                    raise KeyError(f"Probe for node {p[node]} not in netlist")
                 dev_node = list(netlist_graph[p[node]].keys())[0]
                 pr_node  = p[node]
 
@@ -111,6 +118,9 @@ def add_probes_to_device(probes, netlist_graph):
         for p in probes['concentrationNode']:
                 # explicit chem node dev
                 if isinstance(p, SimulationXyce.SimulationXyce.Probe):
+                    if p.getNode() not in netlist_graph.nodes:
+                        logging.debug(f"Nodes in netlist:\n{netlist_graph.nodes}")
+                        raise KeyError(f"Probe for node {p.getNode()} not in netlist")
                     pr_node  = p.getNode()
                     dev_node = p.getDevice()
                 else:
@@ -366,7 +376,7 @@ def generate_spice_nets(in_netlist,
     else:
         no_lengths = False
         len_df = get_length_list(length_list)
-    
+
     if 'XYCE_WL_GRAPH' in os.environ:
         from networkx.readwrite import json_graph
         wl_graph_f = ''
@@ -387,7 +397,6 @@ def generate_spice_nets(in_netlist,
         # os.environ.pop('XYCE_WL_GRAPH')
 
 
-    
 
     def add_fl_net_2_edge(g, edge, net_name):
         if 'fl_net' in g.edges[edge]:
@@ -414,16 +423,16 @@ def generate_spice_nets(in_netlist,
         if in_netlist.nodes[node]['node_type'] == 'input':
             # and (not no_lengths):
             if no_lengths:
-                wl = 0.01 
+                wl = 0.01
             elif isinstance(len_df, pd.DataFrame):
                 wl = len_df.loc[node]["length (mm)"]
             elif isinstance(len_df, dict):
                 wl = len_df[node] #["length (mm)"]
-            
+
             if isinstance(wl, float):
                 in_netlist.nodes[node]['chan_len'] = wl
                 node_edges = list(in_netlist.edges(node))
-                
+
                 if len(node_edges) == 1:
                     comp_node = list(in_netlist[node])[0]
                     input_fluid_net = f"{node}_{comp_node}"
@@ -435,26 +444,29 @@ def generate_spice_nets(in_netlist,
                 else:
                     raise Exception(f"Too many nodes in input, {node_edges}. This will be handled by a net parser, the length file is invalid")
             elif isinstance(wl, dict):
+                print(f"connecting net {node}")
+                if wl_graph is None:
+                    print(f"failed to connect graph, {('XYCE_WL_GRAPH' in os.environ)}")
                 in_netlist = merge_wl_net(in_netlist, wl_graph[node], node, wl_file=len_df)
             else:
                 pass
-                
+
         ############# IF OUTPUT #############
-        
+
         elif in_netlist.nodes[node]['node_type'] == 'output':
             # TODO check if output as dev
             #print(len_df)
             if no_lengths:
-                wl = 0.01 
+                wl = 0.01
             elif isinstance(len_df, pd.DataFrame):
                 wl = len_df.loc[node]["length (mm)"]
             elif isinstance(len_df, dict):
                 wl = len_df[node] #["length (mm)"]
-            
+
             if isinstance(wl, float):
                 in_netlist.nodes[node]['chan_len'] = wl
                 node_edges = list(in_netlist.edges(node))
-                
+
                 if len(node_edges) == 1:
                     comp_node = list(in_netlist[node])[0]
                     output_fluid_net = f"{node}_{comp_node}"
@@ -558,6 +570,7 @@ def write_components_from_graph(in_g, of):
 
     for w_n in wire_nodes:
         e = list(in_g.edges(w_n))
+        print(f"edges of node {w_n}: {e}")
         e_fl1 = in_g[e[0][0]][e[0][1]]['fl_net']
         e_ch1 = in_g[e[0][0]][e[0][1]]['ch_net']
         e_fl2 = in_g[e[1][0]][e[1][1]]['fl_net']
