@@ -46,12 +46,20 @@ def generate_config(input_file, design_name, pin_names=None, startx=960, starty=
     write_make_config(make_filename, [verilog_name], design_name, platform=platform)
     print("Done")
 
-def run_flow(design_name, platform="h.r.3.3"):
-    subprocess.run(["cd flow"],
-                   stdout=None, stderr=None, check=True)
-
-    subprocess.run(["make", "-e", f"DESIGN={design_name}", "-e", f"PLATFORM={platform}"],
-                   stdout=None, stderr=None, check=True)
+def run_flow(design_name, platform="h.r.3.3", mk_targets="all", force_run_deps=False):
+    subprocess.run(["pwd"], stdout=None, stderr=None, check=True)
+    mk_args = []
+    if isinstance(mk_targets, str):
+        mk_targets = [mk_targets]
+    if force_run_deps:
+        mk_args =+ '-B'
+    run_cmd = f"cd flow && make {' '.join(mk_targets)} -e DESIGN={design_name} -e PLATFORM={platform} {' '.join(mk_args)}"
+    subprocess.run(run_cmd, stdout=None, stderr=None, check=True, shell=True)
+    # subprocess.run(["cd flow"],
+    #                stdout=None, stderr=None, check=True)
+    # 
+    # subprocess.run(["make", "-e", f"DESIGN={design_name}", "-e", f"PLATFORM={platform}"],
+    #                stdout=None, stderr=None, check=True)
 
 ################ Generate pin constraints ################
 def write_pin_constraints(io_filename, pin_names, layer, startx=960, starty=660):
@@ -69,13 +77,14 @@ def write_sdc_constraints(sdc_filename, top_name="top"):
         print(f"current_design {top_name}", file=f)
 
 ################ config.mk ################
-def write_make_config(make_filename, verilog_files, design_name, platform="h.r.3.3"):
+def write_make_config(make_filename, verilog_files, design_name, platform="h.r.3.3", dimm_file=False):
     files = " ".join("./designs/src/$(DESIGN_NICKNAME)/" + f for f in verilog_files)
     with open(make_filename, "w") as f:
         print(f"export DESIGN_NAME     	= {design_name}", file=f)
         print(f"export VERILOG_FILES 	= {files}", file=f)
         print(f"export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NAME)/constraint.sdc", file=f)
         print(f"export IO_CONSTRAINTS	= ./designs/$(PLATFORM)/$(DESIGN_NAME)/io_constraints.tcl", file=f)
+        print(f"export SIMULATION_CONFIG= ./designs/$(PLATFORM)/$(DESIGN_NAME)/simulation.config", file=f)
         if dimm_file:
             print(f"DIMM_FILE = {dimm_file}", file=f)
         print("""SCAD_ARGS += --dimm_file "$(DIMM_FILE)" """, file=f)
