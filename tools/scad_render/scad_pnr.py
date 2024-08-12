@@ -128,7 +128,7 @@ class Params():
 
     def get_route_params(self):
         if self.route_params == None:
-            if self.dimm_file == None:
+            if self.dimm_file == None or self.dimm_file.strip()=='':
                 self.route_params = dict()
             else:
                 from csv import reader

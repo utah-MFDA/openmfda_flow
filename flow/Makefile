@@ -320,6 +320,7 @@ clean_floorplan:
 # |  __/| |___ / ___ \ |___| |___
 # |_|   |_____/_/   \_\____|_____|
 #
+replace: $(RESULTS_DIR)/2_1_place_gp.def
 place: $(RESULTS_DIR)/2_place.def \
 	   $(RESULTS_DIR)/2_place.sdc
 # ==============================================================================
@@ -416,6 +417,7 @@ finish: $(LOG_DIR)/4_report.log \
         $(RESULTS_DIR)/4_final.v \
         $(RESULTS_DIR)/4_final.sdc \
         $(4_FINAL_FILE)
+pnr: finish
 # ==============================================================================
 4_FINAL_FILE = $(RESULTS_DIR)/4_final.$(STREAM_SYSTEM_EXT)
 ifneq ($(USE_FILL),)
@@ -529,7 +531,7 @@ $(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN).sc
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 ../tools/simulation/runMFDASim.py \
 		--output_dir $(RESULTS_DIR) \
-		--netlist $(RESULTS_DIR)/1_synth.v \
+		--netlist $(RESULTS_DIR)/4_final.v \
 		--sim_config $(SIMULATION_CONFIG) \
 		--design $(DESIGN) \
 		--sim_dir $(RESULTS_DIR)/simulation \
