@@ -1,0 +1,193 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.9, pytest-8.2.2, pluggy-1.5.0
+rootdir: /home/bg/Software/MFDA/verilog_preparser
+plugins: anyio-4.3.0
+collected 4 items
+
+tests/test_preparse.py ....                                              [100%]
+
+==================================== PASSES ====================================
+____________________________ test_parse_p_cell_lef _____________________________
+----------------------------- Captured stdout call -----------------------------
+{'p_serpentine_0': {'lef_loc': 'tests/lefs/test_lef.lef', 'reg_str': 'p_serpentine_0_(?P<X1>\\d*)_(?P<Y1>\\d*)', 'params': ['X1', 'Y1']}, 'p_serpentine_1': {'lef_loc': 'tests/lefs/test_lef.lef', 'reg_str': 'p_serpentine_1_(?P<X1>\\d*)_(?P<Y1>\\d*)', 'params': ['X1', 'Y1']}}
+{'p_serpentine_0': {'lef_loc': 'tests/lefs/test_lef.lef', 'reg_str': 'p_serpentine_0_(?P<X1>\\d*)_(?P<Y1>\\d*)', 'params': ['X1', 'Y1']}, 'p_serpentine_1': {'lef_loc': 'tests/lefs/test_lef.lef', 'reg_str': 'p_serpentine_1_(?P<X1>\\d*)_(?P<Y1>\\d*)', 'params': ['X1', 'Y1']}}
+____________________________ test_write_to_verilog _____________________________
+----------------------------- Captured stdout call -----------------------------
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_50
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_50_200
+#100+ (p['X1']/25) *30#
+{'X1': 50, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 50, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 50, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 50, 'Y1': 200}
+#p['X1']+50#
+{'X1': 50, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 50, 'Y1': 200}
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_150
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_150_200
+#100+ (p['X1']/25) *30#
+{'X1': 150, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 150, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 150, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 150, 'Y1': 200}
+#p['X1']+50#
+{'X1': 150, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 150, 'Y1': 200}
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_250
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_250_200
+#100+ (p['X1']/25) *30#
+{'X1': 250, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 250, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 250, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 250, 'Y1': 200}
+#p['X1']+50#
+{'X1': 250, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 250, 'Y1': 200}
+_______________________ test_write_to_verilog_to_design ________________________
+----------------------------- Captured stdout call -----------------------------
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_50
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_50_200
+#100+ (p['X1']/25) *30#
+{'X1': 50, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 50, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 50, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 50, 'Y1': 200}
+#p['X1']+50#
+{'X1': 50, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 50, 'Y1': 200}
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_150
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_150_200
+#100+ (p['X1']/25) *30#
+{'X1': 150, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 150, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 150, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 150, 'Y1': 200}
+#p['X1']+50#
+{'X1': 150, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 150, 'Y1': 200}
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_250
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_250_200
+#100+ (p['X1']/25) *30#
+{'X1': 250, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 250, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 250, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 250, 'Y1': 200}
+#p['X1']+50#
+{'X1': 250, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 250, 'Y1': 200}
+Writing coversion files to tests/results/unit_test/
+_____________________________ test_with_arguments ______________________________
+----------------------------- Captured stdout call -----------------------------
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_50
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_50_200
+#100+ (p['X1']/25) *30#
+{'X1': 50, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 50, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 50, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 50, 'Y1': 200}
+#p['X1']+50#
+{'X1': 50, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 50, 'Y1': 200}
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_150
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_150_200
+#100+ (p['X1']/25) *30#
+{'X1': 150, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 150, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 150, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 150, 'Y1': 200}
+#p['X1']+50#
+{'X1': 150, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 150, 'Y1': 200}
+b'MACRO p_serpentine_0(X1.d, Y1.d)\n  CLASS CORE ;\n  ORIGIN  0 0 ;\n  FOREIGN p_serpentine 0 0 ;\n  SIZE #100+ (X1/25) *30# BY #100+ (Y1/25) *30# ;\n  SYMMETRY X Y ;\n  SITE CoreSite ;\n  PIN in_fluid\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT 29.5 29.5 30.5 30.5 ;\n    END\n  END in_fluid\n  PIN out_fluid\n    DIRECTION OUTPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER met1 ;\n        RECT #X1+49.5# 29.5 #X1 + 50.5# 30.5 ;\n    END\n  END out_fluid\n  OBS\n    LAYER met1 ;\n      RECT 30 30 #X1+50# #Y1+50# ;\n  END\n  PROPERTY CatenaDesignType "deviceLevel" ;\nEND p_serpentine_0'
+(#.*?)(X1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_250
+(#.*?)(Y1)([.]?[wd]?)(.*?#)
+\1p['\2']\4
+p_serpentine_0_250_200
+#100+ (p['X1']/25) *30#
+{'X1': 250, 'Y1': 200}
+#100+ (p['Y1']/25) *30#
+{'X1': 250, 'Y1': 200}
+#p['X1']+49.5#
+{'X1': 250, 'Y1': 200}
+#p['X1'] + 50.5#
+{'X1': 250, 'Y1': 200}
+#p['X1']+50#
+{'X1': 250, 'Y1': 200}
+#p['Y1']+50#
+{'X1': 250, 'Y1': 200}
+Writing coversion files to tests/results/cmd_test/
+============================== 4 passed in 0.51s ===============================

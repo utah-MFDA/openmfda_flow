@@ -381,7 +381,7 @@ def convertToCir_from_config(
         length_file=length_file,
         out_file=of,
         basename_only=basename_only,
-        pcell_file=None,
+        pcell_file=pcell_file,
         wl_graph_file=wirelength_g_net
     )
     # locate nessary files

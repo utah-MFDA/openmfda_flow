@@ -6,8 +6,9 @@
 ifndef TECH_LEF
 # export TECH_LEF ?= $(PLATFORM_DIR)/lef/mfda_30px.tlef
 export TECH_LEF ?= $(PLATFORM_DIR)/lef/mfda_30px_proto.tlef
+# export TECH_LEF ?= $(PLATFORM_DIR)/lef/mfda_30px_proto_r.tlef
 endif
-#export SC_LEF = $(PLATFORM_DIR)/lef/mfda_30px_merged_w_pcells.lef
+# export SC_LEF = $(PLATFORM_DIR)/lef/mfda_30px_merged_w_pcells.lef
 ifndef SC_LEF
 export SC_LEF ?= $(PLATFORM_DIR)/lef/mfda_30px_merged.lef
 endif
