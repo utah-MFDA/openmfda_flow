@@ -2,7 +2,7 @@ import opendbpy as odb
 import pcbnew
 from opendb_helpers import wire_iter, segment_iter
 
-class Translator:
+class DefToPcb:
     def __init__(self, db, board):
         self.db = db
         self.board = board
@@ -89,16 +89,17 @@ class Translator:
 
                     self.board.Add(track)
 
-db = odb.dbDatabase.create()
-design = "/home/snelgrov/nas/mfda/openmfda/flow/results/ChIP4/base/4_final.def"
-tlef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3.tlef"
-lef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef"
-odb.read_lef(db, tlef)
-odb.read_lef(db, lef)
-odb.read_def(db, design)
+if __name__ == "__main__":
+    db = odb.dbDatabase.create()
+    design = "/home/snelgrov/nas/mfda/openmfda/flow/results/ChIP4/base/4_final.def"
+    tlef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3.tlef"
+    lef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef"
+    odb.read_lef(db, tlef)
+    odb.read_lef(db, lef)
+    odb.read_def(db, design)
 
-t = Translator(db, pcbnew.GetBoard())
-# Todo clear all traces
-t.place()
-t.route()
-pcbnew.Refresh()
+    t = DefToPcb(db, pcbnew.GetBoard())
+    # Todo clear all traces
+    t.place()
+    t.route()
+    pcbnew.Refresh()
