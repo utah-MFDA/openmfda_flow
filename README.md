@@ -87,7 +87,7 @@ from openmfda_flow import *
 
 verilog_file = "demo.v"
 design_name = "demo"
-platform = "mfda_30px"
+platform = "h.r.3.3"
 pins = [[None for i in range(0,8)] for j in range(0,4)]
 pins[0][1] = "soln1"
 pins[0][2] = "soln2"
