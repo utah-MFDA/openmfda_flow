@@ -1,0 +1,11 @@
+place_pin -pin_name pb1_1 -layer met9 -location { 960 660 } -pin_size {1 1}
+place_pin -pin_name pb1_2 -layer met9 -location { 1050 660 } -pin_size {1 1}
+place_pin -pin_name pb1_1 -layer met9 -location { 1140 660 } -pin_size {1 1}
+place_pin -pin_name pb2_2 -layer met9 -location { 1230 660 } -pin_size {1 1}
+place_pin -pin_name pb3_1 -layer met9 -location { 1320 660 } -pin_size {1 1}
+place_pin -pin_name pb3_2 -layer met9 -location { 1410 660 } -pin_size {1 1}
+place_pin -pin_name cp1 -layer met9 -location { 960 750 } -pin_size {1 1}
+place_pin -pin_name cp2 -layer met9 -location { 1050 750 } -pin_size {1 1}
+place_pin -pin_name cp3 -layer met9 -location { 1140 750 } -pin_size {1 1}
+place_pin -pin_name cp4 -layer met9 -location { 1230 750 } -pin_size {1 1}
+place_pin -pin_name p1 -layer met9 -location { 1320 750 } -pin_size {1 1}
