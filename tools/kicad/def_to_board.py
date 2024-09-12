@@ -3,7 +3,7 @@ from kiutils.items.brditems import LayerToken, Via, Segment
 from kiutils.footprint import Footprint
 from kiutils.board import Board
 from kiutils.items.common import Position, Net
-from kiutils.items.zones import Zone, Hatch
+from kiutils.items.zones import Zone, Hatch, KeepoutSettings
 from kiutils.footprint import Pad
 from uuid import uuid4
 from opendb_helpers import wire_iter, segment_iter

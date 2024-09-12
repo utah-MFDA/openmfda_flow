@@ -5,6 +5,8 @@ import networkx as nx
 
 class Extractor:
     def normalize(self, x):
+        # I was getting floating point errors when comparing positions.
+        # Increasing orders of magnitude and rounding to integer fixed it.
         return round(x*100)
 
     def normal_position(self, pos):
@@ -32,6 +34,7 @@ class Extractor:
         self.net_id_gen = -1
         self.component_id_gen = -1
         self.components = []
+        self.modules = []
 
     def gen_net_id(self):
         self.net_id_gen += 1
@@ -57,8 +60,13 @@ class Extractor:
         self._extract_io()
         self._extract_nets()
         self._extract_components()
+        self._extract_hierarchical()
 
     def _extract_io(self):
+        for label in sch.globalLabels:
+            name = label.text
+            direct = label.shape
+            self.io.append(f"{direct} {name}")
         for label in sch.hierarchicalLabels:
             name = label.text
             direct = label.shape
@@ -69,13 +77,15 @@ class Extractor:
         for junction in self.sch.junctions:
             self.graph.add_node(self.normal_position(junction.position))
 
-        # TODO no-connects in sch.noConnects
+        # TODO no-connects in sch.noConnects?
 
         # Add edges for each segment
         for conn in self.sch.graphicalItems:
-            assert conn.type == "wire"
-            start, end = conn.points
-            self.graph.add_edge(self.normal_position(start), self.normal_position(end))
+            if conn.type == "wire":
+                start, end = conn.points
+                self.graph.add_edge(self.normal_position(start), self.normal_position(end))
+            else:
+                raise NotImplementedError(f"Not handling connection type {conn.type}")
 
         def add_symbol_pins(sym, libsym):
             assert sym.position.angle is None or sym.position.angle == 0
@@ -97,7 +107,11 @@ class Extractor:
                 # Units are distinct sub-symbols, e.g. one op-amp in a dual package
                 add_symbol_pins(sym, unit)
 
-        # TODO for sheet in self.sch.hierarchicalSheetInstances:
+        # Create graph nodes for hierarchical pins
+        for sheet in self.sch.sheets:
+            for pin in sheet.pins:
+                x, y = self.normal_position(pin.position)
+                self.graph.add_node((x,y), symbol=sheet.sheetName, pin=pin.name)
 
         # Create graph nodes for labels
         for label in sch.labels:
@@ -186,7 +200,29 @@ class Extractor:
                 "connections": connections
             })
 
-        # TODO for sheet in self.sch.hierarchicalSheetInstances:
+    def _extract_hierarchical(self):
+        for sheet in self.sch.sheets:
+            connections =[]
+            for pin in sheet.pins:
+                x, y = self.normal_position(pin.position)
+                pin_name = pin.name
+                net = self.graph.nodes[(x,y)]["label"]
+                connections.append((pin_name, net))
+            name = sheet.sheetName.value
+            module = sheet.fileName.value.replace(".", "_")
+            self.components.append({
+                "name": name,
+                "module": module,
+                "connections": connections
+            })
+
+        files = {sheet.fileName.value for sheet in self.sch.sheets}
+        for filename in files:
+            sch = Schematic().from_file(fileName)
+            design = filename.replace(".", "_")
+            ext = Extractor(sch, design)
+            ext.extract()
+            self.modules.append(ext)
 
     def print_verilog(self):
         print(f"module {design} (")
@@ -201,6 +237,8 @@ class Extractor:
             print(*[f"\t\t.{pin}({net})" for pin, net in comp["connections"]], sep=",\n")
             print(");")
         print("endmodule")
+        for mod in self.modules:
+            mod.print_verilog()
 
 if __name__ == "__main__":
     import sys

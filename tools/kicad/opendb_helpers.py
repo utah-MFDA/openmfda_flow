@@ -1,3 +1,5 @@
+import opendbpy as odb
+
 def wire_iter(wire):
     dec = odb.dbWireDecoder()
     dec.begin(wire)
