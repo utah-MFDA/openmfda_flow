@@ -90,13 +90,23 @@ class DefToPcb:
                     self.board.Add(track)
 
 if __name__ == "__main__":
+    import argparse
+
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--def_file', metavar='<path>', action='append', dest='def_files', type=str,
+                    help="Path to the .def file.")
+    ap.add_argument('--tlef_file -f', metavar='<path>', action='append', dest='lef_files', type=str,
+                    help="Path to .tlef file.")
+    ap.add_argument('--lef_file -f', metavar='<path>', action='append', dest='lef_files', type=str,
+                    help="Path to .lef file.")
+    args = ap.parse_args()
     db = odb.dbDatabase.create()
-    design = "/home/snelgrov/nas/mfda/openmfda/flow/results/ChIP4/base/4_final.def"
-    tlef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3.tlef"
-    lef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef"
-    odb.read_lef(db, tlef)
-    odb.read_lef(db, lef)
-    odb.read_def(db, design)
+    for tlef_file in args.tlef_files:
+        odb.read_lef(db, tlef_file)
+    for lef_file in args.lef_files:
+        odb.read_lef(db, lef_file)
+    for def_file in args.def_files:
+        odb.read_lef(db, def_file)
 
     t = DefToPcb(db, pcbnew.GetBoard())
     # Todo clear all traces
