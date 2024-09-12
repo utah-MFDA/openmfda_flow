@@ -65,11 +65,8 @@ class FootprintExtractor:
 
     def extract_pads(self, master):
         for mterm in master.getMTerms(): # PIN in lef
-            # print("Term:", mterm)
             for pin in mterm.getMPins(): # PORT in lef
-                # print("Pin: ", pin)
                 for geom in pin.getGeometry():
-                    # print("Geom: ", geom)
                     if type(geom) != odb.odb_py.dbBox:
                         print(f"Non-rectangles not handled {type(geom)}")
                         continue
@@ -84,7 +81,6 @@ class FootprintExtractor:
                               size=Position(X=xmax-xmin,Y=ymax-ymin),
                               layers=[self.layer_map[metal]],
                               pinFunction=mterm.getName())
-                    # print(pad)
                     yield pad
 
     def extract_obstruction(self, obs):
@@ -135,18 +131,14 @@ if __name__ == "__main__":
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--lef_file -f', metavar='<path>', action='append', dest='lef_files', type=str,
-                    help="Path to .lef or .tlef file.")
+                    help="Path to .lef or .tlef file. TLEF files should be specified before LEF files.")
     ap.add_argument('--output -o', metavar='<path>', type=str, help="Path to output footprint files.", dest="output")
     ap.add_argument('--name -n', type=str, help="Library name.", dest="name")
     args = ap.parse_args()
     db = odb.dbDatabase.create()
     masters = extract_macro_names(args.lef_files)
-    tlef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3.tlef"
-    lef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef"
-    odb.read_lef(db, tlef)
-    odb.read_lef(db, lef)
-    # for lef_file in args.lef_files:
-    #     odb.read_lef(db, lef_file)
+    for lef_file in args.lef_files:
+        odb.read_lef(db, lef_file)
     t = FootprintExtractor(db, masters)
     t.extract()
     t.dump(args.output, args.name)
