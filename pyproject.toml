@@ -9,6 +9,9 @@ dependencies = [
     "pandas==1.5.2",
     "PyQt5==5.15.10",
     "Pillow==10.2.0",
+    "matplotlib==3.9.2",
+    "regex==2024.9.11",
+    "networkx==3.2.1"
 ]
 requires-python = ">=3.9"
 readme = "README.md"

@@ -473,7 +473,6 @@ def generate_report(
     else:
         raise ValueError("devel error: results DF not of type list or pandas DataFrame")
 
-
     if _eval_file:
         #def evaluate_results(ev_file, wd, results_dir, design_name, sim_obj=None)
         evaluate_results(
@@ -483,6 +482,7 @@ def generate_report(
             results_dir=prn_dir,
             design_name=design_name)
         #if output_dir is not None:
+
 
     if output_dir is not None:
         print("Moving results to "+output_dir)
@@ -494,7 +494,6 @@ def generate_report(
 
     if _main_plt_results:
         plot_xyce_results_list(df)
-
 
 
 def convertToCir_from_config(
@@ -545,6 +544,7 @@ def convertToCir_from_config(
     # create Sim class
     _sim = SimulationXyce()
     _sim.parse_config_file(sim_config)
+    # _sim.load_analysis_file(sim_config)
 
     if noarchive:
         return None
@@ -751,8 +751,7 @@ def change_results_node_ref(df, node_file, chem):
                     # hopefully the regex works above
                     #node_name = '_'.join(node_name.split('_')[:-1])
                     #new_node = 'C_'+str(chem)+'('+node_name+')'
-                    #node_name = '_'.join(node_name)
-
+                    node_name = '_'.join(node_name)
                     # to be supported later
                     #new_node = f'C_{str(chem)}({node_dev}-{node_name})'
                     new_node = f'C_{str(chem)}({node_name})'
@@ -826,7 +825,8 @@ def evaluate_results(wd, results_dir, design_name, sim_obj=None, ev_file=None, s
         sim_obj = load_eval_file(wd+'/'+ev_file, sim_obj=sim_obj)
     elif sim_file is not None:
         sim_obj = SimulationXyce()
-        sim_obj.parse_config_file(sim_file)
+        # sim_obj.parse_config_file(sim_file)
+        # sim_obj.load_analysis_file(sim_file)
 
     if not isinstance(sim_obj, SimulationXyce):
         raise ValueError(f"{sim_obj} is not a SimulationXyce object")

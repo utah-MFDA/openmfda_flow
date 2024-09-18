@@ -59,7 +59,8 @@ endif
 #PCELL_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_pcell_pre.lef
 
 ifdef PCELL_LEF
-PCELL_MERGE_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef
+# PCELL_MERGE_LEF=$(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef
+PCELL_MERGE_LEF=results/$(DESIGN)/$(DESIGN_VARIANT)/$(PLATFORM)_merged_w_pcells.lef
 
 verilog_preparse: 
 
@@ -67,16 +68,18 @@ pnr_pre: $(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/ou
 
 
 #--pcell_lef $(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_pcellonly.lef 
-$(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/out_merge_pcell.lef:
+#$(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/out_merge_pcell.lef
+$(OPENROAD_FLOW_DIR)/$(PCELL_MERGE_LEF) $(OPENROAD_FLOW_DIR)/verilog_preparser/designs/$(DESIGN)/$(PLATFORM)/out_merge_pcell.lef: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(PCELL_LEF)
 	mkdir -p $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)
 	python3 $(OPENROAD_FLOW_DIR)/verilog_preparser/verilog_param_preparse.py \
 		 --netlist designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v \
 		 --orig_lef $(OPENROAD_FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged.lef \
-		 --out_lef $(PCELL_MERGE_LEF) \
+		 --out_lef $(OPENROAD_FLOW_DIR)/$(PCELL_MERGE_LEF) \
 		 --pcell_lef $(PCELL_LEF) \
-		 --out_lef_csv $(OPENROAD_FLOW_DIR)/logs/$(DESIGN)/$(DESIGN_VARIANT)/preparse.csv \
-		 --conversion_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)
-	export SC_LEF=platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_w_pcells.lef
+		 --out_lef_csv $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)/preparse.csv \
+		 --conversion_file_dir $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)
+
+export SC_LEF = $(PCELL_MERGE_LEF)
 
 SCAD_PCELL_ARG=--pcell_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)/pcell_out_scad
 XYCE_PCELL_ARG=--pcell_file $(OPENROAD_FLOW_DIR)/results/$(DESIGN)/$(DESIGN_VARIANT)/pcell_out_xyce
@@ -87,7 +90,7 @@ OR_DESIGN_P = openroad_flow/designs/$(PLATFORM)/$(DESIGN)
 OR_PRE = $(OR_DESIGN_P)/config.mk $(OR_DESIGN_P)/constraint.sdc $(OR_DESIGN_P)/global_place_args.tcl $(OR_DESIGN_P)/io_constraints.tcl
 
 #$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
-$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(OR_PRE) $(PCELL_MERGE_LEF) #designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
+$(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def: designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v $(OR_PRE) $(OPENROAD_FLOW_DIR)/$(PCELL_MERGE_LEF) #designs/$(PLATFORM)/$(DESIGN)/$(DESIGN)_configure.py 
 	cd $(OPENROAD_FLOW_DIR) && $(MAKE) $(OR_MK_ARGS)
 
 
@@ -111,6 +114,7 @@ $(XYCE_RESULTS)/$(PLATFORM)/$(DESIGN)/$(DESIGN)_xyceOut.csv: $(FINAL_V) $(XYCE_F
 		--cir_config $(XYCE_FLOW_DIR)/V2Va_Parser/VMF_xyce.mfsp \
 		--lib $(XYCE_FLOW_DIR)/stdCellLib/StandardCellLibrary.csv \
 		--local_xyce True \
+		$(XYCE_PCELL_ARG) \
 		--eval_result True ## comment if no evals
 
 $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/$(DESIGN).v:
@@ -120,6 +124,8 @@ $(XYCE_FLOW_DIR)/designs/$(PLATFORM)/$(DESIGN)/simulation.config:
 # SCAD pnr
 render: ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad
 
+SCAD_LEF = ./openroad_flow/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged.lef
+
 ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad: $(OR_RESULTS)/$(DESIGN)/$(DESIGN_VARIANT)/4_final.def
 	#$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/scad_pnr.py $(SCAD_ARGS) 
 	$(TIME_CMD) python3 $(SCAD_FLOW_DIR)/generator_v2.py $(SCAD_ARGS) \
@@ -127,7 +133,8 @@ ${SCAD_RESULTS}/${DESIGN}/${DESIGN_VARIANT}/${DESIGN}.scad: $(OR_RESULTS)/$(DESI
 		--tlef openroad_flow/platforms/$(PLATFORM)/lef/$(PLATFORM).tlef \
 		--design "$(DESIGN)" \
 		--results_dir "$(SCAD_RESULTS)/${DESIGN}/${DESIGN_VARIANT}" \
-		$(SCAD_PCELL_ARG)
+		$(SCAD_PCELL_ARG) \
+		--lef_file $(SCAD_LEF)
 
 scad_clean:
 	rm -rf $(SCAD_RESULTS)

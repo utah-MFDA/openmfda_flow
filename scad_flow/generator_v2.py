@@ -1,4 +1,4 @@
-
+# fmt:off
 import os, sys
 import shutil
 
@@ -6,6 +6,8 @@ import re
 import mmap
 import argparse
 
+# custom classes
+# import lef_component_class as lcc
 from generator_class import * 
 
 #import solid
@@ -169,11 +171,15 @@ def write_pins(o_file, pin_list, bulk, tlef_properties, mets, mode='w+', debug=F
     ["PIN"], ["net", "{p.net}"],
 {pc_route}{nl});
 """)
+    return pin_list
 
 
-def get_components(in_def):
+def get_components(in_def, in_lef_merged=None):
     
     mod_re = bytes(comp_block_reg, 'utf-8')
+
+    if not isinstance(in_lef_merged, type(None)):
+        lefs_c = lcc.Lef_list(in_lef_merged)
 
     # parse template
     with open(in_def, 'r+') as f:
@@ -194,6 +200,10 @@ def get_components(in_def):
             dir=l.group('dir').decode('utf-8'),
             #def_scale=net_property['def_scale']
         )
+
+        # get port locations
+        if not isinstance(in_lef_merged, type(None)):
+            nc.add_pins(lef_c[nc.comp].pins)
 
         comp_list.append(nc)
     return comp_list
@@ -267,6 +277,8 @@ def write_components(o_file, comp_list, layer_h, px, mode="w+", pcell_file=None)
     
     """)
 
+    return comp_list
+
 # hard coded properties
 net_property = {
     'px':0.0076,
@@ -277,7 +289,8 @@ net_property = {
 }
 
 
-def get_nets(in_def, tlef=None, tlef_property=None, report_len_file=None, debug={}, testing=False):
+def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None,
+             pins=None, components=None, component_lef=None, debug={}, testing=False):
     mod_re = bytes(nets_block_reg, 'utf-8')
     tlef_f = './def_test/test_1.tlef'
     #mod_re = regex.compile(nets_block_reg, re.MULTILINE)
@@ -319,8 +332,8 @@ def get_nets(in_def, tlef=None, tlef_property=None, report_len_file=None, debug=
 
         net_dev_reg = r'\(\s*(?P<dev>\w+)\s+(?P<port>\w+)\s*\)'
 
-        #print(l.group('net'))
-        #print(l.group('dev_groups'))
+        print(l.group('net'))
+        print(l.group('dev_groups'))
         devs = regex.finditer(bytes(net_dev_reg, 'utf-8'), l.group('dev_groups'))
 
         dev_list = []
@@ -342,7 +355,7 @@ def get_nets(in_def, tlef=None, tlef_property=None, report_len_file=None, debug=
                     r_deco[coor] = route.group(coor).decode('utf-8')
                 else:
                     r_deco[coor] = None
-            
+
             if route.group('x2') is not None:
                 nb.add_route(
                 route.group('layer').decode('utf-8'),
@@ -351,7 +364,8 @@ def get_nets(in_def, tlef=None, tlef_property=None, report_len_file=None, debug=
                 r_deco['z1'],
                 x2=r_deco['x2'],
                 y2=r_deco['y2'],
-                z2=r_deco['z2']
+                z2=r_deco['z2'],
+                convert_layer=False
             )
             elif route.group('via') is not None:
                 nb.add_route(
@@ -359,32 +373,47 @@ def get_nets(in_def, tlef=None, tlef_property=None, report_len_file=None, debug=
                 r_deco['x1'],
                 r_deco['y1'],
                 r_deco['z1'],
-                via=route.group('via').decode('utf-8')
+                via=route.group('via').decode('utf-8'),
+                convert_layer=False
             )
 
             else:
                 raise ValueError('Issue parsing route')
 
-            
+
 
         nets_list.append(nb.export_net())
 
     for n in nets_list:
-        if 'compress_routes' in debug and debug['compress_routes']==True:
-            n.compress_routes(debug=True)
+        if 'compress_routes' in debug and debug['compress_routes'] is True:
+            n.compress_routes(debug=True, design=design)
         else:
-            n.compress_routes()
+            if components is None:
+                n.compress_routes(design=design, pin_list=pins)
+            else:
+                n.compress_routes(design=design, pin_list=pins, component_list=components, components_lef=component_lef)
 
     if report_len_file is not None:
         route_len_dict = {}
+        route_graph_dict = {}
         for n in nets_list:
+            n.convert_layers(nb)
             route_len_dict[n.net] = n.report_len()
+            route_graph_dict[n.net] = n.report_route_graph()
         route_len_l = zip(*[route_len_dict.keys(),route_len_dict.values()])
-        pd.DataFrame(route_len_l, 
+        pd.DataFrame(route_len_l,
             columns=['wire', 'length (mm)']).to_csv(report_len_file)
+        if '/' in report_len_file:
+            dirname = os.path.dirname(report_len_file)+'/'
+        else:
+            dirname = ''
+        # if os.path.isfile(dirname+f"{design}_route_nets.json"):
+            # os.remove(dirname+f"{design}_route_nets.json")
+        with open(dirname+f"{design}_route_nets.json", "w+") as of_rnets:
+            of_rnets.write(json.dumps(route_graph_dict))
 
     return nets_list
-    
+
 
 def get_net_lines(in_net):
     mod_re = bytes(nets_line_reg, 'utf-8', )
@@ -411,7 +440,7 @@ def get_net_route(in_net_line):
             data = mmap.mmap(f.fileno(), 0)
     else:
         data = in_net_line
-    
+
     mo = regex.finditer(mod_re, data, 0)
     return mo
 
@@ -431,58 +460,69 @@ def write_nets(o_file, net_list, shape='cube', size=[0.1, 0.1, 0.1], mode="w+"):
         #// routing {n.net}
         #// connect {dev1}, {p1} to {dev2}, {p2}
         #polychannel(""")
-        #print(n)
+        print(n)
 
         pc_route = []
-        
-        for r in n.route:
-            size = size
-            pt = r
-            
-            pc_pt1 = [shape, size, pt, rot]
-            #pc_pt2 = [shape, size, pt2, rot]
 
-            pc_route.append(pc_pt1)
-            #pc_rotue.append(pc_pt2)
-            # todo
-
-
-        #new_pc = pc.polychannel_route(
-        #    n.net, [n.dev1, n.p1], [n.dev2, n.p2],
-        #    str(pc_route).replace(']],', ']],\n')
-        #)
-        pc_route = str(pc_route).replace(']],', ']],\n').replace("'", '"')
-
-        #["{n.dev1}", "{n.p1}"], ["{n.dev2}", "{n.p2}"],
-        dev_str = ''.join([f"""["{x['dev']}", "{x['port']}"], """for x in n.devs])
-
-        f.write(f"""polychannel_route("{n.net}", 
-        [{dev_str}],
-        [],
-{pc_route}{nl});
-        """)
-
-        if n.dangle_routes:
-            for dr in n.dangling_routes:
-                pc_route = []
-                for r in dr['route']:
+        for r in n.route.nodes:
+            pc_route = []
+            #print(n.route[r])
+            if 'route' in n.route.nodes[r]:
+                for pt in n.route.nodes[r]['route']:
                     size = size
-                    pt = r
-                    
+                    #pt = r
+
                     pc_pt1 = [shape, size, pt, rot]
                     #pc_pt2 = [shape, size, pt2, rot]
+
                     pc_route.append(pc_pt1)
-                
-                pc_route = str(pc_route).replace(']],', ']],\n').replace("'", '"')
+                    #pc_rotue.append(pc_pt2)
+                    # todo
+            else:
+                continue # does not write empty routes
 
-                #["{n.dev1}", "{n.p1}"], ["{n.dev2}", "{n.p2}"],
-                dev_str = ''.join([f"""["{x['dev']}", "{x['port']}"], """for x in n.devs])
 
-                f.write(f"""polychannel_route("{n.net}", 
+            #new_pc = pc.polychannel_route(
+            #    n.net, [n.dev1, n.p1], [n.dev2, n.p2],
+            #    str(pc_route).replace(']],', ']],\n')
+            #)
+            pc_route = str(pc_route).replace(']],', ']],\n').replace("'", '"')
+
+            #["{n.dev1}", "{n.p1}"], ["{n.dev2}", "{n.p2}"],
+            dev_str = ''.join([f"""["{x['dev']}", "{x['port']}"], """for x in n.devs])
+
+            if r == '':
+                r_str = ''
+            else:
+                r_str = f'({r})'
+
+            f.write(f"""polychannel_route("{n.net}{r_str}", 
         [{dev_str}],
         [],
 {pc_route}{nl});
         """)
+
+        #if n.dangle_routes:
+        #    for dr in n.dangling_routes:
+        #        pc_route = []
+        #        for r in dr['route']:
+        #            size = size
+        #            pt = r
+        #            
+        #            pc_pt1 = [shape, size, pt, rot]
+        #            #pc_pt2 = [shape, size, pt2, rot]
+        #            pc_route.append(pc_pt1)
+        #        
+        #        pc_route = str(pc_route).replace(']],', ']],\n').replace("'", '"')#
+        #
+        #        #["{n.dev1}", "{n.p1}"], ["{n.dev2}", "{n.p2}"],
+        #        dev_str = ''.join([f"""["{x['dev']}", "{x['port']}"], """for x in n.devs])
+        #
+        #        f.write(f"""polychannel_route("{n.net}", 
+        #[{dev_str}],
+        #[],
+#{pc_route}{nl});
+        #""")
 
 
         if rend == None:
@@ -609,17 +649,19 @@ difference() {fb}
 
 routing_use = ['polychannel_v2', 'routing']
 
-def main(platform, design, def_file, results_dir, px, layer, 
-         bttm_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, 
-         def_scale, pitch, res, dimm_file, tlef, comp_file=None, 
-         pin_con_dir_f=None, pcell_file=None, transparent=False):
-    
+def main(platform, design, def_file, results_dir, px, layer,
+         bttm_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip,
+         def_scale, pitch, res, dimm_file, tlef, comp_file=None,
+         pin_con_dir_f=None, pcell_file=None, transparent=False,
+         component_merge_lef=None, add_comp_to_routes = False):
+
     print("""
     --------------------------------
           OpenSCAD generation
     --------------------------------
     """)
 
+    # default scad component file
     if comp_file == None:
         comp_file = f"scad_flow/support_libs/{platform}_merged.scad"
 
@@ -643,7 +685,7 @@ def main(platform, design, def_file, results_dir, px, layer,
 
     # generation
     # overwrites previous file
-    print(f"Starting writing @ {results_dir}")
+    print(f"Starting writing @ {results_dir}/{design}.scad")
     os.makedirs(results_dir, exist_ok=True)
 
     write_imports(o_file, comp_file, routing_use, './support_libs', mode='w+', copy=True, results_dir=results_dir)
@@ -658,15 +700,8 @@ layer = {layer};
     # initial bulk generation
     write_bulk(o_file, bulk, transparent, mode='a')
 
-    # write nets (routes)
-    write_nets(o_file,
-        get_nets(def_file, tlef, net_properties, report_len_file=results_dir+'/'+len_file),
-        shape='cube',
-        size=[0.1,0.1,0.1],
-        mode='a')
-
     # write components
-    write_components(o_file,
+    comp_list = write_components(o_file,
         get_components(def_file),
         net_property['layer'],
         net_property['px'],
@@ -674,12 +709,29 @@ layer = {layer};
         pcell_file=pcell_file)
 
     # write pin vias
-    write_pins(o_file,
+    io_list = write_pins(o_file,
         get_pins(def_file, pin_con_dir_f),
         bulk,
         net_properties,
         mets,
         mode='a')
+
+
+    # write nets (routes)
+    write_nets(o_file,
+        get_nets(def_file,
+            design,
+            tlef,
+            net_properties,
+            report_len_file=results_dir+'/'+len_file,
+            pins=io_list if add_comp_to_routes else None,
+            components=comp_list if add_comp_to_routes else None,
+            component_lef = component_merge_lef),
+        shape='cube',
+        size=[0.1,0.1,0.1],
+        mode='a',)
+    # pins=io_list,
+    # components=comp_list)
 
     with open(o_file, 'a') as of:
         of.write(f"""
@@ -728,8 +780,14 @@ if __name__ == "__main__":
     parser.add_argument('--comp_file', type=str, default=None)
     parser.add_argument('--pin_file', type=str, default=None)
     parser.add_argument('--pcell_file', type=str, default=None)
+    parser.add_argument('--lef_file', type=str, default=None)
 
     args = parser.parse_args()
+
+    if args.lef_file is not None:
+        add_comps = True
+    else:
+        add_comps = False
 
 
     main(
@@ -754,4 +812,6 @@ if __name__ == "__main__":
         args.comp_file,
         args.pin_file,
         args.pcell_file,
+        add_comp_to_routes=add_comps,
+        component_merge_lef=args.lef_file
     )

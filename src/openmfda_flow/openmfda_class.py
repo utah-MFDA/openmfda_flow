@@ -386,11 +386,12 @@ class OpenMFDA:
         # replace_file = f"openroad_flow/designs/{self.platform}/{self.design_name}/global_place_args.tcl"
         # of.write_replace_args(replace_file, self.replace_arg)
 
-    def run_flow(self, mk_targets="all", skip_if_no_length_file=False):
+    def run_flow(self, mk_targets="all", make_pre='', skip_if_no_length_file=False):
         of.run_flow(
             self.design_name,
             platform=self.platform,
             make_arg=mk_targets,
+            make_pre=make_pre,
             skip_if_no_length_file=skip_if_no_length_file,
         )
 
