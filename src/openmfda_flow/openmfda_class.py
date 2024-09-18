@@ -1,11 +1,19 @@
 import os
+import sys
 import subprocess
 import shutil
+import re
 
 import platform as osplt
 from pathlib import PureWindowsPath, PurePosixPath
 
 import openmfda_flow.openmfda_flow as of
+
+# f_path = os.path.abspath(__file__)
+# sys.path.insert(0, f'{f_path}/place_eval')
+# from openmfda_flow.place_eval import get_placement_data
+import openmfda_flow.get_placement_data as get_placement_data
+# import get_placement_data
 
 
 class OpenMFDA:
@@ -176,7 +184,7 @@ class OpenMFDA:
             ):
                 self.config_file = sim_config_file
             else:
-                raise InputError(
+                raise ValueError(
                     "Only probes or simulation config can be passed. Not both"
                 )
 
@@ -386,7 +394,9 @@ class OpenMFDA:
             skip_if_no_length_file=skip_if_no_length_file,
         )
 
-    def run_flow_iter_soln(self, iter_list, len_file, eval_file, out_csv_len, out_csv_chem):
+    def run_flow_iter_soln(
+        self, iter_list, len_file, eval_file, out_csv_len, out_csv_chem, end_err=0
+    ):
         density_var = iter_list[0]
         bin_var = iter_list[1]
         max_phi = iter_list[2]
@@ -461,6 +471,8 @@ class OpenMFDA:
             row_list = []
             key_list = []
 
+            min_err = None
+
             for ir in chem_df.iterrows():
                 key_base = ir[1]["Chemical"] + "." + ir[1]["Node"]
 
@@ -468,6 +480,9 @@ class OpenMFDA:
                 val_c = ir[1]["Eval Conc"]
                 key_e = key_base + ".error"
                 val_e = ir[1]["Error"]
+
+                if min_err is None or val_e > min_err:
+                    min_err = val_e
 
                 key_list.append(key_c)
                 key_list.append(key_e)
@@ -490,7 +505,9 @@ class OpenMFDA:
                 of = open(o_chem, "a")
             of.write(",".join(row_list) + "\n")
             # print(, )
-            return o_chem_n
+            return o_chem_n, min_err
+
+        iter_count = 0
 
         for dv in density_var:  # density_var
             for bv in bin_var:  # bin_var
@@ -499,6 +516,7 @@ class OpenMFDA:
                         for iwire in i_wire_coef:
                             for iden in i_dens_coef:
                                 for ov in overflow:
+                                    iter_count += 1
                                     self.set_replace_arg("overflow", ov)
                                     self.set_replace_arg("init_wire_coef", iwire)
                                     self.set_replace_arg("init_density_coef", iden)
@@ -549,7 +567,7 @@ class OpenMFDA:
                                         nl = report_len(len_file, out_csv_len, init)
                                         if nl != None:
                                             out_csv_len = nl
-                                        nc = report_chem(eval_file, out_csv_chem, init)
+                                        nc, min_err = report_chem(eval_file, out_csv_chem, init)
                                         if nc != None:
                                             out_csv_chem = nc
                                     else:
@@ -557,9 +575,374 @@ class OpenMFDA:
                                         report_len(len_file, out_csv_len, init)
 
                                         # report eval
-                                        report_chem(eval_file, out_csv_chem, init)
+                                        nnc, min_err = report_chem(eval_file, out_csv_chem, init)
 
                                     init = False
+
+                                    if min_err <= end_err:
+                                        print(f"found solution below {end_err}, actual error {min_err}")
+                                        print("Values:", ' '.join([f"{w_colns[id]}:{w_vals[id]}" for id in range(0,len(w_vals))]))
+                                        print(f"Iteration: {iter_count}")
+                                        return
+
+
+    def run_flow_iter_soln_opt(
+        self, iter_list, len_file, eval_file, out_csv_len, out_csv_chem, end_err=0
+    ):
+        density_var = iter_list[0]
+        bin_var = iter_list[1]
+        max_phi = iter_list[2]
+        min_phi = iter_list[3]
+        i_wire_coef = iter_list[4]
+        i_dens_coef = iter_list[5]
+        fan_out = iter_list[6]
+        overflow = iter_list[7]
+
+        init = True
+
+        def write_vals(colns, val_list, init=True, out_file=None):
+
+            out_file_n = None
+            if out_file == None:
+                out_file = "replace_vars.csv"
+            else:
+                pass
+
+            if os.path.isfile(out_file) and init:
+                count = 0
+                out_file_n = out_file + "_" + str(count)
+                while os.path.isfile(out_file_n):
+                    out_file_n = out_file + "_" + str(count)
+                    count += 1
+                out_file = out_file_n
+
+            if init:
+                of = open(out_file, "w+")
+                of.write(",".join(colns) + "\n")
+            else:
+                of = open(out_file, "a")
+
+            of.write(",".join([str(x) for x in val_list]) + "\n")
+            return out_file_n
+
+        def report_len(len_file, o_len, init=True):
+            import pandas as pd
+
+            o_len_n = None
+            len_df = pd.read_csv(len_file, index_col=1)
+            len_df = len_df.T
+
+            # print(len_df.iloc[1].tolist())
+
+            if os.path.isfile(o_len) and init:
+                count = 0
+                o_len_n = o_len + "_" + str(count)
+                while os.path.isfile(o_len_n):
+                    o_len_n = o_len + "_" + str(count)
+                    count += 1
+                o_len = o_len_n
+
+            if init:
+                of = open(o_len, "w+")
+                of.write(",".join(len_df.columns.tolist()) + "\n")
+            else:
+                of = open(o_len, "a")
+
+            of.write(",".join([str(x) for x in len_df.iloc[1].tolist()]) + "\n")
+            return o_len_n
+
+        def report_chem(chem_file, o_chem, init=True):
+            import pandas as pd
+
+            o_chem_n = None
+            chem_df = pd.read_csv(chem_file)
+
+            ch_list = chem_df[:]["Chemical"].tolist()
+            nd_list = chem_df[:]["Node"].tolist()
+
+            row_list = []
+            key_list = []
+
+            min_err = None
+
+            for ir in chem_df.iterrows():
+                key_base = ir[1]["Chemical"] + "." + ir[1]["Node"]
+
+                key_c = key_base + ".concentration"
+                val_c = ir[1]["Eval Conc"]
+                key_e = key_base + ".error"
+                val_e = ir[1]["Error"]
+
+                if min_err is None or val_e > min_err:
+                    min_err = val_e
+
+                key_list.append(key_c)
+                key_list.append(key_e)
+
+                row_list.append(str(val_c))
+                row_list.append(str(val_e))
+
+            if os.path.isfile(o_chem) and init:
+                count = 0
+                o_chem_n = o_chem + "_" + str(count)
+                while os.path.isfile(o_chem_n):
+                    o_chem_n = o_chem + "_" + str(count)
+                    count += 1
+                o_chem = o_chem_n
+
+            if init:
+                of = open(o_chem, "w+")
+                of.write(",".join(key_list) + "\n")
+            else:
+                of = open(o_chem, "a")
+            of.write(",".join(row_list) + "\n")
+            # print(, )
+            return o_chem_n, min_err
+
+        iter_count = 0
+
+        for dv in density_var:  # density_var
+            for bv in bin_var:  # bin_var
+                for maxp in max_phi:  # max_phi
+                    for minp in min_phi:  # min_phi
+                        for iwire in i_wire_coef:
+                            for iden in i_dens_coef:
+                                for ov in overflow:
+                                    iter_count += 1
+                                    self.set_replace_arg("overflow", ov)
+                                    self.set_replace_arg("init_wire_coef", iwire)
+                                    self.set_replace_arg("init_density_coef", iden)
+                                    self.set_replace_arg("max_phi", maxp)
+                                    self.set_replace_arg("min_phi", minp)
+                                    self.set_replace_arg("bin", bv)
+                                    self.set_replace_arg("density", dv)
+
+                                    mfda_error = False
+
+                                    print(self.to_string_probes())
+                                    self.build()
+                                    try:
+                                        self.run_flow(
+                                            mk_targets=["pnr", "render", "simulate"]
+                                        )
+                                    except subprocess.CalledProcessError:
+                                        # TODO report blank or missing entries
+                                        mfda_error = True
+
+                                    w_colns = [
+                                        "overflow",
+                                        "init_wire_coef",
+                                        "init_density_coef",
+                                        "max_phi",
+                                        "min_phi",
+                                        "bin",
+                                        "density",
+                                        "error",
+                                    ]
+                                    w_vals = [
+                                        ov,
+                                        iwire,
+                                        iden,
+                                        maxp,
+                                        minp,
+                                        bv,
+                                        dv,
+                                        str(mfda_error),
+                                    ]
+                                    if init:
+                                        write_vals(w_colns, w_vals, init)
+                                    else:
+                                        write_vals(w_colns, w_vals, init)
+
+                                    # report lengths
+                                    if init:
+                                        nl = report_len(len_file, out_csv_len, init)
+                                        if nl != None:
+                                            out_csv_len = nl
+                                        nc, min_err = report_chem(eval_file, out_csv_chem, init)
+                                        if nc != None:
+                                            out_csv_chem = nc
+                                    else:
+                                        # report len
+                                        report_len(len_file, out_csv_len, init)
+
+                                        # report eval
+                                        nnc, min_err = report_chem(eval_file, out_csv_chem, init)
+
+                                    init = False
+
+                                    if min_err <= end_err:
+                                        print(f"found solution below {end_err}, actual error {min_err}")
+                                        print("Values:", ' '.join([f"{w_colns[id]}:{w_vals[id]}" for id in range(0,len(w_vals))]))
+                                        print(f"Iteration: {iter_count}")
+                                        return
+
+    def run_flow_iter_placement(
+        self, iter_list, results_root, lef_file, centers=False, delim=','
+    ):
+        # from place_eval import get_placement_data
+        if not isinstance(delim, str):
+            raise ValueError("delim must be of type str")
+
+        if len(iter_list) != 7:
+            raise ValueError("First arg (iter list) needs to have len 7 [density, bin, max_phi, min_phi, init_wire_len, init_den, overflow]")
+
+        density_var = iter_list[0]
+        bin_var = iter_list[1]
+        max_phi = iter_list[2]
+        min_phi = iter_list[3]
+        i_wire_coef = iter_list[4]
+        i_dens_coef = iter_list[5]
+        overflow = iter_list[6]
+
+        def reform_e(edge):
+            e = str(edge)
+            edge_reg = r'\s*\(\s*[\'\"]([_\w\d]+)[\'\"]\s*,\s*[\'\"]([_\w\d]+)[\'\"]\s*\)\s*'
+            edge_repl= r'\1-\2'
+            return re.sub(edge_reg, edge_repl, e)
+
+
+        def write_vals(colns, val_list, distances_gp={}, distances_dp={}, init=True, out_file=None,
+                       centers_gp={}, centers_dp={}, centers=False):
+
+            out_file_n = None
+            if out_file is None:
+                out_file = "distances.csv"
+            else:
+                if out_file[-4:] != '.csv':
+                    out_file += '.csv'
+
+            if os.path.isfile(out_file) and init:
+                count = 0
+                out_file_n = out_file[:-4] + "_" + str(count) + '.csv'
+                while os.path.isfile(out_file_n):
+                    out_file_n = out_file[:-4] + "_" + str(count) + '.csv'
+                    count += 1
+                out_file = out_file_n
+
+            if centers:
+                out_centers = out_file[:-4] + '_centers.csv'
+
+            if init:
+                of = open(out_file, "w+")
+                of.write(delim.join(colns +
+                    [reform_e(comp)+'_gp' for comp in list(distances_gp.keys())] +
+                    [reform_e(comp)+'_dp' for comp in list(distances_dp.keys())]
+                         ) + "\n")
+                if centers:
+                    ofc = open(out_centers, "w+")
+                    ofc.write(delim.join(colns +
+                        [reform_e(comp)+'_cntr_gp' for comp in list(centers_gp.keys())] +
+                        [reform_e(comp)+'_cntr_dp' for comp in list(centers_dp.keys())]
+                            ) + '\n')
+
+            else:
+                of = open(out_file, "a")
+                if centers:
+                    ofc = open(out_centers, "a")
+
+            of.write(delim.join([str(x) for x in val_list] +
+                [str(v) for v in distances_gp.values()] +
+                [str(v) for v in distances_dp.values()]) + "\n")
+            if centers:
+                ofc.write(delim.join([str(x) for x in val_list] +
+                    [str(v) for v in centers_gp.values()] +
+                    [str(v) for v in centers_dp.values()]) + "\n")
+
+            return out_file_n
+
+        iter_count = 0
+        init = True
+
+        for dv in density_var:  # density_var
+            for bv in bin_var:  # bin_var
+                for maxp in max_phi:  # max_phi
+                    for minp in min_phi:  # max_phi
+                        for iwire in i_wire_coef:
+                            for iden in i_dens_coef:
+                                for ov in overflow:
+                                    iter_count += 1
+                                    self.set_replace_arg("overflow", ov)
+                                    self.set_replace_arg("init_wire_coef", iwire)
+                                    self.set_replace_arg("init_density_coef", iden)
+                                    self.set_replace_arg("max_phi", maxp)
+                                    self.set_replace_arg("min_phi", minp)
+                                    self.set_replace_arg("bin", bv)
+                                    self.set_replace_arg("density", dv)
+
+                                    mfda_error = False
+
+                                    print(self.to_string_probes())
+                                    self.build()
+                                    placement = {}
+                                    placement["global_place"] = {}
+                                    placement["detail_place"] = {}
+                                    try:
+                                        self.run_flow(
+                                            mk_targets=["pnr -e OR_MK_ARGS=place"]
+                                        )
+                                        # results_root, self.design, verilog_file, lef_file)
+                                        if centers:
+                                            (placement, p_centers) = get_placement_data.get_placement_distances(
+                                                results_root, self.design_name, self.verilog_file, lef_file, conversion_factor=7.6e-3
+                                            )
+                                        else:
+                                            (placement, p_centers) = get_placement_data.get_placement_distances(
+                                                results_root, self.design_name, self.verilog_file, lef_file, conversion_factor=7.6e-3
+                                            )
+                                    except subprocess.CalledProcessError:
+                                        # TODO report blank or missing entries
+                                        mfda_error = True
+
+                                    w_colns = [
+                                        "overflow",
+                                        "init_wire_coef",
+                                        "init_density_coef",
+                                        "max_phi",
+                                        "min_phi",
+                                        "bin",
+                                        "density",
+                                        "error",
+                                    ]
+                                    w_vals = [
+                                        ov,
+                                        iwire,
+                                        iden,
+                                        maxp,
+                                        minp,
+                                        bv,
+                                        dv,
+                                        str(mfda_error),
+                                    ]
+                                    if init:
+                                        #if centers:
+                                        write_vals(
+                                            w_colns,
+                                            w_vals,
+                                            placement["global_place"],
+                                            placement["detail_place"],
+                                            init,
+                                            centers=centers,
+                                            centers_gp=p_centers["global_place"],
+                                            centers_dp=p_centers["detail_place"]
+                                        )
+                                        # else:
+                                        #    write_vals(w_colns, w_vals, placement["global_place"], placement["detail_place"], init)
+                                    else:
+                                        write_vals(
+                                            w_colns,
+                                            w_vals,
+                                            placement["global_place"],
+                                            placement["detail_place"],
+                                            init,
+                                            centers=centers,
+                                            centers_gp=p_centers["global_place"],
+                                            centers_dp=p_centers["detail_place"]
+                                        )
+                                        #write_vals(w_colns, w_vals, placement["global_place"], placement["detail_place"], init)
+                                    init = False
+
+
 
     def run_flow_remote(
         self,
