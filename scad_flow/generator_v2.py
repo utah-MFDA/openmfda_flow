@@ -621,7 +621,7 @@ def main(platform, design, def_file, results_dir, px, layer,
     """)
 
     if comp_file == None:
-        comp_file = f"scad_flow/support_libs/{platform}_pdk_merged.scad"
+        comp_file = f"scad_flow/support_libs/{platform}_merged.scad"
 
     o_file = f"{results_dir}/{design}.scad"
 

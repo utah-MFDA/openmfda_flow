@@ -335,8 +335,9 @@ $(RESULTS_DIR)/route.guide: $(RESULTS_DIR)/2_place.def $(RESULTS_DIR)/2_place.sd
 ifeq ($(USE_WXL),)
 $(RESULTS_DIR)/3_route.def: $(RESULTS_DIR)/route.guide
 endif
+# CARE Tritonroute can generate very large log files 
 $(RESULTS_DIR)/3_route.def: $(RESULTS_DIR)/2_place.def
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/detail_route.tcl -metrics $(LOG_DIR)/3_2_TritonRoute.json) 2>&1 | tee $(LOG_DIR)/3_2_TritonRoute.log
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/detail_route.tcl -metrics $(LOG_DIR)/3_2_TritonRoute.json) #2>&1 | tee $(LOG_DIR)/3_2_TritonRoute.log
 
 $(RESULTS_DIR)/3_route.sdc: $(RESULTS_DIR)/2_place.sdc
 	cp $< $@
