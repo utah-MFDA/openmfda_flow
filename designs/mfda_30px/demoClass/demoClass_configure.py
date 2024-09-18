@@ -1,12 +1,16 @@
 from openmfda_flow.openmfda_flow import *
 from openmfda_flow.openmfda_class import OpenMFDA
 
+import os
+
 proj = OpenMFDA()
 
 
 proj.verilog_file= "demoClass.v"
 proj.design_name = "demoClass"
-proj.platform    = "mfda_30px" 
+proj.platform    = "mfda_30px"
+
+os.environ["TECH_LEF"] = f'../designs/{proj.platform}/{proj.design_name}/mfda_30px_demo.tlef'
 
 #verilog_file = "demo.v"
 #design_name = "demo"
@@ -23,13 +27,13 @@ proj.set_pin([1, 6], "out")
 #pins[0][3] = "soln3"
 #pins[1][7] = "out"
 
-proj.set_replace_arg('density', 0.88)
-proj.set_replace_arg('bin'    , 24)
-proj.set_replace_arg('max_phi', 1.04)
-#proj.set_replace_arg('min_phi', 1.04)
+proj.set_replace_arg('density', 0.80)
+proj.set_replace_arg('bin'    , 8)
+proj.set_replace_arg('max_phi', 1.06)
+#proj.set_replace_arg('min_phi', 0.95)
 #proj.set_replace_arg('init_density_coef', 1.04)
 #proj.set_replace_arg('init_wire_coef', 1.04)
-#proj.set_replace_arg('fanout', 1.04)
+#proj.set_replace_arg('fanout', 10)
 
 proj.set_die_area([0, 0, 2550, 1590])
 proj.set_core_area([0, 0, 2550, 1590])
@@ -48,7 +52,9 @@ proj.add_analysis('transient','0.1ms','1ms')
 print(proj.to_string_probes())
 proj.build()
 #proj.run_flow_remote(remote_pyenv_home='~/mfda_env', remote_dir="MFDA_flow", mk_targets=['pnr','render', 'simulate'])
-proj.run_flow(mk_targets=['pnr','render', 'simulate'])
+#proj.run_flow(mk_targets=['pnr','render', 'simulate'])
+#proj.run_flow(mk_targets=['simulate'])
+proj.run_flow(mk_targets=['render', 'simulate'])
 
 #generate_config(verilog_file, design_name, pin_names=pins, platform=platform, global_place_args=gp_args, design_dir=True, platform_config=plat)
 #run_flow(design_name, platform=platform, make_arg=['pnr', 'render', 'simulate'])

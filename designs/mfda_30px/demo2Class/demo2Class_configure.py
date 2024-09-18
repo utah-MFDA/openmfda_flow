@@ -45,7 +45,7 @@ proj.add_probe('pressure', 'connect6')
 
 proj.build()
 #proj.run_flow_remote(remote_pyenv_home='~/mfda_env', remote_dir="MFDA_flow", mk_targets=['pnr','render', 'simulate'])
-proj.run_flow(mk_targets=['pnr','render'])
+proj.run_flow(mk_targets=['pnr','render','simulate'])
 
 #generate_config(verilog_file, design_name, pin_names=pins, platform=platform, global_place_args=gp_args, design_dir=True, platform_config=plat)
 #run_flow(design_name, platform=platform, make_arg=['pnr', 'render', 'simulate'])
