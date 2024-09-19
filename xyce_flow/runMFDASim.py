@@ -4,7 +4,7 @@ import os
 import shutil
 import subprocess
 
-import docker
+#import docker
 import tarfile
 import json
 import re

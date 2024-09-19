@@ -11,7 +11,8 @@ dependencies = [
     "Pillow==10.2.0",
     "matplotlib==3.9.2",
     "regex==2024.9.11",
-    "networkx==3.2.1"
+    "networkx==3.2.1",
+    "lark==1.2.2"
 ]
 requires-python = ">=3.9"
 readme = "README.md"
