@@ -751,7 +751,7 @@ def change_results_node_ref(df, node_file, chem):
                     # hopefully the regex works above
                     #node_name = '_'.join(node_name.split('_')[:-1])
                     #new_node = 'C_'+str(chem)+'('+node_name+')'
-                    node_name = '_'.join(node_name)
+                    # node_name = '_'.join(node_name)
                     # to be supported later
                     #new_node = f'C_{str(chem)}({node_dev}-{node_name})'
                     new_node = f'C_{str(chem)}({node_name})'
@@ -825,13 +825,14 @@ def evaluate_results(wd, results_dir, design_name, sim_obj=None, ev_file=None, s
         sim_obj = load_eval_file(wd+'/'+ev_file, sim_obj=sim_obj)
     elif sim_file is not None:
         sim_obj = SimulationXyce()
-        # sim_obj.parse_config_file(sim_file)
+        sim_obj.parse_config_file(sim_file)
         # sim_obj.load_analysis_file(sim_file)
 
     if not isinstance(sim_obj, SimulationXyce):
         raise ValueError(f"{sim_obj} is not a SimulationXyce object")
 
     ev_chem_list = sim_obj.getEvaluation()
+    print("EVALS", ev_chem_list)
     eval_df_coln = ['Chemical', 'Time', 'Node', 'Error', 'Expected Conc', 'Eval Conc']
     eval_df = pd.DataFrame(columns=eval_df_coln)
 
