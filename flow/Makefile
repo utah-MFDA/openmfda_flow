@@ -7,6 +7,7 @@ export DESIGN ?= demo
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
+OPENSCAD ?= openscad
 export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
 export BUILD_PDK_LIBRARY ?=
 
@@ -537,7 +538,7 @@ $(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN).sc
 		--local_xyce True \
 		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
 		--length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv \
-		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
+		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(LOG_DIR)/simulation.log
 endif
 
 # ==============================================================================
@@ -546,7 +547,9 @@ endif
 # \___ \| |     / _ \ | | | |
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
-render: $(RESULTS_DIR)/$(DESIGN).scad
+.PHONY: scad render slice zip
+scad: $(RESULTS_DIR)/$(DESIGN).scad
+render: $(RESULTS_DIR)/$(DESIGN).stl
 slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
@@ -557,13 +560,13 @@ $(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
-		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $(LOG_DIR)/5_1_scad_generate.log
 
 %.stl: %.scad
-	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
+	$(TIME_CMD) $(OPENSCAD) -m make -o $@ -d $@.deps $< 2>&1 | tee $(LOG_DIR)/5_2_stl_render.log
 
 %.slices: %.stl
-	$(TIME_CMD) xvfb-run python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_HEIGHT} $@ 2>&1 | tee $@.log
+	$(TIME_CMD) xvfb-run python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_HEIGHT} $@ 2>&1 | tee $(LOG_DIR)/5_3_slicer.log
 
 ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip: ${RESULTS_DIR}/${DESIGN}.slices
 	7z a -tzip $@ ${RESULTS_DIR}
