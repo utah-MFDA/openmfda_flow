@@ -271,6 +271,10 @@ class OpenMFDA:
         self.platform_config = self.Platform()
         self.replace_arg = {}
         self.simulation_config = self.Simulator()
+        if 'OPENMFDA_ROOT' in os.environ:
+            self.openmfda_flow_path = os.environ['OPENMFDA_ROOT']
+        else:
+            self.openmfda_flow_path = None
 
     def import_verilog_file(self, verilog_file):
         self.verilog_file = verilog_file
@@ -286,6 +290,49 @@ class OpenMFDA:
 
     def set_pin(self, pin, name, layer="met9"):
         self.pins[pin[0]][pin[1]] = {"name": name, "layer": layer}
+
+    def set_openmfda_flow_path(self, path, skip_ckeck=False):
+
+        def check_path():
+            if os.path.isdir(f"{path}/flow") and \
+                  os.path.isdir(f"{path}/tools"):
+                print("Found main flow and tools")
+                return True
+            else:
+                print("Unable to find flow and tools, checkign for old version")
+                found_tools = {"xyce":False,"scad":False, "openroad":False}
+                if os.path.isdir(f"{path}/xyce_flow"):
+                    found_tools['xyce'] = True
+                    print(f"Found xyce flow at {os.path.abspath(f'{path}/xyce_flow')}")
+                if os.path.isdir(f"{path}/scad_flow"):
+                    found_tools['scad'] = True
+                    print(f"Found scad flow at {os.path.abspath(f'{path}/scad_flow')}")
+                if os.path.isdir(f"{path}/openroad_flow"):
+                    found_tools['openroad'] = True
+                    print(f"Found openroad flow at {os.path.abspath(f'{path}/openroad_flow')}")
+
+                if not found_tools['xyce'] and \
+                      not found_tools['scad'] and \
+                      not found_tools['openroad']:
+                    return False
+                else:
+                    return True
+
+        if os.path.isdir(path):
+            if check_path() or skip_ckeck:
+                self.openmfda_flow_path = path
+            else:
+                raise ValueError(f"Not able to find ./flow or ./tools for OpenMFDA_flow path: {path}")
+        else:
+            raise IsADirectoryError(f"{path} is not a valid directory")
+
+
+
+    def get_openmfda_flow_path(self):
+        if self.openmfda_flow_path is None:
+            raise ValueError("OpenMFDA flow path not set, either set enviroment variable 'OPENMFDA_ROOT' or set with set_openmfda_flow_path(<path>)")
+        else:
+            return self.openmfda_flow_path
 
     def add_cell(self, cell, ports):
         pass
@@ -356,26 +403,32 @@ class OpenMFDA:
         return self.simulation_config.to_string_probes()
 
     def generate_xyce_configs(self):
-        dir_path = os.path.dirname(
-            os.path.normpath(os.path.realpath(__file__) + "/../../")
-        )
+        # dir_path = os.path.dirname(
+        #     os.path.normpath(os.path.realpath(__file__) + "/../../")
+        # )
+        dir_path = self.get_openmfda_flow_path()
         xyce_run_dir = (
             f"{dir_path}/xyce_flow/designs/{self.platform}/{self.design_name}"
         )
-        netlist_file = (
-            f"{dir_path}/designs/{self.platform}/{self.design_name}/{self.verilog_file}"
-        )
+        # netlist_file = (
+        #     f"{dir_path}/designs/{self.platform}/{self.design_name}/{self.verilog_file}"
+        # )
 
         print("Writing Xyce configuration")
         os.makedirs(xyce_run_dir, exist_ok=True)
 
-        shutil.copy(netlist_file, xyce_run_dir + "/" + self.verilog_file)
-        self.write_sim_config(xyce_run_dir)
+        if self.verilog_file is not None:
+            shutil.copy(self.verilog_file, xyce_run_dir + "/" + os.path.basename(self.verilog_file))
+            #shutil.copy(netlist_file, xyce_run_dir + "/" + self.verilog_file)
+            self.write_sim_config(xyce_run_dir)
 
     def build(self):
+        if self.platform is None:
+            raise ValueError(f"Set platform for OpenMFDA_class: {self.design_name}")
         of.generate_config(
             self.verilog_file,
             self.design_name,
+            openmfda_flow_path=self.get_openmfda_flow_path(),
             pins=self.pins,
             global_place_args=self.replace_arg,
             design_dir=True,
@@ -387,8 +440,11 @@ class OpenMFDA:
         # of.write_replace_args(replace_file, self.replace_arg)
 
     def run_flow(self, mk_targets="all", make_pre='', skip_if_no_length_file=False):
+        if self.platform is None:
+            raise ValueError(f"Set platform for OpenMFDA_class: {self.design_name}")
         of.run_flow(
             self.design_name,
+            self.get_openmfda_flow_path(),
             platform=self.platform,
             make_arg=mk_targets,
             make_pre=make_pre,
@@ -981,9 +1037,10 @@ class OpenMFDA:
             "src/openmfda_flow",
         ]
 
-        dir_path = os.path.dirname(
-            os.path.normpath(os.path.realpath(__file__) + "/../../").replace("\\", "/")
-        )
+        # dir_path = os.path.dirname(
+        #     os.path.normpath(os.path.realpath(__file__) + "/../../").replace("\\", "/")
+        # )
+        dir_path = self.get_openmfda_flow_path()
 
         cmd_paths = " ".join([f"{dir_path}/{x}" for x in local_paths])
 

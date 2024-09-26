@@ -3,6 +3,8 @@ from lark import Lark, Transformer
 import json
 import os
 
+import openmfda_flow.def_grammer as def_grammer
+
 class Def_transformer(Transformer):
     def INT(self, i):
         # (i,) = i
@@ -218,13 +220,14 @@ class Def_transformer(Transformer):
 def main(in_file, design=None, info_output=None, debug=False):
 
     info = get_info(in_file, design, info_output, debug)
-    
+
     if debug: print(info)
- 
+
 
 def get_info(in_file, design=None, info_output=None, debug=False):
     f_dir = os.path.abspath(os.path.dirname(__file__))
-    def_parser = Lark.open(f"{f_dir}/def_grammer.lark", lexer='basic')
+    #def_parser = Lark.open(f"{f_dir}/def_grammer.lark", lexer='basic')
+    def_parser = def_grammer.import_def_parser()
 
     with open(in_file, 'r') as ifile:
         tree = def_parser.parse(ifile.read())
@@ -247,6 +250,7 @@ def get_info(in_file, design=None, info_output=None, debug=False):
             of.write(json.dumps(tr_tree, indent=3))
 
     return tr_tree
+
 
 def testing():
 

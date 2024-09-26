@@ -18,17 +18,19 @@ def default_pin_names():
 def generate_config(
     input_file,
     design_name,
+    openmfda_flow_path,
     pins=None,
     platform="mfda_30px",
     global_place_args={},
     design_dir=False,
     platform_config=None,
 ):
-    dir_path = os.path.dirname(os.path.normpath(os.path.realpath(__file__) + "/../../"))
-    if design_dir:
-        input_file = f"{dir_path}/designs/{platform}/{design_name}/" + input_file
-    else:
-        pass
+    # dir_path = os.path.dirname(os.path.normpath(os.path.realpath(__file__) + "/../../"))
+    # if design_dir:
+    #     input_file = f"{dir_path}/designs/{platform}/{design_name}/" + input_file
+    # else:
+    #     pass
+    dir_path = openmfda_flow_path
 
     print("project_root_dir: " + os.path.dirname(input_file))
 
@@ -108,6 +110,7 @@ def generate_config(
 
 def run_flow(
     design_name,
+    openmfda_root,
     platform="mfda_30px",
     stdout=False,
     make_arg="all",
@@ -117,7 +120,8 @@ def run_flow(
     subprocess.run(["pwd"], stdout=None, stderr=None, check=True)
     if isinstance(make_arg, str):
         make_arg = [make_arg]
-    dir_path = os.path.dirname(os.path.normpath(os.path.realpath(__file__) + "/../.."))
+    # dir_path = os.path.dirname(os.path.normpath(os.path.realpath(__file__) + "/../.."))
+    dir_path = openmfda_root
     for arg in make_arg:
         run_cmd = f"cd {dir_path} && make {make_pre} {arg} -e DESIGN={design_name} -e PLATFORM={platform}"
         print(run_cmd)

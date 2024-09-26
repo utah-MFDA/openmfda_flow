@@ -6,10 +6,13 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import os
 
+import openmfda_flow.verilog_grammer as verilog_grammer
+
 comp_type = "comp_type"
 
 f_dir = os.path.abspath(os.path.dirname(__file__))
-v_parser = Lark.open(f"{f_dir}/verilog_grammer.lark", lexer='basic')
+#v_parser = Lark.open(f"{f_dir}/verilog_grammer.lark", lexer='basic')
+v_parser = verilog_grammer.import_verilog_parser()
 
 class V_Graph():
 
