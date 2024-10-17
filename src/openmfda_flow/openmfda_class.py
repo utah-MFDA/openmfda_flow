@@ -7,7 +7,7 @@ import re
 import platform as osplt
 from pathlib import PureWindowsPath, PurePosixPath
 
-import openmfda_flow.openmfda_flow as of
+import openmfda_flow.openmfda_flow_0_2 as of
 
 # f_path = os.path.abspath(__file__)
 # sys.path.insert(0, f'{f_path}/place_eval')
@@ -442,13 +442,14 @@ class OpenMFDA:
     def run_flow(self, mk_targets="all", make_pre='', skip_if_no_length_file=False):
         if self.platform is None:
             raise ValueError(f"Set platform for OpenMFDA_class: {self.design_name}")
+        print(self.platform)
         of.run_flow(
             self.design_name,
-            self.get_openmfda_flow_path(),
+            #self.get_openmfda_flow_path(),
             platform=self.platform,
-            make_arg=mk_targets,
-            make_pre=make_pre,
-            skip_if_no_length_file=skip_if_no_length_file,
+            mk_targets=mk_targets,
+            #make_pre=make_pre,
+            #skip_if_no_length_file=skip_if_no_length_file,
         )
 
     def run_flow_iter_soln(
@@ -557,10 +558,16 @@ class OpenMFDA:
 
             if init:
                 of = open(o_chem, "w+")
-                of.write(",".join(key_list) + "\n")
+                of.write(",".join(key_list))
+                if end_err > 0:
+                    of.write(",min_err")
+                of.write("\n")
             else:
                 of = open(o_chem, "a")
-            of.write(",".join(row_list) + "\n")
+            of.write(",".join(row_list))
+            if end_err > 0:
+                of.write(f",{min_err}")
+            of.write("\n")
             # print(, )
             return o_chem_n, min_err
 
@@ -636,7 +643,7 @@ class OpenMFDA:
 
                                     init = False
 
-                                    if min_err <= end_err:
+                                    if min_err is not None and min_err <= end_err:
                                         print(f"found solution below {end_err}, actual error {min_err}")
                                         print("Values:", ' '.join([f"{w_colns[id]}:{w_vals[id]}" for id in range(0,len(w_vals))]))
                                         print(f"Iteration: {iter_count}")
