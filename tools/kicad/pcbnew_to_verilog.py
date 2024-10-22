@@ -1,15 +1,12 @@
 import itertools
 import math
 from kiutils.schematic import Schematic
-import networkx as nx
 import pcbnew
 
 class PcbToVerilog:
     def __init__(self, board, design):
         self.design = design
         self.board = board
-        self.graph = nx.Graph()
-
 
     def print_verilog(self, outfile):
         print(f"module {design} ();"), file=outfile)
