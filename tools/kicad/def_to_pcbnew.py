@@ -77,7 +77,6 @@ class DefToPcb:
                     elif ey == sy:
                         sy -= sext
                         ey += eext
-                    width =
                     track = pcbnew.PCB_TRACK(self.board)
                     track.SetEndX(eext)
                     track.SetEndY(eeyt)
@@ -106,9 +105,9 @@ if __name__ == "__main__":
     for lef_file in args.lef_files:
         odb.read_lef(db, lef_file)
     for def_file in args.def_files:
-        odb.read_lef(db, def_file)
-
-    t = DefToPcb(db, pcbnew.GetBoard())
+        odb.read_def(db, def_file)
+    board = pcbnew.LoadBoard(args.pcb_file)
+    t = DefToPcb(db, board)
     # Todo clear all traces
     t.place()
     t.route()

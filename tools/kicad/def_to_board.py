@@ -167,7 +167,7 @@ if __name__ == "__main__":
     for lef_file in args.lef_files:
         odb.read_lef(db, lef_file)
     for def_file in args.def_files:
-        odb.read_lef(db, def_file)
+        odb.read_def(db, def_file)
     t = Translator(db)
     t.extract()
     t.dump(args.output)
