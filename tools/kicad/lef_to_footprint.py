@@ -1,7 +1,9 @@
+
 from kiutils.items.brditems import LayerToken
 from kiutils.footprint import Footprint, Pad
 from kiutils.items.common import Position, Net
 from kiutils.items.zones import Zone, Hatch, KeepoutSettings, ZonePolygon
+from kiutils.items.fpitems import FpText
 import os
 import opendbpy as odb
 import re
@@ -49,19 +51,21 @@ class FootprintExtractor:
         mx, my = map(self.scale, master.getOrigin())
         angle = 0 # TODO check
         w, h = map(self.scale, [master.getWidth(), master.getHeight()])
-        pads = list(self.extract_pads(master))
+        pads, labels = zip(*self.extract_pads(master))
         zones = [
             self.extract_obstruction(obs)
             for obs in master.getObstructions()
         ]
-
+        name_label = FpText(type="value", text=master.getConstName(), position=Position(X=mx, Y=my))
         footprint = Footprint(libraryNickname="mfda",
                               entryName=master.getConstName(),
                               generator="openmfda",
                               position = Position(X=mx, Y=my, angle=angle),
-                              pads=pads,
+                              pads=list(pads),
+                              graphicItems=list(labels) + [name_label],
                               zones=zones)
         return footprint
+
 
     def extract_pads(self, master):
         for mterm in master.getMTerms(): # PIN in lef
@@ -81,7 +85,10 @@ class FootprintExtractor:
                               size=Position(X=xmax-xmin,Y=ymax-ymin),
                               layers=[self.layer_map[metal]],
                               pinFunction=mterm.getName())
-                    yield pad
+                    label = FpText(type="value",
+                                   text=mterm.getName(),
+                                   position=Position(X=xmax+0.1,Y=(ymax+ymin)/2))
+                    yield pad, label
 
     def extract_obstruction(self, obs):
         bounds = [obs.xMin(), obs.xMax(), obs.yMin(), obs.yMax()]
