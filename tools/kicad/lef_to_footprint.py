@@ -1,9 +1,8 @@
-
 from kiutils.items.brditems import LayerToken
 from kiutils.footprint import Footprint, Pad
-from kiutils.items.common import Position, Net
+from kiutils.items.common import Position, Net, Font, Effects
 from kiutils.items.zones import Zone, Hatch, KeepoutSettings, ZonePolygon
-from kiutils.items.fpitems import FpText
+from kiutils.items.fpitems import FpText, FpRect
 import os
 import opendbpy as odb
 import re
@@ -17,6 +16,7 @@ class FootprintExtractor:
         self.footprints =[]
         self.layers = []
         self.layer_map = {}
+        self.default_font = Effects(font=Font(height=10.0, width=10.0))
 
     def scale(self, i):
         return i / 1000
@@ -56,13 +56,22 @@ class FootprintExtractor:
             self.extract_obstruction(obs)
             for obs in master.getObstructions()
         ]
-        name_label = FpText(type="value", text=master.getConstName(), position=Position(X=mx, Y=my))
+        name_label = FpText(type="value",
+                            text=master.getConstName(),
+                            effects=self.default_font,
+                            position = Position(X=(mx+w)/2, Y=my+h+self.default_font.font.height),
+                            layer="F.SilkS")
+        reference =  FpText(type="reference",
+                            effects=self.default_font,
+                            position = Position(X=(mx+w)/2, Y=my-self.default_font.font.height),
+                            layer="F.SilkS")
+        outline = FpRect(start=Position(X=mx, Y=my), end=Position(X=(mx+w), Y=(my+h)), layer="F.SilkS")
         footprint = Footprint(libraryNickname="mfda",
                               entryName=master.getConstName(),
                               generator="openmfda",
                               position = Position(X=mx, Y=my, angle=angle),
                               pads=list(pads),
-                              graphicItems=list(labels) + [name_label],
+                              graphicItems=list(labels) + [name_label, reference, outline],
                               zones=zones)
         return footprint
 
@@ -87,6 +96,8 @@ class FootprintExtractor:
                               pinFunction=mterm.getName())
                     label = FpText(type="value",
                                    text=mterm.getName(),
+                                   layer="F.SilkS",
+                                   effects=self.default_font,
                                    position=Position(X=xmax+0.1,Y=(ymax+ymin)/2))
                     yield pad, label
 
