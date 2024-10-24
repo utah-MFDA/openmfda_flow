@@ -154,11 +154,11 @@ if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--def_file', metavar='<path>', action='append', dest='def_files', type=str,
+    ap.add_argument('--def', '-d', metavar='<path>', action='append', dest='def_files', type=str,
                     help="Path to the .def file.")
-    ap.add_argument('--tlef_file -f', metavar='<path>', action='append', dest='lef_files', type=str,
+    ap.add_argument('--tlef', '-t', metavar='<path>', action='append', dest='tlef_files', type=str,
                     help="Path to .tlef file.")
-    ap.add_argument('--lef_file -f', metavar='<path>', action='append', dest='lef_files', type=str,
+    ap.add_argument('--lef', '-l', metavar='<path>', action='append', dest='lef_files', type=str,
                     help="Path to .lef file.")
     args = ap.parse_args()
     db = odb.dbDatabase.create()

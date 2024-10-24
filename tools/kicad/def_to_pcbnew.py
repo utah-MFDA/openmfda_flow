@@ -27,8 +27,14 @@ class DefToPcb:
                 else:
                     name = f"In{num_layers - i - 1}.Cu"
                 self.layer_map[layer.getName()] = name
-                pcb_layer = LayerToken(ordinal=i, name =name)
-                self.board.layers.append(pcb_layer)
+        # self.board.SetCopperLayerCount(i+1)
+        # GetLayerName(aLayer)
+        # GetLayerID(self, aLayerName):
+        # SetLayerName(self, aLayer, aLayerName)
+        # GetStandardLayerName(aLayerId):
+        # SetLayerDescr(self, aIndex, aLayer)
+        # GetLayerType(self, aLayer)
+        # SetLayerType(self, aLayer, aLayerType):
         print(self.layer_map)
         # Stackup is optional, may need to set
 
@@ -92,11 +98,11 @@ if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--def_file', metavar='<path>', action='append', dest='def_files', type=str,
+    ap.add_argument('--def', '-d', metavar='<path>', action='append', dest='def_files', type=str,
                     help="Path to the .def file.")
-    ap.add_argument('--tlef_file -f', metavar='<path>', action='append', dest='lef_files', type=str,
+    ap.add_argument('--tlef', '-t', metavar='<path>', action='append', dest='tlef_files', type=str,
                     help="Path to .tlef file.")
-    ap.add_argument('--lef_file -f', metavar='<path>', action='append', dest='lef_files', type=str,
+    ap.add_argument('--lef', '-l', metavar='<path>', action='append', dest='lef_files', type=str,
                     help="Path to .lef file.")
     args = ap.parse_args()
     db = odb.dbDatabase.create()
@@ -106,7 +112,10 @@ if __name__ == "__main__":
         odb.read_lef(db, lef_file)
     for def_file in args.def_files:
         odb.read_def(db, def_file)
-    board = pcbnew.LoadBoard(args.pcb_file)
+    if (args.pcb_file):
+        board = pcbnew.LoadBoard(args.pcb_file)
+    else:
+        board = pcbnew.GetBoard()
     t = DefToPcb(db, board)
     # Todo clear all traces
     t.place()

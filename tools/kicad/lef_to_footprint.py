@@ -130,13 +130,17 @@ if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--lef_file -f', metavar='<path>', action='append', dest='lef_files', type=str,
-                    help="Path to .lef or .tlef file. TLEF files should be specified before LEF files.")
-    ap.add_argument('--output -o', metavar='<path>', type=str, help="Path to output footprint files.", dest="output")
-    ap.add_argument('--name -n', type=str, help="Library name.", dest="name")
+    ap.add_argument('--tlef', '-t', metavar='<path>', action='append', dest='tlef_files', type=str,
+                    help="Path to .tlef file.")
+    ap.add_argument('--lef', '-l', metavar='<path>', action='append', dest='lef_files', type=str,
+                    help="Path to .lef file.")
+    ap.add_argument('--output', '-o', metavar='<path>', type=str, help="Path to output footprint files.", dest="output")
+    ap.add_argument('--name', '-n', type=str, help="Library name.", dest="name")
     args = ap.parse_args()
     db = odb.dbDatabase.create()
     masters = extract_macro_names(args.lef_files)
+    for tlef_file in args.tlef_files:
+        odb.read_lef(db, tlef_file)
     for lef_file in args.lef_files:
         odb.read_lef(db, lef_file)
     t = FootprintExtractor(db, masters)
