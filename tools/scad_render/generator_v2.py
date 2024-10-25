@@ -12,6 +12,7 @@ from generator_class import *
 
 #import solid
 import regex
+import csv
 import pandas as pd
 
 ## Regex parsing
@@ -296,7 +297,8 @@ net_property = {
 
 
 def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None,
-             pins=None, components=None, component_lef=None, debug={}, testing=False):
+             pins=None, components=None, component_lef=None, debug={}, testing=False,
+             dimm_file=None):
     mod_re = bytes(nets_block_reg, 'utf-8')
     tlef_f = './def_test/test_1.tlef'
     #mod_re = regex.compile(nets_block_reg, re.MULTILINE)
@@ -314,7 +316,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None
         print("Testing! Using test tlef file")
         tlef = tlef_f
 
-    if tlef_property == None:
+    if tlef_property is None:
         nb = NetBuilder(
             px        =net_property['px'],
             layer     =net_property['layer'],
@@ -386,6 +388,13 @@ def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None
             else:
                 raise ValueError('Issue parsing route')
 
+        if not (dimm_file is None or dimm_file == "") and \
+                l.group('net') in dimm_file:
+            pass
+            nb.set_dimm(dimm_file[l.group('net')])
+
+
+
 
 
         nets_list.append(nb.export_net())
@@ -450,7 +459,10 @@ def get_net_route(in_net_line):
     mo = regex.finditer(mod_re, data, 0)
     return mo
 
-def write_nets(o_file, net_list, shape='cube', size=[0.1, 0.1, 0.1], mode="w+"):
+
+def write_nets(o_file, net_list, shape='cube',
+               size=[14, 14, 10], mode="w+",
+               dimm_file=None, init_size=[14, 14, 10]):
 
     rot = [0, [0,0,1]]
 
@@ -458,6 +470,9 @@ def write_nets(o_file, net_list, shape='cube', size=[0.1, 0.1, 0.1], mode="w+"):
 
     f = open(o_file, mode)
     nl = '\n'
+
+    def convert_size(sz):
+        return f"[{sz[0]}*px, {sz[1]}*px, {sz[2]}*layer]"
 
     #print(net_list[0])
 
@@ -470,22 +485,42 @@ def write_nets(o_file, net_list, shape='cube', size=[0.1, 0.1, 0.1], mode="w+"):
 
         pc_route = []
 
+        if dimm_file is None:
+            rt_size = convert_size(size)
+        else:
+            if n.net in dimm_file and \
+                    isinstance(dimm_file[n.net]["dimm"], list) and \
+                    len(dimm_file[n.net]["dimm"]) == 3:
+                dimm = dimm_file[n.net]["dimm"]
+                rt_size = convert_size(dimm)
+                dimm_file[n.net]["been-read"] = True
+                pass
+            else:
+                if n.net in dimm_file and isinstance(dimm_file[n.net]["dimm"], list) and \
+                        len(dimm_file[n.net]["dimm"]) != 3:
+                    print(f"Net {n.net} does not have the correct amount of args")
+                rt_size = convert_size(size)
+
         for r in n.route.nodes:
             pc_route = []
             #print(n.route[r])
             if 'route' in n.route.nodes[r]:
                 for pt in n.route.nodes[r]['route']:
-                    size = size
                     #pt = r
 
-                    pc_pt1 = [shape, size, pt, rot]
+                    if len(pc_route) == 0:
+                        pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                    elif len(pc_route) == len(n.route.nodes[r]) - 1:
+                        pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                    else:
+                        pc_pt1 = [shape, rt_size, pt, rot]
                     #pc_pt2 = [shape, size, pt2, rot]
 
                     pc_route.append(pc_pt1)
                     #pc_rotue.append(pc_pt2)
                     # todo
             else:
-                continue # does not write empty routes
+                continue  # does not write empty routes
 
 
             #new_pc = pc.polychannel_route(
@@ -502,10 +537,10 @@ def write_nets(o_file, net_list, shape='cube', size=[0.1, 0.1, 0.1], mode="w+"):
             else:
                 r_str = f'({r})'
 
-            f.write(f"""polychannel_route("{n.net}{r_str}", 
+            f.write(f"""polychannel_route("{n.net}{r_str}",
         [{dev_str}],
         [],
-{pc_route}{nl});
+{pc_route.replace('"[','[').replace(']"',']')}{nl});
         """)
 
         #if n.dangle_routes:
@@ -524,18 +559,25 @@ def write_nets(o_file, net_list, shape='cube', size=[0.1, 0.1, 0.1], mode="w+"):
         #        #["{n.dev1}", "{n.p1}"], ["{n.dev2}", "{n.p2}"],
         #        dev_str = ''.join([f"""["{x['dev']}", "{x['port']}"], """for x in n.devs])
         #
-        #        f.write(f"""polychannel_route("{n.net}", 
+        #        f.write(f"""polychannel_route("{n.net}",
         #[{dev_str}],
         #[],
 #{pc_route}{nl});
         #""")
 
 
-        if rend == None:
-            rend = pc_route
-        else:
-            rend += pc_route
+        # if rend == None:
+        #     rend = pc_route
+        # else:
+        #     rend += pc_route
     f.close()
+
+    if dimm_file is not None and isinstance(dimm_file, dict):
+        for nt in dimm_file:
+            if not dimm_file[nt]["been-read"]:
+                print(f"Net {nt} was not used in design; dimm:{dimm_file[nt]['dimm']}")
+    elif dimm_file is not None:
+        print(f"Dimm file not read correctly, type {type(dimm_file)}")
 
     #solid.scad_render_to_file(rend, o_file)
 
@@ -640,6 +682,9 @@ def write_imports(
                 of.write(f"use <./{sc_i_name}>\n")
             else:
                 of.write(f"use <{scad_lib_dir}/{sc_i_name}>\n")
+    elif scad_include is None:
+        # Nothing to do
+        pass
     else:
         raise ValueError(f"routing use of wrong type is of type {type(scad_include)}")
     # elif isinstance(routing_use, str):
@@ -652,6 +697,22 @@ def write_imports(
     #         of.write(f"use <./{routing_use}.scad>\n")
     #     else:
     #         of.write(f"use <{scad_lib_dir}/{routing_use}.scad>\n")
+
+
+def read_dimm(dimm_file):
+    out_dict = {}
+    reader = csv.reader(open(dimm_file, 'r'))
+    for ind, i in enumerate(reader):
+        if len(i)>1 and i[-1] == '':
+            i = i[:-1]
+        # net, dim1, dim2, dim3
+        if len(i) == 4:
+            out_dict[i[0]] = {}
+            out_dict[i[0]]["dimm"] = i[1:4]
+            out_dict[i[0]]["been-read"] = False
+        else:
+            print(f"Line {ind} is defined incorrectly, expecting [net_name, dimm_wd_1, dimm_wd_2, dimm_ht]")
+    return out_dict
 
 
 tlef_bl_re = r'(?P<key>(?:LAYER|SITE|VIA|PROPERTYDEFINITIONS|UNITS))\s*(?|.*\s*)*?END\s*\w*'
@@ -832,7 +893,8 @@ show_lefs=false ;
     write_bulk(o_file, bulk, transparent, mode='a')
 
     # write components
-    comp_list = write_components(o_file,
+    comp_list = write_components(
+        o_file,
         get_components(def_file),
         net_property['layer'],
         net_property['px'],
@@ -840,16 +902,22 @@ show_lefs=false ;
         pcell_file=pcell_file)
 
     # write pin vias
-    io_list = write_pins(o_file,
+    io_list = write_pins(
+        o_file,
         get_pins(def_file, pin_con_dir_f),
         bulk,
         net_properties,
         mets,
         mode='a')
 
+    if dimm_file is not None:
+        dimm_ = read_dimm(dimm_file)
+    else:
+        dimm_ = None
 
     # write nets (routes)
-    write_nets(o_file,
+    write_nets(
+        o_file,
         get_nets(
             def_file,
             design,
@@ -860,8 +928,9 @@ show_lefs=false ;
             components=comp_list if add_comp_to_routes else None,
             component_lef = component_merge_lef),
         shape='cube',
-        size=[0.1,0.1,0.1],
-        mode='a',)
+        size=[14,14,10],
+        mode='a',
+        dimm_file=dimm_)
     # pins=io_list,
     # components=comp_list)
 
@@ -913,7 +982,7 @@ if __name__ == "__main__":
     parser.add_argument('--comp_file', type=str, default=None)
     parser.add_argument('--pin_file', type=str, default=None)
     parser.add_argument('--pcell_file', type=str, default=None)
-    parser.add_argument('--lef_file', type=str, default=None)
+    parser.add_argument('--lef_file', type=str, default=None, nargs='*')
     parser.add_argument('--transparent_bulk', action='store_true', default=False)
     parser.add_argument('--no_copy_include', action='store_true', default=False)
 
@@ -940,6 +1009,8 @@ if __name__ == "__main__":
     else:
         add_comps = False
 
+    if args.dimm_file == '':
+        args.dimm_file = None
 
     main(
         args.platform,

@@ -9,7 +9,8 @@ KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
 #export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
 export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
-export BUILD_PDK_LIBRARY ?=
+# add a space to the below to definition to build library
+export BUILD_PDK_LIBRARY ?= pdk
 
 # Add design configure paths here
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
@@ -64,6 +65,8 @@ export WORK_HOME     ?= .
 export UTILS_DIR     ?= $(FLOW_HOME)/util
 export SCRIPTS_DIR   ?= $(FLOW_HOME)/scripts
 export TEST_DIR      ?= $(FLOW_HOME)/test
+
+export CUSTOM_SCRIPTS_DIR ?= $(FLOW_HOME)/scripts_custom
 
 #-------------------------------------------------------------------------------
 
@@ -211,6 +214,8 @@ $(WRAPPED_LIBS):
 	mkdir -p $(OBJECTS_DIR)/lib
 	sed 's/library(\(.*\))/library(\1_mod)/g' $(filter %$(notdir $(@:_mod.lib=.lib)),$(WRAP_LIBS)) | sed 's/cell(\(.*\))/cell(\1_mod)/g' > $@
 
+#include ../tools/verilog_preparser/Makefile
+include ../tools/p_cell_generator/util.mk
 # ==============================================================================
 #  _     ___ ____  ____      _    ______   __
 # | |   |_ _| __ )|  _ \    / \  |  _ \ \ / /
@@ -369,6 +374,11 @@ clean_place:
 route: $(RESULTS_DIR)/3_route.def \
        $(RESULTS_DIR)/3_route.sdc
 # ==============================================================================
+# rereplace_test:
+# 	($(TIME_CMD) $(OPENROAD_CMD) $(CUSTOM_SCRIPTS_DIR)/read_def.tcl)
+
+reroute:
+	$(TIME_CMD) $(OPENROAD_CMD) $(CUSTOM_SCRIPTS_DIR)/reroute.tcl
 
 # STEP 1: Run global route
 #-------------------------------------------------------------------------------
@@ -516,6 +526,8 @@ clean_finish:
 #  ___) | || |  | | |_| | |___ / ___ \| |  | | |_| | |\  |
 # |____/___|_|  |_|\___/|_____/_/   \_\_| |___\___/|_| \_|
 # ==============================================================================
+SIMULATION_SCRIPT = ../tools/simulation/runMFDASim.py
+
 .PHONY: simulate clean_simulate
 simulate: $(RESULTS_DIR)/xyceOut.csv
 clean_simulate:
@@ -530,7 +542,8 @@ $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 
 $(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN).scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
-	$(TIME_CMD) python3 ../tools/simulation/runMFDASim.py \
+	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
+		$(SIMULATION_ARGS) \
 		--output_dir $(RESULTS_DIR) \
 		--netlist $(RESULTS_DIR)/4_final.v \
 		--sim_config $(SIMULATION_CONFIG) \
@@ -539,8 +552,9 @@ $(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN).sc
 		--cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp \
 		--local_xyce True \
 		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
-		--length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv \
+		--length_file $(RESULTS_DIR)/$(DESIGN)_length.csv \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
+		# --length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv
 endif
 
 # ==============================================================================
@@ -561,6 +575,9 @@ $(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 		--def_file $< \
         --design ${DESIGN} \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+
+$(RESULTS_DIR)/5_scad.scad: $(RESULTS_DIR)/$(DESIGN).scad
+	cp $^ $@
 
 %.stl: %.scad
 	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
