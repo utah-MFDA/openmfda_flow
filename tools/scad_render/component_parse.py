@@ -38,7 +38,6 @@ tokens = ["END_STMT", "CNAME", "NUMBER", "ESCAPED_STRING", "COMMENT"] + list(
 
 # t_NL = r"\n"
 t_END_STMT = r";"
-t_COMMENT = r"\#.*$"
 
 
 def t_NUMBER(t):
@@ -66,17 +65,18 @@ def t_error(t):
 
 
 t_ignore = " \t\n"
+t_ignore_COMMENT = r"\#.*"
 
 lexer = lex.lex()
 
 
 def p_in_file(p):
     """in_file : in_file macro
-    | in_file comment
     | in_file lef_noimp
     | macro
-    | comment
     | lef_noimp"""
+    #| in_file comment
+    #| comment
     # | in_file NL
     # | NL"""
     # if p is None:

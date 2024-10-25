@@ -69,6 +69,12 @@ export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
 # KLayout technology file
 export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
 
+# export SCAD_DESIGN_INCLUDE=$(PLATFORM_DIR)/pdk/Components/scad_use/lef_helper.scad \
+# 									 $(PLATFORM_DIR)/pdk/Components/scad_use/lef_scad_config.scad \
+# 									 $(PLATFORM_DIR)/pdk/Components/scad_use/polychannel_v2.scad
+
+export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/Components/scad_use/polychannel_v2.scad
+
 #------------------------------------------------------------------------------
 # PRINTER PARAMETERS
 #------------------------------------------------------------------------------s
@@ -95,8 +101,8 @@ export RES_VAL			= 120
 export PITCH            = 30
 # Default SCAD script arguments
 SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
-			--routing_file ${SCAD_ROUTING_LIBRARY} \
-			--lef_file ${SC_LEF} --tlef_file ${TECH_LEF} \
+			--routing_file ${SCAD_ROUTING_LIBRARY} --scad_include $(SCAD_DESIGN_INCLUDE) \
+			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
             --platform "$(PLATFORM)" \
             --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
             --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \

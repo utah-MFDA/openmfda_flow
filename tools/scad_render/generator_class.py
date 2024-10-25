@@ -161,8 +161,8 @@ class Nets:
         self.compress = True
 
         #TODO pass as variable
-        s = 7.6/1000 # hard coded scale
-        s1 = s/1000 # hard coded scale
+        s = 7.6/1000  # hard coded scale
+        s1 = s/1000  # hard coded scale
         err = 0.05
 
         if components_lef is not None:
@@ -170,7 +170,7 @@ class Nets:
                 print("Component list not passed!!!!")
             import component_parse
             import os
-            
+
 
             os.environ["XYCE_WL_GRAPH"] = ''
             # with open(components_lef, 'r') as f:
@@ -178,7 +178,18 @@ class Nets:
             # def is_pt_in_pins(self, pt, pos=None, layer=None):
             #get_comp_pins_from_lef
             # comp_dict = component_parse.ComponentParser().parser_multi_file(components_lef)
-            comp_dict = component_parse.ComponentParser().get_comp_pins_from_lef(components_lef, scale=s)
+            comp_dict = {}
+            if isinstance(components_lef, str):
+                comp_dict = component_parse.ComponentParser().get_comp_pins_from_lef(components_lef, scale=s)
+            elif isinstance(components_lef, list):
+                for c_lef in components_lef:
+                    new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(c_lef, scale=s)
+                    for cmp in new_dict.items():
+                        if cmp[0] in comp_dict:
+                            print(f"Component {cmp[0]} already read in, skipping")
+                        else:
+                            comp_dict[cmp[0]] = cmp[1]
+
 
         def check_inner(r_list, node, head=False):
             # that inner node is not inside
@@ -671,26 +682,33 @@ class Nets:
 
 class NetBuilder:
 
-    def __init__(self,
-        px=None,
-        layer=None,
-        lpv=None,
-        def_scale=None,
-        bottom_layers=None):
+    def __init__(
+            self,
+            px=None,
+            layer=None,
+            lpv=None,
+            def_scale=None,
+            bottom_layers=None):
 
         self.px   = px
-        self.layer= layer
+        self.layer = layer
         self.lpv  = lpv
         self.def_scale  = def_scale
         self.bot_layers = bottom_layers
 
         self.net = None
-        self.vias= {}
+        self.vias = {}
         self.met_layers = None
+
+        # default route dimm
+        self.dimm = [14,14,10]
 
     def set_net(self, net):
         self.net = net
 
+    def set_dimm(self, dimm):
+        if self.net is not None:
+            self.net.dimm = dimm
 
     def import_tlef(self, tlef_f):
 
@@ -753,17 +771,18 @@ class NetBuilder:
         if met_f is not None:
             raise ValueError('met_f not currently implemented')
 
-    def add_route(self,
-        layer = None,
-        x1 = None,
-        y1 = None,
-        z1 = None,
-        x2 = None,
-        y2 = None,
-        z2 = None,
-        via= None,
-        convert_layer=False,
-        debug=False):
+    def add_route(
+            self,
+            layer = None,
+            x1 = None,
+            y1 = None,
+            z1 = None,
+            x2 = None,
+            y2 = None,
+            z2 = None,
+            via= None,
+            convert_layer=False,
+            debug=False):
 
 
         if via is not None:
@@ -817,19 +836,20 @@ class NetBuilder:
 
 class Component:
 
-    def __init__(self,
-        name=None,
-        comp=None,
-        x1=None,
-        y1=None,
-        dir=None,
-        conversion_factor=None
+    def __init__(
+            self,
+            name=None,
+            comp=None,
+            x1=None,
+            y1=None,
+            dir=None,
+            conversion_factor=None
                  ):
 
         self.name = name
         self.comp = comp
-        self.x1   = x1#/def_scale
-        self.y1   = y1#/def_scale
+        self.x1   = x1  # /def_scale
+        self.y1   = y1  # /def_scale
         self.dir  = dir
         if conversion_factor is None:
             self.lef_cv = 7.6/1000000 # hard coded for testing
@@ -877,15 +897,16 @@ class Component:
 
 class Pin:
 
-    def __init__(self,
-        name=None,
-        net=None,
-        direction=None,
-        layer=None,
-        l_size=[0,0,0,0],
-        fixed=[0,0,''],
-        connect_dir=None,
-        layer_z_pos=None
+    def __init__(
+            self,
+            name=None,
+            net=None,
+            direction=None,
+            layer=None,
+            l_size=[0,0,0,0],
+            fixed=[0,0,''],
+            connect_dir=None,
+            layer_z_pos=None
                  ):
 
         self.name = name

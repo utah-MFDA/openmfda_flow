@@ -10,3 +10,6 @@
 [submodule "tools/simulation"]
 	path = tools/simulation
 	url = https://github.com/utah-MFDA/simulation
+[submodule "tools/p_cell_generator"]
+  path = tools/p_cell_generator
+  url = https://github.com/utah-MFDA/pcell_generator
