@@ -94,7 +94,7 @@ class FootprintExtractor:
                               size=Position(X=xmax-xmin,Y=ymax-ymin),
                               layers=[self.layer_map[metal]],
                               pinFunction=mterm.getName())
-                    label = FpText(type="value",
+                    label = FpText(type="user",
                                    text=mterm.getName(),
                                    layer="F.SilkS",
                                    effects=self.default_font,
