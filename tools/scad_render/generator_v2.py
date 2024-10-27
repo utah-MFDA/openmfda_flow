@@ -10,14 +10,16 @@ import argparse
 # custom classes
 # import lef_component_class as lcc
 #from generator_class import *
-from generator_class import NetBuilder
-from generator_class import Pin, Component, Nets
 
 #import solid
 import regex
 import json
 import csv
 import pandas as pd
+
+from generator_class import NetBuilder
+from generator_class import Pin, Component, Nets
+import component_parse
 
 ## Regex parsing
 pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$'
@@ -307,6 +309,7 @@ hc_net_property = {
 def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None,
              pins=None, components=None, component_lef=None, debug={}, testing=False,
              dimm_file=None):
+
     mod_re = bytes(nets_block_reg, 'utf-8')
     tlef_f = './def_test/test_1.tlef'
     #mod_re = regex.compile(nets_block_reg, re.MULTILINE)
@@ -332,6 +335,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None
             def_scale =hc_net_property['def_scale'],
             bottom_layers=hc_net_property['bot_layers']
         )
+        s = hc_net_property['px']*1000/hc_net_property['def_scale']
     else:
         nb = NetBuilder(
             px        =tlef_property['px'],
@@ -340,8 +344,29 @@ def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None
             def_scale =tlef_property['def_scale'],
             bottom_layers=tlef_property['bot_layers']
         )
+        s = tlef_property['px']*1000/tlef_property['def_scale']
     nb.import_tlef(tlef)
     nb.import_met(mets)
+
+
+    os.environ["XYCE_WL_GRAPH"] = ''
+    # with open(components_lef, 'r') as f:
+    # component pins can be checked by
+    # def is_pt_in_pins(self, pt, pos=None, layer=None):
+    #get_comp_pins_from_lef
+    # comp_dict = component_parse.ComponentParser().parser_multi_file(components_lef)
+    # s = 7.6/1000  # hard coded scale
+    comp_dict = {}
+    if isinstance(component_lef, str):
+        comp_dict = component_parse.ComponentParser().get_comp_pins_from_lef(component_lef, scale=s)
+    elif isinstance(component_lef, list):
+        for c_lef in component_lef:
+            new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(c_lef, scale=s)
+            for cmp in new_dict.items():
+                if cmp[0] in comp_dict:
+                    print(f"Component {cmp[0]} already read in, skipping")
+                else:
+                    comp_dict[cmp[0]] = cmp[1]
 
     for l in mo_l:
         mo_r = get_net_route(l.group(0))
@@ -414,7 +439,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None
             if components is None:
                 n.compress_routes(design=design, pin_list=pins)
             else:
-                n.compress_routes(design=design, pin_list=pins, component_list=components, components_lef=component_lef)
+                n.compress_routes(design=design, pin_list=pins, component_list=components, components_lef=component_lef, comp_dict=comp_dict)
 
     if report_len_file is not None:
         route_len_dict = {}
