@@ -399,6 +399,145 @@ class OpenMFDA:
     def write_sim_config(self, out_dir, out_file="simulation.config"):
         self.simulation_config.write_sim_config(out_dir, out_file)
 
+    def check_replace_args(self, replace_arg):
+        if "bin" in replace_arg:
+
+            replace_arg["bin"] = str(replace_arg["bin"])
+        else:
+            replace_arg["bin"] = "24"
+
+        if "density" in replace_arg:
+
+            replace_arg["density"] = str(replace_arg["density"])
+        else:
+            replace_arg["density"] = "0.95"
+
+        if "init_density_coef" in replace_arg:
+
+            replace_arg["init_density_coef"] = str(replace_arg["init_density_coef"])
+        else:
+            replace_arg["init_density_coef"] = "8e-5"
+
+        if "init_wire_coef" in replace_arg:
+
+            replace_arg["init_wire_coef"] = str(replace_arg["init_wire_coef"])
+        else:
+            replace_arg["init_wire_coef"] = "0.25"
+
+        if "max_phi" in replace_arg:
+
+            replace_arg["max_phi"] = str(replace_arg["max_phi"])
+        else:
+            replace_arg["max_phi"] = "1.04"
+
+        if "min_phi" in replace_arg:
+
+            replace_arg["min_phi"] = str(replace_arg["min_phi"])
+        else:
+            replace_arg["min_phi"] = "0.95"
+
+        if "overflow" in replace_arg:
+            if float(replace_arg["overflow"]) < 0:
+                print("WARNING: overflow set below 0! Set overflow = 0.1")
+                replace_arg["overflow"] = 0.1
+
+            replace_arg["overflow"] = str(replace_arg["overflow"])
+        else:
+            replace_arg["overflow"] = "0.1"
+
+        if "init_place_max_iter" in replace_arg:
+            pass
+        else:
+            replace_arg["init_place_max_iter"] = "20"
+
+        if "fanout" in replace_arg:
+            if int(replace_arg["fanout"]) < 1:
+                print("WARNING: fanout set below 1! Set fanout = 1")
+                replace_arg["fanout"] = 1
+
+            replace_arg["fanout"] = str(replace_arg["fanout"])
+        else:
+            replace_arg["fanout"] = "20"
+
+    def write_replace_config(self, replace_args_filename):
+        replace_arg = self.replace_arg
+        # if replace_arg == None:
+        #     print("WARNING: replace_arg set to None! Set to empty dictionary")
+
+        self.check_replace_args(replace_arg)
+        bs = "/"
+        fb = "{"
+        bb = "}"
+
+        with open(replace_args_filename, "w") as f:
+            print(
+            f"""
+# does not work
+set skip_initial_placement 0
+
+# does not work
+set incremental 0
+
+# Set bin grid's counts. Default: Defined by internal algorithm. [64,128,256,512,..., int]
+set bin_grid_count {replace_arg['bin']}
+
+# density is set differently
+set pl_density {replace_arg['density']}
+
+# Set initial density penalty. Default: 8e-5 [1e-6 - 1e6, float]
+set init_density_penalty {replace_arg['init_density_coef']}
+
+# Set initial wirelength coefficient. Default: 0.25 [unlimited, float]
+set init_wirelength_coef {replace_arg['init_wire_coef']}
+
+# Set pcof_min(µ_k Lower Bound). Default: 0.95 [0.95-1.05, float]
+set min_phi_coef {replace_arg['min_phi']}
+
+# Set pcof_max(µ_k Upper Bound). Default: 1.05 [1.00-1.20, float]
+set max_phi_coef {replace_arg['max_phi']}
+
+# Set target overflow for termination condition. Default: 0.1 [0-1, float]
+set overflow {replace_arg['overflow']}
+
+# Set maximum iterations in initial place. Default: 20 [0-, int]
+set initial_place_max_iter {replace_arg['init_place_max_iter']}
+
+# Set net escape condition in initial place when 'fanout >= initial_place_max_fanout'. Default: 200 [1-, int]
+set initial_place_max_fanout {replace_arg['fanout']}
+
+set global_place_args {fb}{bb}
+
+if {fb}$skip_initial_placement{bb} {fb}
+	set global_place_args "$global_place_args -skip_initial_place"
+{bb}
+
+if {fb}$incremental{bb} {fb}
+	set global_place_args "$global_place_args -incremental"
+{bb}
+
+
+
+
+set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
+    -init_density_penalty $init_density_penalty {bs}
+    -init_wirelength_coef $init_wirelength_coef {bs}
+    -min_phi_coef $min_phi_coef {bs}
+    -max_phi_coef $max_phi_coef {bs}
+    -overflow $overflow {bs}
+    -initial_place_max_iter $initial_place_max_iter {bs}
+    -initial_place_max_fanout $initial_place_max_fanout"
+
+#set ::env(GLOBAL_PLACEMENT_ARGS) $global_place_args
+#puts $::env(GLOBAL_PLACEMENT_ARGS)
+
+#set ::env(GLOBAL_PLACEMENT_ARGS)
+""",
+            file=f,
+            )
+
+        os.environ['GLOBAL_PLACEMENT_ARGS_PATH'] = os.path.abspath(replace_args_filename)
+
+
     def to_string_probes(self):
         return self.simulation_config.to_string_probes()
 
@@ -651,7 +790,8 @@ class OpenMFDA:
 
 
     def run_flow_iter_soln_opt(
-        self, iter_list, len_file, eval_file, out_csv_len, out_csv_chem, end_err=0
+        self, iter_list, len_file, eval_file, out_csv_len, out_csv_chem, replace_config_loc,
+        end_err=0, write_configs=True,
     ):
         density_var = iter_list[0]
         bin_var = iter_list[1]
@@ -784,7 +924,10 @@ class OpenMFDA:
                                     mfda_error = False
 
                                     print(self.to_string_probes())
-                                    self.build()
+                                    if write_configs:
+                                        self.build()
+                                    else:
+                                        self.write_replace_config(replace_config_loc)
                                     try:
                                         self.run_flow(
                                             mk_targets=["pnr", "render", "simulate"]
