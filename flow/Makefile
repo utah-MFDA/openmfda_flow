@@ -10,7 +10,7 @@ YOSYS_CMD ?= yosys
 #export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
 export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
 # add a space to the below to definition to build library
-export BUILD_PDK_LIBRARY ?= pdk
+export BUILD_PDK_LIBRARY ?=
 
 # Add design configure paths here
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
@@ -51,7 +51,7 @@ SHELL          = /bin/bash
 # - Setup in environment but can be changed here if running Makefile standalone
 #   from root Makefile (pnr/Makefile)
 export FLOW_HOME ?= .
-export GLOBAL_PLACEMENT_ARGS = -skip_nesterov_place
+#export GLOBAL_PLACEMENT_ARGS = -skip_nesterov_place
 #-------------------------------------------------------------------------------
 # Setup variables to point to other location for the following sub directory
 # - designs - default is under current directory
@@ -215,7 +215,10 @@ $(WRAPPED_LIBS):
 	sed 's/library(\(.*\))/library(\1_mod)/g' $(filter %$(notdir $(@:_mod.lib=.lib)),$(WRAP_LIBS)) | sed 's/cell(\(.*\))/cell(\1_mod)/g' > $@
 
 #include ../tools/verilog_preparser/Makefile
-include ../tools/p_cell_generator/util.mk
+include $(FLOW_HOME)/../tools/p_cell_generator/util.mk
+
+.PHONY: gen_pcells
+gen_pcells: $(PCELL_MERGE_LEF)
 # ==============================================================================
 #  _     ___ ____  ____      _    ______   __
 # | |   |_ _| __ )|  _ \    / \  |  _ \ \ / /
@@ -326,15 +329,21 @@ clean_floorplan:
 # |  __/| |___ / ___ \ |___| |___
 # |_|   |_____/_/   \_\____|_____|
 #
+.PHONY: replace
 replace: $(RESULTS_DIR)/2_1_place_gp.def
+.PHONY: place
 place: $(RESULTS_DIR)/2_place.def \
 	   $(RESULTS_DIR)/2_place.sdc
 # ==============================================================================
+ifndef $(GLOBAL_PLACEMENT_ARGS_FILE)
+$(GLOBAL_PLACEMENT_ARGS_FILE):
+endif
 
 # STEP 1: Global placement + IO placement (not random)
+GLOBAL_PLACE_SCRIPT = $(SCRIPTS_DIR)/global_place.tcl
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/2_1_place_gp.def: $(RESULTS_DIR)/1_floorplan.def $(RESULTS_DIR)/1_floorplan.sdc $(LIB_FILES)
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/global_place.tcl -metrics $(LOG_DIR)/2_1_place_gp.json) 2>&1 | tee $(LOG_DIR)/2_1_place_gp.log
+$(RESULTS_DIR)/2_1_place_gp.def: $(RESULTS_DIR)/1_floorplan.def $(RESULTS_DIR)/1_floorplan.sdc $(LIB_FILES) $(GLOBAL_PLACEMENT_ARGS_FILE)
+	($(TIME_CMD) $(OPENROAD_CMD) $(GLOBAL_PLACE_SCRIPT) -metrics $(LOG_DIR)/2_1_place_gp.json) 2>&1 | tee $(LOG_DIR)/2_1_place_gp.log
 
 # STEP 2: IO placement (non-random)
 #-------------------------------------------------------------------------------
@@ -643,6 +652,6 @@ $(foreach file,$(RESULTS_DEF),gui_$(file)): gui_%:
 
 # Utilities
 #-------------------------------------------------------------------------------
-include $(UTILS_DIR)/utils.mk
+# include $(UTILS_DIR)/utils.mk
 #export PRIVATE_DIR = ../../private_tool_scripts
 #include $(PRIVATE_DIR)/private.mk

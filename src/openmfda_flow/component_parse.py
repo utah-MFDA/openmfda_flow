@@ -38,7 +38,6 @@ tokens = ["END_STMT", "CNAME", "NUMBER", "ESCAPED_STRING", "COMMENT"] + list(
 
 # t_NL = r"\n"
 t_END_STMT = r";"
-t_COMMENT = r"\#.*$"
 
 
 def t_NUMBER(t):
@@ -61,22 +60,23 @@ def t_ESCAPED_STRING(t):
 
 # Error handling rule
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print("Illegal character '%s' while parsing" % t.value[0])
     t.lexer.skip(1)
 
 
 t_ignore = " \t\n"
+t_ignore_COMMENT = r"\#+.*"
 
 lexer = lex.lex()
 
 
 def p_in_file(p):
     """in_file : in_file macro
-    | in_file comment
     | in_file lef_noimp
     | macro
-    | comment
     | lef_noimp"""
+    # | comment
+    # | in_file comment
     # | in_file NL
     # | NL"""
     # if p is None:
@@ -331,6 +331,7 @@ def p_property(p):
 
 def p_comment(p):
     """comment : COMMENT"""
+    # t_COMMENT
     pass
 
 

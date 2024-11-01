@@ -14,12 +14,14 @@ export SC_LEF = $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
 
 export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      $(ADDITIONAL_LIBS)
-export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/scad/components.scad
+#export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/scad/components.scad
+export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3_merged.scad
 export SCAD_ROUTING_LIBRARY = $(PLATFORM_DIR)/scad/routing.scad
 else
 # Locally built distribution files
-ROOT_DIR=$(PLATFORM_DIR)/pdk/Components
-include $(PLATFORM_DIR)/pdk/Components/Makefile
+#ROOT_DIR=$(PLATFORM_DIR)/pdk/Components
+ROOT_DIR=$(PLATFORM_DIR)/pdk
+include $(PLATFORM_DIR)/pdk/Componets/Makefile
 export LIBRARY_DEPS = $(SC_LEF) $(TECH_LEF) $(LIB_FILES) $(SCAD_COMPONENT_LIBRARY) $(SCAD_ROUTING_LIBRARY) $(GDS_FILES) $(XYCE_LIB)
 endif
 
@@ -73,7 +75,7 @@ export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
 # 									 $(PLATFORM_DIR)/pdk/Components/scad_use/lef_scad_config.scad \
 # 									 $(PLATFORM_DIR)/pdk/Components/scad_use/polychannel_v2.scad
 
-export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/Components/scad_use/polychannel_v2.scad
+export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/scad_include/polychannel_v2.scad
 
 #------------------------------------------------------------------------------
 # PRINTER PARAMETERS
