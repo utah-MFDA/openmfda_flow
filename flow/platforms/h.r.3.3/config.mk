@@ -75,7 +75,9 @@ export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
 # 									 $(PLATFORM_DIR)/pdk/Components/scad_use/lef_scad_config.scad \
 # 									 $(PLATFORM_DIR)/pdk/Components/scad_use/polychannel_v2.scad
 
-export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/scad_include/polychannel_v2.scad
+export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/scad_include/polychannel_v2.scad \
+                             $(PLATFORM_DIR)/pdk/scad_include/lef_scad_config.scad \
+														 $(PLATFORM_DIR)/pdk/scad_include/lef_helper.scad
 
 #------------------------------------------------------------------------------
 # PRINTER PARAMETERS
