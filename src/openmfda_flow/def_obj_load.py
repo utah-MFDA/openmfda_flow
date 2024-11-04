@@ -5,8 +5,11 @@ import json
 import os
 import sys
 
-#import openmfda_flow.def_obj_grammer as def_grammer
-import def_obj_grammer as def_grammer
+if __name__ != "__main__":
+    import openmfda_flow.def_obj_grammer as def_grammer
+else:
+    import def_obj_grammer as def_grammer
+# import def_obj_grammer as def_grammer
 
 
 def write_def_header():
@@ -61,6 +64,9 @@ class Design:
             self.components[comp_inst].set_pos([value[0]*self.unit,value[1]*self.unit])
         elif property == "raw_pos" or property == "raw_position":
             self.components[comp_inst].set_pos(value)
+
+    def get_component_names(self):
+        return list(self.components.keys())
 
     def write_units(self):
         return f"UNITS {self.units_str} ;"
@@ -550,7 +556,7 @@ class Def_transformer(Transformer):
                 elif d[1] == "DIEAREA":
                     d_class.set_die_area(d[0]['pt'][0], d[0]['pt'][1])
         # print(d_class.print_def())
-        return {db[0]: d_class}
+        return {"design": {db[0]: d_class}}
         # return {db[0]: d_dict}
 
     ##########################
@@ -583,17 +589,21 @@ def test(in_file, ofile):
 
     with open(in_file, 'r') as ifile:
         tree = def_obj_parser.parse(ifile.read())
-    tr_tree = Def_transformer().transform(tree)['demo']
+    tr_tree = Def_transformer().transform(tree)
 
+    print(tr_tree)
+    tr_demo = tr_tree['design']['demo']
     # def change_component_property(self, comp_inst, property, value):
-    tr_tree.change_component_property('serp0', 'pos', [2100, 420])
-    tr_tree.change_component_property('serp0', 'type', 'serpentine_210px_0')
+    tr_demo.change_component_property('serp0', 'pos', [2100, 420])
+    tr_demo.change_component_property('serp0', 'type', 'serpentine_210px_0')
 
-    tr_tree.print_def()
+    tr_demo.print_def()
     # print(tr_tree)
 
 
-ifl = "../../flow/results/demo/base/4_final.def"
-ofl = "./demo_out_test.def"
+if __name__ == "__main__":
 
-test(ifl, ofl)
+    ifl = "../../flow/results/demo/base/4_final.def"
+    ofl = "./demo_out_test.def"
+
+    test(ifl, ofl)
