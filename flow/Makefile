@@ -295,7 +295,7 @@ endif
 
 # STEP 1: Translate verilog to def
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL)
+$(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL) $(PCELL_MERGE_LEF)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/floorplan.tcl -metrics $(LOG_DIR)/1_1_floorplan.json) 2>&1 | tee $(LOG_DIR)/1_1_floorplan.log
 
 # STEP 2: IO Placement (random)
