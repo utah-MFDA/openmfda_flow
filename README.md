@@ -29,6 +29,7 @@ The following external tools are required.
 - OpenROAD
 - KLayout
 - python3
+- yosys
 - make
 
 The OpenROAD tool can be downloaded at https://github.com/The-OpenROAD-Project/OpenROAD.

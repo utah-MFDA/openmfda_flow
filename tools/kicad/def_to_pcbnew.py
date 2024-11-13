@@ -27,8 +27,14 @@ class DefToPcb:
                 else:
                     name = f"In{num_layers - i - 1}.Cu"
                 self.layer_map[layer.getName()] = name
-                pcb_layer = LayerToken(ordinal=i, name =name)
-                self.board.layers.append(pcb_layer)
+        # self.board.SetCopperLayerCount(i+1)
+        # GetLayerName(aLayer)
+        # GetLayerID(self, aLayerName):
+        # SetLayerName(self, aLayer, aLayerName)
+        # GetStandardLayerName(aLayerId):
+        # SetLayerDescr(self, aIndex, aLayer)
+        # GetLayerType(self, aLayer)
+        # SetLayerType(self, aLayer, aLayerType):
         print(self.layer_map)
         # Stackup is optional, may need to set
 
@@ -77,7 +83,6 @@ class DefToPcb:
                     elif ey == sy:
                         sy -= sext
                         ey += eext
-                    width =
                     track = pcbnew.PCB_TRACK(self.board)
                     track.SetEndX(eext)
                     track.SetEndY(eeyt)
@@ -90,16 +95,32 @@ class DefToPcb:
                     self.board.Add(track)
 
 if __name__ == "__main__":
-    db = odb.dbDatabase.create()
-    design = "/home/snelgrov/nas/mfda/openmfda/flow/results/ChIP4/base/4_final.def"
-    tlef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3.tlef"
-    lef = "/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef"
-    odb.read_lef(db, tlef)
-    odb.read_lef(db, lef)
-    odb.read_def(db, design)
+    import argparse
 
-    t = DefToPcb(db, pcbnew.GetBoard())
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--def', metavar='<path>', action='append', dest='def_files', type=str,
+                    help="Path to the .def file.")
+    ap.add_argument('--tlef -f', metavar='<path>', action='append', dest='tlef_files', type=str,
+                    help="Path to .tlef file.")
+    ap.add_argument('--pcb',  metavar='<path>', dest='pcb_file', type=str,
+                    help="Path to the pcb file.")
+    ap.add_argument('--lef -f', metavar='<path>', action='append', dest='lef_files', type=str,
+                    help="Path to .lef file.")
+    args = ap.parse_args()
+    db = odb.dbDatabase.create()
+    for tlef_file in args.tlef_files:
+        odb.read_lef(db, tlef_file)
+    for lef_file in args.lef_files:
+        odb.read_lef(db, lef_file)
+    for def_file in args.def_files:
+        odb.read_def(db, def_file)
+    if (args.pcb_file):
+        board = pcbnew.LoadBoard(args.pcb_file)
+    else:
+        board = pcbnew.GetBoard()
+    t = DefToPcb(db, board)
     # Todo clear all traces
     t.place()
     t.route()
-    pcbnew.Refresh()
+    board.Save("test.kicad_pcb")
+    # pcbnew.Refresh()

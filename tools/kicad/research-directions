@@ -1,0 +1,12 @@
+Plan from grant proposal is focusing on 2d layered P&R:
+1. Folded ribbon - create a wide thin die area, then fold it back and forth like an accordion.
+2. Hypergraph partitioning used for separating into subcircuits for layers. use pin constraints at top and bottom (automating pin placement a concern). Also interested in the application to lego stacked devices.
+3. Combining valves and components into banks to leverage height. Synthesis for valve clustering.
+
+Evaluating different PNR algorithms from the literature to find the most effective algorithm at different device complexities.
+
+Next interests:
+Biomedical semantic languages.
+Lab procedure extraction (Check with Morteza on his datasheet extraction)
+
+Timeline types for tracking scheduling constraints (Vishay in CS).
