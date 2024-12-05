@@ -66,7 +66,6 @@ if { [info exists ::env(MAKE_TRACKS)] } {
 
 if {[info exists ::env(FOOTPRINT_TCL)]} {
   source $::env(FOOTPRINT_TCL)
-  initialize_padring
 }
 
 if { [info exists ::env(POST_FLOORPLAN_TCL)] } {

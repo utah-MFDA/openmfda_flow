@@ -12,7 +12,7 @@ if {![info exists standalone] || $standalone} {
   foreach libFile $::env(LIB_FILES) {
     read_liberty $libFile
   }
-  
+
   # Read design files
   read_def $::env(RESULTS_DIR)/1_2_floorplan_io.def
   read_sdc $::env(RESULTS_DIR)/1_floorplan.sdc
@@ -39,24 +39,28 @@ proc find_macros {} {
   return $macros
 }
 
-
-if {[find_macros] != ""} {
-  if {[info exists ::env(MACRO_PLACEMENT)]} {
-    source $::env(SCRIPTS_DIR)/read_macro_placement.tcl
-    puts "\[INFO\]\[FLOW-xxxx\] Using manual macro placement file $::env(MACRO_PLACEMENT)"
-    read_macro_placement $::env(MACRO_PLACEMENT)
-  } else {
-    macro_placement \
-      -halo $::env(MACRO_PLACE_HALO) \
-      -channel $::env(MACRO_PLACE_CHANNEL)
-  }
-
-  if {[info exists ::env(MACRO_BLOCKAGE_HALO)]} {
-    source $::env(SCRIPTS_DIR)/placement_blockages.tcl
-    block_channels $::env(MACRO_BLOCKAGE_HALO)
-  }
+if {[info exists ::env(MACRO_PLACE_TCL)]} {
+  source $::env(MACRO_PLACE_TCL)
 } else {
-  puts "No macros found: Skipping macro_placement"
+
+    if {[find_macros] != ""} {
+      if {[info exists ::env(MACRO_PLACEMENT)]} {
+        source $::env(SCRIPTS_DIR)/read_macro_placement.tcl
+        puts "\[INFO\]\[FLOW-xxxx\] Using manual macro placement file $::env(MACRO_PLACEMENT)"
+        read_macro_placement $::env(MACRO_PLACEMENT)
+      } else {
+        macro_placement \
+          -halo $::env(MACRO_PLACE_HALO) \
+          -channel $::env(MACRO_PLACE_CHANNEL)
+      }
+
+      if {[info exists ::env(MACRO_BLOCKAGE_HALO)]} {
+        source $::env(SCRIPTS_DIR)/placement_blockages.tcl
+        block_channels $::env(MACRO_BLOCKAGE_HALO)
+      }
+    } else {
+      puts "No macros found: Skipping macro_placement"
+    }
 }
 
 if {![info exists standalone] || $standalone} {
