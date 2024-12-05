@@ -35,3 +35,69 @@ module trap4(inout a, b, c, d);
   assign d = c;
   serpentine_50px thing1(.a_fluid(a), .b_fluid(d));
 endmodule
+
+module interconnect_8x4(inout pin_0_0, pin_0_0_pad,
+                        pin_0_1, pin_0_1_pad,
+                        pin_0_2, pin_0_2_pad,
+                        pin_0_3, pin_0_3_pad,
+                        pin_1_0, pin_1_0_pad,
+                        pin_1_1, pin_1_1_pad,
+                        pin_1_2, pin_1_2_pad,
+                        pin_1_3, pin_1_3_pad,
+                        pin_2_0, pin_2_0_pad,
+                        pin_2_1, pin_2_1_pad,
+                        pin_2_2, pin_2_2_pad,
+                        pin_2_3, pin_2_3_pad,
+                        pin_3_0, pin_3_0_pad,
+                        pin_3_1, pin_3_1_pad,
+                        pin_3_2, pin_3_2_pad,
+                        pin_3_3, pin_3_3_pad,
+                        pin_4_0, pin_4_0_pad,
+                        pin_4_1, pin_4_1_pad,
+                        pin_4_2, pin_4_2_pad,
+                        pin_4_3, pin_4_3_pad,
+                        pin_5_0, pin_5_0_pad,
+                        pin_5_1, pin_5_1_pad,
+                        pin_5_2, pin_5_2_pad,
+                        pin_5_3, pin_5_3_pad,
+                        pin_6_0, pin_6_0_pad,
+                        pin_6_1, pin_6_1_pad,
+                        pin_6_2, pin_6_2_pad,
+                        pin_6_3, pin_6_3_pad,
+                        pin_7_0, pin_7_0_pad,
+                        pin_7_1, pin_7_1_pad,
+                        pin_7_2, pin_7_2_pad,
+                        pin_7_3, pin_7_3_pad);
+  interconnect interconnect_0_0(.pin(pin_0_0), .pad(pin_0_0_pad));
+  interconnect interconnect_0_1(.pin(pin_0_1), .pad(pin_0_1_pad));
+  interconnect interconnect_0_2(.pin(pin_0_2), .pad(pin_0_2_pad));
+  interconnect interconnect_0_3(.pin(pin_0_3), .pad(pin_0_3_pad));
+  interconnect interconnect_1_0(.pin(pin_1_0), .pad(pin_1_0_pad));
+  interconnect interconnect_1_1(.pin(pin_1_1), .pad(pin_1_1_pad));
+  interconnect interconnect_1_2(.pin(pin_1_2), .pad(pin_1_2_pad));
+  interconnect interconnect_1_3(.pin(pin_1_3), .pad(pin_1_3_pad));
+  interconnect interconnect_2_0(.pin(pin_2_0), .pad(pin_2_0_pad));
+  interconnect interconnect_2_1(.pin(pin_2_1), .pad(pin_2_1_pad));
+  interconnect interconnect_2_2(.pin(pin_2_2), .pad(pin_2_2_pad));
+  interconnect interconnect_2_3(.pin(pin_2_3), .pad(pin_2_3_pad));
+  interconnect interconnect_3_0(.pin(pin_3_0), .pad(pin_3_0_pad));
+  interconnect interconnect_3_1(.pin(pin_3_1), .pad(pin_3_1_pad));
+  interconnect interconnect_3_2(.pin(pin_3_2), .pad(pin_3_2_pad));
+  interconnect interconnect_3_3(.pin(pin_3_3), .pad(pin_3_3_pad));
+  interconnect interconnect_4_0(.pin(pin_4_0), .pad(pin_4_0_pad));
+  interconnect interconnect_4_1(.pin(pin_4_1), .pad(pin_4_1_pad));
+  interconnect interconnect_4_2(.pin(pin_4_2), .pad(pin_4_2_pad));
+  interconnect interconnect_4_3(.pin(pin_4_3), .pad(pin_4_3_pad));
+  interconnect interconnect_5_0(.pin(pin_5_0), .pad(pin_5_0_pad));
+  interconnect interconnect_5_1(.pin(pin_5_1), .pad(pin_5_1_pad));
+  interconnect interconnect_5_2(.pin(pin_5_2), .pad(pin_5_2_pad));
+  interconnect interconnect_5_3(.pin(pin_5_3), .pad(pin_5_3_pad));
+  interconnect interconnect_6_0(.pin(pin_6_0), .pad(pin_6_0_pad));
+  interconnect interconnect_6_1(.pin(pin_6_1), .pad(pin_6_1_pad));
+  interconnect interconnect_6_2(.pin(pin_6_2), .pad(pin_6_2_pad));
+  interconnect interconnect_6_3(.pin(pin_6_3), .pad(pin_6_3_pad));
+  interconnect interconnect_7_0(.pin(pin_7_0), .pad(pin_7_0_pad));
+  interconnect interconnect_7_1(.pin(pin_7_1), .pad(pin_7_1_pad));
+  interconnect interconnect_7_2(.pin(pin_7_2), .pad(pin_7_2_pad));
+  interconnect interconnect_7_3(.pin(pin_7_3), .pad(pin_7_3_pad));
+endmodule

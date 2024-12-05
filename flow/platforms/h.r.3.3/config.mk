@@ -11,7 +11,7 @@ export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                       $(ADDITIONAL_GDS)
 export TECH_LEF = $(PLATFORM_DIR)/lef/h.r.3.3.tlef
 export SC_LEF = $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
-
+export ADDITIONAL_LEFS = $(PLATFORM_DIR)/lef/h.r.3.3_pads.lef
 export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      $(ADDITIONAL_LIBS)
 export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/scad/components.scad
@@ -61,7 +61,7 @@ export PLACE_DENSITY ?= 1
 
 # FastRoute options
 export MIN_ROUTING_LAYER = met1
-export MAX_ROUTING_LAYER = met8
+export MAX_ROUTING_LAYER = met10
 
 # Define fastRoute tcl
 export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
@@ -97,6 +97,7 @@ export PITCH            = 30
 SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
 			--routing_file ${SCAD_ROUTING_LIBRARY} \
 			--lef_file ${SC_LEF} --tlef_file ${TECH_LEF} \
+			--lef_file ${ADDITIONAL_LEFS} \
             --platform "$(PLATFORM)" \
             --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
             --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
