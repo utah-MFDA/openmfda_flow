@@ -10,4 +10,5 @@ pins[0][3] = "soln3"
 pins[1][7] = "out"
 
 generate_config(verilog_file, design_name, pin_names=pins, platform=platform)
-run_flow(design_name, platform=platform)
+
+run_flow(design_name, platform=platform, mk_targets=["pnr", "render", "simulate"])
