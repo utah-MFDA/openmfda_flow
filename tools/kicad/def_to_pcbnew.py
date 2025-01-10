@@ -2,7 +2,7 @@ import opendbpy as odb
 import pcbnew
 from opendb_helpers import wire_iter, segment_iter
 
-class DefToPcb:
+class DefToPcbnew:
     def __init__(self, db, board):
         self.db = db
         self.board = board
@@ -116,7 +116,7 @@ if __name__ == "__main__":
         board = pcbnew.LoadBoard(args.pcb_file)
     else:
         board = pcbnew.GetBoard()
-    t = DefToPcb(db, board)
+    t = DefToPcbnew(db, board)
     # Todo clear all traces
     t.place()
     t.route()

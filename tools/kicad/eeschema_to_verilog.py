@@ -3,7 +3,7 @@ import math
 from kiutils.schematic import Schematic
 import networkx as nx
 
-class Extractor:
+class EeschemaToVerilog:
     def normalize(self, x):
         # I was getting floating point errors when comparing positions.
         # Increasing orders of magnitude and rounding to integer fixed it.
@@ -244,6 +244,6 @@ if __name__ == "__main__":
     import sys
     sch = Schematic().from_file(sys.argv[2])
     design = sys.argv[1]
-    ext = Extractor(sch, design)
+    ext = EeschemaToVerilog(sch, design)
     ext.extract()
     ext.print_verilog()

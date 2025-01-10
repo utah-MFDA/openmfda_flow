@@ -8,7 +8,7 @@ from kiutils.footprint import Pad
 from uuid import uuid4
 from opendb_helpers import wire_iter, segment_iter
 
-class Translator:
+class DefToBoard:
     def __init__(self, db):
         self.db = db
         self.board = Board(generator="openmfda", version=20221018)
@@ -168,6 +168,6 @@ if __name__ == "__main__":
         odb.read_lef(db, lef_file)
     for def_file in args.def_files:
         odb.read_def(db, def_file)
-    t = Translator(db)
+    t = DefToBoard(db)
     t.extract()
     t.dump(args.output)

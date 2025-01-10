@@ -9,7 +9,7 @@ import re
 from uuid import uuid4
 
 
-class FootprintExtractor:
+class LefToFootprint:
     def __init__(self, db, masters):
         self.db = db
         self.masters = masters
@@ -161,6 +161,6 @@ if __name__ == "__main__":
         odb.read_lef(db, tlef_file)
     for lef_file in args.lef_files:
         odb.read_lef(db, lef_file)
-    t = FootprintExtractor(db, masters)
+    t = LefToFootprint(db, masters)
     t.extract()
     t.dump(args.output, args.name)
