@@ -3,6 +3,7 @@ import os
 import wx
 import subprocess
 from pathlib import Path
+# I commented these out and dropped in locally because it was caching the python import.
 # from .pcbnew_to_verilog import PcbnewToVerilog
 # import .config_generator as config
 class PcbnewToVerilog:
@@ -45,21 +46,22 @@ def write_pads(filename, pinholes, bumps):
              [("IO_EAST", offset) for offset in range(1400, 0, -140)])
 
     with open(filename, "w") as f:
-        print(f"""make_io_sites -horizontal_site IO_SIDE \
-    -vertical_site IO_TOP \
-    -corner_site IO_CORNER \
-    -offset 0 \
+        print(f"""make_io_sites -horizontal_site IO_SIDE \\
+    -vertical_site IO_TOP \\
+    -corner_site IO_CORNER \\
+    -offset 0 \\
     -rotation_vertical R90""", file=f)
         for pinhole, (side, location) in zip(pinholes, spots):
             print(f"place_pad -row {side} -location {location} {{ {pinhole} }}", file=f)
-        print(f"""make_io_bump_array -bump interconnect \
-    -rows 4 \
-    -columns 8 \
-    -pitch {{ 90 90 }} \
+        print(f"""make_io_bump_array -bump interconnect \\
+    -rows 4 \\
+    -columns 8 \\
+    -pitch {{ 90 90 }} \\
     -origin {{ 960 660 }}""", file=f)
-        for nets, row in enumerate(bumps):
-             for net, column in enumerate(row):
-                 print(f"assign_io_bump -net {column} BUMP_{row}_{column}", file=f)
+        for row, nets in enumerate(bumps):
+             for column, net in enumerate(nets):
+                 if net is not None:
+                     print(f"assign_io_bump -net {net} BUMP_{row}_{column}", file=f)
         print("place_io_terminals pinhole*/pad", file=f)
         print("place_io_terminals ic.interconnect*/pad", file=f)
         print("remove_io_rows", file=f)
@@ -79,13 +81,13 @@ class SubprocFrame(wx.Frame):
         panel = wx.Panel(self)
         self.log = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY)
 
-        ping_btn = wx.Button(panel, label='Ping')
-        ping_btn.Bind(wx.EVT_BUTTON, self.start)
+        start_btn = wx.Button(panel, label='Start')
+        start_btn.Bind(wx.EVT_BUTTON, self.start)
 
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.log, 1, wx.ALL|wx.EXPAND, 5)
-        sizer.Add(ping_btn, 0, wx.ALL, 5)
+        sizer.Add(start_btn, 0, wx.ALL, 5)
         panel.SetSizer(sizer)
 
     def start(self, event):
@@ -101,22 +103,6 @@ class SubprocFrame(wx.Frame):
             else:
                 self.log.write(line)
         proc.wait()
-
-    def OnExit(self, event):
-        """Close the frame, terminating the application."""
-        self.Close(True)
-
-
-    def OnHello(self, event):
-        """Say hello to the user."""
-        wx.MessageBox("Hello again from wxPython")
-
-
-    def OnAbout(self, event):
-        """Display an About Dialog"""
-        wx.MessageBox("This is a wxPython Hello World sample",
-                      "About Hello World 2",
-                      wx.OK|wx.ICON_INFORMATION)
 
 class ExportFrame(wx.Frame):
     def __init__(self, *args, **kw):
@@ -137,20 +123,21 @@ class ExportFrame(wx.Frame):
         exporter = PcbnewToVerilog(self.board, design)
         with open(output, "w") as f:
             exporter.print_verilog(f)
-        wx.MessageBox("Done.")
-        # write_sdc_constraints(directory / "constraints.sdc", top_name=design)
-        # write_makefile(directory / "config.mk", design)
-        # pinholes = [footprint.GetReference()
-        #             for footprint in self.board.GetFootprints()
-        #             if footprint.GetValue() == "pinhole_325px_met1"]
-        # bumps = [list(range(0,8)) for x in range(0,4)]
+        write_sdc_constraints(directory / "constraints.sdc", top_name=design)
+        write_makefile(directory / "config.mk", design)
+        pinholes = [footprint.GetReference()
+                    for footprint in self.board.GetFootprints()
+                    if footprint.GetValue() == "h.r.3.3:pinhole_325px_met1"]
+
+        bumps = [["foo" for i in  range(0,8)] for x in range(0,4)]
         # for footprint in self.board.GetFootprints():
-        #     if footprint.GetValue() != "flushing_interface_4x8"]:
+        #     if footprint.GetValue() != "h.r.3.3:flushing_interface_4x8"]:
         #         continue
         #     for pad in footprint.Pads():
         #          pin = int(pad.GetName())
         #          bumps[pin // 4][pin % 8] = pad.GetNetName()
-        # write_pads(directory / "pads.tcl", pinholes, bumps)
+        write_pads(directory / "pads.tcl", pinholes, bumps)
+        wx.MessageBox("Done.")
 
 class OpenMFDAPlugin(pcbnew.ActionPlugin):
     def defaults(self):
@@ -163,6 +150,5 @@ class OpenMFDAPlugin(pcbnew.ActionPlugin):
     def Run(self):
         frm = ExportFrame(None, title="OpenMFDA flow")
         frm.Show()
-        # frm = SubprocFrame(None, title="OpenMFDA flow")
 
 OpenMFDAPlugin().register() # Instantiate and register to Pcbnew
