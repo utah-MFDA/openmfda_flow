@@ -12,6 +12,7 @@ make_io_sites -horizontal_site IO_SIDE \
     -offset 0 \
     -rotation_vertical R90
 
+# THESE MUST HAVE NO SPACES AROUND THE PORT NAME
 place_pad -row IO_WEST -location 1030 {pinhole1}
 place_pad -row IO_WEST -location 1170 {pinhole2}
 place_pad -row IO_NORTH -location 330 {pinhole3}
