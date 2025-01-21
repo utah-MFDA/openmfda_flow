@@ -12,17 +12,37 @@ class PcbnewToVerilog:
         self.board = board
 
     def print_verilog(self, outfile):
-        print(f"module {self.design} ();", file=outfile)
+        print(f"module {self.design} (", file=outfile)
+        ios = []
+        for foot in self.board.GetFootprints():
+            if foot.GetFieldText("Footprint") == "h.r.3.3:interconnect_4x8":
+                for pad in foot.Pads():
+                    direction = pad.GetPinType()
+                    if "no_connect" in direction:
+                        continue
+                    if direction == "input" or direction == "power_in":
+                        dir = "input"
+                    elif direction == "output" or direction == "power_out":
+                        dir = "output"
+                    else:
+                        dir = "inout"
+                    # Space after name matters!
+                    ios.append(f"{dir} \\{pad.GetNetname()} ")
+        print(*ios, sep=",\n\t", file=outfile)
+        print(");", file=outfile)
         for net, item in self.board.GetNetsByName().items():
-            if len(str(net)):
+            net = str(net)
+            if len(net) and "unconnected" not in net:
                 print(f"\twire \\{net} ;", file=outfile) # Space after the name is important here!
         for foot in self.board.GetFootprints():
             module = foot.GetFieldText("Footprint").replace("h.r.3.3:", "")
+            if module == "interconnect_4x8":
+                continue
             name = foot.GetReference()
             # Space after the name is important here!
             print(f"\t\\{module} \\{name} (", file=outfile)
             # Space after the name is important here!
-            print(*[f"\t\t.\\{pad.GetName()} (\\{pad.GetNetname()} )" for pad in foot.Pads() if len(str(pad.GetNetname()))], sep=",\n", file=outfile)
+            print(*[f"\t\t.\\{pad.GetPinFunction()} (\\{pad.GetNetname()} )" for pad in foot.Pads() if len(str(pad.GetNetname()))], sep=",\n", file=outfile)
             print("\t);", file=outfile)
         print("endmodule", file=outfile)
 
@@ -34,16 +54,16 @@ def write_makefile(filename, design):
 export DESIGN_NAME     	= {design}
 
 export VERILOG_FILES 	= $(ROOT_DIR)/{design}.v
-export SDC_FILE      	= $(ROOT_DIR)/constraint.sdc
+export SDC_FILE      	= $(ROOT_DIR)/constraints.sdc
 export FOOTPRINT_TCL = $(ROOT_DIR)/pads.tcl
 export DIE_AREA    	 	= 0 0 2560 1600
 export CORE_AREA   	 	= 0 0 2550 1590
 """, file=f)
 
 def write_pads(filename, pinholes, bumps):
-    spots = ([("IO_WEST", offset) for offset in range(140, 1600, 140)] +
-             [("IO_NORTH", offset) for offset in range(330, 2560-330, 140)] +
-             [("IO_EAST", offset) for offset in range(1400, 0, -140)])
+    spots = ([("IO_NORTH", offset) for offset in range(330, 2560-330, 140)] +
+             [("IO_WEST", offset) for offset in range(330, 1600 - 330, 140)] +
+             [("IO_EAST", offset) for offset in range(1600-330, 330, -140)])
 
     with open(filename, "w") as f:
         print(f"""make_io_sites -horizontal_site IO_SIDE \\
@@ -52,18 +72,21 @@ def write_pads(filename, pinholes, bumps):
     -offset 0 \\
     -rotation_vertical R90""", file=f)
         for pinhole, (side, location) in zip(pinholes, spots):
-            print(f"place_pad -row {side} -location {location} {{ {pinhole} }}", file=f)
-        print(f"""make_io_bump_array -bump interconnect \\
-    -rows 4 \\
-    -columns 8 \\
-    -pitch {{ 90 90 }} \\
-    -origin {{ 960 660 }}""", file=f)
-        for row, nets in enumerate(bumps):
-             for column, net in enumerate(nets):
-                 if net is not None:
-                     print(f"assign_io_bump -net {net} BUMP_{row}_{column}", file=f)
-        print("place_io_terminals pinhole*/pad", file=f)
-        print("place_io_terminals ic.interconnect*/pad", file=f)
+            print(f"""place_pad -master pinhole_325px_met5 -row {side} -location {location} {{{pinhole}}}""", file=f)
+        pitch_x = 90
+        pitch_y = 90
+        origin_x = 960
+        origin_y = 660
+        width = 40
+        height = 40
+        layer = "met10"
+        for column, nets in enumerate(bumps):
+             for row, net in enumerate(nets):
+                 if net is not None and "unconnected" not in net:
+                     y = row * pitch_y + origin_y
+                     x = column * pitch_x + origin_x
+                     print(f"""place_pin -pin_name {net} -layer {layer} -location {{ {x} {y} }} -pin_size {{ {width} {height} }}""", file=f)
+        print("place_io_terminals */pad", file=f)
         print("remove_io_rows", file=f)
 
 def write_sdc_constraints(filename, top_name="top"):
@@ -112,6 +135,7 @@ class ExportFrame(wx.Frame):
 
         run_btn = wx.Button(panel, label='Run')
         run_btn.Bind(wx.EVT_BUTTON, self.start)
+        self.start("foo")
 
     def start(self, event):
         # from .pcbnew_to_verilog import PcbnewToVerilog
@@ -127,15 +151,17 @@ class ExportFrame(wx.Frame):
         write_makefile(directory / "config.mk", design)
         pinholes = [footprint.GetReference()
                     for footprint in self.board.GetFootprints()
-                    if footprint.GetValue() == "h.r.3.3:pinhole_325px_met1"]
+                    if footprint.GetFieldByName("Footprint").GetText() == "h.r.3.3:pinhole_325px_met5"]
 
-        bumps = [["foo" for i in  range(0,8)] for x in range(0,4)]
-        # for footprint in self.board.GetFootprints():
-        #     if footprint.GetValue() != "h.r.3.3:flushing_interface_4x8"]:
-        #         continue
-        #     for pad in footprint.Pads():
-        #          pin = int(pad.GetName())
-        #          bumps[pin // 4][pin % 8] = pad.GetNetName()
+        bumps = [[None for i in  range(0,4)] for x in range(0,8)]
+        for footprint in self.board.GetFootprints():
+            if footprint.GetFieldByName("Footprint").GetText() != "h.r.3.3:interconnect_4x8":
+                continue
+            for pad in footprint.Pads():
+                # if pad.GetNetname().startswith("unconnected"):
+                #     continue
+                pin = int(pad.GetName()) - 1
+                bumps[pin // 4][pin % 4] = pad.GetNetname()
         write_pads(directory / "pads.tcl", pinholes, bumps)
         wx.MessageBox("Done.")
 
