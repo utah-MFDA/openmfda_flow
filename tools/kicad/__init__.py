@@ -98,9 +98,9 @@ class SubprocFrame(wx.Frame):
     A Frame that says Hello World
     """
 
-    def __init__(self, *args, **kw):
+    def __init__(self, cmd, *args, **kw):
         super(SubprocFrame, self).__init__(*args, **kw)
-
+        self.cmd = cmd
         panel = wx.Panel(self)
         self.log = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY)
 
@@ -114,8 +114,7 @@ class SubprocFrame(wx.Frame):
         panel.SetSizer(sizer)
 
     def start(self, event):
-        command = ["tail", "-f", "test.txt"]
-        proc = subprocess.Popen(command,
+        proc = subprocess.Popen(self.cmd,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         while True:
@@ -126,6 +125,8 @@ class SubprocFrame(wx.Frame):
             else:
                 self.log.write(line)
         proc.wait()
+        wx.MessageBox("Done.")
+
 
 class ExportFrame(wx.Frame):
     def __init__(self, *args, **kw):
@@ -135,7 +136,6 @@ class ExportFrame(wx.Frame):
 
         run_btn = wx.Button(panel, label='Run')
         run_btn.Bind(wx.EVT_BUTTON, self.start)
-        self.start("foo")
 
     def start(self, event):
         # from .pcbnew_to_verilog import PcbnewToVerilog
@@ -163,7 +163,13 @@ class ExportFrame(wx.Frame):
                 pin = int(pad.GetName()) - 1
                 bumps[pin // 4][pin % 4] = pad.GetNetname()
         write_pads(directory / "pads.tcl", pinholes, bumps)
-        wx.MessageBox("Done.")
+        flow = "~/nas/mfda/openmfda/flow"
+        cmd = ["make", "-C", flow,
+               f"DESIGN={design}", "TIME_CMD=", f"DESIGN_CONFIG={directory}/config.mk",
+               f"LOG_DIR={directory}/results",  f"OBJECTS_DIR={directory}/results",
+               f"REPORTS_DIR={directory}/results", f"RESULTS_DIR={directory}/results"]
+        sub = SubprocFrame(cmd, None, title="OpenMFDA")
+        sub.Show()
 
 class OpenMFDAPlugin(pcbnew.ActionPlugin):
     def defaults(self):
