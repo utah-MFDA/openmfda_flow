@@ -68,13 +68,14 @@ class Nets:
         #print('Adding route: '+str(nr))
         self.route.append(nr)
 
-    def calc_len_funct(self, in_route=None):
+    def calc_len_funct(self, in_route=None, route_name=None):
         if isinstance(in_route, type(None)):
-            in_route=self.route
+            in_route = self.route
+            route_name = self.net
 
         if isinstance(in_route, list):
             if len(in_route) == 0:
-                raise Exception(f"Empty route {in_route}")
+                raise Exception(f"Empty route {in_route}, for route {route_name}")
             else:
                 pass
         else:
@@ -107,7 +108,7 @@ class Nets:
             for nd in self.route.nodes:
                 if 'route' in self.route.nodes[nd]:
                     print(self.route.nodes[nd]['route'])
-                    len_dict[nd] = self.calc_len_funct(self.route.nodes[nd]['route'])
+                    len_dict[nd] = self.calc_len_funct(self.route.nodes[nd]['route'], nd)
                 else:
                     print('skipping length calc for', nd)
             self.route_len = len_dict
@@ -149,11 +150,39 @@ class Nets:
             raise Exception("Invalid route type")
         self.needs_layers_converted = False
 
-                # self.route[r_node]['route'] = \
-                #     net_builder.convert_route(self.route.nodes[r_node]['route'])
+    def convert_lengths(self, net_builder, len_multiplier):
+        if isinstance(self.add_route, list):
+            self.route = net_builder.convert_route_len(self.route, len_multiplier)
+        elif isinstance(self.route, nx.Graph):
+            for r_node in self.route.nodes:
+                if 'route' not in self.route.nodes[r_node]:
+                    print(f'skipping {r_node}, no routes')
+                    continue
+                print("converting route: ",self.net,':', r_node)
+                net_builder.convert_route_len(self.route.nodes[r_node]['route'], len_multiplier)
+                # print(new_r)
+                # self.route.nodes[r_node]['route'] = new_r
+        else:
+            raise Exception("Invalid route type")
 
 
-    def compress_routes(self, debug=False, design='', component_list=None, components_lef=None, comp_dict=None, pin_list=None, report_route=False, subsegment=True):
+    def get_list(self):
+        if isinstance(self.route, list):
+            return self.route
+        elif isinstance(self.route, nx.Graph):
+            sg_list = []
+            for r_nd in self.route.nodes:
+                if 'route' not in self.route.nodes[r_nd]:
+                    continue
+                sg_list += self.route.nodes[r_nd]['route']
+            return sg_list
+
+
+    def compress_routes(
+            self, debug=False, design='', component_list=None, components_lef=None,
+            comp_dict=None, pin_list=None, report_route=False, subsegment=True,
+            def_scale=7.6*1e-6, segment_float_err=0.05
+            ):
 
         if self.compress:
             raise Exception("Routes already compressed")
@@ -161,9 +190,9 @@ class Nets:
         self.compress = True
 
         #TODO pass as variable
-        s = 7.6/1000  # hard coded scale
-        s1 = s/1000  # hard coded scale
-        err = 0.05
+        s1 = def_scale
+
+        err = segment_float_err
 
         if components_lef is not None:
             if component_list is not None:
@@ -932,6 +961,11 @@ class NetBuilder:
                 route[i][2] = (self.bot_layers + self.met_layers[r[2]]*self.lpv)*self.layer
         # return route
 
+    def convert_route_len(self, route, route_multi):
+        for i, r in enumerate(route):
+            route[i][0] = (route_multi*r[0])
+            route[i][1] = (route_multi*r[1])
+
     def export_net(self):
         return self.net
 
@@ -958,44 +992,6 @@ class Component:
         else:
             self.lef_cv = conversion_factor
         self.pins = {}
-
-    # def add_pins(self, in_pins):
-    #     for pin in in_pins:
-    #         new_pin = {'layer':'', 'type':'', 'params':''}
-    #         new_pin['layer'] = in_pin[pin]['layer']
-    #         new_pin['type'] = in_pin[pin]['type']
-    #         if new_pin['type'] == 'RECT':
-    #             for i, x in enumerate(in_pin[pin]['params']):
-    #                 if i%2:
-    #                     new_pin['params'] = str(self.x1+int(x))
-    #                 else:
-    #                     new_pin['params'] = str(self.y1+int(x))
-    #         elif new_pin['type'] == 'POLYGON' or \
-    #             new_pin['type'] == 'PATH':
-    #             print(f'{new_pin["type"]} not supported')
-    #
-    # def is_point_in_ports(self, pt, no_pin_ok=False, unsupported_type_ok=False):
-    #     if len(self.pins) == 0:
-    #         if not no_pin_ok:
-    #             Exception("No pins")
-    #         else:
-    #             return False
-    #
-    #     for p in self.pins.items():
-    #         if p['type'] == 'RECT':
-    #             if p['layer'] == pt[2] and \
-    #                 p['param'][0] > pt[0] and \
-    #                 p['param'][1] > pt[1] and \
-    #                 p['param'][2] > pt[0] and \
-    #                 p['param'][3] > pt[1]:
-    #                 return True
-    #         elif p['type'] == 'POLYGON' or \
-    #             p['type'] == 'PATH':
-    #             print(f"{p['type']} is not supported")
-    #             if not unsupported_type_ok:
-    #                 Exception(f"{p['type']} is not supported")
-    #     return False
-    #
 
 
 class Pin:

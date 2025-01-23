@@ -369,6 +369,8 @@ class ComponentParser:
 
     def get_comp_pins_from_lef(self, in_file, scale=1):
         par_f = self.parser_multi_file(in_file)
+        if par_f is None:
+            return {}
         if len(par_f) == 0:
             raise Exception(f"No macros in file: '{in_file}'")
         c_list = {}
