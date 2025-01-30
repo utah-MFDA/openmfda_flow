@@ -16,10 +16,10 @@ def wire_iter(wire):
         layer = dec.getLayer()
         if opcode == odb.dbWireDecoder.BTERM:
             term = dec.getBTerm()
-            yield (opcode, layer, (term,))
+            yield (opcode, layer, term)
         elif opcode == odb.dbWireDecoder.ITERM:
             term = dec.getITerm()
-            yield (opcode, layer, (term,))
+            yield (opcode, layer, term)
         elif opcode == odb.dbWireDecoder.JUNCTION:
             wire_type = dec.getWireType()
             jid = dec.getJunctionId()
@@ -27,25 +27,25 @@ def wire_iter(wire):
             yield (opcode, layer, (wire_type, jid, jval))
         elif opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
             wire_type = dec.getWireType()
-            yield (opcode, layer, (wire_type,))
+            yield (opcode, layer, wire_type)
         elif opcode == odb.dbWireDecoder.POINT_EXT:
             point = dec.getPoint_ext()
-            yield (opcode, layer, (point,))
+            yield (opcode, layer, point)
         elif opcode == odb.dbWireDecoder.POINT:
             point = dec.getPoint()
-            yield (opcode, layer, (point,))
+            yield (opcode, layer, point)
         elif opcode == odb.dbWireDecoder.RECT:
             rect = dec.getRect()
-            yield (opcode, layer, (rect,))
+            yield (opcode, layer, rect)
         elif opcode == odb.dbWireDecoder.RULE:
             rule = dec.getRule()
-            yield (opcode, layer, (rule,))
+            yield (opcode, layer, rule)
         elif opcode == odb.dbWireDecoder.TECH_VIA:
             via = dec.getTechVia()
-            yield (opcode, layer, (via,))
+            yield (opcode, layer, via)
         elif opcode == odb.dbWireDecoder.VIA:
             via = dec.getVia()
-            yield (opcode, layer, (via,))
+            yield (opcode, layer, via)
         else:
             raise ValueError()
         opcode = dec.next()
@@ -56,12 +56,12 @@ def segment_iter(wire):
         if opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
             last = None
         elif opcode == odb.dbWireDecoder.POINT_EXT:
-            (point,) = vals
+            point = vals
             if last is not None:
                 yield (layer, last, point)
             last = point
         elif opcode == odb.dbWireDecoder.POINT:
-            ((x,y),) = vals
+            (x,y) = vals
             width = layer.getWidth()
             # By default, no extension means half the width.
             ext = int(width / 2)
@@ -70,12 +70,12 @@ def segment_iter(wire):
                 yield (layer, last, point)
             last = point
         elif opcode == odb.dbWireDecoder.TECH_VIA:
-            (via,) = vals
+            via = vals
             if last is not None:
                 yield (layer, last, via)
             last = via
         elif opcode == odb.dbWireDecoder.VIA:
-            (via,) = vals
+            via = vals
             if last is not None:
                 yield (layer, last, via)
             last = via # TODO squash multilayer vias
@@ -95,6 +95,11 @@ class DefToPcbnew:
         # Kicad stores sizes in nanometers, just fixed scale for integer math.
         # scaling to 0.1mm per pixel
         return i * 100
+    def convert_x(self, x):
+        return x # + 12000000 #256000000 - x
+
+    def convert_y(self, y):
+        return y # + 12000000 # 160000000 - y
 
     def _extract_layers(self):
         layers = self.db.getTech().getLayers()
@@ -120,46 +125,76 @@ class DefToPcbnew:
         # SetLayerType(self, aLayer, aLayerType):
         # Stackup is optional, may need to set
 
+    def convert_location(self, comp, master):
+        # DEF standard:
+        # "Components are always placed such that the lower left
+        # corner of the cell is the origin (0,0) after any orientation.
+        # When a component flips about the y axis, it flips about
+        # the component center.
+        # When a component rotates, the lower left corner of the
+        # bounding box of the component’s sites remains at the
+        # same placement location."
+        # Rotation is counterclockwise positive (regular cartesian)
+        # Flip happens before rotation happens
+
+
+        # KiCad behavior:
+        # the origin of the component is always the same corner.
+        # The position of the component is always the origin.
+        # Flipped flag is vertical flip across the x-axis at origin.
+        # Flip happens after rotation.
+
+        ori = comp.getOrient()
+        x, y = map(self.scale, comp.getLocation())
+        h = self.scale(master.getHeight())
+        w = self.scale(master.getWidth())
+        mx, my = map(self.scale, master.getOrigin())
+        # need to figure out what this does to the offsets, for now assume macro origin always 0,0
+        assert mx == 0 and my == 0
+
+        if ori == "R0" or ori == "N":
+            return (x, y, 0.0, False)
+        elif ori == "R90" or ori == "W":
+            return (x + w, y, 90.0, False)
+        elif ori == "R180" or ori == "S":
+            return (x + w, y + h, 180.0, False)
+        elif ori == "R270" or ori == "E":
+            return (x, y + w, 180.0, False)
+        elif ori == "MY" or ori == "FN":
+            return (x + w, y, 180.0, True)
+        elif ori == "MX" or ori == "FS":
+            return (x, y + h, 0.0, True)
+        elif ori == "MX90" or ori == "FW" or ori == "MXR90":
+            return (x, y, 90.0, True)
+        elif ori == "MY90" or ori == "FE" or ori == "MYR90":
+            return (x + h, y + w, 90.0, True)
+        else:
+            raise ValueError(f"Unexpected orientation '{ori}', should be one of R0, R180, R90, R270, MY, MX, MX90, MXR90, MY90, or MYR90. Or N,S,E,W,FN,FS,FE, or FW")
+
     def place(self):
         block = self.db.getChip().getBlock()
         for comp in block.getInsts():
             master = comp.getMaster()
-            x, y = map(self.scale, comp.getLocation())
-            if "R90" in comp.getOrient():
-                angle = 90.0
-            elif "R180" in comp.getOrient():
-                angle = 180.0
-            elif "R270" in comp.getOrient():
-                angle = 270.0
-            else:
-                angle = 0.0
-            mirror_y = "MY" in comp.getOrient()
-            mirror_x = "MX" in comp.getOrient()
-            mx, my = map(self.scale, master.getOrigin())
-            # need to figure out what this does to the offsets, for now assume macro origin always 0,0
-            assert mx == 0 and my == 0
+            x, y, angle, flip = self.convert_location(comp, master)
             name = comp.getConstName()
             module = master.getConstName()
-            print("placing", name, module, x/1000000, y/1000000, angle)
+            print("placing", name, module, x/1000000, y/1000000, comp.getOrient(), angle, flip)
             for foot in self.board.GetFootprints():
                 # O(n**2), fix later
                 if foot.GetReference() == name:
-                    # foot.SetLayerAndFlip()
-                    # foot.IsFlipped()
-                    # foot.Flip()
-                    # foot.GetSide() number 0 or 31
-                    if (mirror_y or mirror_x) and not foot.IsFlipped():
-                        foot.Flip(foot.GetCenter(), True)
-                    if not mirror_y and not mirror_x and foot.IsFlipped():
-                        foot.Flip(foot.GetCenter(), False)
+                    # reset everything, flipping is stateful.
+                    if foot.IsFlipped():
+                        foot.Flip(foot.GetPosition(), False)
+                    foot.SetOrientationDegrees(0)
+
+                    if flip:
+                        foot.Flip(foot.GetPosition(), False)
+                    foot.SetOrientationDegrees(angle)
                     foot.SetX(x)
                     foot.SetY(y)
-                    foot.SetOrientationDegrees(angle)
-                    # foot.NeedsPlaced()
-                    # foot.IsPlaced()
                     foot.SetIsPlaced(True)
                     foot.SetNeedsPlaced(False)
-                    pcbnew.Refresh()
+            pcbnew.Refresh()
 
     def route(self):
         block = self.db.getChip().getBlock()
@@ -177,28 +212,30 @@ class DefToPcbnew:
                     layers = [start_id, end_id]
                     print("routing net", net.getName(), "via at ", sx/1000000, sy/1000000, "width", width/1000000, "layers", start_name, end_name)
                     via = pcbnew.PCB_VIA(self.board)
-                    via.SetX(sx)
-                    via.SetY(sy)
+                    via.SetX(int(self.convert_x(sx)))
+                    via.SetY(int(self.convert_y(sy)))
                     via.SetWidth(width)
                     # todo layers
+                    # Todo need to set as blind via
                     via.SetNetCode(knet.GetNetCode())
                     self.board.Add(via)
                 else:
                     # If the track has an extension beyond the end point
                     ex, ey, eext = map(self.scale, end)
-                    if ex == sx:
-                        sy -= sext
-                        ey += eext
-                    elif ey == sy:
-                        sy -= sext
-                        ey += eext
+                    # Kicad seems to add the extension.
+                    # if ey == sy:
+                    #     sy -= sext
+                    #     ey += eext
+                    # elif ex == sx:
+                    #     sy -= sext
+                    #     ey += eext
                     track = pcbnew.PCB_TRACK(self.board)
                     layer_id, layer_name = self.layer_map[layer.getName()]
                     print("routing net", net.getName(), "trace from", sx/1000000, sy/1000000, "to", ex/1000000, ey/1000000, "width", width/1000000)
-                    track.SetEndX(ex)
-                    track.SetEndY(ey)
-                    track.SetX(sx)
-                    track.SetY(sy)
+                    track.SetEndX(int(self.convert_x(ex)))
+                    track.SetEndY(int(self.convert_y(ey)))
+                    track.SetX(int(self.convert_x(sx)))
+                    track.SetY(int(self.convert_y(sy)))
                     track.SetWidth(width)
                     track.SetLayer(layer_id)
                     track.SetNetCode(knet.GetNetCode())
@@ -292,38 +329,45 @@ def write_sdc_constraints(filename, top_name="top"):
     with open(filename, "w") as f:
         print(f"current_design {top_name}", file=f)
 
-class SubprocFrame(wx.Frame):
+class SubprocDialog(wx.Dialog):
     """
-    A Frame that says Hello World
+    A dialog that logs subprocess call
     """
 
     def __init__(self, cmd, *args, **kw):
-        super(SubprocFrame, self).__init__(*args, **kw)
+        super(SubprocDialog, self).__init__(style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.MAXIMIZE_BOX, *args, **kw)
         self.cmd = cmd
         panel = wx.Panel(self)
         self.log = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY)
-
+        self.proc = None
         start_btn = wx.Button(panel, label='Start')
         start_btn.Bind(wx.EVT_BUTTON, self.start)
+        halt_btn = wx.Button(panel, label='Halt')
+        halt_btn.Bind(wx.EVT_BUTTON, self.halt)
 
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.log, 1, wx.ALL|wx.EXPAND, 5)
         sizer.Add(start_btn, 0, wx.ALL, 5)
+        sizer.Add(halt_btn, 0, wx.ALL, 5)
         panel.SetSizer(sizer)
 
+    def halt(self, event):
+        if self.proc:
+            self.proc.terminate()
+
     def start(self, event):
-        proc = subprocess.Popen(self.cmd,
+        self.proc = subprocess.Popen(self.cmd,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         while True:
             wx.Yield()
-            line = proc.stdout.readline()
+            line = self.proc.stdout.readline()
             if line:
                 self.log.write(line)
             else:
                 break
-        proc.wait()
+        self.proc.wait()
         wx.MessageBox("Done.")
 
 class ExportFrame(wx.Frame):
@@ -344,25 +388,25 @@ class PnRPlugin(pcbnew.ActionPlugin):
         self.icon_file_name = os.path.join(os.path.dirname(__file__), 'icon.png')
 
     def Run(self):
+        board = pcbnew.GetBoard()
         print("****************************************************************")
-    def start(self, event):
         # from .pcbnew_to_verilog import PcbnewToVerilog
         # from .config_generator import write_sdc_constraints, write_makefile, write_pads
-        filename = Path(self.board.GetFileName())
+        filename = Path(board.GetFileName())
         directory = filename.parent
         output = directory / (filename.stem + ".v")
         design = filename.stem
-        exporter = PcbnewToVerilog(self.board, design)
+        exporter = PcbnewToVerilog(board, design)
         with open(output, "w") as f:
             exporter.print_verilog(f)
         write_sdc_constraints(directory / "constraints.sdc", top_name=design)
         write_makefile(directory / "config.mk", design)
         pinholes = [footprint.GetReference()
-                    for footprint in self.board.GetFootprints()
+                    for footprint in board.GetFootprints()
                     if footprint.GetFieldByName("Footprint").GetText() == "h.r.3.3:pinhole_325px_met5"]
 
         bumps = [[None for i in  range(0,4)] for x in range(0,8)]
-        for footprint in self.board.GetFootprints():
+        for footprint in board.GetFootprints():
             if footprint.GetFieldByName("Footprint").GetText() != "h.r.3.3:interconnect_4x8":
                 continue
             for pad in footprint.Pads():
@@ -377,8 +421,8 @@ class PnRPlugin(pcbnew.ActionPlugin):
                f"LOG_DIR={directory}/results",  f"OBJECTS_DIR={directory}/results",
                f"REPORTS_DIR={directory}/results", f"RESULTS_DIR={directory}/results",
                "pnr"]
-        sub = SubprocFrame(cmd, None, title="OpenMFDA")
-        sub.Show()
+        sub = SubprocDialog(cmd, None, title="OpenMFDA Place and Route")
+        sub.ShowModal()
         def_file = "/home/snelgrov/test_design/simple/results/4_final.def"
         tlef_files = ["/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3.tlef"]
         lef_files = ["/home/snelgrov/nas/mfda/openmfda/flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef",
@@ -390,6 +434,9 @@ class PnRPlugin(pcbnew.ActionPlugin):
             odb.read_lef(db, lef_file)
         odb.read_def(db, def_file)
         board = pcbnew.GetBoard()
+        for tr in board.GetTracks():
+            board.Remove(tr)
+
         d = DefToPcbnew(db, board)
         d.place()
         d.route()
@@ -402,11 +449,27 @@ class PreviewPlugin(pcbnew.ActionPlugin):
         self.description = "A description of the plugin and what it does"
         self.show_toolbar_button = True
         self.icon_file_name = os.path.join(os.path.dirname(__file__), 'icon.png')
+        self.proc = None
 
     def Run(self):
-        print("****************************************************************")
-        frm = ExportFrame(None, title="OpenMFDA Place and Route")
-        frm.Show()
+        board = pcbnew.GetBoard()
+        filename = Path(board.GetFileName())
+        directory = filename.parent
+        scad_file = directory / "results" / (filename.stem + ".scad")
+        design = filename.stem
+        flow = "~/nas/mfda/openmfda/flow"
+        cmd = ["make", "-C", flow,
+               f"DESIGN={design}", "TIME_CMD=", f"DESIGN_CONFIG={directory}/config.mk",
+               f"LOG_DIR={directory}/results",  f"OBJECTS_DIR={directory}/results",
+               f"REPORTS_DIR={directory}/results", f"RESULTS_DIR={directory}/results",
+               "scad"]
+        sub = SubprocDialog(cmd, None, title="OpenMFDA")
+        sub.ShowModal()
+        if self.proc is None or (self.proc is not None and self.proc.poll() is not None):
+            cmd = ["openscad", str(scad_file)]
+            print(cmd)
+            proc = subprocess.Popen(cmd)
+
 
 class ExportPlugin(pcbnew.ActionPlugin):
     def defaults(self):
@@ -418,7 +481,19 @@ class ExportPlugin(pcbnew.ActionPlugin):
 
     def Run(self):
         print("****************************************************************")
-        frm = ExportFrame(None, title="OpenMFDA Place and Route")
-        frm.Show()
+        board = pcbnew.GetBoard()
+        filename = Path(board.GetFileName())
+        directory = filename.parent
+        design = filename.stem
+        flow = "~/nas/mfda/openmfda/flow"
+        cmd = ["make", "-C", flow,
+               f"DESIGN={design}", "TIME_CMD=", f"DESIGN_CONFIG={directory}/config.mk",
+               f"LOG_DIR={directory}/results",  f"OBJECTS_DIR={directory}/results",
+               f"REPORTS_DIR={directory}/results", f"RESULTS_DIR={directory}/results",
+               "slice"]
+        sub = SubprocDialog(cmd, None, title="OpenMFDA Render")
+        sub.ShowModal()
 
-PnRPlugin().register() # Instantiate and register to Pcbnew
+PnRPlugin().register()
+PreviewPlugin().register()
+ExportPlugin().register()

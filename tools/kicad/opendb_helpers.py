@@ -20,7 +20,12 @@ def wire_iter(wire):
         elif opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
             wire_type = dec.getWireType()
             yield (opcode, layer, (wire_type,))
-        elif opcode == odb.dbWireDecoder.POINT or opcode == odb.dbWireDecoder.POINT_EXT:
+        elif opcode == odb.dbWireDecoder.POINT_EXT:
+            point = dec.getPoint_ext()
+            prop = dec.getProperty()
+            print(point)
+            print(opcode, layer, (point, prop))
+        elif opcode == odb.dbWireDecoder.POINT
             point = dec.getPoint()
             prop = dec.getProperty()
             yield (opcode, layer, (point, prop))
