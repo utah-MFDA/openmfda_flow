@@ -557,12 +557,11 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
-$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
-	mkdir -p "$(RESULTS_DIR)"
+$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def  $(LIBRARY_DEPS)
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
-		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $(LOG_DIR)/5_1_scad_generate.log
+		--results_dir "$(shell dirname $<)" 2>&1 | tee $(LOG_DIR)/5_1_scad_generate.log
 
 %.stl: %.scad
 	$(TIME_CMD) $(OPENSCAD) -m make -o $@ -d $@.deps $< 2>&1 | tee $(LOG_DIR)/5_2_stl_render.log

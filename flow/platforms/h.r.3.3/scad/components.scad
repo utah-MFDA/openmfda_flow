@@ -1005,7 +1005,7 @@ module diffmix_25px_0(xpos, ypos, zpos, orientation){
 //diffmix_25px_0(2*90, 0, 0, "FS");
 //diffmix_25px_0(3*90, 0, 0, "S");
 
-module pinhole_325px_0(xpos, ypos, zpos, orientation){
+module pinhole_325px_met5(xpos, ypos, zpos, orientation){
 
     // Parameters
     d_pin   = 140*px;   // ~= 106*layer = 1.06mm;
