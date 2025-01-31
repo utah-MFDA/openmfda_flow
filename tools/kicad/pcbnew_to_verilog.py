@@ -1,27 +1,112 @@
 import itertools
-import math
-from kiutils.schematic import Schematic
 import pcbnew
 
 class PcbnewToVerilog:
-    def __init__(self, board, design):
+    def __init__(self, board, design, directory):
         self.design = design
         self.board = board
+        self.directory = directory
 
-    def print_verilog(self, outfile):
-        print(f"module {self.design} ();", file=outfile)
-        for net, item in self.board.GetNetsByName().items():
-            if len(str(net)):
-                print(f"\twire \\{net} ;", file=outfile) # Space after the name is important here!
-        for foot in self.board.GetFootprints():
-            module = foot.GetFieldText("Footprint").replace("h.r.3.3:", "")
-            name = foot.GetReference()
-            # Space after the name is important here!
-            print(f"\t\\{module} \\{name} (", file=outfile)
-            # Space after the name is important here!
-            print(*[f"\t\t.\\{pad.GetName()} (\\{pad.GetNetname()} )" for pad in foot.Pads() if len(str(pad.GetNetname()))], sep=",\n", file=outfile)
-            print("\t);", file=outfile)
-        print("endmodule", file=outfile)
+    def write_verilog(self):
+        with open(self.directory / (self.design + ".v"), "w") as outfile:
+            print(f"module {self.design} (", file=outfile)
+            ios = []
+            for foot in self.board.GetFootprints():
+                if foot.GetFieldText("Footprint") == "h.r.3.3:interconnect_4x8":
+                    for pad in foot.Pads():
+                        direction = pad.GetPinType()
+                        if "no_connect" in direction:
+                            continue
+                        if direction == "input" or direction == "power_in":
+                            dir = "input"
+                        elif direction == "output" or direction == "power_out":
+                            dir = "output"
+                        else:
+                            dir = "inout"
+                        # Space after name matters!
+                        ios.append(f"{dir} \\{pad.GetNetname()} ")
+            print(*ios, sep=",\n\t", file=outfile)
+            print(");", file=outfile)
+            for net, item in self.board.GetNetsByName().items():
+                net = str(net)
+                if len(net) and "unconnected" not in net:
+                    print(f"\twire \\{net} ;", file=outfile) # Space after the name is important here!
+            for foot in self.board.GetFootprints():
+                module = foot.GetFieldText("Footprint").replace("h.r.3.3:", "")
+                if module == "interconnect_4x8":
+                    continue
+                name = foot.GetReference()
+                # Space after the name is important here!
+                print(f"\t\\{module} \\{name} (", file=outfile)
+                # Space after the name is important here!
+                print(*[f"\t\t.\\{pad.GetPinFunction()} (\\{pad.GetNetname()} )" for pad in foot.Pads() if len(str(pad.GetNetname()))], sep=",\n", file=outfile)
+                print("\t);", file=outfile)
+            print("endmodule", file=outfile)
+
+    def write_makefile(self):
+        with open(self.directory / "config.mk", "w") as f:
+            print(f"""ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+
+export DESIGN_NAME     	= {self.design}
+
+export VERILOG_FILES 	= $(ROOT_DIR)/{self.design}.v
+export SDC_FILE      	= $(ROOT_DIR)/constraints.sdc
+export FOOTPRINT_TCL = $(ROOT_DIR)/pads.tcl
+export DIE_AREA    	 	= 0 0 2560 1600
+export CORE_AREA   	 	= 0 0 2550 1590
+""", file=f)
+
+    def write_pads(self):
+        pinholes = [footprint.GetReference()
+                    for footprint in self.board.GetFootprints()
+                    if footprint.GetFieldByName("Footprint").GetText() == "h.r.3.3:pinhole_325px_met5"]
+
+        bumps = [[None for i in  range(0,4)] for x in range(0,8)]
+        for footprint in self.board.GetFootprints():
+            if footprint.GetFieldByName("Footprint").GetText() != "h.r.3.3:interconnect_4x8":
+                continue
+            for pad in footprint.Pads():
+                # if pad.GetNetname().startswith("unconnected"):
+                #     continue
+                pin = int(pad.GetName()) - 1
+                bumps[pin // 4][pin % 4] = pad.GetNetname()
+
+        spots = ([("IO_NORTH", offset) for offset in range(330, 2560-330, 140)] +
+                 [("IO_WEST", offset) for offset in range(330, 1600 - 330, 140)] +
+                 [("IO_EAST", offset) for offset in range(1600-330, 330, -140)])
+        with open(self.directory / "pads.tcl", "w") as f:
+            print(f"""make_io_sites -horizontal_site IO_SIDE \\
+        -vertical_site IO_TOP \\
+        -corner_site IO_CORNER \\
+        -offset 0 \\
+        -rotation_vertical R90""", file=f)
+            for pinhole, (side, location) in zip(pinholes, spots):
+                print(f"""place_pad -master pinhole_325px_met5 -row {side} -location {location} {{{pinhole}}}""", file=f)
+            pitch_x = 90
+            pitch_y = 90
+            origin_x = 960
+            origin_y = 660
+            width = 40
+            height = 40
+            layer = "met10"
+            for column, nets in enumerate(bumps):
+                 for row, net in enumerate(nets):
+                     if net is not None and "unconnected" not in net:
+                         y = row * pitch_y + origin_y
+                         x = column * pitch_x + origin_x
+                         print(f"""place_pin -pin_name {net} -layer {layer} -location {{ {x} {y} }} -pin_size {{ {width} {height} }}""", file=f)
+            print("place_io_terminals */pad", file=f)
+            print("remove_io_rows", file=f)
+
+    def write_sdc_constraints(self):
+        with open(self.directory / "constraints.sdc", "w") as f:
+            print(f"current_design {self.design}", file=f)
+
+    def export(self):
+        self.write_verilog()
+        self.write_makefile()
+        self.write_pads()
+        self.write_sdc_constraints()
 
 if __name__ == "__main__":
     import sys
