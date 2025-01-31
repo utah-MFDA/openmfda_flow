@@ -124,6 +124,7 @@ endif
 export NUM_CORES := $(NPROC)
 
 #-------------------------------------------------------------------------------
+XVFB_CMD=xvfb-run
 # setup all commands used within this flow
 TIME_CMD=/usr/bin/time --verbose
 # TIME_TEST = $(shell $(TIME_CMD) echo foo 2>/dev/null)
@@ -567,7 +568,7 @@ $(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def  $(LIBRARY_DEPS)
 	$(TIME_CMD) $(OPENSCAD) -m make -o $@ -d $@.deps $< 2>&1 | tee $(LOG_DIR)/5_2_stl_render.log
 
 %.slices: %.stl
-	$(TIME_CMD) xvfb-run python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_VAL} $@ 2>&1 | tee $(LOG_DIR)/5_3_slicer.log
+	$(TIME_CMD) $(XBUF) python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_VAL} $@ 2>&1 | tee $(LOG_DIR)/5_3_slicer.log
 
 ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip: ${RESULTS_DIR}/${DESIGN}.slices
 	7z a -tzip $@ ${RESULTS_DIR}
