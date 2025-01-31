@@ -108,6 +108,7 @@ class PnRPlugin(pcbnew.ActionPlugin):
             board.Remove(tr)
 
         d = DefToPcbnew(db, board)
+        d.extract_layers()
         d.place()
         d.route()
         pcbnew.Refresh()

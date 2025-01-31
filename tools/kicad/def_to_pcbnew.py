@@ -6,9 +6,6 @@ class DefToPcbnew:
     def __init__(self, db, board):
         self.db = db
         self.board = board
-        self.layer_map = {}
-        self.net_map = {}
-        self._extract_layers()
 
     def scale(self, i):
         # Kicad stores sizes in nanometers, just fixed scale for integer math.
@@ -22,28 +19,22 @@ class DefToPcbnew:
     def convert_y(self, y):
         return 160000000 - y + 32000000
 
-    def _extract_layers(self):
+    def extract_layers(self):
         layers = self.db.getTech().getLayers()
         num_layers = self.db.getTech().getRoutingLayerCount()
+        self.board.SetCopperLayerCount(num_layers)
         i = -1
         for layer in self.db.getTech().getLayers():
+            # Layer names seem to be the same even if labelled differently in the UI.
             if layer.getType() == "ROUTING":
                 i += 1
+
                 if i == 0:
-                    name = (i, "B.Cu")
-                elif i == (num_layers - 1):
-                    name = (i, "F.Cu")
+                    # bottom layer is always id 31
+                    self.board.SetLayerName(31, layer.getName())
                 else:
-                    name = (i, f"In{num_layers - i - 1}.Cu")
-                self.layer_map[layer.getName()] = name
-        # self.board.SetCopperLayerCount(i+1)
-        # GetLayerName(aLayer)
-        # GetLayerID(self, aLayerName):
-        # SetLayerName(self, aLayer, aLayerName)
-        # GetStandardLayerName(aLayerId):
-        # SetLayerDescr(self, aIndex, aLayer)
-        # GetLayerType(self, aLayer)
-        # SetLayerType(self, aLayer, aLayerType):
+                    # top layer is 0, so set layers in reverse order
+                    self.board.SetLayerName(num_layers - i - 1, layer.getName())
         # Stackup is optional, may need to set
 
     def convert_location(self, comp, master):
@@ -131,20 +122,21 @@ class DefToPcbnew:
                 sx, sy, sext = map(self.scale, start)
                 knet = self.board.FindNet(net.getName())
                 if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
-                    start_id, start_name = self.layer_map[end.getBottomLayer().getName()]
-                    end_id, end_name = self.layer_map[end.getTopLayer().getName()]
-                    layers = [start_id, end_id]
+                    bottom_id = self.board.GetLayerID(end.getBottomLayer().getName())
+                    top_id = self.board.GetLayerID(end.getTopLayer().getName())
                     print("routing net", net.getName(),
                           "via at ", sx/1000000, sy/1000000,
                           "width", width/1000000,
-                          "layers", start_name, end_name)
+                          "layers", end.getBottomLayer().getName(),
+                          end.getTopLayer().getName())
                     via = pcbnew.PCB_VIA(self.board)
                     via.SetX(int(self.convert_x(sx)))
                     via.SetY(int(self.convert_y(sy)))
                     via.SetWidth(width)
-                    # todo layers
-                    # Todo need to set as blind via
+                    via.SetViaType(pcbnew.VIATYPE_BLIND_BURIED)
                     via.SetNetCode(knet.GetNetCode())
+                    via.SetTopLayer(top_id)
+                    via.SetBottomLayer(bottom_id)
                     self.board.Add(via)
                 else:
                     # If the track has an extension beyond the end point
@@ -157,7 +149,6 @@ class DefToPcbnew:
                     #     sy -= sext
                     #     ey += eext
                     track = pcbnew.PCB_TRACK(self.board)
-                    layer_id, layer_name = self.layer_map[layer.getName()]
                     print("routing net", net.getName(),
                           "trace from", sx/1000000, sy/1000000,
                           "to", ex/1000000, ey/1000000,
@@ -167,7 +158,7 @@ class DefToPcbnew:
                     track.SetX(int(self.convert_x(sx)))
                     track.SetY(int(self.convert_y(sy)))
                     track.SetWidth(width)
-                    track.SetLayer(layer_id)
+                    track.SetLayer(self.board.GetLayerID(layer.getName()))
                     track.SetNetCode(knet.GetNetCode())
 
                     self.board.Add(track)
