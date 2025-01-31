@@ -15,11 +15,12 @@ class DefToPcbnew:
         # scaling to 0.1mm per pixel
         return i * 100
 
+    # 32mm page offset.
     def convert_x(self, x):
-        return x # + 12000000 #256000000 - x
+        return x + 32000000
 
     def convert_y(self, y):
-        return y # + 12000000 # 160000000 - y
+        return y + 32000000
 
     def _extract_layers(self):
         layers = self.db.getTech().getLayers()
@@ -66,6 +67,8 @@ class DefToPcbnew:
 
         ori = comp.getOrient()
         x, y = map(self.scale, comp.getLocation())
+        x = self.convert_x(x)
+        y = self.convert_y(y)
         h = self.scale(master.getHeight())
         w = self.scale(master.getWidth())
         mx, my = map(self.scale, master.getOrigin())
@@ -130,7 +133,10 @@ class DefToPcbnew:
                     start_id, start_name = self.layer_map[end.getBottomLayer().getName()]
                     end_id, end_name = self.layer_map[end.getTopLayer().getName()]
                     layers = [start_id, end_id]
-                    print("routing net", net.getName(), "via at ", sx/1000000, sy/1000000, "width", width/1000000, "layers", start_name, end_name)
+                    print("routing net", net.getName(),
+                          "via at ", sx/1000000, sy/1000000,
+                          "width", width/1000000,
+                          "layers", start_name, end_name)
                     via = pcbnew.PCB_VIA(self.board)
                     via.SetX(int(self.convert_x(sx)))
                     via.SetY(int(self.convert_y(sy)))
@@ -142,7 +148,7 @@ class DefToPcbnew:
                 else:
                     # If the track has an extension beyond the end point
                     ex, ey, eext = map(self.scale, end)
-                    # Kicad seems to add the extension.
+                    # Kicad does add the extension, point specified is center of trace.
                     # if ey == sy:
                     #     sy -= sext
                     #     ey += eext
@@ -151,7 +157,10 @@ class DefToPcbnew:
                     #     ey += eext
                     track = pcbnew.PCB_TRACK(self.board)
                     layer_id, layer_name = self.layer_map[layer.getName()]
-                    print("routing net", net.getName(), "trace from", sx/1000000, sy/1000000, "to", ex/1000000, ey/1000000, "width", width/1000000)
+                    print("routing net", net.getName(),
+                          "trace from", sx/1000000, sy/1000000,
+                          "to", ex/1000000, ey/1000000,
+                          "width", width/1000000)
                     track.SetEndX(int(self.convert_x(ex)))
                     track.SetEndY(int(self.convert_y(ey)))
                     track.SetX(int(self.convert_x(sx)))
