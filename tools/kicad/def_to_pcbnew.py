@@ -20,7 +20,7 @@ class DefToPcbnew:
         return x + 32000000
 
     def convert_y(self, y):
-        return y + 32000000
+        return 160000000 - y + 32000000
 
     def _extract_layers(self):
         layers = self.db.getTech().getLayers()
@@ -60,6 +60,7 @@ class DefToPcbnew:
 
 
         # KiCad behavior:
+        # Grid is pos y is down
         # the origin of the component is always the same corner.
         # The position of the component is always the origin.
         # Flipped flag is vertical flip across the x-axis at origin.
@@ -78,19 +79,19 @@ class DefToPcbnew:
         if ori == "R0" or ori == "N":
             return (x, y, 0.0, False)
         elif ori == "R90" or ori == "W":
-            return (x + w, y, 90.0, False)
+            return (x + h, y, 90.0, False)
         elif ori == "R180" or ori == "S":
-            return (x + w, y + h, 180.0, False)
+            return (x + w, y - h, 180.0, False)
         elif ori == "R270" or ori == "E":
-            return (x, y + w, 180.0, False)
+            return (x, y - w, -90.0, False)
         elif ori == "MY" or ori == "FN":
             return (x + w, y, 180.0, True)
         elif ori == "MX" or ori == "FS":
-            return (x, y + h, 0.0, True)
+            return (x, y - h, 0.0, True)
         elif ori == "MX90" or ori == "FW" or ori == "MXR90":
             return (x, y, 90.0, True)
         elif ori == "MY90" or ori == "FE" or ori == "MYR90":
-            return (x + h, y + w, 90.0, True)
+            return (x + h, y - w, -90.0, True)
         else:
             raise ValueError(f"Unexpected orientation '{ori}', should be one of R0, R180, R90, R270, MY, MX, MX90, MXR90, MY90, or MYR90. Or N,S,E,W,FN,FS,FE, or FW")
 
