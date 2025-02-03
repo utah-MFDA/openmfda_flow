@@ -4,11 +4,18 @@ import copy
 from math import sqrt
 
 
+#<<<<<<< HEAD
 # this script tries to order the routes in consecutive segments
 def link_routes(route, route_devs, debug=False, design='', component_list=None,
                 components_lef=None, comp_dict=None, pin_list=None,
                 report_route=False, subsegment=True, def_scale=1000,
                 px_sz=7.6e-3, pt_err=0.05
+# =======
+# def link_routes(route, route_devs, debug=False, design='', component_list=None,
+#                     components_lef=None, comp_dict=None, pin_list=None,
+#                     report_route=False, subsegment=True,def_scale=1000,
+#                     px_sz = 7.6e-3, pt_err=0.05
+# >>>>>>> dafa4f78692090b001f90a8bea2fe60ae248bc31
                 ):
 
     cp_route = copy.deepcopy(route)
