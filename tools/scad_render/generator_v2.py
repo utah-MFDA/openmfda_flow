@@ -16,9 +16,13 @@ import regex
 import json
 import csv
 import pandas as pd
+import networkx as nx
 
 from generator_class import NetBuilder
 from generator_class import Pin, Component, Nets
+#from route_scripts import link_routes, convert_layers, convert_lengths, get_intersections
+#from route_scripts import check_net_intersections
+import route_scripts
 import component_parse
 
 ## Regex parsing
@@ -26,7 +30,7 @@ pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$'
 pin_line_reg  = r'^\s*-\s*(?P<pin>\w*)\s*\+\s*NET\s*(?P<net>\w*)\s*\+\s*DIRECTION\s*(?P<dir>\w*)\s*\+\sUSE\s*SIGNAL\s*\+\s*PORT\s*\+\s*LAYER\s*(?P<layer>\w*)\s*(\(\s*(?P<lx1>[-\d]*)\s*(?P<ly1>[-\d]*)\s*\))\s*(\(\s*(?P<lx2>[-\d]*)\s*(?P<ly2>[-\d]*)\s*\))\s*\+\s*FIXED\s*(\(\s*(?P<fx1>\d*)\s*(?P<fy1>\d*)\s*\)\s*(?P<fdir>\w))\s*;'
 
 comp_block_reg = r'^COMPONENTS\s*\d*\s*;\w*\n(?|.*\n)*END\s*COMPONENTS$'
-comp_line_reg = r'^\s*-\s*(?P<name>\w*)\s*(?P<comp>\w*)\s*\+\s*PLACED\s*(\(\s*(?P<x1>\d*)\s*(?P<y1>\d*)\s*\)\s*(?P<dir>\w*))\s*;'
+comp_line_reg = r'^\s*-\s*(?P<name>\w*)\s*(?P<comp>\w*)\s*\+\s*(?:PLACED|FIXED)\s*(\(\s*(?P<x1>\d*)\s*(?P<y1>\d*)\s*\)\s*(?P<dir>\w*))\s*;'
 
 nets_block_reg = r'^NETS\s*\d*\s*;\w*\n(?|.*\n)*END\s*NETS$'
 #nets_line_reg = r'-\s*(?P<net>\w*)\s*(\(\s*(?P<dev1>\w*)\s*(?P<p1>\w*)\s*\))\s*(\(\s*(?P<dev2>\w*)\s*(?P<p2>\w*)\s*\))\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
@@ -55,6 +59,10 @@ mets = {
     'met8':7,
     'met9':8,
 }
+
+run_u_adjustment_script = False
+
+METS = mets
 
 
 def get_pins(in_def, in_pins_cdir, debug=False):
@@ -306,9 +314,12 @@ hc_net_property = {
 }
 
 
-def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None,
-             pins=None, components=None, component_lef=None, debug={}, testing=False,
-             dimm_file=None):
+def get_nets(in_def, design, tlef=None, tlef_property=None,
+             report_len_file=None, pins=None, components=None,
+             component_lef=None, debug={}, testing=False,
+             dimm_file=None, report_route_net_file=None,
+             gen_with_px_conversion=True, skip_u_adj=(not run_u_adjustment_script)
+             ):
 
     mod_re = bytes(nets_block_reg, 'utf-8')
     tlef_f = './def_test/test_1.tlef'
@@ -427,41 +438,123 @@ def get_nets(in_def, design, tlef=None, tlef_property=None, report_len_file=None
             nb.set_dimm(dimm_file[l.group('net')])
 
 
-
-
-
         nets_list.append(nb.export_net())
 
+    if gen_with_px_conversion:
+        def_scale = 7.6e-6
+        # def_scale = 1e3
+        # px_size = 7.6e-3
+    else:
+        def_scale = 1000
+        px_size = 1
+
     for n in nets_list:
+        print("ROUTE:",n.route)
         if 'compress_routes' in debug and debug['compress_routes'] is True:
             n.compress_routes(debug=True, design=design)
+            # linked_net = link_routes(n.route, n.devs, debug=True, design=design)
         else:
             if components is None:
-                n.compress_routes(design=design, pin_list=pins)
+                n.compress_routes(design=design, pin_list=pins, def_scale=def_scale)
+                # linked_net = link_routes(
+                #     n.route,
+                #     n.devs,
+                #     debug=True,
+                #     design=design,
+                #     pin_list=pins,
+                #     def_scale=def_scale,
+                #     px_sz=px_size
+                # )
             else:
-                n.compress_routes(design=design, pin_list=pins, component_list=components, components_lef=component_lef, comp_dict=comp_dict)
+                n.compress_routes(design=design, pin_list=pins, component_list=components,
+                                  components_lef=component_lef, comp_dict=comp_dict,
+                                  def_scale=def_scale)
+                # linked_net = link_routes(
+                #     n.route,
+                #     n.devs,
+                #     debug=True,
+                #     design=design,
+                #     pin_list=pins,
+                #     component_list=components,
+                #     components_lef=component_lef,
+                #     def_scale=def_scale,
+                #     px_sz=px_size
+                # )
 
-    if report_len_file is not None:
-        route_len_dict = {}
-        route_graph_dict = {}
-        for n in nets_list:
+        if gen_with_px_conversion:
             n.convert_layers(nb)
-            route_len_dict[n.net] = n.report_len()
-            route_graph_dict[n.net] = n.report_route_graph()
-        route_len_l = zip(*[route_len_dict.keys(),route_len_dict.values()])
-        pd.DataFrame(
-            route_len_l,
-            columns=['wire', 'length (mm)']).to_csv(report_len_file)
-        if '/' in report_len_file:
-            dirname = os.path.dirname(report_len_file)+'/'
-        else:
-            dirname = ''
-        # if os.path.isfile(dirname+f"{design}_route_nets.json"):
-            # os.remove(dirname+f"{design}_route_nets.json")
-        with open(dirname+f"{design}_route_nets.json", "w+") as of_rnets:
-            of_rnets.write(json.dumps(route_graph_dict))
+            # linked_net = convert_layers(
+            #     linked_net,
+            #     METS,
+            # )
+    segment_limit = 120*7.6e-3
 
-    return nets_list
+    if not skip_u_adj:
+        # used to remove unnessary "u-turn vias"
+        #   currently removes too many pts
+        for net1 in nets_list:
+            if isinstance(net1.route, nx.Graph):
+                print(f"Analyzing {net1.net}")
+                for subnet in net1.route.nodes:
+                    print(f"rt: {net1.route.nodes[subnet]['route']}")
+                    # print(net1.route.nodes[subnet])
+                    net1.route.nodes[subnet]['route'] = \
+                        route_scripts.u_adjustments(
+                            route=net1.route.nodes[subnet]['route'],
+                            other_rt=[
+                                ch_net.route.nodes[ck_subnet]['route']
+                                for ch_net in nets_list if ch_net.net != net1.net
+                                for ck_subnet in ch_net.route.nodes
+                            ],
+                            u_len_limit=segment_limit
+                        )
+                    net1.route.nodes[subnet]['route'] = \
+                        route_scripts.u_adjustments(
+                            route=net1.route.nodes[subnet]['route'],
+                            other_rt=[
+                                ch_net.route.nodes[ck_subnet]['route']
+                                for ch_net in nets_list if ch_net.net != net1.net
+                                for ck_subnet in ch_net.route.nodes
+                            ],
+                            u_len_limit=segment_limit
+                        )
+                    net1.route.nodes[subnet]['route'] = \
+                        route_scripts.u_adjustments(
+                            route=net1.route.nodes[subnet]['route'],
+                            other_rt=[
+                                ch_net.route.nodes[ck_subnet]['route']
+                                for ch_net in nets_list if ch_net.net != net1.net
+                                for ck_subnet in ch_net.route.nodes
+                            ],
+                            u_len_limit=segment_limit
+                        )
+                    print(f"after\nrt: {net1.route.nodes[subnet]['route']}\n")
+            if isinstance(net1.route, list):
+                print("Route flattening not support")
+
+
+    # check for intersections
+    intersect_pts = {}
+    for net1 in nets_list:
+        for net2 in nets_list:
+            if net1.net == net2.net:
+                continue
+            # TODO update to check routes instead of combining them
+            i = route_scripts.check_net_intersections(
+                    net1.get_list(),
+                    net2.get_list()
+            )
+            if len(i) > 0:
+                if net1 not in intersect_pts:
+                    intersect_pts[net1.net] = {}
+                intersect_pts[net1.net][net2.net] = i
+
+    # if len(intersect_pts) > 0:
+    #     intersct_file = "net_intersections.json"
+    #     with open(intersct_file, "w+") as insct_f:
+    #         insct_f.write(str(intersect_pts))
+
+    return nets_list, intersect_pts
 
 
 def get_net_lines(in_net):
@@ -497,7 +590,12 @@ def get_net_route(in_net_line):
 
 def write_nets(o_file, net_list, shape='cube',
                size=[14, 14, 10], mode="w+",
-               dimm_file=None, init_size=[14, 14, 10]):
+               dimm_file=None, init_size=[14, 14, 10],
+               report_len_file=None, report_route_net_file=None,
+               tlef=None, tlef_property=None,
+               dim_is_converted=False, poly_px_module=False,
+               px_conversion=1
+               ):
 
     rot = [0, [0,0,1]]
 
@@ -506,8 +604,38 @@ def write_nets(o_file, net_list, shape='cube',
     f = open(o_file, mode)
     nl = '\n'
 
+    if poly_px_module:
+        route_module = poly_px_module
+    else:
+        route_module = "polychannel_route"
+
+
     def convert_size(sz):
-        return f"[{sz[0]}*px, {sz[1]}*px, {sz[2]}*layer]"
+        if poly_px_module:
+            return f"[{sz[0]}, {sz[1]}, {sz[2]}]"
+        else:
+            return f"[{sz[0]}*px, {sz[1]}*px, {sz[2]}*layer]"
+
+    if tlef_property is None:  # load defaults
+        nb = NetBuilder(
+            px        =hc_net_property['px'],
+            layer     =hc_net_property['layer'],
+            lpv       =hc_net_property['lpv'],
+            def_scale =hc_net_property['def_scale'],
+            bottom_layers=hc_net_property['bot_layers']
+        )
+        s = hc_net_property['px']*1000/hc_net_property['def_scale']
+    else:
+        nb = NetBuilder(
+            px        =tlef_property['px'],
+            layer     =tlef_property['layer'],
+            lpv       =tlef_property['lpv'],
+            def_scale =tlef_property['def_scale'],
+            bottom_layers=tlef_property['bot_layers']
+        )
+        s = tlef_property['px']*1000/tlef_property['def_scale']
+    nb.import_tlef(tlef)
+    nb.import_met(mets)
 
     #print(net_list[0])
 
@@ -572,39 +700,37 @@ def write_nets(o_file, net_list, shape='cube',
             else:
                 r_str = f'({r})'
 
-            f.write(f"""polychannel_route("{n.net}{r_str}",
+            f.write(f"""{route_module}("{n.net}{r_str}",
         [{dev_str}],
         [],
 {pc_route.replace('"[','[').replace(']"',']')}{nl});
         """)
 
-        #if n.dangle_routes:
-        #    for dr in n.dangling_routes:
-        #        pc_route = []
-        #        for r in dr['route']:
-        #            size = size
-        #            pt = r
-        #
-        #            pc_pt1 = [shape, size, pt, rot]
-        #            #pc_pt2 = [shape, size, pt2, rot]
-        #            pc_route.append(pc_pt1)
-        #
-        #        pc_route = str(pc_route).replace(']],', ']],\n').replace("'", '"')#
-        #
-        #        #["{n.dev1}", "{n.p1}"], ["{n.dev2}", "{n.p2}"],
-        #        dev_str = ''.join([f"""["{x['dev']}", "{x['port']}"], """for x in n.devs])
-        #
-        #        f.write(f"""polychannel_route("{n.net}",
-        #[{dev_str}],
-        #[],
-#{pc_route}{nl});
-        #""")
-
-
-        # if rend == None:
-        #     rend = pc_route
-        # else:
-        #     rend += pc_route
+        if report_len_file is not None:
+            route_len_dict = {}
+            route_graph_dict = {}
+            for n in net_list:
+                if not dim_is_converted:
+                    n.convert_layers(nb)
+                    n.convert_lengths(nb, px_conversion)
+                route_len_dict[n.net] = n.report_len()
+                route_graph_dict[n.net] = n.report_route_graph()
+            route_len_l = zip(*[route_len_dict.keys(),route_len_dict.values()])
+            pd.DataFrame(
+                route_len_l,
+                columns=['wire', 'length (mm)']).to_csv(report_len_file)
+            if '/' in report_len_file:
+                dirname = os.path.dirname(report_len_file)+'/'
+            else:
+                dirname = ''
+            # if os.path.isfile(dirname+f"{design}_route_nets.json"):
+                # os.remove(dirname+f"{design}_route_nets.json")
+            if report_route_net_file is None:
+                with open(dirname+f"{design}_route_nets.json", "w+") as of_rnets:
+                    of_rnets.write(json.dumps(route_graph_dict, indent=4))
+            else:
+                with open(report_route_net_file, "w+") as of_rnets:
+                    of_rnets.write(json.dumps(route_graph_dict, indent=4))
     f.close()
 
     if dimm_file is not None and isinstance(dimm_file, dict):
@@ -846,6 +972,7 @@ def main(
         res,
         dimm_file,
         tlef,
+        o_file,
         def_scale=1000,
         comp_file=None,
         pin_con_dir_f=None,
@@ -858,7 +985,9 @@ def main(
         routing_scad=None,
         scad_bulk=None,
         scad_src_dir='.',  # './support_libs'
-        scad_includes=[]
+        scad_includes=[],
+        length_out_file=None,
+        route_net_file=None
         ):
 
     print("""
@@ -883,7 +1012,7 @@ def main(
     if isinstance(scad_includes, str):
         scad_includes = [scad_includes]
 
-    o_file = f"{results_dir}/{design}.scad"
+    #o_file = f"{results_dir}/{design}.scad"
 
     net_properties = {
         'px':px,
@@ -955,21 +1084,45 @@ show_lefs=false ;
         dimm_ = None
 
     # write nets (routes)
-    write_nets(
-        o_file,
-        get_nets(
+    # lengths are not reported in this step
+    nets_list, net_intersects = get_nets(
             def_file,
             design,
             tlef,
             net_properties,
-            report_len_file=results_dir+'/'+len_file,
+            report_len_file=length_out_file,
             pins=io_list if add_comp_to_routes else None,
             components=comp_list if add_comp_to_routes else None,
-            component_lef = component_merge_lef),
+            component_lef = component_merge_lef,
+            report_route_net_file=route_net_file
+        )
+
+    if len(net_intersects) > 0:
+        pt_reg = r"\[\s*(\d+[.]?\d*),\s*(\d+[.]?\d*),\s*(\d+[.]?\d*)\s*\]"
+        intersct_file = os.path.dirname(o_file) + "/net_intersections.json"
+        with open(intersct_file, "w+") as insct_f:
+            insct_f.write(
+                re.sub(
+                    pt_reg,
+                    r"[\1, \2, \3]",
+                    json.dumps(net_intersects, indent=4),
+                    re.MULTILINE)
+            )
+            #insct_f.write("{"+str(net_intersects)+"}")
+
+
+    write_nets(
+        o_file,
+        nets_list,
         shape='cube',
         size=[14,14,10],
         mode='a',
-        dimm_file=dimm_)
+        dimm_file=dimm_,
+        report_len_file=length_out_file,
+        report_route_net_file=route_net_file,
+        tlef=tlef,
+        tlef_property=net_properties
+    )
     # pins=io_list,
     # components=comp_list)
 
@@ -986,7 +1139,11 @@ show_lefs=false ;
         tp = ''
     with open(o_file, 'a') as of:
         of.write(f"""
-{tp}interconnect_32channel({xbulk/2}, {ybulk/2}, {zbulk});
+if($preview) {fb}
+    {tp}%interconnect_32channel({xbulk/2}, {ybulk/2}, {zbulk});
+{bb} else {fb}
+    {tp}interconnect_32channel({xbulk/2}, {ybulk/2}, {zbulk});
+{bb}
 """)
 
     print("""
@@ -1026,11 +1183,21 @@ if __name__ == "__main__":
     parser.add_argument('--transparent_bulk', action='store_true', default=False)
     parser.add_argument('--no_copy_include', action='store_true', default=False)
 
+    parser.add_argument('--scad_out_file', type=str, default=None)
+
     parser.add_argument('--component_file', type=str, default=None)
     parser.add_argument('--routing_file', type=str, default=None)
     parser.add_argument('--scad_include', type=str, nargs='*')
 
+    parser.add_argument('--length_out', type=str, default=None)
+    parser.add_argument('--route_map_out', type=str, default=None)
+
+    parser.add_argument('--use_poly_px_mod', type=str, default=None)
+
     args = parser.parse_args()
+
+    if args.scad_out_file is None:
+        args.scad_out_file = f"{args.results_dir}/{args.design}.scad"
 
     if args.tlef is not None and args.tlef_file is not None:
         raise ValueError("Cannot define both --tlef and --tlef_file")
@@ -1052,6 +1219,15 @@ if __name__ == "__main__":
     if args.dimm_file == '':
         args.dimm_file = None
 
+    if args.length_out is None:
+        args.length_out = f"{args.results_dir}/{args.design}_length.csv"
+
+    if args.route_map_out is None:
+        args.route_map_out = f"{args.results_dir}/{args.design}_route_nets.json"
+
+    if args.use_poly_px_mod is None:
+        args.use_poly_px_mod = False
+
     main(
         args.platform,
         args.design,
@@ -1070,14 +1246,17 @@ if __name__ == "__main__":
         args.res,
         args.dimm_file,
         args.tlef,
-        args.def_scale,
-        args.comp_file,
-        args.pin_file,
-        args.pcell_file,
+        o_file=args.scad_out_file,
+        def_scale=args.def_scale,
+        comp_file=args.comp_file,
+        pin_con_dir_f=args.pin_file,
+        pcell_file=args.pcell_file,
         transparent=args.transparent_bulk,
         no_copy_include=args.no_copy_include,
         add_comp_to_routes=add_comps,
         component_merge_lef=args.lef_file,
         routing_scad=args.routing_file,
-        scad_includes=args.scad_include
+        scad_includes=args.scad_include,
+        length_out_file=args.length_out,
+        route_net_file=args.route_map_out
     )

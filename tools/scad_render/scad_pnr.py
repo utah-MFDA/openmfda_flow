@@ -551,7 +551,7 @@ if __name__ == "__main__":
                     help="The design name.")
     ap.add_argument('--def_file', metavar='<path>', dest='def_file', type=str,
                     help="Path to the .def file from OpenROAD flow.")
-    ap.add_argument('--lef_file', metavar='<path>', dest='lef_file', type=str,
+    ap.add_argument('--lef_file', metavar='<path>', dest='lef_file', type=str, nargs='+',
                     help="Path to the .lef file from OpenROAD flow.")
     ap.add_argument('--routing_file', metavar='<path>', dest='routing_file', type=str,
                     help="Path to the scad routing definitions.")
@@ -585,11 +585,17 @@ if __name__ == "__main__":
                     help="Resolution of the scad rendering.")
     ap.add_argument('--dimm_file', metavar='<path>', dest='dimm_file', type=str,
                     help="Optional .csv file with routing dimensions.", default = None)
+    ap.add_argument('--pcell_file', metavar='<path>', dest='pcell_file', type=str,
+                    help="Optional .csv file with pcell parameters.", default = None)
     args = ap.parse_args()
 
     db = odb.dbDatabase.create()
     odb.read_lef(db, args.tlef_file)
-    odb.read_lef(db, args.lef_file)
+    if isinstance(args.lef_file, str):
+        odb.read_lef(db, args.lef_file)
+    if isinstance(args.lef_file, list):
+        for lef in args.lef_file:
+            odb.read_lef(db, lef)
     odb.read_def(db, args.def_file)
     scad_pnr(db,
              args.component_file,
