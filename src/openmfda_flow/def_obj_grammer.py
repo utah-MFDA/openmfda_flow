@@ -57,6 +57,7 @@ def import_def_parser():
 
     cmp_st : "-" CNAME CNAME [("+" cmp_prop)*]
     cmp_prop : "PLACED" pt (CNAME|ORIENT)
+        | "FIXED" pt (CNAME|ORIENT)
 
     net_st : "-" CNAME [strnet+] [("+" net_prop)*]
     !net_prop : "USE" ("SIGNAL")
@@ -64,7 +65,7 @@ def import_def_parser():
 
     net_route : net_segment [("NEW" net_segment)*]
     net_segment : CNAME net_pt (net_pt|CNAME)
-    net_pt : "(" (INT|"*") (INT|"*") [INT] ")"
+    !net_pt : "(" (INT|"*") (INT|"*") [INT] ")"
 
     rect : CNAME pt pt
 

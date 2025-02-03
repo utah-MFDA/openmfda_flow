@@ -57,6 +57,7 @@ def import_def_parser():
 
     cmp_st : "-" CNAME CNAME [("+" cmp_prop)*]
     cmp_prop : "PLACED" pt (CNAME|ORIENT)
+        | "FIXED" pt (CNAME|ORIENT)
 
     net_st : "-" CNAME [strnet+] [("+" net_prop)*]
     !net_prop : "USE" ("SIGNAL")

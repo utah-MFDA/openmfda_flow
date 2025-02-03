@@ -5,10 +5,12 @@ import json
 import os
 import sys
 
-if __name__ != "__main__":
-    import openmfda_flow.def_obj_grammer as def_grammer
-else:
-    import def_obj_grammer as def_grammer
+# if __name__ != "__main__":
+#     import openmfda_flow.def_obj_grammer as def_grammer
+# else:
+if os.path.abspath(__file__) in sys.path:
+    sys.path.append(os.path.abspath(__file__))
+import def_obj_grammer as def_grammer
 # import def_obj_grammer as def_grammer
 
 
@@ -19,7 +21,7 @@ BUSBITCHARS "[]" ;"""
 
 
 class Design:
-    def __init__(self, design_name):
+    def __init__(self, design_name=''):
         self.design_name = design_name
         self.rows = []
         self.tracks = []
@@ -30,7 +32,13 @@ class Design:
         self.nets = {}
         self.unit = 1
         self.units_str = ""
-        self.dieA = [[0,0], [0,0]]
+        self.dieA = [[0, 0], [0, 0]]
+
+    def import_def(self, def_file):
+        if os.path.exists(def_file):
+            parser = def_grammer.import_def_parser()
+            with open(def_file, "r") as in_def:
+                return Def_transformer().transform(parser.parse(in_def.read()))
 
     def add_row(self, new_row):
         pass
@@ -61,12 +69,16 @@ class Design:
         if property == "type":
             self.components[comp_inst].set_component_type(value)
         elif property == "pos" or property == "position":
-            self.components[comp_inst].set_pos([value[0]*self.unit,value[1]*self.unit])
+            self.components[comp_inst].set_pos(
+                [value[0]*self.unit, value[1]*self.unit])
         elif property == "raw_pos" or property == "raw_position":
             self.components[comp_inst].set_pos(value)
 
     def get_component_names(self):
         return list(self.components.keys())
+
+    def export_component_obj_list(self):
+        return list(self.components.values())
 
     def write_units(self):
         return f"UNITS {self.units_str} ;"
@@ -75,7 +87,7 @@ class Design:
         return f"DIEAREA ( {self.dieA[0][0]} {self.dieA[0][1]} ) ( {self.dieA[1][0]} {self.dieA[1][1]} ) ;"
 
     def print_def(self, out_file=None):
-        #with open(out_file, "w+") as def_of:
+        # with open(out_file, "w+") as def_of:
         print(write_def_header()+'\n')
         print(f'DESIGN {self.design_name} ;' + '\n')
         print(self.write_units() + '\n')
@@ -84,10 +96,12 @@ class Design:
         print('\n'.join([r.write_track() for r in self.tracks]) + '\n')
         print('\n'.join([r.write_gcellgrid() for r in self.gcellgrid]) + '\n')
         print(f'COMPONENTS {len(self.components)} ;' + '\n')
-        print('\n'.join(['    '+c.write_component() for c in self.components.values()]) + '\n')
+        print('\n'.join(['    '+c.write_component()
+              for c in self.components.values()]) + '\n')
         print('END COMPONENTS\n')
         print(f'PINS {len(self.pins)} ;' + '\n')
-        print('\n'.join(['    '+p.write_pin() for p in self.pins.values()]) + '\n')
+        print('\n'.join(['    '+p.write_pin()
+              for p in self.pins.values()]) + '\n')
         print('END PINS\n')
         print(f'NETS {len(self.nets)} ;' + '\n')
         print('\n'.join([''+n.write_net() for n in self.nets.values()]) + '\n')
@@ -101,20 +115,24 @@ class Design:
             def_of.write(self.write_units() + '\n')
             def_of.write(self.write_die_area() + '\n')
             def_of.write('\n'.join([r.write_row() for r in self.rows]) + '\n')
-            def_of.write('\n'.join([r.write_track() for r in self.tracks]) + '\n')
-            def_of.write('\n'.join([r.write_gcellgrid() for r in self.gcellgrid]) + '\n')
+            def_of.write('\n'.join([r.write_track()
+                         for r in self.tracks]) + '\n')
+            def_of.write('\n'.join([r.write_gcellgrid()
+                         for r in self.gcellgrid]) + '\n')
             def_of.write(f'COMPONENTS {len(self.components)} ;' + '\n')
-            #def_of.write('\n'.join(['    '+str(c) for c in self.components.values()]) + '\n')
-            def_of.write('\n'.join(['    '+c.write_component() for c in self.components.values()]) + '\n')
+            # def_of.write('\n'.join(['    '+str(c) for c in self.components.values()]) + '\n')
+            def_of.write('\n'.join(['    '+c.write_component()
+                         for c in self.components.values()]) + '\n')
             def_of.write('END COMPONENTS\n')
             def_of.write(f'PINS {len(self.pins)} ;' + '\n')
-            def_of.write('\n'.join(['    '+p.write_pin() for p in self.pins.values()]) + '\n')
+            def_of.write('\n'.join(['    '+p.write_pin()
+                         for p in self.pins.values()]) + '\n')
             def_of.write('END PINS\n')
             def_of.write(f'NETS {len(self.nets)} ;' + '\n')
-            def_of.write('\n'.join([''+n.write_net() for n in self.nets.values()]) + '\n')
+            def_of.write('\n'.join([''+n.write_net()
+                         for n in self.nets.values()]) + '\n')
             def_of.write('END NETS\n')
             def_of.write('END DESIGN')
-
 
 
 class Row:
@@ -145,6 +163,15 @@ class Tracks:
         self.step_dir_1 = step_dir_1
         self.layer = layer
 
+    def export_as_dict(self):
+        return {
+            'direction': self.dir,
+            'origin': self.origin,
+            'num_steps': self.num_dir_1,
+            'step_space': self.step_dir_1,
+            'layer': self.layer
+        }
+
     def write_track(self):
         return f"TRACKS {self.dir} {self.origin} DO {self.num_dir_1} STEP {self.step_dir_1} LAYER {self.layer} ;"
 
@@ -163,6 +190,7 @@ class GCellGrid:
 class Component:
     def __init__(self, instance_name, component_type):
         self.instance_name = instance_name
+        self.name = self.instance_name
         self.component_type = component_type
         self.is_placed = False
         self.pos = [0, 0]
@@ -177,10 +205,19 @@ class Component:
     def set_component_type(self, component):
         self.component_type = component
 
+    def export_properties(self):
+        return {
+            'name': self.instance_name,
+            'comp_type': self.component_type,
+            'isPlaced': self.is_placed,
+            'pos': self.pos,
+            'orientation': self.orientation
+        }
+
     def write_component(self):
         return f"- {self.instance_name} {self.component_type} + " + \
             f"{'PLACED' if self.is_placed else ''} " + \
-            f"( {self.pos[0]} {self.pos[1]} ) ;"
+            f"( {self.pos[0]} {self.pos[1]} ) {self.orientation} ;"
 
 
 class Pin:
@@ -189,8 +226,8 @@ class Pin:
         self.pin_net = pin_net
         self.dir = direction
         self.use = use
-        self.size = [[0,0], [0,0], ""]
-        self.pos = [[0,0], ""]
+        self.size = [[0, 0], [0, 0], ""]
+        self.pos = [[0, 0], ""]
 
     def set_layer(self, pt1, pt2, layer):
         self.size[0] = pt1
@@ -200,8 +237,7 @@ class Pin:
     def set_pos(self, pt, layer):
         self.pos[0][0] = pt[0]
         self.pos[0][1] = pt[1]
-        self.pos[1]    = layer
-
+        self.pos[1] = layer
 
     def write_pin(self):
         return f"""    - {self.pin_name} + NET {self.pin_net} + DIRECTION {self.dir} + USE {self.use}
@@ -232,7 +268,6 @@ class Net:
             else:
                 return f"NEW {pt_str}"
 
-
     def __init__(self, net_name):
         self.net_name = net_name
         self.net_components = {}
@@ -240,21 +275,46 @@ class Net:
 
     def add_component(self, comp_inst, comp_port):
         if comp_inst in self.net_components:
-            raise ValueError(f"Component {comp_inst} already defined in net {self.net_name}")
+            raise ValueError(
+                f"Component {comp_inst} already defined in net {self.net_name}")
         self.net_components[comp_inst] = comp_port
 
     def add_segment(self, s_layer, s_pt1, s_pt2):
         if isinstance(s_pt2, list):
-            self.net_segments.append(self.segement(s_layer, s_pt1, s_pt2, is_via=False))
+            self.net_segments.append(self.segement(
+                s_layer, s_pt1, s_pt2, is_via=False))
         elif isinstance(s_pt2, str):
-            self.net_segments.append(self.segement(s_layer, s_pt1, s_pt2, is_via=True))
+            self.net_segments.append(self.segement(
+                s_layer, s_pt1, s_pt2, is_via=True))
         else:
             raise ValueError("Pt2 is not of correct type "+str(type(s_pt2)))
 
+    def export_as_list(self, as_3pts=False, via_map={}):
+        if as_3pts:
+            if not isinstance(via_map, dict):
+                Exception("Via map not formated correctly, expecting dictionary")
+            if len(via_map) == 0:
+                Exception(f"Via map not defined for empty: {via_map}")
+            seg_list = []
+            for seg in self.net_segments:
+                if isinstance(seg.pt2, str):
+                    seg_list += [[seg.pt1+[via_map[seg.pt2][0]],
+                                 seg.pt1+[via_map[seg.pt2][1]]]]
+                else:
+                    seg_list += [[seg.pt1+[seg.layer], seg.pt2+[seg.layer]]]
+            return seg_list
+        else:
+            return [[s.pt1, s.pt2, s.layer] for s in self.net_segments]
+
     def write_net(self):
         nl = '\n        '
-        return f"""    - {self.net_name} {' '.join(['( '+c[0]+' '+c[0]+' )' for c in self.net_components.items()])} + USE SIGNAL
-        + {nl.join([r.write_segment() for r in self.net_segments])} ;"""
+        if len(self.net_segments) > 0:
+            segment_str = f"{nl}    + {nl.join([r.write_segment() for r in self.net_segments])}"
+        else:
+            segment_str = ""
+
+        net_str = f"""    - {self.net_name} {' '.join(['( '+c[0]+' '+c[1]+' )' for c in self.net_components.items()])} + USE SIGNAL {segment_str};"""
+        return net_str
 
 
 class Def_transformer(Transformer):
@@ -291,7 +351,9 @@ class Def_transformer(Transformer):
     ##########################
     # net parsing
     def net_pt(self, s):
-        return [s[0], s[1]]
+        return [
+            s[1] if s[1] != '*' else None,
+            s[2] if s[2] != '*' else None]
     # need the rule passe
 
     def net_segment(self, ns):
@@ -322,7 +384,7 @@ class Def_transformer(Transformer):
             return {str(prop[0]): prop[1]}
 
     def strnet(self, comp):
-        return {"COMPONENT": {"inst":comp[0], "port":comp[1]}}
+        return {"COMPONENT": {"inst": comp[0], "port": comp[1]}}
 
     def net_st(self, statement):
         net_name = statement[0]
@@ -349,11 +411,11 @@ class Def_transformer(Transformer):
                     for nt_seg in s['ROUTED']:
                         n_cl.add_segment(
                             s_layer=nt_seg[0][2],
-                            s_pt1=[nt_seg[0][0],nt_seg[0][1]],
+                            s_pt1=[nt_seg[0][0], nt_seg[0][1]],
                             s_pt2=nt_seg[1],
-                            )
+                        )
         n_cl_d = {statement[0]: n_cl}
-        #print(n_cl_d)
+        # print(n_cl_d)
         return n_cl_d
         #  return n
 
@@ -375,7 +437,7 @@ class Def_transformer(Transformer):
             component_type=st[1]
         )
         cmp.set_pos(st[2]["pt"], st[2]['orientation'])
-        return {st[0]:cmp}
+        return {st[0]: cmp}
         #  return {st[0]: {"comp_type": st[1], **st[2]}}
 
     def cmp_block(self, cb):
@@ -395,11 +457,10 @@ class Def_transformer(Transformer):
             return {str(p[0]): str(p[1])}
         elif str(p[0]) == "PORT":
             return {"PORT": True}
-        elif str(p[0]) == "FIXED" :
-            return {"FIXED": {"pt":p[1], "orientation":p[2]}}
+        elif str(p[0]) == "FIXED":
+            return {"FIXED": {"pt": p[1], "orientation": p[2]}}
         else:  # is a layer
             return {"LAYER": [p[1], p[2], str(p[0])]}
-
 
     def via_st(self, st):
         # print ({st[0]:[{**x} for x in st[1:]]})
@@ -407,11 +468,11 @@ class Def_transformer(Transformer):
         for p in st[1:]:
             temp.update(p)
         p = Pin(
-                pin_name=st[0],
-                pin_net=temp['NET'],
-                direction=temp['DIRECTION'],
-                use=temp['USE']
-                )
+            pin_name=st[0],
+            pin_net=temp['NET'],
+            direction=temp['DIRECTION'],
+            use=temp['USE']
+        )
         p.set_layer(temp["LAYER"][0], temp["LAYER"][1], temp["LAYER"][2],)
         p.set_pos(temp["FIXED"]['pt'], temp["FIXED"]['orientation'])
         return {st[0]: p}
@@ -458,7 +519,7 @@ class Def_transformer(Transformer):
             num_dir_1=t[2]["do"][0],
             step_dir_1=t[3]["step"][0],
             layer=t[4]
-            ), "TRACK"
+        ), "TRACK"
         # return {
         #     "dir": t[0],
         #     "origin": t[1],
@@ -487,9 +548,9 @@ class Def_transformer(Transformer):
 
     def units(self, u):
         return {
-            'ustr':f"{u[0]} {u[1]} {u[2]}",
-            'unit':u[2]
-            }, "UNITS"
+            'ustr': f"{u[0]} {u[1]} {u[2]}",
+            'unit': u[2]
+        }, "UNITS"
         # return {
         #     "type": u[0],
         #     "unit": u[1],
@@ -530,13 +591,13 @@ class Def_transformer(Transformer):
         }
         for d in db:
             if d[1] == "ROW":
-                #d_dict["ROW"] = {**d_dict["ROW"], **d[0]}
+                # d_dict["ROW"] = {**d_dict["ROW"], **d[0]}
                 d_class.rows.append(d[0])
             elif d[1] == "TRACK":
-                #d_dict["TRACK"].append(d[0])
+                # d_dict["TRACK"].append(d[0])
                 d_class.tracks.append(d[0])
             elif d[1] == "GCELLGRID":
-                #d_dict["GCELLGRID"].append(d[0])
+                # d_dict["GCELLGRID"].append(d[0])
                 d_class.gcellgrid.append(d[0])
             elif d[1] == "PINS" \
                     or d[1] == "COMPONENTS" \
@@ -563,13 +624,13 @@ class Def_transformer(Transformer):
     # def parsing
 
     def busbitchars(self, bbchar):
-        return {"BUTBITCHARS":bbchar[0]}
+        return {"BUTBITCHARS": bbchar[0]}
 
     def dividerchar(self, dchar):
-        return {"BUTBITCHARS":dchar[0]}
+        return {"BUTBITCHARS": dchar[0]}
 
     def version(self, v):
-        return {"DEF_VERSION":v[0]}
+        return {"DEF_VERSION": v[0]}
 
     def def_f(self, d):
         temp = {}
