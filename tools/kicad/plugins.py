@@ -12,8 +12,7 @@ def flow_root():
     if "OPENMFDA_FLOW_ROOT" in os.environ:
         return os.environ["OPENMFDA_FLOW_ROOT"]
     else:
-        #return "/app/opt/openmfda/flow"
-        return "/home/snelgrov/openmfda/flow"
+        return "/app/opt/openmfda/flow"
 
 def lef_from_env():
     root = flow_root()
