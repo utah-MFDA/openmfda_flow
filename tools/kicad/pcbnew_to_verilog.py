@@ -1,6 +1,8 @@
 import itertools
 import pcbnew
 
+pads = ["h.r.3.3:pinhole_325px_met5", "h.r.3.3:interconnect_4x8"]
+
 class PcbnewToVerilog:
     def __init__(self, board, design, directory):
         self.design = design
@@ -52,9 +54,52 @@ export DESIGN_NAME     	= {self.design}
 export VERILOG_FILES 	= $(ROOT_DIR)/{self.design}.v
 export SDC_FILE      	= $(ROOT_DIR)/constraints.sdc
 export FOOTPRINT_TCL = $(ROOT_DIR)/pads.tcl
+export MACRO_PLACE_TCL = $(ROOT_DIR)/macros.tcl
 export DIE_AREA    	 	= 0 0 2560 1600
 export CORE_AREA   	 	= 0 0 2550 1590
 """, file=f)
+
+    # Also see DefToPcbnew.convert_location for the reverse calculation.
+    def convert_location(self, footprint):
+        x = int((footprint.GetX() - 32000000) / 100000)
+        y = int((160000000 - footprint.GetY() + 32000000) / 100000)
+        # May need to lookup width from the footprint LEF master instead.
+        b = footprint.GetBoundingBox()
+        h = int(b.GetHeight() / 100000)
+        w = int(b.GetWidth()  / 100000)
+        print(x, y, h, w)
+        degree = int(footprint.GetOrientationDegrees())
+        if footprint.IsFlipped():
+            if degree == 0:
+                return ("FS", x + h, y)
+            elif degree == 90:
+                return ("FW", x, y)
+            elif degree == 180:
+                return ("FN", x - w, y)
+            elif degree == -90 or degree == 270:
+                return ("FE", x - h, y + w)
+            else:
+                raise ValueError(f"Unsupported orientation angle {degree}.")
+        else:
+            if degree == 0:
+                return ("N", x, y)
+            elif degree == 90:
+                return ("W", x - h, y)
+            elif degree == 180:
+                return ("S", x - w, y + h)
+            elif degree == -90 or degree == 270:
+                return ("E", x, y + w)
+            else:
+                raise ValueError(f"Unsupported orientation angle {degree}.")
+
+    def write_macros(self):
+        with open(self.directory / "macros.tcl", "w") as f:
+            for footprint in self.board.GetFootprints():
+                name = footprint.GetFieldByName("Footprint").GetText()
+                if footprint.IsLocked() and name not in pads:
+                    name = footprint.GetReference()
+                    orientation, x, y = self.convert_location(footprint)
+                    print(f"place_inst -name {name} -location {{ {x} {y} }} -orientation {orientation} -status FIRM", file=f)
 
     def write_pads(self):
         pinholes = [footprint.GetReference()
@@ -105,6 +150,7 @@ export CORE_AREA   	 	= 0 0 2550 1590
     def export(self):
         self.write_verilog()
         self.write_makefile()
+        self.write_macros()
         self.write_pads()
         self.write_sdc_constraints()
 
