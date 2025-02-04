@@ -2,4 +2,17 @@ env
 *.zip
 openroad_flow/designs/*/demo
 scad_flow/designs/*/demo
+xyce_flow/designs/*
 __pycache__
+.ipynb_checkpoints
+build
+openmfda_flow.egg-info
+flow/results/*
+
+chem_out.csv*
+length_out.csv*
+replace_vars.csv*
+
+parsetab.py
+parser.out
+.flake8

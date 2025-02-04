@@ -525,12 +525,12 @@ def scad_pnr(db, component_file, routing_file, platform, design, def_file, resul
     bulk = add_bulk(params).bulk()
     routing = route(db, params).perform_routing()
     components =  place(db, params).place_components()
-    # pinholes = pin_place(db, params).place_pinholes()
+    pinholes = pin_place(db, params).place_pinholes()
     interconnect, pins = pin_place(db, params).place_interconnect()
     marker = add_marker(params).marker()
-    negative = components + pins + marker + solid.color("orange")(routing)
-    model = bulk - negative  + solid.color("blue", alpha=0.1)(interconnect)
-    # model = negative
+    negative = components + pinholes + pins + marker + solid.color("orange")(routing)
+    #model = bulk - negative  + solid.color("blue", alpha=0.1)(interconnect)
+    model = negative
     print("Build complete\n")
 
     route(db, params).report_route_lengths(results_dir, design)
@@ -550,6 +550,7 @@ def scad_pnr(db, component_file, routing_file, platform, design, def_file, resul
 
 if __name__ == "__main__":
     import argparse
+
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--platform', metavar='<platform>', dest='platform', type=str,
                     help="Design platform.")
@@ -591,15 +592,16 @@ if __name__ == "__main__":
                     help="Resolution of the scad rendering.")
     ap.add_argument('--dimm_file', metavar='<path>', dest='dimm_file', type=str,
                     help="Optional .csv file with routing dimensions.", default = None)
+    ap.add_argument('--pcell_file', metavar='<path>', dest='pcell_file', type=str,
+                    help="Optional .csv file with pcell parameters.", default = None)
     args = ap.parse_args()
-    print("******************************** Startup")
+
     db = odb.dbDatabase.create()
     for tlef_file in args.tlef_files:
         odb.read_lef(db, tlef_file)
     for lef_file in args.lef_files:
         odb.read_lef(db, lef_file)
     odb.read_def(db, args.def_file)
-    print("******************************** Parsed")
     scad_pnr(db,
              args.component_file,
              args.routing_file,
