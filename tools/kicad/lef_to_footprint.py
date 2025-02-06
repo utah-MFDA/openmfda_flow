@@ -18,9 +18,12 @@ class LefToFootprint:
         self.layer_map = {}
         self.default_font = Effects(font=Font(height=10.0, width=10.0))
 
+    # Kicad stores sizes in nanometers, just fixed scale for integer math.
+    # scaling to 0.1mm per pixel
     def scale(self, i):
-        return i / 1000
+        return i * 100
 
+    #TODO layers
     def extract_layers(self):
         layers = self.db.getTech().getLayers()
         num_layers = self.db.getTech().getRoutingLayerCount()
@@ -37,18 +40,17 @@ class LefToFootprint:
                 self.layer_map[layer.getName()] = name
                 pcb_layer = LayerToken(ordinal=i, name =name)
                 self.layers.append(pcb_layer)
-        # print("Layers:", self.layer_map)
         # Stackup is optional, may need to set
 
     def extract_footprints(self):
         for master_name in self.masters:
-            # print(master_name)
             master = self.db.findMaster(master_name)
             footprint = self.extract_footprint(master)
             self.footprints.append(footprint)
 
     def extract_footprint(self, master):
         mx, my = map(self.scale, master.getOrigin())
+        my *= -1 # Kicad is negative y-axis
         angle = 0 # TODO check
         w, h = map(self.scale, [master.getWidth(), master.getHeight()])
         pads, labels = zip(*self.extract_pads(master))
@@ -84,7 +86,8 @@ class LefToFootprint:
                         print(f"Non-rectangles not handled {type(geom)}")
                         continue
 
-                    bounds = [geom.xMin(), geom.xMax(), geom.yMin(), geom.yMax()]
+                    # Kicad is negative y-axis
+                    bounds = [geom.xMin(), geom.xMax(), -geom.yMin(), -geom.yMax()]
                     xmin, xmax, ymin, ymax = map(self.scale, bounds)
                     metal = geom.getTechLayer().getName()
 
@@ -102,7 +105,7 @@ class LefToFootprint:
                     yield pad, label
 
     def extract_obstruction(self, obs):
-        bounds = [obs.xMin(), obs.xMax(), obs.yMin(), obs.yMax()]
+        bounds = [obs.xMin(), obs.xMax(), -obs.yMin(), -obs.yMax()]
         xmin, xmax, ymin, ymax = map(self.scale, bounds)
         metal = obs.getTechLayer().getName()
         layer = self.layer_map[metal]
@@ -149,11 +152,11 @@ if __name__ == "__main__":
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--tlef', '-t', metavar='<path>', action='append', dest='tlef_files', type=str,
-                    help="Path to .tlef file.")
-    ap.add_argument('--lef', '-l', metavar='<path>', action='append', dest='lef_files', type=str,
+                    help="Path to .tlef file.", required=True)
+    ap.add_argument('--lef', '-l', metavar='<path>', action='append', dest='lef_files', type=str, required=True,
                     help="Path to .lef file.")
-    ap.add_argument('--output', '-o', metavar='<path>', type=str, help="Path to output footprint files.", dest="output")
-    ap.add_argument('--name', '-n', type=str, help="Library name.", dest="name")
+    ap.add_argument('--output', '-o', metavar='<path>', type=str, help="Path to output footprint files.", dest="output", required=True)
+    ap.add_argument('--name', '-n', type=str, help="Library name.", dest="name", required=True)
     args = ap.parse_args()
     db = odb.dbDatabase.create()
     masters = extract_macro_names(args.lef_files)
