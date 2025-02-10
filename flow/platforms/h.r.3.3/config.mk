@@ -11,7 +11,7 @@ export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                       $(ADDITIONAL_GDS)
 export TECH_LEF = $(PLATFORM_DIR)/lef/h.r.3.3.tlef
 export SC_LEF = $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
-export ADDITIONAL_LEFS = $(PLATFORM_DIR)/lef/h.r.3.3_pads.lef
+export ADDITIONAL_LEFS =
 export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      $(ADDITIONAL_LIBS)
 export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3_merged.scad

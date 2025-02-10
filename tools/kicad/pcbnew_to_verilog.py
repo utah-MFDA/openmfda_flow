@@ -1,7 +1,7 @@
 import itertools
 import pcbnew
 
-pads = ["h.r.3.3:pinhole_325px_met5", "h.r.3.3:interconnect_4x8"]
+pads = ["h.r.3.3:pinhole_325px_0", "h.r.3.3:interconnect_4x8"]
 
 class PcbnewToVerilog:
     def __init__(self, board, design, directory):
@@ -104,7 +104,7 @@ export CORE_AREA   	 	= 0 0 2550 1590
     def write_pads(self):
         pinholes = [footprint.GetReference()
                     for footprint in self.board.GetFootprints()
-                    if footprint.GetFieldByName("Footprint").GetText() == "h.r.3.3:pinhole_325px_met5"]
+                    if footprint.GetFieldByName("Footprint").GetText() == "h.r.3.3:pinhole_325px_0"]
 
         bumps = [[None for i in  range(0,4)] for x in range(0,8)]
         for footprint in self.board.GetFootprints():
@@ -126,7 +126,7 @@ export CORE_AREA   	 	= 0 0 2550 1590
         -offset 0 \\
         -rotation_vertical R90""", file=f)
             for pinhole, (side, location) in zip(pinholes, spots):
-                print(f"""place_pad -master pinhole_325px_met5 -row {side} -location {location} {{{pinhole}}}""", file=f)
+                print(f"""place_pad -master pinhole_325px_0 -row {side} -location {location} {{{pinhole}}}""", file=f)
             pitch_x = 90
             pitch_y = 90
             origin_x = 960
