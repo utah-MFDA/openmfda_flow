@@ -289,11 +289,6 @@ $(RESULTS_DIR)/$(DESIGN_NAME).sdc: $(SDC_FILE)
 floorplan: $(RESULTS_DIR)/1_floorplan.def
 # ==============================================================================
 
-ifneq ($(FOOTPRINT),)
-IS_CHIP = 1
-else ifneq ($(FOOTPRINT_TCL),)
-IS_CHIP = 1
-endif
 
 # STEP 1: Translate verilog to def
 #-------------------------------------------------------------------------------
