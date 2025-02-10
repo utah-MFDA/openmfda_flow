@@ -8,8 +8,8 @@ OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
 OPENSCAD ?= openscad
-export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
-#export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
 export BUILD_PDK_LIBRARY ?=
 
 # Add design configure paths here
