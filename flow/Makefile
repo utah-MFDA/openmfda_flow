@@ -7,7 +7,7 @@ export DESIGN ?= demo
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
-#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+#export SCAD_SCRIPT ?=../tools/scad_render/scad_pnr.py
 export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
 # add a space to the below to definition to build library
 export BUILD_PDK_LIBRARY ?=
@@ -215,10 +215,10 @@ $(WRAPPED_LIBS):
 	sed 's/library(\(.*\))/library(\1_mod)/g' $(filter %$(notdir $(@:_mod.lib=.lib)),$(WRAP_LIBS)) | sed 's/cell(\(.*\))/cell(\1_mod)/g' > $@
 
 #include ../tools/verilog_preparser/Makefile
-include $(FLOW_HOME)/../tools/p_cell_generator/util.mk
+#include $(FLOW_HOME)/../tools/p_cell_generator/util.mk
 
-.PHONY: gen_pcells
-gen_pcells: $(PCELL_MERGE_LEF)
+#.PHONY: gen_pcells
+#gen_pcells: $(PCELL_MERGE_LEF)
 # ==============================================================================
 #  _     ___ ____  ____      _    ______   __
 # | |   |_ _| __ )|  _ \    / \  |  _ \ \ / /
@@ -295,7 +295,7 @@ endif
 
 # STEP 1: Translate verilog to def
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL) $(PCELL_MERGE_LEF)
+$(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/floorplan.tcl -metrics $(LOG_DIR)/1_1_floorplan.json) 2>&1 | tee $(LOG_DIR)/1_1_floorplan.log
 
 # STEP 2: IO Placement (random)
@@ -340,7 +340,7 @@ $(GLOBAL_PLACEMENT_ARGS_FILE):
 endif
 
 # STEP 1: Global placement + IO placement (not random)
-GLOBAL_PLACE_SCRIPT = $(SCRIPTS_DIR)/global_place.tcl
+GLOBAL_PLACE_SCRIPT ?= $(SCRIPTS_DIR)/global_place.tcl
 #-------------------------------------------------------------------------------
 $(RESULTS_DIR)/2_1_place_gp.def: $(RESULTS_DIR)/1_floorplan.def $(RESULTS_DIR)/1_floorplan.sdc $(LIB_FILES) $(GLOBAL_PLACEMENT_ARGS_FILE)
 	($(TIME_CMD) $(OPENROAD_CMD) $(GLOBAL_PLACE_SCRIPT) -metrics $(LOG_DIR)/2_1_place_gp.json) 2>&1 | tee $(LOG_DIR)/2_1_place_gp.log
@@ -536,9 +536,11 @@ clean_finish:
 # |____/___|_|  |_|\___/|_____/_/   \_\_| |___\___/|_| \_|
 # ==============================================================================
 SIMULATION_SCRIPT = ../tools/simulation/runMFDASim.py
+LENGTH_FILE       = $(RESULTS_DIR)/$(DESIGN)_length.csv
+XYCE_RUN_CONFIG   = $(RESULTS_DIR)/xyce_run.config
 
 .PHONY: simulate clean_simulate
-simulate: $(RESULTS_DIR)/xyceOut.csv
+simulate: $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv
 clean_simulate:
 	rm -rf $(RESULTS_DIR)/xyceOut.csv
 	rm -rf $(RESULTS_DIR)/simulation
@@ -546,24 +548,27 @@ clean_simulate:
 	rm -rf $(RESULTS_DIR)/xyce_run.config
 
 ifneq ($(SIMULATION_CONFIG),)
-$(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
+$(XYCE_RUN_CONFIG): $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
-$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN).scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
 		$(SIMULATION_ARGS) \
-		--output_dir $(RESULTS_DIR) \
 		--netlist $(RESULTS_DIR)/4_final.v \
 		--sim_config $(SIMULATION_CONFIG) \
 		--design $(DESIGN) \
 		--sim_dir $(RESULTS_DIR)/simulation \
 		--cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp \
-		--local_xyce True \
-		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
-		--length_file $(RESULTS_DIR)/$(DESIGN)_length.csv \
+		--local_xyce \
+		--xyce_run_config $(XYCE_RUN_CONFIG) \
+		--length_file $(LENGTH_FILE) \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
-		# --length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv
+
+# cp $(RESULTS_DIR)/Chem_Eval.csv Chem_Eval_base.csv
+
+# --output_dir $(RESULTS_DIR) \
+# --length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv
 endif
 
 # ==============================================================================
@@ -572,21 +577,24 @@ endif
 # \___ \| |     / _ \ | | | |
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
-render: $(RESULTS_DIR)/$(DESIGN).scad
+render: $(RESULTS_DIR)/4_final.scad
 slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
-$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+#$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+$(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
 
-$(RESULTS_DIR)/5_scad.scad: $(RESULTS_DIR)/$(DESIGN).scad
-	cp $^ $@
+				#--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
+# $(RESULTS_DIR)/5_scad.scad: $(RESULTS_DIR)/$(DESIGN).scad
+# 	cp $^ $@
 
 %.stl: %.scad
 	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log

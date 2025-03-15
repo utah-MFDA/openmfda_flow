@@ -507,6 +507,7 @@ set initial_place_max_fanout {replace_arg['fanout']}
 
 set global_place_args {fb}{bb}
 
+
 if {fb}$skip_initial_placement{bb} {fb}
 	set global_place_args "$global_place_args -skip_initial_place"
 {bb}
@@ -790,24 +791,39 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
 
 
     def run_flow_iter_soln_opt(
-        self, iter_list, len_file, eval_file, out_csv_len, out_csv_chem, replace_config_loc,
-        end_err=0, write_configs=True,
+        self, iter_items, len_file, eval_file, out_csv_len, out_csv_chem, replace_config_loc,
+        end_err=0, write_configs=True, gpl_arg_out_dir=None,
     ):
-        density_var = iter_list[0]
-        bin_var = iter_list[1]
-        max_phi = iter_list[2]
-        min_phi = iter_list[3]
-        i_wire_coef = iter_list[4]
-        i_dens_coef = iter_list[5]
-        fan_out = iter_list[6]
-        overflow = iter_list[7]
+        REPLACE_ARGS = ["bin", "overflow", "min_phi", "max_phi", "density", "init_wire_coef", "init_density_coef"]
+
+        # density_var = iter_list[0]
+        # bin_var = iter_list[1]
+        # max_phi = iter_list[2]
+        # min_phi = iter_list[3]
+        # i_wire_coef = iter_list[4]
+        # i_dens_coef = iter_list[5]
+        # fan_out = iter_list[6]
+        # overflow = iter_list[7]
+
+        iter_keys = list(iter_items.keys())
+
+        iter_list = list(iter_items.values())
+
+        iter_var_1 = iter_list[0]
+        iter_var_2 = iter_list[1]
+        iter_var_3 = iter_list[2]
+        iter_var_4 = iter_list[3]
+        iter_var_5 = iter_list[4]
+        iter_var_6 = iter_list[5]
+        iter_var_7 = iter_list[6]
+        # iter_var_8 = iter_list[7]
 
         init = True
 
         def write_vals(colns, val_list, init=True, out_file=None):
 
             out_file_n = None
-            if out_file == None:
+            if out_file is None:
                 out_file = "replace_vars.csv"
             else:
                 pass
@@ -829,7 +845,7 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
             of.write(",".join([str(x) for x in val_list]) + "\n")
             return out_file_n
 
-        def report_len(len_file, o_len, init=True):
+        def report_len(len_file, o_len, init=True, file_found=True):
             import pandas as pd
 
             o_len_n = None
@@ -903,23 +919,51 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
             # print(, )
             return o_chem_n, min_err
 
+        def get_key(in_dict):
+            return list(in_dict.keys())[0]
+
+        # =====================================
+        # start of main function
+        # =====================================
+
         iter_count = 0
 
-        for dv in density_var:  # density_var
-            for bv in bin_var:  # bin_var
-                for maxp in max_phi:  # max_phi
-                    for minp in min_phi:  # min_phi
-                        for iwire in i_wire_coef:
-                            for iden in i_dens_coef:
-                                for ov in overflow:
+        for ik in iter_items.keys():
+            if ik not in REPLACE_ARGS:
+                raise ValueError(f"'{ik}' not a valid replace variable.")
+
+        # for dv in density_var:  # density_var
+        #     for bv in bin_var:  # bin_var
+        #         for maxp in max_phi:  # max_phi
+        #             for minp in min_phi:  # min_phi
+        #                 for iwire in i_wire_coef:
+        #                     for iden in i_dens_coef:
+        #                         for ov in overflow:
+        #                             self.set_replace_arg("overflow", ov)
+        #                             self.set_replace_arg("init_wire_coef", iwire)
+        #                             self.set_replace_arg("init_density_coef", iden)
+        #                             self.set_replace_arg("max_phi", maxp)
+        #                             self.set_replace_arg("min_phi", minp)
+        #                             self.set_replace_arg("bin", bv)
+        #                             self.set_replace_arg("density", dv)
+        print(iter_var_1)
+
+        for a1 in iter_var_1:
+            for a2 in iter_var_2:
+                for a3 in iter_var_3:
+                    for a4 in iter_var_4:
+                        for a5 in iter_var_5:
+                            for a6 in iter_var_6:
+                                for a7 in iter_var_7:
+
                                     iter_count += 1
-                                    self.set_replace_arg("overflow", ov)
-                                    self.set_replace_arg("init_wire_coef", iwire)
-                                    self.set_replace_arg("init_density_coef", iden)
-                                    self.set_replace_arg("max_phi", maxp)
-                                    self.set_replace_arg("min_phi", minp)
-                                    self.set_replace_arg("bin", bv)
-                                    self.set_replace_arg("density", dv)
+                                    self.set_replace_arg(iter_keys[0], a1)
+                                    self.set_replace_arg(iter_keys[1], a2)
+                                    self.set_replace_arg(iter_keys[2], a3)
+                                    self.set_replace_arg(iter_keys[3], a4)
+                                    self.set_replace_arg(iter_keys[4], a5)
+                                    self.set_replace_arg(iter_keys[5], a6)
+                                    self.set_replace_arg(iter_keys[6], a7)
 
                                     mfda_error = False
 
@@ -937,37 +981,46 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                         mfda_error = True
 
                                     w_colns = [
-                                        "overflow",
-                                        "init_wire_coef",
-                                        "init_density_coef",
-                                        "max_phi",
-                                        "min_phi",
-                                        "bin",
-                                        "density",
+                                        iter_keys[0],
+                                        iter_keys[1],
+                                        iter_keys[2],
+                                        iter_keys[3],
+                                        iter_keys[4],
+                                        iter_keys[5],
+                                        iter_keys[6],
                                         "error",
                                     ]
                                     w_vals = [
-                                        ov,
-                                        iwire,
-                                        iden,
-                                        maxp,
-                                        minp,
-                                        bv,
-                                        dv,
+                                        a1,
+                                        a2,
+                                        a3,
+                                        a4,
+                                        a5,
+                                        a6,
+                                        a7,
                                         str(mfda_error),
                                     ]
-                                    if init:
-                                        write_vals(w_colns, w_vals, init)
+                                    if init and (gpl_arg_out_dir is None):
+                                        re_arg_out = write_vals(w_colns, w_vals, init)
+                                    elif init and (gpl_arg_out_dir is not None):
+                                        write_vals(w_colns, w_vals, init,
+                                                   out_file=f"'{gpl_arg_out_dir}/replace_vars.csv")
+                                    elif gpl_arg_out_dir is not None:
+                                        write_vals(w_colns, w_vals, init,
+                                                   out_file=f"'{gpl_arg_out_dir}/replace_vars.csv")
                                     else:
-                                        write_vals(w_colns, w_vals, init)
+                                        write_vals(w_colns, w_vals, init, re_arg_out)
 
                                     # report lengths
                                     if init:
+                                        #try:
                                         nl = report_len(len_file, out_csv_len, init)
-                                        if nl != None:
+                                        if nl is not None:
                                             out_csv_len = nl
+                                        # except FileNotFoundError:
+                                        #     nl = report_len(len_file, out_csv_len, init, False)
                                         nc, min_err = report_chem(eval_file, out_csv_chem, init)
-                                        if nc != None:
+                                        if nc is not None:
                                             out_csv_chem = nc
                                     else:
                                         # report len
