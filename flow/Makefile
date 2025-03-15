@@ -67,6 +67,7 @@ export SCRIPTS_DIR   ?= $(FLOW_HOME)/scripts
 export TEST_DIR      ?= $(FLOW_HOME)/test
 
 export CUSTOM_SCRIPTS_DIR ?= $(FLOW_HOME)/scripts_custom
+export CUSTOM_TCL_DIR ?= $(FLOW_HOME)/scripts_custom
 
 #-------------------------------------------------------------------------------
 
@@ -551,10 +552,15 @@ ifneq ($(SIMULATION_CONFIG),)
 $(XYCE_RUN_CONFIG): $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
+# <<<<<<< HEAD
+# 		$(SIMULATION_ARGS) \
+# =======
+# 		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
+# >>>>>>> 50e2fb4b33cf68824579d3b641cbf4a305a48a6f
 $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
-		$(SIMULATION_ARGS) \
+		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
 		--netlist $(RESULTS_DIR)/4_final.v \
 		--sim_config $(SIMULATION_CONFIG) \
 		--design $(DESIGN) \
@@ -589,6 +595,7 @@ $(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
+				--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
 

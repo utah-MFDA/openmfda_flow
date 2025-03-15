@@ -1,19 +1,28 @@
+#fmt:off
 import networkx as nx
 import copy
 from math import sqrt
 
 
+#<<<<<<< HEAD
+# this script tries to order the routes in consecutive segments
 def link_routes(route, route_devs, debug=False, design='', component_list=None,
-                    components_lef=None, comp_dict=None, pin_list=None,
-                    report_route=False, subsegment=True,def_scale=1000,
-                    px_sz = 7.6e-3, pt_err=0.05
+                components_lef=None, comp_dict=None, pin_list=None,
+                report_route=False, subsegment=True, def_scale=1000,
+                px_sz=7.6e-3, pt_err=0.05
+# =======
+# def link_routes(route, route_devs, debug=False, design='', component_list=None,
+#                     components_lef=None, comp_dict=None, pin_list=None,
+#                     report_route=False, subsegment=True,def_scale=1000,
+#                     px_sz = 7.6e-3, pt_err=0.05
+# >>>>>>> dafa4f78692090b001f90a8bea2fe60ae248bc31
                 ):
 
     cp_route = copy.deepcopy(route)
 
     # TODO pass as variable
     s = px_sz  # hard coded scale
-    #s1 = s/1000  # hard coded scale
+    # s1 = s/1000  # hard coded scale
     s1 = px_sz/def_scale
     err = pt_err
 
@@ -197,14 +206,20 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                 c = None
                 # check if device is valid component
                 for c_i in component_list:
-                    if d['dev'] == c_i.name:
+                    if 'dev' in d and d['dev'] == c_i.name:
+                        c = c_i
+                    elif 'name' in d and d['components'] == c_i.name:
                         c = c_i
                 # TODO check for pins
                 # if d['dev'] in pin_list.keys():
                 if d['dev'] == "PIN" and isinstance(pin_list, list):
                     p = pin_list[d['port']]
-                    pos = [[(float(p.fx1)+float(p.lx1))*s1, (float(p.fy1)+float(p.ly1))*s1],
-                           [(float(p.fx1)+float(p.lx2))*s1, (float(p.fy1)+float(p.ly2))*s1]]
+                    pos = [
+                        [(float(p.fx1)+float(p.lx1))*s1,
+                         (float(p.fy1)+float(p.ly1))*s1],
+                        [(float(p.fx1)+float(p.lx2))*s1,
+                         (float(p.fy1)+float(p.ly2))*s1]
+                    ]
                     if not supress_output:
                         print(f"Checking pin {d['port']} at {pos}")
                     if float(pt[0]) > pos[0][0] - err\
@@ -396,7 +411,24 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
 
         return net_G
 
+    def route_validation(route):
+        print(route)
+        if not isinstance(route, list):
+            raise Exception(
+                f"Input route not of correct type, expecting list: {type(route)}")
+        for iseg, seg in enumerate(route):
+            if not isinstance(seg, list):
+                raise Exception(
+                    f"Element {iseg} of route not correct type, expecting list: {type(seg)}")
+            if len(seg) != 2:
+                raise Exception(
+                    f"Element {iseg} of route not correct length, should be 2: {len(seg)}")
+            if len(seg[0]) != 3 or len(seg[1]) != 3:
+                raise Exception(
+                    f"Segment points not formated correctly: {seg}")
+
     #################### BEGIN FUNCTION compress_routes ######################
+    route_validation(route)
 
     nr = []
     d_routes = []
@@ -511,7 +543,7 @@ def convert_layers(routes, layers_ref, lpv, layer_ht, num_bot_layers):
             if 'route' not in routes.nodes[r_node]:
                 print(f'skipping {r_node}, no routes')
                 continue
-            #print("converting route: ",self.net,':', r_node)
+            # print("converting route: ",self.net,':', r_node)
             out_route[r_node]['route'] = convert_route(
                 routes.nodes[r_node]['route'],
                 layers_ref,
@@ -520,8 +552,8 @@ def convert_layers(routes, layers_ref, lpv, layer_ht, num_bot_layers):
                 num_bot_layers
             )
         return out_route
-            # print(new_r)
-            # self.route.nodes[r_node]['route'] = new_r
+        # print(new_r)
+        # self.route.nodes[r_node]['route'] = new_r
     else:
         raise Exception("Invalid route type")
 
@@ -534,8 +566,9 @@ def convert_lengths(self, net_builder, len_multiplier):
             if 'route' not in self.route.nodes[r_node]:
                 print(f'skipping {r_node}, no routes')
                 continue
-            print("converting route: ",self.net,':', r_node)
-            net_builder.convert_route_len(self.route.nodes[r_node]['route'], len_multiplier)
+            print("converting route: ", self.net, ':', r_node)
+            net_builder.convert_route_len(
+                self.route.nodes[r_node]['route'], len_multiplier)
             # print(new_r)
             # self.route.nodes[r_node]['route'] = new_r
     else:
@@ -565,24 +598,53 @@ def convert_pt(pt_list):
 
 def cross(p1, p2): return (p1[0]*p2[1]) - (p1[1]*p2[0])
 def dot(p1, p2): return p1[0]*p2[0] + p1[1]*p2[1]
-def colin_3pt(p1, p2, p3): return (cross([p1[0]-p2[0], p1[1]-p2[1]], [p1[0]-p3[0], p1[1]-p3[1]]) == 0)
 
 
-def is_between(p1, p2, p3, fl_acc=0.0):
+def colin_3pt(p1, p2, p3): return (
+    cross([p1[0]-p2[0], p1[1]-p2[1]], [p1[0]-p3[0], p1[1]-p3[1]]) == 0)
+
+
+def ccw(A,B,C):
+    return (C[1]-A[1]) * (B[0]-A[0]) > (B[1]-A[1]) * (C[0]-A[0])
+
+
+# Return true if line segments AB and CD intersect
+def do_lines_cross(A,B,C,D):
+    return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
+
+
+def is_between(p1, p2, p3, fl_acc=0.00001, print_debug=False):
+    # check slope, they need to be equal to be on the same line
+    # check they both equal zero
+
+    # p12_is0 = (p1[0]-p2[0]) == 0
+    # p13_is0 = (p1[0]-p3[0]) == 0
+    # if (not p12_is0 and not p13_is0):
+    #     slope_d = ((float(p1[1])-float(p2[1]))/(float(p1[0])-float(p2[0])) -
+    #                (float(p1[1])-float(p3[1]))/(float(p1[0])-float(p3[0])))
+    #     if slope_d >= fl_acc:
+    #         return False
+    # elif (p12_is0 and not p13_is0) or (not p12_is0 and p13_is0):
+    #     return False
+    # else:
+    slope_d = "ncalc"
+
     v_12 = [p1[0]-p2[0], p1[1]-p2[1]]
     v_13 = [p1[0]-p3[0], p1[1]-p3[1]]
 
-    X_p  = cross(v_12, v_13)
+    X_p = cross(v_12, v_13)
     K_13 = dot(v_12, v_13)
     K_12 = dot(v_12, v_12)
 
     if (X_p <= fl_acc) and (X_p >= -fl_acc) and (K_13 >= 0) and (K_13 <= K_12):
+        if print_debug:
+            print("Xp:", X_p, ", K_13:", K_13, ", K_12:", K_12, ", dy/dx:", slope_d)
         return True
     else:
         return False
 
 
-def check_net_intersections(net1, net2, fl_acc=0.0):
+def check_net_intersections(net1, net2, fl_acc=0.00001):
     intersections = []
 
     def is_via(pt1, pt2):
@@ -596,11 +658,15 @@ def check_net_intersections(net1, net2, fl_acc=0.0):
             return abs(pt1[0]-pt2[0]) < fl_acc and \
                 abs(pt1[1]-pt2[1]) < fl_acc and \
                 abs(pt1[2]-pt2[2]) < fl_acc
-        elif isinstance(pt1[2], str): 
+        elif isinstance(pt1[2], int):
+            return abs(pt1[0]-pt2[0]) < fl_acc and \
+                abs(pt1[1]-pt2[1]) < fl_acc and \
+                abs(pt1[2]-pt2[2]) < fl_acc
+        elif isinstance(pt1[2], str):
             return abs(pt1[0]-pt2[0]) < fl_acc and \
                 abs(pt1[1]-pt2[1]) < fl_acc and \
                 pt1[2] == pt2[2]
-        raise ValueError(f"{pt1}, {pt2}")
+        raise ValueError(f"Type not supported {pt1[2]}; {pt1}, {pt2}")
 
     for i1, ntpt1 in enumerate(net1[:-1]):
         for i2, ntpt2 in enumerate(net2[:-1]):
@@ -609,42 +675,54 @@ def check_net_intersections(net1, net2, fl_acc=0.0):
             # chcck if both are vias
             if is_via(sg1[0], sg1[1]) and \
                     is_via(sg2[0], sg2[1]):
-                if check_pt_eq(ntpt1, ntpt2) and check_pt_eq(net1[i1+1], net2[i2]+1):
+                # if check_pt_eq(ntpt1, ntpt2) and check_pt_eq(net1[i1+1], net2[i2]+1):
+                if check_pt_eq(ntpt1, ntpt2) and check_pt_eq(net1[i1+1], net2[i2+1]):
                     print(f"Via {sg1} == {sg2}")
                     # intersections.append((i1, i2))
                     intersections.append(("via", sg1, sg2))
+                elif check_pt_eq(sg1[0], sg2[0]):
+                    intersections.append(("via", sg1[0], sg2[0]))
+                elif check_pt_eq(sg1[0], sg2[1]):
+                    intersections.append(("via", sg1[0], sg2[1]))
+                elif check_pt_eq(sg1[1], sg2[0]):
+                    intersections.append(("via", sg1[1], sg2[0]))
+                elif check_pt_eq(sg1[1], sg2[1]):
+                    intersections.append(("via", sg1[1], sg2[1]))
                 else:
                     continue
             # we have checked is both are vias
             #  check if one is a via
-            if is_via_sgmt(sg1):
+            elif is_via_sgmt(sg1):
                 if sg1[0][2] == sg2[0][2]:
-                    if is_between(sg2[0], sg2[1], sg1[0], fl_acc):
+                    if is_between(sg2[0], sg2[1], sg1[0], fl_acc, 1):
                         print(f"(1.1) pt {sg1[0]} is in {sg2}")
                         intersections.append(('via_pt', sg1[0], sg2))
                 elif sg1[1][2] == sg2[0][2]:
-                    if is_between(sg2[0], sg2[1], sg1[1], fl_acc):
+                    if is_between(sg2[0], sg2[1], sg1[1], fl_acc, 1):
                         print(f"(1.2) pt {sg1[1]} is in {sg2}")
-                        intersections.append(('via_pt',sg1[1], sg2))
+                        intersections.append(('via_pt', sg1[1], sg2))
             elif is_via_sgmt(sg2):
                 if sg2[0][2] == sg1[0][2]:
-                    if is_between(sg1[0], sg1[1], sg2[0], fl_acc):
+                    if is_between(sg1[0], sg1[1], sg2[0], fl_acc, 1):
                         print(f"(1.3) pt {sg2[0]} is in {sg1}")
-                        intersections.append(('via_pt',sg1, sg2[0]))
+                        intersections.append(('via_pt', sg1, sg2[0]))
                 elif sg2[1][2] == sg1[0][2]:
-                    if is_between(sg1[0], sg1[1], sg2[1], fl_acc):
+                    if is_between(sg1[0], sg1[1], sg2[1], fl_acc, 1):
                         print(f"(1.4) pt {sg2[1]} is in {sg1}")
-                        intersections.append(('via_pt',sg1, sg2[1]))
+                        intersections.append(('via_pt', sg1, sg2[1]))
             # both are segments
             else:
                 if isinstance(sg1[0][2], str) and sg1[0][2] != sg2[0][2] or \
-                        isinstance(sg1[0][2], float) and abs(sg1[0][2]-sg2[0][2]) > fl_acc:
+                        isinstance(sg1[0][2], float) and abs(sg1[0][2]-sg2[0][2]) >= fl_acc or \
+                        isinstance(sg1[0][2], int) and abs(sg1[0][2]-sg2[0][2]) >= fl_acc:
                     continue
                 else:
                     if is_between(sg1[0], sg1[1], sg2[0], fl_acc) or \
                             is_between(sg1[0], sg1[1], sg2[1], fl_acc) or \
                             is_between(sg2[0], sg2[1], sg1[0], fl_acc) or \
                             is_between(sg2[0], sg2[1], sg1[1], fl_acc):
+                        intersections.append(('sgmt', sg1, sg2))
+                    elif do_lines_cross(sg1[0], sg1[1], sg2[0], sg2[1]):
                         intersections.append(('sgmt', sg1, sg2))
                     else:
                         continue
@@ -703,7 +781,7 @@ def check_net_intersections_from_sgmt_list(net1, net2, fl_acc=0.001):
     return intersections
 
 
-## ================================
+# ================================
 # U detection and fixes
 
 
@@ -714,7 +792,7 @@ def is_via_from_pts(pt1, pt2):
 def is_intersected(A, B, C, D):
     def ccw(a, b, c):
         return (c[1]-a[1]) * (b[0]-a[0]) > (b[1]-a[1]) * (c[0]-a[0])
-    return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
+    return ccw(A, C, D) != ccw(B, C, D) and ccw(A, B, C) != ccw(A, B, D)
 
 
 def line_len(A, B):
@@ -758,15 +836,15 @@ def u_adjustments(route, other_rt=None, u_len_limit=0.0, skip_intersection_check
 
             if line_len(route[ip+1], route[ip+2]) < u_len_limit:
                 print(f"Removing {route[ip+1]} and {route[ip+2]}")
-                new_seg = [route[ip], route[ip+3]]
+                new_seg=[route[ip], route[ip+3]]
                 print(f"New segment {new_seg}")
 
                 if not skip_intersection_check and other_rt is not None:
-                    has_intersect = False
+                    has_intersect=False
                     for rt in other_rt:
                         for iopt, opt in enumerate(rt[:-1]):
                             if is_seg_intersect(new_seg, [opt, rt[iopt+1]]):
-                                has_intersect = True
+                                has_intersect=True
                         if has_intersect:
                             print("Intersection found in new segment")
                             break

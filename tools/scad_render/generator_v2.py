@@ -60,6 +60,8 @@ mets = {
     'met9':8,
 }
 
+run_u_adjustment_script = False
+
 METS = mets
 
 
@@ -316,7 +318,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
              report_len_file=None, pins=None, components=None,
              component_lef=None, debug={}, testing=False,
              dimm_file=None, report_route_net_file=None,
-             gen_with_px_conversion=True, skip_u_adj=False
+             gen_with_px_conversion=True, skip_u_adj=(not run_u_adjustment_script)
              ):
 
     mod_re = bytes(nets_block_reg, 'utf-8')
@@ -447,6 +449,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         px_size = 1
 
     for n in nets_list:
+        print("ROUTE:",n.route)
         if 'compress_routes' in debug and debug['compress_routes'] is True:
             n.compress_routes(debug=True, design=design)
             # linked_net = link_routes(n.route, n.devs, debug=True, design=design)

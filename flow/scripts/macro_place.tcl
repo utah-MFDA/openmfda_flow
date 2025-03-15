@@ -40,12 +40,12 @@ proc find_macros {} {
 }
 
 
-if {[find_macros] != ""} {
+if {[find_macros] != " "} {
   if {[info exists ::env(MACRO_PLACEMENT)]} {
     source $::env(SCRIPTS_DIR)/read_macro_placement.tcl
     puts "\[INFO\]\[FLOW-xxxx\] Using manual macro placement file $::env(MACRO_PLACEMENT)"
     read_macro_placement $::env(MACRO_PLACEMENT)
-  } else {
+  } elseif {[info exists ::env(MACRO_PLACE_HALO)]} {
     macro_placement \
       -halo $::env(MACRO_PLACE_HALO) \
       -channel $::env(MACRO_PLACE_CHANNEL)
