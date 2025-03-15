@@ -180,7 +180,7 @@ class Component:
     def write_component(self):
         return f"- {self.instance_name} {self.component_type} + " + \
             f"{'PLACED' if self.is_placed else ''} " + \
-            f"( {self.pos[0]} {self.pos[1]} ) ;"
+            f"( {self.pos[0]} {self.pos[1]} ) {self.orientation} ;"
 
 
 class Pin:
@@ -253,8 +253,13 @@ class Net:
 
     def write_net(self):
         nl = '\n        '
-        return f"""    - {self.net_name} {' '.join(['( '+c[0]+' '+c[0]+' )' for c in self.net_components.items()])} + USE SIGNAL
-        + {nl.join([r.write_segment() for r in self.net_segments])} ;"""
+        if len(self.net_segments) > 0:
+            segment_str = f"{nl}    + {nl.join([r.write_segment() for r in self.net_segments])}"
+        else:
+            segment_str = ""
+
+        net_str = f"""    - {self.net_name} {' '.join(['( '+c[0]+' '+c[1]+' )' for c in self.net_components.items()])} + USE SIGNAL {segment_str};"""
+        return net_str
 
 
 class Def_transformer(Transformer):
