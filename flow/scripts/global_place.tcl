@@ -30,7 +30,10 @@ source $::env(PLATFORM_DIR)/setRC.tcl
 
 # set fastroute layer reduction
 if {[info exist env(FASTROUTE_TCL)]} {
-  source $env(FASTROUTE_TCL)
+  # source $env(FASTROUTE_TCL)
+  foreach fast_rt $::env(FASTROUTE_TCL) {
+    source $fast_rt
+  }
 } else {
   set_global_routing_layer_adjustment $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER) 0.5
   set_routing_layers -signal $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER)
