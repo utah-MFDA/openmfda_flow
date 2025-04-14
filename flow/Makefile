@@ -7,7 +7,14 @@ export DESIGN ?= demo
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
+
+# The docker image does not have the OpenROAD OpenBD
+# 	references a compatible version
+ifeq (HAS_OPENDB,T)
 export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+else
+export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
+endif
 export BUILD_PDK_LIBRARY ?=
 
 # Add design configure paths here
@@ -15,6 +22,11 @@ DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
 
 # Global setting for Floorplan
 export PLACE_PINS_ARGS ?=
+
+# Set for new versions of openroad, sites is no longer a valid argument in tcl file.
+# 	This just changes the reference to a script compatible to newer versions of 
+# 	OpenROAD
+export NEW_VER_FL_SITE ?=
 
 # If we are running headless use offscreen rendering for save_image
 ifndef DISPLAY
@@ -49,7 +61,6 @@ SHELL          = /bin/bash
 # - Setup in environment but can be changed here if running Makefile standalone
 #   from root Makefile (pnr/Makefile)
 export FLOW_HOME ?= .
-export GLOBAL_PLACEMENT_ARGS = -skip_nesterov_place
 #-------------------------------------------------------------------------------
 # Setup variables to point to other location for the following sub directory
 # - designs - default is under current directory
@@ -79,6 +90,8 @@ include $(PLATFORM_DIR)/config.mk
 
 # Include design and platform configuration
 include $(DESIGN_CONFIG)
+
+export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
 
 export FLOW_VARIANT ?= base
 
@@ -286,8 +299,13 @@ endif
 
 # STEP 1: Translate verilog to def
 #-------------------------------------------------------------------------------
+ifeq (NEW_VER_FL_SITE,)
 $(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/floorplan.tcl -metrics $(LOG_DIR)/1_1_floorplan.json) 2>&1 | tee $(LOG_DIR)/1_1_floorplan.log
+else
+$(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL)
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/floorplan_up.tcl -metrics $(LOG_DIR)/1_1_floorplan.json) 2>&1 | tee $(LOG_DIR)/1_1_floorplan.log
+endif
 
 # STEP 2: IO Placement (random)
 #-------------------------------------------------------------------------------
@@ -308,6 +326,7 @@ $(RESULTS_DIR)/1_floorplan.def: $(RESULTS_DIR)/1_3_floorplan_macro.def
 
 $(RESULTS_DIR)/1_floorplan.sdc: $(RESULTS_DIR)/1_synth.sdc
 	cp $< $@
+
 clean_floorplan:
 	rm -f $(RESULTS_DIR)/1_*floorplan*.def $(RESULTS_DIR)/1_floorplan.sdc $(RESULTS_DIR)/1_floorplan.v
 	rm -f $(REPORTS_DIR)/1_*
@@ -420,6 +439,7 @@ finish: $(LOG_DIR)/4_report.log \
 pnr: finish
 # ==============================================================================
 4_FINAL_FILE = $(RESULTS_DIR)/4_final.$(STREAM_SYSTEM_EXT)
+
 ifneq ($(USE_FILL),)
 $(RESULTS_DIR)/4_1_fill.def: $(RESULTS_DIR)/3_route.def $(FILL_CONFIG)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/density_fill.tcl -metrics $(LOG_DIR)/4_density_fill.json) 2>&1 | tee $(LOG_DIR)/4_density_fill.log
@@ -523,7 +543,9 @@ clean_simulate:
 	rm -rf $(RESULTS_DIR)/simulation.log
 	rm -rf $(RESULTS_DIR)/xyce_run.config
 
-ifneq ($(SIMULATION_CONFIG),)
+XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
+
+#ifneq ($(SIMULATION_CONFIG),)
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
@@ -536,11 +558,11 @@ $(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN).sc
 		--design $(DESIGN) \
 		--sim_dir $(RESULTS_DIR)/simulation \
 		--cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp \
-		--local_xyce True \
+		--local_xyce \
 		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
-		--length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv \
+		--length_file $(RESULTS_DIR)/$(DESIGN)_length.csv \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
-endif
+#endif
 
 # ==============================================================================
 #  ____   ____    _    ____
@@ -548,18 +570,34 @@ endif
 # \___ \| |     / _ \ | | | |
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
-render: $(RESULTS_DIR)/$(DESIGN).scad
+
+render: $(RESULTS_DIR)/$(DESIGN)_base.scad
 slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
-$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+# additional pcell files to include
+ifneq ($(SCAD_INCLUDE_FILES),)
+SCAD_INCLUDE_FILES += $(SCAD_LIB)/polychannel_v2.scad $(SCAD_LIB)/lef_helper.scad $(SCAD_LIB)/lef_scad_config.scad
+else
+SCAD_INCLUDE_FILES = $(SCAD_LIB)/polychannel_v2.scad $(SCAD_LIB)/lef_helper.scad $(SCAD_LIB)/lef_scad_config.scad
+endif
+
+ifneq ($(PCELL_MERGE_LEF),)
+SCAD_ARGS += --pcell $(SCAD_PCELL)
+endif
+
+#$(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+$(RESULTS)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
+				--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
+				--scad_include $(SCAD_INCLUDE_FILES) \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
 
 %.stl: %.scad
 	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
