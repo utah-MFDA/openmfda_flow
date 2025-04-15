@@ -1,0 +1,1348 @@
+VERSION 5.7 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+ 
+MACRO serpentine_100px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_100px_0 0 0 ;
+  SIZE 180 BY 180 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 149.5 29.5 150.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 150 150 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_100px_0
+ 
+MACRO serpentine_150px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_150px_0 0 0 ;
+  SIZE 240 BY 240 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 209.5 29.5 210.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 210 210 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_150px_0
+ 
+MACRO serpentine_200_100px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_200_100px_0 0 0 ;
+  SIZE 300 BY 180 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 269.5 29.5 270.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 270 150 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_200_100px_0
+
+MACRO serpentine_200px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_200px_0 0 0 ;
+  SIZE 300 BY 300 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 269.5 29.5 270.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 270 270 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_200px_0
+ 
+MACRO serpentine_200px_3
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_200px_0 0 0 ;
+  SIZE 300 BY 300 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met5 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met2 ;
+      RECT 30 0 270 300 ;
+    LAYER met3 ;
+      RECT 60 0 270 300 ;
+    LAYER met4 ;
+      RECT 60 0 270 300 ;
+    LAYER met5 ;
+      RECT 30 0 270 300 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_200px_3
+ 
+
+MACRO serpentine_300px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_300px_0 0 0 ;
+  SIZE 420 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 389.5 29.5 390.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 360 390 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_300px_0
+
+MACRO serpentine_300px_1
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_300px_0 0 0 ;
+  SIZE 420 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 59.5 29.5 60.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met2 ;
+      RECT 60 0 390 420 ;
+    LAYER met3 ;
+      RECT 60 0 390 420 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_300px_1
+ 
+MACRO serpentine_300px_2
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_300px_0 0 0 ;
+  SIZE 450 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met4 ;
+        RECT 419.5 29.5 420.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met2 ;
+      RECT 30 0 390 420 ;
+    LAYER met3 ;
+      RECT 60 0 390 420 ;
+    LAYER met4 ;
+      RECT 60 0 420 420 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_300px_2
+ 
+MACRO serpentine_300px_3
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_300px_0 0 0 ;
+  SIZE 420 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 59.5 29.5 60.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met5 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met2 ;
+      RECT 60 0 420 420 ;
+    LAYER met3 ;
+      RECT 60 0 420 420 ;
+    LAYER met4 ;
+      RECT 60 0 420 420 ;
+    LAYER met5 ;
+      RECT 30 0 420 420 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_300px_3
+ 
+MACRO serpentine_300px_4
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_300px_0 0 0 ;
+  SIZE 450 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met6 ;
+        RECT 419.5 29.5 420.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met2 ;
+      RECT 30 0 390 420 ;
+    LAYER met3 ;
+      RECT 60 0 390 420 ;
+    LAYER met4 ;
+      RECT 60 0 420 420 ;
+    LAYER met5 ;
+      RECT 60 0 420 420 ;
+    LAYER met6 ;
+      RECT 60 0 420 420 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_300px_4
+ 
+MACRO serpentine_50px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_50px_0 0 0 ;
+  SIZE 120 BY 120 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 89.5 29.5 90.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 90 90 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_50px_0
+ 
+MACRO serpentine_75px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN serpentine_75px_0 0 0 ;
+  SIZE 150 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 119.5 29.5 120.5 30.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 120 120 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END serpentine_75px_0
+MACRO diffmix_25px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN diffmix_25px_0 0 0 ;
+  SIZE 90 BY 90 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN a_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END a_fluid
+  PIN b_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END b_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 59.5 59.5 60.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 60 60 ;
+    LAYER met2 ;
+      RECT 30 30 60 60 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END diffmix_25px_0
+ 
+MACRO mixer_sw_test
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN mixer_sw_test 0 0 ;
+  SIZE 210 BY 260 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN a_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END a_fluid
+  PIN b_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 163.5 29.5 164.5 30.5 ;
+    END
+  END b_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 99.5 229.5 100.5 230.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 180 230 ;
+    LAYER met2 ;
+      RECT 30 30 180 230 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END mixer_sw_test
+
+MACRO directional_res_400nl
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN directional_res_400nl 0 0 ;
+  SIZE 210 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met4 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 179.5 59.5 180.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 180 120 ;
+    LAYER met2 ;
+      RECT 30 30 180 120 ;
+    LAYER met3 ;
+      RECT 30 30 180 120 ;
+    LAYER met4 ;
+      RECT 30 30 180 120 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END directional_res_400nl
+
+MACRO directional_res_600nl
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN directional_res_600nl 0 0 ;
+  SIZE 210 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met6 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 179.5 59.5 180.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 180 120 ;
+    LAYER met2 ;
+      RECT 30 30 180 120 ;
+    LAYER met3 ;
+      RECT 30 30 180 120 ;
+    LAYER met4 ;
+      RECT 30 30 180 120 ;
+    LAYER met5 ;
+      RECT 30 30 180 120 ;
+    LAYER met6 ;
+      RECT 30 30 180 120 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END directional_res_600nl
+
+MACRO directional_res_800nl
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN directional_res_800nl 0 0 ;
+  SIZE 210 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met8 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 179.5 59.5 180.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 180 120 ;
+    LAYER met2 ;
+      RECT 30 30 180 120 ;
+    LAYER met3 ;
+      RECT 30 30 180 120 ;
+    LAYER met4 ;
+      RECT 30 30 180 120 ;
+    LAYER met5 ;
+      RECT 30 30 180 120 ;
+    LAYER met6 ;
+      RECT 30 30 180 120 ;
+    LAYER met7 ;
+      RECT 30 30 180 120 ;
+    LAYER met8 ;
+      RECT 30 30 180 120 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END directional_res_800nl
+
+MACRO bidirectional_res_400ul
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN bidirectional_res_400ul 0 0 ;
+  SIZE 150 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 72.5 29.5 73.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 72.5 114.5 73.5 115.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 115 115 ;
+    LAYER met2 ;
+      RECT 30 30 115 115 ;
+    LAYER met3 ;
+      RECT 30 30 115 115 ;
+    LAYER met4 ;
+      RECT 30 30 115 115 ;
+    LAYER met5 ;
+      RECT 30 30 115 115 ;
+    LAYER met6 ;
+      RECT 30 30 115 115 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END bidirectional_res_400ul
+
+MACRO bidirectional_res_600ul
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN bidirectional_res_600ul 0 0 ;
+  SIZE 150 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 72.5 29.5 73.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 72.5 114.5 73.5 115.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 115 115 ;
+    LAYER met2 ;
+      RECT 30 30 115 115 ;
+    LAYER met3 ;
+      RECT 30 30 115 115 ;
+    LAYER met4 ;
+      RECT 30 30 115 115 ;
+    LAYER met5 ;
+      RECT 30 30 115 115 ;
+    LAYER met6 ;
+      RECT 30 30 115 115 ;
+    LAYER met7 ;
+      RECT 30 30 115 115 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END bidirectional_res_600ul
+
+MACRO bidirectional_res_800ul
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN bidirectional_res_800ul 0 0 ;
+  SIZE 150 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 72.5 29.5 73.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 72.5 114.5 73.5 115.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 115 115 ;
+    LAYER met2 ;
+      RECT 30 30 115 115 ;
+    LAYER met3 ;
+      RECT 30 30 115 115 ;
+    LAYER met4 ;
+      RECT 30 30 115 115 ;
+    LAYER met5 ;
+      RECT 30 30 115 115 ;
+    LAYER met6 ;
+      RECT 30 30 115 115 ;
+    LAYER met7 ;
+      RECT 30 30 115 115 ;
+    LAYER met8 ;
+      RECT 30 30 115 115 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END bidirectional_res_800ul
+
+MACRO inline_res_100nl
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN inline_res_100nl 0 0 ;
+  SIZE 240 BY 120 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 209.5 59.5 210.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 210 90 ;
+    LAYER met2 ;
+      RECT 30 30 210 90 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END inline_res_100nl
+
+MACRO inline_res_40nl
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN inline_res_40nl 0 0 ;
+  SIZE 210 BY 120 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 179.5 59.5 180.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 180 90 ;
+    LAYER met2 ;
+      RECT 30 30 180 90 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END inline_res_40nl
+
+MACRO inline_res_60nl
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN inline_res_60nl 0 0 ;
+  SIZE 180 BY 120 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 149.5 59.5 150.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 150 90 ;
+    LAYER met2 ;
+      RECT 30 30 150 90 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END inline_res_60nl
+
+MACRO inline_res_80nl
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN inline_res_80nl 0 0 ;
+  SIZE 210 BY 120 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 179.5 59.5 180.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 180 90 ;
+    LAYER met2 ;
+      RECT 30 30 180 90 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END inline_res_80nl
+
+MACRO valve_40px_1
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN valve_40px_1 0 0 ;
+  SIZE 180 BY 180 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 89.5 30.5 90.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 149.5 89.5 150.5 90.5 ;
+    END
+  END out_fluid
+  PIN in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 29.5 90.5 30.5 ;
+    END
+  END in_air
+  PIN out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 149.5 90.5 150.5 ;
+    END
+  END out_air
+  OBS
+    LAYER met1 ;
+      RECT 30 30 150 150 ;
+    LAYER met2 ;
+      RECT 30 30 150 150 ;
+    LAYER met3 ;
+      RECT 30 30 150 150 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END valve_40px_1
+
+MACRO valve_80px_1
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN valve_80px_1 0 0 ;
+  SIZE 190 BY 190 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 89.5 30.5 90.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 149.5 89.5 150.5 90.5 ;
+    END
+  END out_fluid
+  PIN in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 29.5 90.5 30.5 ;
+    END
+  END in_air
+  PIN out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 149.5 90.5 150.5 ;
+    END
+  END out_air
+  OBS
+    LAYER met1 ;
+      RECT 30 30 150 150 ;
+    LAYER met2 ;
+      RECT 30 30 150 150 ;
+    LAYER met3 ;
+      RECT 30 30 150 150 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END valve_80px_1
+
+MACRO valve_80px_4way_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN valve_80px_4way_0 0 0 ;
+  SIZE 190 BY 190 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN a_fluid
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 89.5 30.5 90.5 ;
+    END
+  END a_fluid
+  PIN b_fluid
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 149.5 89.5 150.5 90.5 ;
+    END
+  END b_fluid
+  PIN c_fluid
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 89.5 29.5 90.5 30.5 ;
+    END
+  END c_fluid
+  PIN d_fluid
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 89.5 149.5 90.5 150.5 ;
+    END
+  END d_fluid
+  PIN in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 59.5 90.5 60.5 ;
+    END
+  END in_air
+  PIN out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 119.5 90.5 120.5 ;
+    END
+  END out_air
+  OBS
+    LAYER met1 ;
+      RECT 30 30 150 150 ;
+    LAYER met2 ;
+      RECT 30 30 150 150 ;
+    LAYER met3 ;
+      RECT 60 60 120 120 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END valve_80px_4way_0
+
+MACRO pump_20_40_20px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN pump_20_40_20px_0 0 0 ;
+  SIZE 320 BY 165 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN fluid_in
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 89.5 30.5 90.5 ;
+    END
+  END fluid_in
+  PIN fluid_out
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 299.5 89.5 300.5 90.5 ;
+    END
+  END fluid_out
+  PIN a_out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 149.5 90.5 150.5 ;
+    END
+  END a_out_air
+  PIN b_out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 164.5 149.5 165.5 150.5 ;
+    END
+  END b_out_air
+  PIN c_out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 239.5 149.5 240.5 150.5 ;
+    END
+  END c_out_air
+  PIN a_in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 29.5 90.5 30.5 ;
+    END
+  END a_in_air
+  PIN b_in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 164.5 29.5 165.5 30.5 ;
+    END
+  END b_in_air
+  PIN c_in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 239.5 29.5 240.5 30.5 ;
+    END
+  END c_in_air
+  OBS
+    LAYER met1 ;
+      RECT 30 30 300 150 ;
+    LAYER met2 ;
+      RECT 30 30 300 150 ;
+    LAYER met3 ;
+      RECT 30 30 300 150 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END pump_20_40_20px_0
+
+MACRO pump_20px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN pump_20px_0 0 0 ;
+  SIZE 300 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN fluid_in
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 62.5 30.5 63.5 ;
+    END
+  END fluid_in
+  PIN fluid_out
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 269 62.5 270.5 63.5 ;
+    END
+  END fluid_out
+  PIN air_out_a
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 77.5 99.5 78.5 100.5 ;
+    END
+  END air_out_a
+  PIN air_out_b
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 147.5 99.5 148.5 100.5 ;
+    END
+  END air_out_b
+  PIN air_out_c
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 217.5 99.5 218.5 100.5 ;
+    END
+  END air_out_c
+  PIN air_in_a
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 77.5 29.5 78.5 30.5 ;
+    END
+  END air_in_a
+  PIN air_in_b
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 147.5 29.5 148.5 30.5 ;
+    END
+  END air_in_b
+  PIN air_in_c
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 217.5 29.5 218.5 30.5 ;
+    END
+  END air_in_c
+  OBS
+    LAYER met1 ;
+      RECT 30 30 280 110 ;
+    LAYER met2 ;
+      RECT 30 30 280 110 ;
+    LAYER met3 ;
+      RECT 30 30 280 110 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END pump_20px_0
+
+MACRO pump_40px_0
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN pump_40px_0 0 0 ;
+  SIZE 290 BY 135 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 269.5 59.5 270.5 60.5 ;
+    END
+  END out_fluid
+  PIN a_in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 29.5 90.5 30.5 ;
+    END
+  END a_in_air
+  PIN a_out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 89.5 89.5 90.5 90.5 ;
+    END
+  END a_out_air
+  PIN b_in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 149.5 29.5 150.5 30.5 ;
+    END
+  END b_in_air
+  PIN b_out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 149.5 89.5 150.5 90.5 ;
+    END
+  END b_out_air
+  PIN c_in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 209.5 29.5 210.5 30.5 ;
+    END
+  END c_in_air
+  PIN c_out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 209.5 89.5 210.5 90.5 ;
+    END
+  END c_out_air
+  OBS
+    LAYER met1 ;
+      RECT 30 30 270 90 ;
+    LAYER met2 ;
+      RECT 30 30 270 90 ;
+    LAYER met3 ;
+      RECT 30 30 270 90 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END pump_40px_0
+
+MACRO optical_measure_100_5ch
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN optical_measure_100_5ch 0 0 ;
+  SIZE 360 BY 120 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met4 ;
+        RECT 29.5 59.5 30.5 60.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met4 ;
+        RECT 329.5 59.5 330.5 60.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 330 90 ;
+    LAYER met2 ;
+      RECT 30 30 330 90 ;
+    LAYER met3 ;
+      RECT 30 30 330 90 ;
+    LAYER met4 ;
+      RECT 30 30 330 90 ;
+    LAYER met5 ;
+      RECT 30 30 330 90 ;
+    LAYER met6 ;
+      RECT 30 30 330 90 ;
+    LAYER met7 ;
+      RECT 30 30 330 90 ;
+    LAYER met8 ;
+      RECT 30 30 330 90 ;
+    LAYER met9 ;
+      RECT 30 30 330 90 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END optical_measure_100_5ch
+
+MACRO optical_measure_300_5ch
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN optical_measure_300_5ch 0 0 ;
+  SIZE 600 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met4 ;
+        RECT 29.5 74.5 30.5 75.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met4 ;
+        RECT 569.5 74.5 570.5 75.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 570 120 ;
+    LAYER met2 ;
+      RECT 30 30 570 120 ;
+    LAYER met3 ;
+      RECT 30 30 570 120 ;
+    LAYER met4 ;
+      RECT 30 30 570 120 ;
+    LAYER met5 ;
+      RECT 30 30 570 120 ;
+    LAYER met6 ;
+      RECT 30 30 570 120 ;
+    LAYER met7 ;
+      RECT 30 30 570 120 ;
+    LAYER met8 ;
+      RECT 30 30 570 120 ;
+    LAYER met9 ;
+      RECT 30 30 570 120 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END optical_measure_300_5ch
+END LIBRARY
