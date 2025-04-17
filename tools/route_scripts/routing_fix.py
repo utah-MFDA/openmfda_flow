@@ -26,6 +26,7 @@ if not os.path.exists(path_for_omfda):
         f"Not able to find openmfda_flow path; {os.path.abspath(path_for_omfda)}")
 
 src_path = f"{path_for_omfda}/src/openmfda_flow"
+print(os.path.abspath(src_path))
 tool_path = f"{path_for_omfda}/tools"
 flow_path = f"{path_for_omfda}/flow"
 results_path = f"{path_for_omfda}/flow/results"
@@ -44,6 +45,7 @@ import Astr_grid
 
 import component_parse
 import route_scripts
+
 import def_obj_load
 
 #fmt:on

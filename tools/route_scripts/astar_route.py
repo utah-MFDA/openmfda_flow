@@ -3,12 +3,17 @@ import os
 import sys
 import copy
 import json
+this_file = os.path.abspath(os.path.dirname(__file__))
+is_tool = str(this_file).split('/')[-2]
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 import Astr_grid
 import Astar_basic_grid
 
 # testing path configuration
-path_for_omfda = "../openmfda_flow_2up"
+if is_tool == 'tools':
+    path_for_omfda = os.path.abspath(f"{this_file}/../..")
+else:
+    path_for_omfda = "../openmfda_flow_2up"
 src_path = f"{path_for_omfda}/src/openmfda_flow"
 tool_path = f"{path_for_omfda}/tools"
 flow_path = f"{path_for_omfda}/flow"
