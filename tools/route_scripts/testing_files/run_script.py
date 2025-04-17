@@ -27,6 +27,7 @@ def run_test_1():
         design_name='albumin_opt_0',
         platform_config_file=plt_conf,
         lef_files=lef_files,
+        out_def='alb_fix.def',
         grid_size=[84, 52, 10],
         def_scale=1000,
         write_polyroute=True

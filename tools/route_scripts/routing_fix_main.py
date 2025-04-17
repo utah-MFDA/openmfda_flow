@@ -8,7 +8,14 @@ import Astr_grid
 # fmt: off
 this_file_dir = os.path.abspath(os.path.dirname(__file__))
 
-openmfda_base_dir = os.path.abspath(f'{this_file_dir}/../../openmfda_flow_2up')
+is_tool = str(this_file_dir).split('/')[-2]
+
+if is_tool == 'tools':
+    openmfda_base_dir = os.path.abspath(f'{this_file_dir}/../../')
+    print(openmfda_base_dir)
+else:
+    openmfda_base_dir = os.path.abspath(f'{this_file_dir}/../../openmfda_flow_2up')
+
 if not os.path.exists(openmfda_base_dir):
     raise Exception(f'openmfda_base_dir is not pointing to a valid dir; {openmfda_base_dir}')
 
@@ -19,6 +26,143 @@ sys.path.append(f'{openmfda_base_dir}/tools/scad_render')
 import route_scripts
 import component_parse
 # fmt: on
+
+
+def transfer_comp(new_netlist, old_netlist):
+    for rt, net_val in new_netlist.items():
+        for comp, port in old_netlist[rt].net_components.items():
+            net_val.add_component(comp, port)
+
+
+def format_netlist_2_def(net_list):
+    nets = {}
+    for net, sgmts in net_list.items():
+        new_net = def_obj_load.Net(
+            net
+        )
+        for sind, s_data in enumerate(sgmts):
+            if sind == 0:
+                new_net.add_segment(
+                    s_layer=s_data['layer'],
+                    s_pt1=s_data['pt1'],
+                    s_pt2=s_data['pt2'],
+                )
+            else:
+                new_net.add_segment(
+                    s_layer=s_data['layer'],
+                    s_pt1=s_data['pt1'],
+                    s_pt2=s_data['pt2']
+                )
+
+        new_net.net_segments[0].init_segment = True
+
+        nets[net] = new_net
+
+    return nets
+
+
+def lnk_pts_2_def_obj(
+    lnk_rt,
+    convert_factor_grid,
+    convert_factor_layer,
+    platform_config,
+    export_int=True,
+    ignore_layer_cp=False
+):
+    def add_via(pt_1, pt_2):
+        pass
+
+    net_list = {}
+
+    via_map = platform_config['via_map']
+    met_via_map = {}
+    for v, mets in via_map.items():
+        met_via_map[(mets[0], mets[1])] = v
+
+    # invert layer map
+    met_map = platform_config['layers']
+    lay_map = {}
+    for met, lay in met_map.items():
+        if lay in lay_map.keys():
+            if ignore_layer_cp:
+                print(f'Skipping {met} as {lay} already exists')
+                continue
+            else:
+                raise ValueError(
+                    'Duplicate layer {met} as {lay} already exists')
+        lay_map[lay] = met
+
+    for rt, segs in lnk_rt.items():
+        segment_list = []
+        via_list = []
+        for br in segs.nodes:
+            pt1_iter = iter(segs.nodes[br]['route'])
+            for pt2 in segs.nodes[br]['route'][1:]:
+                pt1 = next(pt1_iter)
+
+                if export_int:
+                    exp_seg = [
+                        [int(pt1[0]*convert_factor_grid),
+                         int(pt1[1]*convert_factor_grid)],
+                        [int(pt2[0]*convert_factor_grid),
+                         int(pt2[1]*convert_factor_grid)]
+                    ]
+                    # if isinstance(pt1[2], str):
+                else:
+                    exp_seg = [
+                        [pt1[0]*convert_factor_grid,
+                         pt1[1]*convert_factor_grid],
+                        [pt2[0]*convert_factor_grid,
+                         pt2[1]*convert_factor_grid]
+                    ]
+
+                is_via = (
+                    pt1[2] != pt2[2]
+                )
+
+                if is_via:
+                    mets_stack = []
+
+                    es = sorted([pt1[2], pt2[2]], key=lambda x: x)
+
+                    if es[1] - es[0] >= 2:
+                        for i in range(es[0], es[1]):
+                            exp_layer = (
+                                lay_map[i],
+                                lay_map[i+1]
+                            )
+                            mets_stack += [exp_layer]
+                    else:
+                        exp_layer = tuple(lay_map[a] for a in es)
+                        mets_stack = [(exp_layer[0], exp_layer[1])]
+
+                    for mets2 in mets_stack:
+
+                        # determine which vias
+                        via = met_via_map[mets2]
+
+                        # replace pt
+
+                        # add point
+                        via_list += [{
+                            'pt1': exp_seg[0],
+                            'pt2': via,
+                            'layer': exp_layer[0]
+                        }]
+
+                else:
+                    # create segement
+
+                    segment_list += [{
+                        'pt1': exp_seg[0],
+                        'pt2': exp_seg[1],
+                        'layer': exp_layer[0]
+                    }]
+
+        # add segments to routes
+        net_list[rt] = segment_list + via_list
+
+    return net_list
 
 
 def fix_routes(
@@ -194,9 +338,34 @@ def fix_routes(
             )
 
     if out_def is not None:
+        print(f"Writing to file: {out_def}")
         # unlink routes
+        new_net_list = format_netlist_2_def(
+                lnk_pts_2_def_obj(
+                    lnk_rt=lnk_routes,
+                    convert_factor_grid=platform_conf["def_grid_scale"],
+                    convert_factor_layer=1,
+                    platform_config=platform_conf,
+                    export_int=True,
+                    ignore_layer_cp=False
+                )
+        )
+
+        transfer_comp(
+            new_net_list,
+            def_obj['design'][design_name].nets
+        )
+
+        from pprint import pp
+        pp(new_net_list)
 
         # connect back with def object
+        def_obj['design'][design_name].nets = new_net_list
 
         # write def file
-        pass
+        def_obj['design'][design_name].write_def(
+            out_def if len(
+                out_def) > 4 and out_def[-4:] == '.def' else f'{out_def}.def'
+        )
+
+    return lnk_routes
