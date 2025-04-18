@@ -341,14 +341,14 @@ def fix_routes(
         print(f"Writing to file: {out_def}")
         # unlink routes
         new_net_list = format_netlist_2_def(
-                lnk_pts_2_def_obj(
-                    lnk_rt=lnk_routes,
-                    convert_factor_grid=platform_conf["def_grid_scale"],
-                    convert_factor_layer=1,
-                    platform_config=platform_conf,
-                    export_int=True,
-                    ignore_layer_cp=False
-                )
+            lnk_pts_2_def_obj(
+                lnk_rt=lnk_routes,
+                convert_factor_grid=platform_conf["def_grid_scale"],
+                convert_factor_layer=1,
+                platform_config=platform_conf,
+                export_int=True,
+                ignore_layer_cp=False
+            )
         )
 
         transfer_comp(
@@ -369,3 +369,37 @@ def fix_routes(
         )
 
     return lnk_routes
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--def_file', required=True)
+    parser.add_argument('--design_name', required=True)
+    parser.add_argument('--platform_conf', required=True)
+    parser.add_argument('--src_lef', required=True)
+    parser.add_argument('--additional_lefs', nargs='+')
+
+    parser.add_argument('--output_def')
+    parser.add_argument('--grid_size', nargs=3)
+    parser.add_argument('--def_scale', type=int)
+    parser.add_argument('--write_polyroute', action='store_true', default=False)
+
+    args = parser.parse_args()
+
+    fix_routes(
+        def_file=args.def_file,
+        design_name=args.design_name,
+        platform_config_file=args.platform_conf,
+        lef_files=[args.src_files] + args.additional_lefs,
+        out_def=args.output_def,
+        grid_size=[
+            args.grid_size[0],
+            args.grid_size[1],
+            args.grid_size[2]
+        ],
+        def_scale=args.def_scale,
+        write_polyroute=False
+    )
