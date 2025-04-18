@@ -75,8 +75,8 @@ def p_in_file(p):
     | in_file lef_noimp
     | macro
     | lef_noimp"""
-    #| in_file comment
-    #| comment
+    # | in_file comment
+    # | comment
     # | in_file NL
     # | NL"""
     # if p is None:
@@ -367,7 +367,7 @@ class ComponentParser:
         # for c in p_out.items():
         # print(c[0], c[1].values())
 
-    def get_comp_pins_from_lef(self, in_file, scale=1):
+    def get_comp_pins_from_lef(self, in_file, scale=1, silent=False):
         par_f = self.parser_multi_file(in_file)
         if par_f is None:
             return {}
@@ -391,8 +391,11 @@ class ComponentParser:
                     # for p in pin[1]["PORT"]["RECT"]
                     # ]
                 }
-            print("SIZE:", [i * scale for i in c[1]["SIZE"]])
-            c_list[c[0]] = Component(c[0], pins, [i * scale for i in c[1]["SIZE"]])
+
+            if not silent:
+                print("SIZE:", [i * scale for i in c[1]["SIZE"]])
+            c_list[c[0]] = Component(
+                c[0], pins, [i * scale for i in c[1]["SIZE"]])
         return c_list
 
 
@@ -403,12 +406,13 @@ class Component:
         self.pins = pins
         self.size = size
 
-    def get_component_center(self, pos=[0,0]):
+    def get_component_center(self, pos=[0, 0]):
         return [
             sum(self.size[0::2])/(len(self.size)/2) + pos[0],
             sum(self.size[1::2])/(len(self.size)/2) + pos[1]]
 
-    def get_pin_center(self, pin_name, pos=[0,0], orient="N"):
+
+    def get_pin_center(self, pin_name, pos=[0, 0], orient="N"):
         p = self.pins[pin_name]["pos"]
         return [sum(p[0::2])/(len(p)/2), sum(p[1::2])/(len(p)/2)]
 
