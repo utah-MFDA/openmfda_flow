@@ -8,8 +8,6 @@ OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
 
-#export SCAD_SCRIPT ?=../tools/scad_render/scad_pnr.py
-export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
 # add a space to the below to definition to build library
 export BUILD_PDK_LIBRARY ?=
 
@@ -637,7 +635,7 @@ SCAD_ARGS += --pcell $(SCAD_PCELL)
 endif
 
 #$(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
-$(RESULTS)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+$(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
