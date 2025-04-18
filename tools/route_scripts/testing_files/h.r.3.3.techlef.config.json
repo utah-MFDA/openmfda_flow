@@ -1,0 +1,27 @@
+{
+	"via_map": {
+		"M1M2_PR": ["met1", "met2"],
+		"M2M3_PR": ["met2", "met3"],
+		"M3M4_PR": ["met3", "met4"],
+		"M4M5_PR": ["met4", "met5"],
+		"M5M6_PR": ["met5", "met6"],
+		"M6M7_PR": ["met6", "met7"],
+		"M7M8_PR": ["met7", "met8"],
+		"M8M9_PR": ["met8", "met9"]
+	},
+	"layers": {
+		"met1": 0,
+		"met2": 1,
+		"met3": 2,
+		"met4": 3,
+		"met5": 4,
+		"met6": 5,
+		"met7": 6,
+		"met8": 7,
+		"met9": 8,
+		"met10": 9
+	},
+	"def_grid_scale": 30000,
+	"pitch": 30,
+	"def_scale": 1000
+}

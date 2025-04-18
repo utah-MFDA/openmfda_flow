@@ -233,6 +233,10 @@ $(WRAPPED_LIBS):
 
 #.PHONY: gen_pcells
 #gen_pcells: $(PCELL_MERGE_LEF)
+
+DEF_FIX_UTIL = ../tools/route_scripts/util.mk
+include $(DEF_FIX_UTIL)
+
 # ==============================================================================
 #  _     ___ ____  ____      _    ______   __
 # | |   |_ _| __ )|  _ \    / \  |  _ \ \ / /
@@ -403,8 +407,6 @@ clean_place:
 route: $(RESULTS_DIR)/3_route.def \
        $(RESULTS_DIR)/3_route.sdc
 # ==============================================================================
-# rereplace_test:
-# 	($(TIME_CMD) $(OPENROAD_CMD) $(CUSTOM_SCRIPTS_DIR)/read_def.tcl)
 
 reroute:
 	$(TIME_CMD) $(OPENROAD_CMD) $(CUSTOM_SCRIPTS_DIR)/reroute.tcl
@@ -569,14 +571,13 @@ clean_simulate:
 	rm -rf $(RESULTS_DIR)/xyce_run.config
 
 ifneq ($(SIMULATION_CONFIG),)
-#$(XYCE_RUN_CONFIG): $(XYCE_LIB)
 XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 
 #ifneq ($(SIMULATION_CONFIG),)
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
-$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
 		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
@@ -645,7 +646,7 @@ $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
 
-				#--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
+#--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
 # $(RESULTS_DIR)/5_scad.scad: $(RESULTS_DIR)/$(DESIGN).scad
 # 	cp $^ $@
 

@@ -1,0 +1,319 @@
+VERSION 5.8 ;
+DIVIDERCHAR "/" ;
+BUSBITCHARS "[]" ;
+DESIGN albumin_opt_0 ;
+UNITS DISTANCE MICRONS 1000 ;
+DIEAREA ( 0 0 ) ( 2550000 1590000 ) ;
+ROW ROW_0 CoreSite 0 0 N DO 85 BY 1 STEP 30000 0 ;
+ROW ROW_1 CoreSite 0 240000 FS DO 85 BY 1 STEP 30000 0 ;
+ROW ROW_2 CoreSite 0 480000 N DO 85 BY 1 STEP 30000 0 ;
+ROW ROW_3 CoreSite 0 720000 FS DO 85 BY 1 STEP 30000 0 ;
+ROW ROW_4 CoreSite 0 960000 N DO 85 BY 1 STEP 30000 0 ;
+ROW ROW_5 CoreSite 0 1200000 FS DO 85 BY 1 STEP 30000 0 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met1 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met1 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met2 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met2 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met3 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met3 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met4 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met4 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met5 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met5 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met6 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met6 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met7 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met7 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met8 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met8 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met9 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met9 ;
+TRACKS X 30000 DO 84 STEP 30000 LAYER met10 ;
+TRACKS Y 30000 DO 52 STEP 30000 LAYER met10 ;
+GCELLGRID X 0 DO 5 STEP 450000 ;
+GCELLGRID Y 0 DO 2 STEP 690000 ;
+COMPONENTS 15 ;
+    - mixabcd diffmix_25px_0 + PLACED ( 1080000 630000 ) N ;
+    - mixbcd diffmix_25px_0 + PLACED ( 990000 630000 ) N ;
+    - mixcd diffmix_25px_0 + PLACED ( 900000 630000 ) N ;
+    - opt1 optical_measure_300_5ch + PLACED ( 900000 420000 ) N ;
+    - serp0 p_serpentine_1_180_30_8 + PLACED ( 960000 960000 ) FN ;
+    - serp1 p_serpentine_1_180_30_8 + PLACED ( 960000 1200000 ) S ;
+    - serp10 p_serpentine_1_180_30_5 + PLACED ( 1560000 1200000 ) FS ;
+    - serp2 p_serpentine_1_180_30_8 + PLACED ( 1590000 720000 ) FS ;
+    - serp3 p_serpentine_1_180_30_8 + PLACED ( 1500000 480000 ) N ;
+    - serp4 p_serpentine_1_180_30_8 + PLACED ( 1560000 960000 ) N ;
+    - serp5 p_serpentine_1_180_30_8 + PLACED ( 360000 720000 ) S ;
+    - serp6 p_serpentine_1_180_30_7 + PLACED ( 990000 0 ) N ;
+    - serp7 p_serpentine_1_180_30_9 + PLACED ( 960000 720000 ) FS ;
+    - serp8 p_serpentine_1_180_30_6 + PLACED ( 420000 960000 ) FN ;
+    - serp9 p_serpentine_1_180_30_6 + PLACED ( 1500000 240000 ) FS ;
+END COMPONENTS
+PINS 5 ;
+    - out + NET out + DIRECTION OUTPUT + USE SIGNAL
+      + PORT
+        + LAYER met9 ( -7000 -7000 ) ( 7000 7000 )
+        + FIXED ( 1590000 660000 ) N ;
+    - solna + NET solna + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met9 ( -7000 -7000 ) ( 7000 7000 )
+        + FIXED ( 960000 930000 ) N ;
+    - solnb + NET solnb + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met9 ( -7000 -7000 ) ( 7000 7000 )
+        + FIXED ( 1140000 930000 ) N ;
+    - solnc + NET solnc + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met9 ( -7000 -7000 ) ( 7000 7000 )
+        + FIXED ( 1320000 930000 ) N ;
+    - solnd + NET solnd + DIRECTION INPUT + USE SIGNAL
+      + PORT
+        + LAYER met9 ( -7000 -7000 ) ( 7000 7000 )
+        + FIXED ( 1500000 930000 ) N ;
+END PINS
+NETS 19 ;
+    - chan_a_0 ( serp1 in_fluid ) ( serp0 out_fluid ) + USE SIGNAL
+      + ROUTED met4 ( 1230000 990000 ) ( * 1440000 )
+      NEW met2 ( 1230000 1410000 0 ) ( * 1440000 )
+      NEW met3 ( 1230000 990000 ) M3M4_PR
+      NEW met2 ( 1230000 1440000 ) M2M3_PR
+      NEW met3 ( 1230000 1440000 ) M3M4_PR ;
+    - chan_a_1 ( serp2 in_fluid ) ( serp1 out_fluid ) + USE SIGNAL
+      + ROUTED met3 ( 1230000 1410000 0 ) ( 1260000 * )
+      NEW met1 ( 1260000 1410000 ) ( 1410000 * )
+      NEW met2 ( 1410000 960000 ) ( * 1410000 )
+      NEW met1 ( 1410000 960000 ) ( 1620000 * )
+      NEW met2 ( 1620000 930000 0 ) ( * 960000 )
+      NEW met1 ( 1260000 1410000 ) M1M2_PR
+      NEW met2 ( 1260000 1410000 ) M2M3_PR
+      NEW met1 ( 1410000 1410000 ) M1M2_PR
+      NEW met1 ( 1410000 960000 ) M1M2_PR
+      NEW met1 ( 1620000 960000 ) M1M2_PR ;
+    - chan_a_2 ( serp3 in_fluid ) ( serp2 out_fluid ) + USE SIGNAL
+      + ROUTED met3 ( 1500000 930000 ) ( 1620000 * 0 )
+      NEW met2 ( 1500000 540000 ) ( * 930000 )
+      NEW met4 ( 1500000 510000 ) ( * 540000 )
+      NEW met2 ( 1500000 510000 ) ( 1530000 * 0 )
+      NEW met2 ( 1500000 930000 ) M2M3_PR
+      NEW met2 ( 1500000 540000 ) M2M3_PR
+      NEW met3 ( 1500000 540000 ) M3M4_PR
+      NEW met2 ( 1500000 510000 ) M2M3_PR
+      NEW met3 ( 1500000 510000 ) M3M4_PR ;
+    - chan_a_3 ( serp4 in_fluid ) ( serp3 out_fluid ) + USE SIGNAL
+      + ROUTED met6 ( 1530000 510000 ) ( * 720000 )
+      NEW met5 ( 1530000 720000 ) ( 1590000 * )
+      NEW met2 ( 1590000 720000 ) ( * 990000 0 )
+      NEW met3 ( 1530000 510000 ) M3M4_PR
+      NEW met4 ( 1530000 510000 ) M4M5_PR
+      NEW met5 ( 1530000 510000 ) M5M6_PR
+      NEW met5 ( 1530000 720000 ) M5M6_PR
+      NEW met2 ( 1590000 720000 ) M2M3_PR
+      NEW met3 ( 1590000 720000 ) M3M4_PR
+      NEW met4 ( 1590000 720000 ) M4M5_PR ;
+    - chan_a_4 ( serp5 in_fluid ) ( serp4 out_fluid ) + USE SIGNAL
+      + ROUTED met2 ( 630000 930000 0 ) ( * 960000 )
+      NEW met3 ( 630000 960000 ) ( 780000 * )
+      NEW met2 ( 780000 960000 ) ( * 990000 )
+      NEW met4 ( 1590000 960000 ) ( * 990000 )
+      NEW met3 ( 1170000 960000 ) ( 1590000 * )
+      NEW met4 ( 1170000 960000 ) ( * 990000 )
+      NEW met5 ( 960000 990000 ) ( 1170000 * )
+      NEW met3 ( 780000 990000 ) ( 960000 * )
+      NEW met2 ( 630000 960000 ) M2M3_PR
+      NEW met2 ( 780000 960000 ) M2M3_PR
+      NEW met2 ( 780000 990000 ) M2M3_PR
+      NEW met3 ( 1590000 990000 ) M3M4_PR
+      NEW met3 ( 1590000 960000 ) M3M4_PR
+      NEW met3 ( 1170000 960000 ) M3M4_PR
+      NEW met4 ( 1170000 990000 ) M4M5_PR
+      NEW met3 ( 960000 990000 ) M3M4_PR
+      NEW met4 ( 960000 990000 ) M4M5_PR ;
+    - chan_a_5 ( serp6 in_fluid ) ( serp5 out_fluid ) + USE SIGNAL
+      + ROUTED met4 ( 630000 30000 ) ( * 930000 )
+      NEW met3 ( 630000 30000 ) ( 900000 * )
+      NEW met2 ( 1005000 30000 ) ( 1020000 * 0 )
+      NEW met1 ( 900000 30000 ) ( 1005000 * )
+      NEW met3 ( 630000 930000 ) M3M4_PR
+      NEW met3 ( 630000 30000 ) M3M4_PR
+      NEW met1 ( 1005000 30000 ) M1M2_PR
+      NEW met1 ( 900000 30000 ) M1M2_PR
+      NEW met2 ( 900000 30000 ) M2M3_PR ;
+    - chan_a_6 ( serp6 out_fluid ) ( mixabcd b_fluid ) + USE SIGNAL
+      + ROUTED met6 ( 870000 420000 ) ( * 570000 )
+      NEW met1 ( 870000 570000 ) ( 900000 * )
+      NEW met1 ( 1095000 660000 ) ( 1110000 * 0 )
+      NEW met2 ( 1095000 600000 ) ( * 660000 )
+      NEW met1 ( 900000 600000 ) ( 1095000 * )
+      NEW met1 ( 900000 570000 ) ( * 600000 )
+      NEW met5 ( 990000 30000 ) ( 1020000 * )
+      NEW met2 ( 990000 30000 ) ( * 420000 )
+      NEW met7 ( 870000 420000 ) ( 990000 * )
+      NEW met6 ( 870000 420000 ) M6M7_PR
+      NEW met1 ( 870000 570000 ) M1M2_PR
+      NEW met2 ( 870000 570000 ) M2M3_PR
+      NEW met3 ( 870000 570000 ) M3M4_PR
+      NEW met4 ( 870000 570000 ) M4M5_PR
+      NEW met5 ( 870000 570000 ) M5M6_PR
+      NEW met1 ( 1095000 660000 ) M1M2_PR
+      NEW met1 ( 1095000 600000 ) M1M2_PR
+      NEW met3 ( 1020000 30000 ) M3M4_PR
+      NEW met4 ( 1020000 30000 ) M4M5_PR
+      NEW met2 ( 990000 30000 ) M2M3_PR
+      NEW met3 ( 990000 30000 ) M3M4_PR
+      NEW met4 ( 990000 30000 ) M4M5_PR
+      NEW met2 ( 990000 420000 ) M2M3_PR
+      NEW met3 ( 990000 420000 ) M3M4_PR
+      NEW met4 ( 990000 420000 ) M4M5_PR
+      NEW met5 ( 990000 420000 ) M5M6_PR
+      NEW met6 ( 990000 420000 ) M6M7_PR ;
+    - chan_bcd_0 ( mixbcd out_fluid ) ( mixabcd a_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 1095000 690000 ) ( 1110000 * 0 )
+      NEW met2 ( 1065000 690000 ) ( 1095000 * )
+      NEW met1 ( 1050000 690000 0 ) ( 1065000 * )
+      NEW met1 ( 1095000 690000 ) M1M2_PR
+      NEW met1 ( 1065000 690000 ) M1M2_PR ;
+    - chan_c_0 ( serp7 out_fluid ) ( mixcd a_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 915000 690000 ) ( 930000 * 0 )
+      NEW met3 ( 915000 690000 ) ( 930000 * )
+      NEW met4 ( 930000 690000 ) ( * 720000 )
+      NEW met1 ( 930000 720000 ) ( 960000 * )
+      NEW met2 ( 960000 720000 ) ( * 930000 )
+      NEW met3 ( 960000 930000 ) ( 990000 * 0 )
+      NEW met1 ( 915000 690000 ) M1M2_PR
+      NEW met2 ( 915000 690000 ) M2M3_PR
+      NEW met3 ( 930000 690000 ) M3M4_PR
+      NEW met1 ( 930000 720000 ) M1M2_PR
+      NEW met2 ( 930000 720000 ) M2M3_PR
+      NEW met3 ( 930000 720000 ) M3M4_PR
+      NEW met1 ( 960000 720000 ) M1M2_PR
+      NEW met2 ( 960000 930000 ) M2M3_PR ;
+    - chan_cd_0 ( mixcd out_fluid ) ( mixbcd a_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 1005000 690000 ) ( 1020000 * 0 )
+      NEW met3 ( 975000 690000 ) ( 1005000 * )
+      NEW met1 ( 960000 690000 0 ) ( 975000 * )
+      NEW met1 ( 1005000 690000 ) M1M2_PR
+      NEW met2 ( 1005000 690000 ) M2M3_PR
+      NEW met1 ( 975000 690000 ) M1M2_PR
+      NEW met2 ( 975000 690000 ) M2M3_PR ;
+    - chan_d_0 ( serp9 in_fluid ) ( serp8 out_fluid ) + USE SIGNAL
+      + ROUTED met4 ( 630000 990000 ) ( * 1020000 )
+      NEW met5 ( 630000 1020000 ) ( 660000 * )
+      NEW met2 ( 1530000 450000 0 ) ( * 480000 )
+      NEW met6 ( 1530000 480000 ) ( * 510000 )
+      NEW met4 ( 1530000 510000 ) ( * 690000 )
+      NEW met5 ( 1500000 690000 ) ( 1530000 * )
+      NEW met4 ( 1500000 690000 ) ( * 990000 )
+      NEW met3 ( 1230000 990000 ) ( 1500000 * )
+      NEW met4 ( 1230000 990000 ) ( * 1020000 )
+      NEW met5 ( 960000 1020000 ) ( 1230000 * )
+      NEW met3 ( 660000 1020000 ) ( 960000 * )
+      NEW met3 ( 630000 990000 ) M3M4_PR
+      NEW met4 ( 630000 1020000 ) M4M5_PR
+      NEW met3 ( 660000 1020000 ) M3M4_PR
+      NEW met4 ( 660000 1020000 ) M4M5_PR
+      NEW met2 ( 1530000 480000 ) M2M3_PR
+      NEW met3 ( 1530000 480000 ) M3M4_PR
+      NEW met4 ( 1530000 480000 ) M4M5_PR
+      NEW met5 ( 1530000 480000 ) M5M6_PR
+      NEW met4 ( 1530000 510000 ) M4M5_PR
+      NEW met5 ( 1530000 510000 ) M5M6_PR
+      NEW met4 ( 1530000 690000 ) M4M5_PR
+      NEW met4 ( 1500000 690000 ) M4M5_PR
+      NEW met3 ( 1500000 990000 ) M3M4_PR
+      NEW met3 ( 1230000 990000 ) M3M4_PR
+      NEW met4 ( 1230000 1020000 ) M4M5_PR
+      NEW met3 ( 960000 1020000 ) M3M4_PR
+      NEW met4 ( 960000 1020000 ) M4M5_PR ;
+    - chan_d_1 ( serp9 out_fluid ) ( serp10 in_fluid ) + USE SIGNAL
+      + ROUTED met2 ( 1560000 1410000 ) ( 1590000 * 0 )
+      NEW met4 ( 1560000 450000 ) ( * 1410000 )
+      NEW met5 ( 1530000 450000 ) ( 1560000 * )
+      NEW met2 ( 1560000 1410000 ) M2M3_PR
+      NEW met3 ( 1560000 1410000 ) M3M4_PR
+      NEW met4 ( 1560000 450000 ) M4M5_PR
+      NEW met3 ( 1530000 450000 ) M3M4_PR
+      NEW met4 ( 1530000 450000 ) M4M5_PR ;
+    - chan_d_2 ( serp10 out_fluid ) ( mixcd b_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 915000 660000 ) ( 930000 * 0 )
+      NEW met3 ( 915000 660000 ) ( 1380000 * )
+      NEW met4 ( 1380000 660000 ) ( * 1200000 )
+      NEW met3 ( 1380000 1200000 ) ( 1590000 * )
+      NEW met4 ( 1590000 1200000 ) ( * 1410000 )
+      NEW met1 ( 915000 660000 ) M1M2_PR
+      NEW met2 ( 915000 660000 ) M2M3_PR
+      NEW met3 ( 1380000 660000 ) M3M4_PR
+      NEW met3 ( 1380000 1200000 ) M3M4_PR
+      NEW met3 ( 1590000 1200000 ) M3M4_PR
+      NEW met3 ( 1590000 1410000 ) M3M4_PR ;
+    - out ( PIN out ) ( opt1 out_fluid ) + USE SIGNAL
+      + ROUTED met5 ( 1470000 495000 ) ( 1590000 * )
+      NEW met6 ( 1590000 495000 ) ( * 510000 )
+      NEW met8 ( 1590000 510000 ) ( * 660000 0 )
+      NEW met4 ( 1470000 495000 ) M4M5_PR
+      NEW met5 ( 1590000 495000 ) M5M6_PR
+      NEW met6 ( 1590000 510000 ) M6M7_PR
+      NEW met7 ( 1590000 510000 ) M7M8_PR
+      NEW met8 ( 1590000 660000 ) M8M9_PR ;
+    - out_opt ( opt1 in_fluid ) ( mixabcd out_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 1140000 690000 0 ) ( 1155000 * )
+      NEW met2 ( 1155000 570000 ) ( * 690000 )
+      NEW met1 ( 1110000 570000 ) ( 1155000 * )
+      NEW met5 ( 930000 570000 ) ( 1110000 * )
+      NEW met5 ( 930000 495000 ) ( * 570000 )
+      NEW met1 ( 1155000 690000 ) M1M2_PR
+      NEW met1 ( 1155000 570000 ) M1M2_PR
+      NEW met1 ( 1110000 570000 ) M1M2_PR
+      NEW met2 ( 1110000 570000 ) M2M3_PR
+      NEW met3 ( 1110000 570000 ) M3M4_PR
+      NEW met4 ( 1110000 570000 ) M4M5_PR
+      NEW met4 ( 930000 495000 ) M4M5_PR ;
+    - solna ( PIN solna ) ( serp0 in_fluid ) + USE SIGNAL
+      + ROUTED met2 ( 1230000 960000 ) ( * 990000 0 )
+      NEW met8 ( 1230000 900000 ) ( * 960000 )
+      NEW met7 ( 960000 900000 ) ( 1230000 * )
+      NEW met8 ( 960000 900000 ) ( * 930000 0 )
+      NEW met2 ( 1230000 960000 ) M2M3_PR
+      NEW met3 ( 1230000 960000 ) M3M4_PR
+      NEW met4 ( 1230000 960000 ) M4M5_PR
+      NEW met5 ( 1230000 960000 ) M5M6_PR
+      NEW met6 ( 1230000 960000 ) M6M7_PR
+      NEW met7 ( 1230000 960000 ) M7M8_PR
+      NEW met7 ( 1230000 900000 ) M7M8_PR
+      NEW met7 ( 960000 900000 ) M7M8_PR
+      NEW met8 ( 960000 930000 ) M8M9_PR ;
+    - solnb ( PIN solnb ) ( mixbcd b_fluid ) + USE SIGNAL
+      + ROUTED met1 ( 1005000 660000 ) ( 1020000 * 0 )
+      NEW met3 ( 1005000 660000 ) ( 1140000 * )
+      NEW met8 ( 1140000 660000 ) ( * 930000 0 )
+      NEW met1 ( 1005000 660000 ) M1M2_PR
+      NEW met2 ( 1005000 660000 ) M2M3_PR
+      NEW met3 ( 1140000 660000 ) M3M4_PR
+      NEW met4 ( 1140000 660000 ) M4M5_PR
+      NEW met5 ( 1140000 660000 ) M5M6_PR
+      NEW met6 ( 1140000 660000 ) M6M7_PR
+      NEW met7 ( 1140000 660000 ) M7M8_PR
+      NEW met8 ( 1140000 930000 ) M8M9_PR ;
+    - solnc ( PIN solnc ) ( serp7 in_fluid ) + USE SIGNAL
+      + ROUTED met2 ( 990000 930000 0 ) ( * 960000 )
+      NEW met5 ( 990000 960000 ) ( 1320000 * )
+      NEW met8 ( 1320000 930000 0 ) ( * 960000 )
+      NEW met2 ( 990000 960000 ) M2M3_PR
+      NEW met3 ( 990000 960000 ) M3M4_PR
+      NEW met4 ( 990000 960000 ) M4M5_PR
+      NEW met5 ( 1320000 960000 ) M5M6_PR
+      NEW met6 ( 1320000 960000 ) M6M7_PR
+      NEW met7 ( 1320000 960000 ) M7M8_PR
+      NEW met8 ( 1320000 930000 ) M8M9_PR ;
+    - solnd ( PIN solnd ) ( serp8 in_fluid ) + USE SIGNAL
+      + ROUTED met2 ( 630000 990000 0 ) ( 660000 * )
+      NEW met8 ( 1500000 930000 0 ) ( * 990000 )
+      NEW met7 ( 660000 990000 ) ( 1500000 * )
+      NEW met2 ( 660000 990000 ) M2M3_PR
+      NEW met3 ( 660000 990000 ) M3M4_PR
+      NEW met4 ( 660000 990000 ) M4M5_PR
+      NEW met5 ( 660000 990000 ) M5M6_PR
+      NEW met6 ( 660000 990000 ) M6M7_PR
+      NEW met7 ( 1500000 990000 ) M7M8_PR
+      NEW met8 ( 1500000 930000 ) M8M9_PR ;
+END NETS
+END DESIGN
