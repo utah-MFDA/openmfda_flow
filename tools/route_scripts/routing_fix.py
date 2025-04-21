@@ -66,7 +66,7 @@ def get_intersections2(rt_dict, silent=False):
             found_intersects = route_scripts.check_net_intersections(
                 [pt for nd in net1[1].nodes for pt in net1[1].nodes[nd]['route']],
                 [pt for nd in net2[1].nodes for pt in net2[1].nodes[nd]['route']],
-                silent=silent
+                # silent=silent
             )
             if len(found_intersects) > 0:
                 intersection_dict[(net1[0], net2[0])] = found_intersects

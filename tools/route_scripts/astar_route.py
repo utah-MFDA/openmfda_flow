@@ -14,10 +14,15 @@ if is_tool == 'tools':
     path_for_omfda = os.path.abspath(f"{this_file}/../..")
 else:
     path_for_omfda = "../openmfda_flow_2up"
-src_path = f"{path_for_omfda}/src/openmfda_flow"
+print(f'astar_route: {path_for_omfda}')
+if not os.path.exists(path_for_omfda):
+    raise Exception(f"{path_for_omfda} does not exist")
+
+src_path = os.path.abspath(f"{path_for_omfda}/src/openmfda_flow")
 tool_path = f"{path_for_omfda}/tools"
 flow_path = f"{path_for_omfda}/flow"
-sys.path.append(os.path.abspath(src_path))
+print(src_path)
+sys.path.append(src_path)
 sys.path.append(os.path.abspath(tool_path+'/scad_render'))
 import component_parse
 import route_scripts

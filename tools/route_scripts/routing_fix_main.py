@@ -152,6 +152,9 @@ def lnk_pts_2_def_obj(
 
                 else:
                     # create segement
+                    exp_layer = tuple(lay_map[a] for a in
+                        sorted([pt1[2], pt2[2]], key=lambda x: x)
+                    )
 
                     segment_list += [{
                         'pt1': exp_seg[0],
@@ -380,12 +383,13 @@ if __name__ == "__main__":
     parser.add_argument('--design_name', required=True)
     parser.add_argument('--platform_conf', required=True)
     parser.add_argument('--src_lef', required=True)
-    parser.add_argument('--additional_lefs', nargs='+')
+    parser.add_argument('--additional_lefs', nargs='+', default=[])
 
     parser.add_argument('--output_def')
-    parser.add_argument('--grid_size', nargs=3)
+    parser.add_argument('--grid_size', nargs=3, type=int)
     parser.add_argument('--def_scale', type=int)
-    parser.add_argument('--write_polyroute', action='store_true', default=False)
+    parser.add_argument('--write_polyroute',
+                        action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -393,7 +397,7 @@ if __name__ == "__main__":
         def_file=args.def_file,
         design_name=args.design_name,
         platform_config_file=args.platform_conf,
-        lef_files=[args.src_files] + args.additional_lefs,
+        lef_files=[args.src_lef] + args.additional_lefs,
         out_def=args.output_def,
         grid_size=[
             args.grid_size[0],
