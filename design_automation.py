@@ -183,7 +183,7 @@ def con_results(assay):
     table_str += "-" * 65
     table_str += f"\n| SAMPLES/REAGENTS | EXPECTED CON. | EVALUATED CON. | ERROR [%] |\n"
     table_str += "-" * 65
-    csv_file_path = f"flow/results/{assay}/base/Chem_Eval.csv"
+    csv_file_path = f"flow/results/{assay}/base/simulation/Chem_Eval.csv"
     with open(csv_file_path, mode="r", newline="") as file:
         reader = csv.DictReader(file)
         for row in reader:
