@@ -1,7 +1,12 @@
 
 PYTHON3 ?= python3
 
-THIS_DIR_FROM_FLOW = ../tools/route_scripts
+ifneq ($(FLOW_HOME),)
+THIS_DIR_FROM_FLOW = $(realpath $(FLOW_HOME)/../tools/route_scripts)
+endif
+ifneq ($(FLOW_DIR),)
+THIS_DIR_FROM_FLOW = $(realpath $(FLOW_DIR)/../tools/route_scripts)
+endif
 FIX_PY_SCRIPT = $(THIS_DIR_FROM_FLOW)/routing_fix_main.py
 
 FIX_DEF ?=
@@ -23,7 +28,12 @@ ifeq ($(PLATFORM),h.r.3.3)
 PLATFORM_CONF_JSON ?= $(THIS_DIR_FROM_FLOW)/testing_files/h.r.3.3.techlef.config.json
 endif
 
-OPT_FIX_ARGS += --grid_size 84 52 10
+ifeq ($(strip $(FIX_GRID_SIZE)),)
+OPT_FIX_ARGS += --grid_size 88 52 10
+else
+OPT_FIX_ARGS += --grid_size $(FIX_GRID_SIZE)
+endif
+
 OPT_FIX_ARGS += --def_scale 1000
 
 $(OUT_FIX_DEF): $(FIX_DEF)
@@ -51,6 +61,8 @@ endif
 
 ifneq ($(OUT_FIX_SCAD),)
 
+SCAD_LIB ?= $(PLATFORM_DIR)/pdk/scad_lib
+
 ifneq ($(SCAD_INCLUDE_FILES),)
 SCAD_INCLUDE_FILES += $(SCAD_LIB)/polychannel_v2.scad $(SCAD_LIB)/lef_helper.scad $(SCAD_LIB)/lef_scad_config.scad
 else
@@ -61,17 +73,19 @@ ifneq ($(PCELL_MERGE_LEF),)
 SCAD_ARGS += --pcell $(SCAD_PCELL)
 endif
 
-$(OUT_FIX_SCAD)_fixbase.scad: $(FIX_DEF) $(LIBRARY_DEPS)
+$(OUT_FIX_SCAD): $(OUT_FIX_DEF) $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
-        --design ${DESIGN} \
-				--scad_out_file $(RESULTS_DIR)/$(FIX_SCAD)_base.scad \
+        --design ${DESIGN_NAME} \
+				--scad_out_file $(OUT_FIX_SCAD) \
 				--scad_include $(SCAD_INCLUDE_FILES) \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
-	cp $(RESULTS_DIR)/$(FIX_SCAD)_fixbase.scad $(RESULTS_DIR)/4_final.scad
+	cp $(OUT_FIX_SCAD) $(RESULTS_DIR)/4_final_fix.scad
+
 endif # OUT_FIX_SCAD
 
 fix_route: $(OUT_FIX_DEF)
+	echo $(OUT_FIX_DEF)
 
 fix_render: $(OUT_FIX_SCAD)

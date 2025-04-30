@@ -9,8 +9,8 @@ ifeq ($(BUILD_PDK_LIBRARY),)
 # General distribution files
 export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                       $(ADDITIONAL_GDS)
-export TECH_LEF = $(PLATFORM_DIR)/lef/h.r.3.3.tlef
-export SC_LEF = $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
+export TECH_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3.tlef
+export SC_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
 
 export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      $(ADDITIONAL_LIBS)
@@ -78,6 +78,8 @@ export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
 export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/scad_include/polychannel_v2.scad \
                              $(PLATFORM_DIR)/pdk/scad_include/lef_scad_config.scad \
 														 $(PLATFORM_DIR)/pdk/scad_include/lef_helper.scad
+
+export SCAD_LIB ?= $(PLATFORM_DIR)/pdk/scad_lib
 
 #------------------------------------------------------------------------------
 # PRINTER PARAMETERS
