@@ -234,8 +234,10 @@ $(WRAPPED_LIBS):
 #.PHONY: gen_pcells
 #gen_pcells: $(PCELL_MERGE_LEF)
 
+ifdef DEF_FIX
 DEF_FIX_UTIL = ../tools/route_scripts/util.mk
 include $(DEF_FIX_UTIL)
+endif
 
 # ==============================================================================
 #  _     ___ ____  ____      _    ______   __
