@@ -58,6 +58,31 @@ mets = {
     'met7':6,
     'met8':7,
     'met9':8,
+    'met10':9,
+    'met11':10,
+    'met12':11,
+    'met13':12,
+    'met14':13,
+    'met15':14,
+    'met16':15,
+    'met17':16,
+    'met18':17,
+    'met19':18,
+    'met20':19,
+    'met21':20,
+    'met22':21,
+    'met23':22,
+    'met24':23,
+    'met25':24,
+    'met26':25,
+    'met27':26,
+    'met28':27,
+    'met29':28,
+    'met30':29,
+    'met31':30,
+    'met32':31,
+    'met33':32,
+    'met34':33,
 }
 
 run_u_adjustment_script = False
@@ -1015,10 +1040,10 @@ def main(
     #o_file = f"{results_dir}/{design}.scad"
 
     net_properties = {
-        'px':px,
-        'layer':layer,
-        'lpv':lpv,
-        'def_scale':def_scale,
+        'px': px,
+        'layer': layer,
+        'lpv': lpv,
+        'def_scale': def_scale,
         'bot_layers':bttm_layer
     }
 
@@ -1071,11 +1096,11 @@ show_lefs=false ;
 
     # write pin vias
     io_list = write_pins(
-        o_file,
-        get_pins(def_file, pin_con_dir_f),
-        bulk,
-        net_properties,
-        mets,
+        o_file=o_file,
+        pin_list=get_pins(def_file, pin_con_dir_f),
+        bulk=bulk,
+        tlef_properties=net_properties,
+        mets=mets,
         mode='a')
 
     if dimm_file is not None:
@@ -1093,13 +1118,17 @@ show_lefs=false ;
             report_len_file=length_out_file,
             pins=io_list if add_comp_to_routes else None,
             components=comp_list if add_comp_to_routes else None,
-            component_lef = component_merge_lef,
+            component_lef=component_merge_lef,
             report_route_net_file=route_net_file
         )
 
     if len(net_intersects) > 0:
         pt_reg = r"\[\s*(\d+[.]?\d*),\s*(\d+[.]?\d*),\s*(\d+[.]?\d*)\s*\]"
-        intersct_file = os.path.dirname(o_file) + "/net_intersections.json"
+        if os.path.dirname(o_file) == '':
+            intersct_file = "./net_intersections.json"
+        else:
+            intersct_file = os.path.dirname(o_file) + "/net_intersections.json"
+        print(o_file)
         with open(intersct_file, "w+") as insct_f:
             insct_f.write(
                 re.sub(
@@ -1197,7 +1226,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.scad_out_file is None:
-        args.scad_out_file = f"{args.results_dir}/{args.design}.scad"
+        if '/' in args.design:
+            o_file_basename = os.path.basename(args.design)
+            args.scad_out_file = f"{args.results_dir}/{o_file_basename}.scad"
+        else:
+            args.scad_out_file = f"{args.results_dir}/{args.design}.scad"
 
     if args.tlef is not None and args.tlef_file is not None:
         raise ValueError("Cannot define both --tlef and --tlef_file")
