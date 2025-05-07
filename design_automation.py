@@ -183,7 +183,7 @@ def con_results(assay):
     table_str += "-" * 65
     table_str += f"\n| SAMPLES/REAGENTS | EXPECTED CON. | EVALUATED CON. | ERROR [%] |\n"
     table_str += "-" * 65
-    csv_file_path = f"flow/results/{assay}/base/simulation/Chem_Eval.csv"
+    csv_file_path = f"flow/results/{assay}/base/Chem_Eval.csv"
     with open(csv_file_path, mode="r", newline="") as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -330,7 +330,7 @@ def update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero):
     max_x = edit_file(verilog_file, num_samples, serp_num, old_serp, new_serp, max_x, zero)
    
     # Run Tcl script commands following .def and .v modification 
-    command = f"cd flow && make -e DESIGN={assay} run_tcl_script"
+    command = f"cd flow && make -e DESIGN={assay} run_tcl_script -B"
     result = subprocess.run(command, shell=True)
 
     # Print results

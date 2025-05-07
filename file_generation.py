@@ -72,7 +72,7 @@ proj.set_replace_arg('bin'    , 4)
 proj.set_replace_arg('max_phi', 1.04)
 proj.set_replace_arg('overflow', 0.1)
 
-make_targets = ['pnr','render', 'simulate', '-B']
+make_targets = ['gen_pcells', 'pnr','render', 'simulate', '-B']
 
 if args.run_all_deps:
     make_targets.append("-B")
@@ -111,8 +111,11 @@ SCAD_DEF = 3_route_1.def
 run_tcl_script: $(PCELL_MERGE_LEF)
 	$(OPENROAD_CMD) ./scripts/update_design.tcl
 	make re_render
-	make re_simulate	
+	make re_simulate
 
+export ADDITIONAL_LEFS += $(PCELL_MERGE_LEF)
+
+gen_pcells: $(PCELL_MERGE_LEF)
 re_render: $(RESULTS_DIR)/$(DESIGN)_reroute.scad
 re_simulate: $(RESULTS_DIR)/xyceOut_1.csv
 
@@ -139,9 +142,10 @@ $(RESULTS_DIR)/xyceOut_1.csv: $(RESULTS_DIR)/$(DESIGN)_reroute.scad $(SIMULATION
 		--design $(DESIGN) \\
 		--sim_dir $(RESULTS_DIR)/simulation \\
 		--cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp \\
-		--local_xyce True \\
+		--local_xyce \\
 		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \\
 		--length_file $(LENGTH_FILE_REROUTE) \\
+        --pcell_file $(RESULTS_DIR)/pcell_out_xyce \\
 --lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
         """)
 

@@ -35,6 +35,8 @@ platform = "h.r.3.3"
 # assay = "five_samples_v1"
 # assay = "four_samples_v1"
 # assay = "four_samples_v2"
+# assay = "albumin_v2"
+assay = "ketone_v2"
 
 # Collect number of samples/reagents 
 # while True:
@@ -45,13 +47,13 @@ platform = "h.r.3.3"
 #         print("Error: Please enter a valid integer.")
 # num_samples = 3
 # num_samples = 4
-# num_samples = 2
+num_samples = 2
 # num_samples = 5
 
 # Define dictionary for storing sample/reagent data
 input_dict = {}
 
-# Collect sample/reagent name(s) and concentration(s)
+# # Collect sample/reagent name(s) and concentration(s)
 # for i in range(0, num_samples):
 #     if i == 0:
 #         name = str(input("What is the name of the first sample/reagent?\n"))
@@ -75,6 +77,8 @@ input_dict = {}
 # input_dict = {"sample":100*10**(-6), "R1":75*10**(-6), "R2":50*10**(-6), "R3":25*10**(-6), "R4":10*10**(-6)}
 # input_dict = {"sample":5*10**(-6), "R1":100*10**(-6), "R2":100*10**(-6), "H2O":10*10**(-6)}
 # input_dict = {"sample":50*10**(-6), "R1":100*10**(-6), "R2":100*10**(-6), "H2O":50*10**(-6)}
+# input_dict = {"sample":100*10**(-6), "R1":3000*10**(-6)}
+input_dict = {"sample":50*10**(-6), "R1":50*10**(-6)}
 
 
 # Collect maximum acceptable error 
@@ -84,7 +88,7 @@ input_dict = {}
 #         break
 #     except ValueError:
 #         print("Error: Please enter a valid percentage.")
-error_condition = 1
+error_condition = 3
 
 # Best design after 30 min. 
 def store_design(num_samples):
@@ -162,24 +166,24 @@ if __name__ == "__main__":
     #     assay = assay_ls.pop()
     #     num_samples = num_samples_ls.pop()
     #     input_dict = input_dict_ls.pop()
-    #     filename = f'{assay}_25_04_11.csv'
-    #     with open(filename, mode='w', newline='') as file:
-    #         writer = csv.writer(file)
-    #         writer.writerow(['Name', 'Number of Samples', 'Runtime [s]', 'Time to Best Design [s]', 'Die Area', 'Design Area',
-    #         '% Area Utilization', 'Maximum X Coordinate', 'Total Wire Length', 'Max Wire Length', 'Max Wire Location', 'Mean Wire Length', 'Median Wire Length', 'Concentrations', 'Concentration Error [%]', 'Channel Volume [mL]', 'Required Volume [mL]'])
-        # # Record start time
-        # start_time = time.time()
-        # # Generate error_list_stored
-        # error_list_stored = store_design(num_samples)
-        # # Run design process
-        # error_list, total_time_opt, max_x, chan_vol, reg_vol = main(assay, platform, num_samples, input_dict, error_condition, start_time, error_list_stored)
-        # # Record end time
-        # end_time = time.time()
-        # total_time = end_time - start_time
-        # # total_time_opt = opt_time_end
-        # min = total_time // 60
-        # sec = total_time % 60
-        # print(f"Your design was generated in {min} min and {round(sec, 4)} s.\n")
+    filename = f'{assay}_25_04_11.csv'
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Name', 'Number of Samples', 'Runtime [s]', 'Time to Best Design [s]', 'Die Area', 'Design Area',
+        '% Area Utilization', 'Maximum X Coordinate', 'Total Wire Length', 'Max Wire Length', 'Max Wire Location', 'Mean Wire Length', 'Median Wire Length', 'Concentrations', 'Concentration Error [%]', 'Channel Volume [mL]', 'Required Volume [mL]'])
+    # Record start time
+    start_time = time.time()
+    # Generate error_list_stored
+    error_list_stored = store_design(num_samples)
+    # Run design process
+    error_list, total_time_opt, max_x, chan_vol, reg_vol = main(assay, platform, num_samples, input_dict, error_condition, start_time, error_list_stored)
+    # Record end time
+    end_time = time.time()
+    total_time = end_time - start_time
+    # total_time_opt = opt_time_end
+    min = total_time // 60
+    sec = total_time % 60
+    print(f"Your design was generated in {min} min and {round(sec, 4)} s.\n")
     #     # Data to be added to csv file
     #     rows = [[] for _ in range(num_samples)]
 
@@ -1014,16 +1018,16 @@ if __name__ == "__main__":
     #             writer.writerows(rows)
 
 
-    ### RESUME
-    filename = 'eleven_samples_25_04_18.csv'
+    # ### RESUME
+    # filename = 'eleven_samples_25_04_18.csv'
     # with open(filename, mode='w', newline='') as file:
     #     writer = csv.writer(file)
     #     writer.writerow(['Name', 'Number of Samples', 'Runtime [s]', 'Time to Best Design [s]', 'Die Area', 'Design Area',
     #     '% Area Utilization', 'Maximum X Coordinate', 'Total Wire Length', 'Max Wire Length', 'Max Wire Location', 'Mean Wire Length', 'Median Wire Length', 'Concentrations', 'Concentration Error [%]', 'Channel Volume [mL]', 'Required Volume [mL]'])
     # 11 samples
-    assay = "eleven_samples"
-    num_samples = 11
-    designs = {
+    # assay = "eleven_samples"
+    # num_samples = 11
+    # designs = {
         # "design1": {
         #     "input_dict": {
         #         "R1" : 100, 
@@ -1054,75 +1058,75 @@ if __name__ == "__main__":
         #         "R11" : 100
         #     }
         # },
-        "design3": {
-            "input_dict": {
-                "R1" : random.randint(1, 25), 
-                "R2" : random.randint(25, 100),
-                "R3" : random.randint(25, 100),
-                "R4" : random.randint(25, 100),
-                "R5" : random.randint(25, 100),
-                "R6" : random.randint(25, 100),
-                "R7" : random.randint(100, 250),
-                "R8" : random.randint(100, 250),
-                "R9" : random.randint(100, 250),
-                "R10" : random.randint(100, 250),
-                "R11" : random.randint(100, 250)
-            }
-        },
-        "design4": {
-            "input_dict": {
-                "R1" : 5, 
-                "R2" : random.randint(10, 50),
-                "R3" : random.randint(50, 100),
-                "R4" : random.randint(50, 100),
-                "R5" : random.randint(50, 100),
-                "R6" : random.randint(50, 100),
-                "R7" : random.randint(50, 100),
-                "R8" : random.randint(50, 100),
-                "R9" : random.randint(200, 250),
-                "R10" : random.randint(200, 250),
-                "R11" : random.randint(200, 250)
-            }
-        }
-    }
-    for key1 in designs:
-        for key2 in designs[key1]:
-            input_dict = designs[key1][key2]
-            # Record start time
-            start_time = time.time()
-            # Generate error_list_stored
-            error_list_stored = store_design(num_samples)
-            # Run design process
-            error_list, total_time_opt, max_x, chan_vol, reg_vol = main(assay, platform, num_samples, input_dict, error_condition, start_time, error_list_stored)
-            # Record end time
-            end_time = time.time()
-            total_time = end_time - start_time
-            # total_time_opt = opt_time_end
-            min = total_time // 60
-            sec = total_time % 60
-            print(f"Your design was generated in {min} min and {round(sec, 4)} s.\n")
-            # Data to be added to csv file
-            rows = [[] for _ in range(num_samples)]
+    #     "design3": {
+    #         "input_dict": {
+    #             "R1" : random.randint(1, 25), 
+    #             "R2" : random.randint(25, 100),
+    #             "R3" : random.randint(25, 100),
+    #             "R4" : random.randint(25, 100),
+    #             "R5" : random.randint(25, 100),
+    #             "R6" : random.randint(25, 100),
+    #             "R7" : random.randint(100, 250),
+    #             "R8" : random.randint(100, 250),
+    #             "R9" : random.randint(100, 250),
+    #             "R10" : random.randint(100, 250),
+    #             "R11" : random.randint(100, 250)
+    #         }
+    #     },
+    #     "design4": {
+    #         "input_dict": {
+    #             "R1" : 5, 
+    #             "R2" : random.randint(10, 50),
+    #             "R3" : random.randint(50, 100),
+    #             "R4" : random.randint(50, 100),
+    #             "R5" : random.randint(50, 100),
+    #             "R6" : random.randint(50, 100),
+    #             "R7" : random.randint(50, 100),
+    #             "R8" : random.randint(50, 100),
+    #             "R9" : random.randint(200, 250),
+    #             "R10" : random.randint(200, 250),
+    #             "R11" : random.randint(200, 250)
+    #         }
+    #     }
+    # }
+    # for key1 in designs:
+    #     for key2 in designs[key1]:
+    #         input_dict = designs[key1][key2]
+    #         # Record start time
+    #         start_time = time.time()
+    #         # Generate error_list_stored
+    #         error_list_stored = store_design(num_samples)
+    #         # Run design process
+    #         error_list, total_time_opt, max_x, chan_vol, reg_vol = main(assay, platform, num_samples, input_dict, error_condition, start_time, error_list_stored)
+    #         # Record end time
+    #         end_time = time.time()
+    #         total_time = end_time - start_time
+    #         # total_time_opt = opt_time_end
+    #         min = total_time // 60
+    #         sec = total_time % 60
+    #         print(f"Your design was generated in {min} min and {round(sec, 4)} s.\n")
+    #         # Data to be added to csv file
+    #         rows = [[] for _ in range(num_samples)]
 
-            die_area = grab_info("flow/platforms/h.r.3.3/config.mk", "CORE_AREA", "=", -1) 
-            design_area = grab_info(f"flow/logs/{assay}/base/4_report.log", "Design area", " ", 2) 
-            percent_utilization = grab_info(f"flow/logs/{assay}/base/4_report.log", "Design area", " ", 4) 
-            total_wire_length = grab_info(f"flow/logs/{assay}/base/3_2_TritonRoute.log", "Total wire length", "=", -1) 
-            max_wire_length, wire_connect, mean_wire_length, median_wire_length = max_mean_med(f"flow/results/{assay}/base/{assay}_length.csv", "{", ":", "}", ",", -1, 0, 0, 1)
+    #         die_area = grab_info("flow/platforms/h.r.3.3/config.mk", "CORE_AREA", "=", -1) 
+    #         design_area = grab_info(f"flow/logs/{assay}/base/4_report.log", "Design area", " ", 2) 
+    #         percent_utilization = grab_info(f"flow/logs/{assay}/base/4_report.log", "Design area", " ", 4) 
+    #         total_wire_length = grab_info(f"flow/logs/{assay}/base/3_2_TritonRoute.log", "Total wire length", "=", -1) 
+    #         max_wire_length, wire_connect, mean_wire_length, median_wire_length = max_mean_med(f"flow/results/{assay}/base/{assay}_length.csv", "{", ":", "}", ",", -1, 0, 0, 1)
                 
-            rows[0] = [assay, num_samples, total_time, total_time_opt, die_area, design_area, percent_utilization, max_x, total_wire_length, max_wire_length, wire_connect, mean_wire_length, median_wire_length]
-            for j in range(1, len(rows)):
-                rows[j] = ["", "", "", "", "", "", "", "", "", "", "", "", ""]
-            k = 0
-            for key in input_dict.keys():
-                rows[k].append(input_dict[key])
-                rows[k].append(error_list[k] * 100)
-                rows[k].append(chan_vol[k])
-                rows[k].append(reg_vol[k])
-                k += 1
-            with open(filename, mode='a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerows(rows)
+    #         rows[0] = [assay, num_samples, total_time, total_time_opt, die_area, design_area, percent_utilization, max_x, total_wire_length, max_wire_length, wire_connect, mean_wire_length, median_wire_length]
+    #         for j in range(1, len(rows)):
+    #             rows[j] = ["", "", "", "", "", "", "", "", "", "", "", "", ""]
+    #         k = 0
+    #         for key in input_dict.keys():
+    #             rows[k].append(input_dict[key])
+    #             rows[k].append(error_list[k] * 100)
+    #             rows[k].append(chan_vol[k])
+    #             rows[k].append(reg_vol[k])
+    #             k += 1
+    #         with open(filename, mode='a', newline='') as file:
+    #             writer = csv.writer(file)
+    #             writer.writerows(rows)
     
     # filename = 'twelve_samples_25_04_10.csv'
     # with open(filename, mode='w', newline='') as file:
