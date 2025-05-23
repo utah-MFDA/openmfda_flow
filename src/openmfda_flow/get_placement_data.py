@@ -15,30 +15,80 @@ import os
 def load_lefs():
     return component_parse.ComponentParser().get_comp_pins_from_lef()
 
-def get_placement_data(results_dir_root, design, design_varient="base"):
+
+def get_placement_data(
+        results_dir_root,
+        design,
+        design_varient="base",
+        placement_step='both'
+):
 
     print(f"looking for file in {os.getcwd()}/{results_dir_root}")
-    gp_file = f"{results_dir_root}/{design}/{design_varient}/2_1_place_gp.def"
-    dp_file = f"{results_dir_root}/{design}/{design_varient}/2_3_place_dp.def"
+    if placement_step == 'both':
+        gp_file = f"{results_dir_root}/{design}/{design_varient}/2_1_place_gp.def"
+        dp_file = f"{results_dir_root}/{design}/{design_varient}/2_3_place_dp.def"
 
-    try:
-        gp_pos = def_parse.get_info(gp_file, design, ["COMPONENTS", "PINS"])
-        dp_pos = def_parse.get_info(dp_file, design, ["COMPONENTS", "PINS"])
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Could not file in {os.getcwd()}/{results_dir_root}")
+        try:
+            gp_pos = def_parse.get_info(gp_file, design, ["COMPONENTS", "PINS"])
+            dp_pos = def_parse.get_info(dp_file, design, ["COMPONENTS", "PINS"])
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Could not find placement file in {os.getcwd()}/{results_dir_root}")
 
-    return (gp_pos, dp_pos)
+        return (gp_pos, dp_pos)
+    elif placement_step == 'global':
+        gp_file = f"{results_dir_root}/{design}/{design_varient}/2_1_place_gp.def"
+        try:
+            gp_pos = def_parse.get_info(gp_file, design, ["COMPONENTS", "PINS"])
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Could not find placement file in {os.getcwd()}/{results_dir_root}")
+        return gp_pos
+    elif placement_step == 'detail':
+        dp_file = f"{results_dir_root}/{design}/{design_varient}/2_3_place_dp.def"
+        try:
+            dp_pos = def_parse.get_info(dp_file, design, ["COMPONENTS", "PINS"])
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Could not find placement file in {os.getcwd()}/{results_dir_root}")
+        return dp_pos
+    else:
+        raise ValueError(f"Invalid value for placement_step {placement_step}; expecting 'both', 'global', or 'detail'")
 
-def get_placement_distances(results_root, design, verilog_file, lef_file, conversion_factor, design_varient='base'):
+
+def get_placement_distances(
+    results_root,
+    design,
+    verilog_file,
+    lef_file,
+    conversion_factor,
+    design_varient='base',
+    placement_step='both'
+):
 
     def_data = get_placement_data(results_root, design, design_varient)
     lef_list = component_parse.ComponentParser().get_comp_pins_from_lef(lef_file)
     ver_G = read_netlist.import_from_file(verilog_file)
 
-    nd_gp = traverse_graph(ver_G.graph, lef_list, def_data[0], cv=conversion_factor)
-    nd_dp = traverse_graph(ver_G.graph, lef_list, def_data[1], cv=conversion_factor)
+    #print([ver_G.get_graph().nodes[n] for n in ver_G.get_graph().nodes])
+    inputs = [n
+        for n in ver_G.get_graph().nodes
+            if ver_G.get_graph().nodes[n]['comp_type'] == 'INPUT']
+    print('INPUTS:', inputs)
 
-    return {"global_place": nd_gp["distances"], "detail_place": nd_dp["distances"]}, {"global_place": nd_gp["center"], "detail_place": nd_dp["center"]}
+    if placement_step == 'both':
+        nd_gp = traverse_graph(ver_G.graph, lef_list, def_data[0], node1=inputs[0], cv=conversion_factor)
+        nd_dp = traverse_graph(ver_G.graph, lef_list, def_data[1], node1=inputs[0], cv=conversion_factor)
+
+        return {"global_place": nd_gp["distances"], "detail_place": nd_dp["distances"]}, {"global_place": nd_gp["center"], "detail_place": nd_dp["center"]}
+
+    elif placement_step == 'global':
+        nd_gp = traverse_graph(ver_G.graph, lef_list, def_data[0], node1=inputs[0], cv=conversion_factor)
+        return {'distances': {"global_place": nd_gp["distances"]}, 'centers':{"global_place": nd_gp["center"]}}
+
+    elif placement_step == 'detail':
+        nd_dp = traverse_graph(ver_G.graph, lef_list, def_data[1], node1=inputs[0], cv=conversion_factor)
+        return {'distances': {"detail_place": nd_dp["distances"]}, 'centers':{"detail_place": nd_dp["center"]}}
+    else:
+        raise ValueError(f"Invalid value for placement_step {placement_step}; expecting 'both', 'global', or 'detail'")
+
 
 def draw_placement(verilog_G, comp_list, def_pos, place_area, def_scale=1000, img_name=None, show_img=False):
 
@@ -77,7 +127,8 @@ def traverse_graph(verilog_G, comp_list, def_pos, def_scale=1000, node1=None, pr
 
     CP = component_parse.ComponentParser()
     # pick an input node
-    in_node = "soln1"
+    # in_node = "soln1"
+    in_node = node1
     node_distances = {}
     node_centers = {}
     p_adj = 10
@@ -177,7 +228,7 @@ def test_distance():
     nd_dd = {}
     for nd in nd_gp.items():
         nd_dd[nd[0]] = (nd_gp[nd[0]] - nd_dp[nd[0]])
-    
+
     print(nd_dd)
 
 if __name__ == "__main__":
