@@ -42,8 +42,8 @@ export IO_PLACER_H = met3
 export IO_PLACER_V = met2
 
 # defaults specified here, override in local file as needed
-export DIE_AREA    	 	= 0 0 2550 1590
-export CORE_AREA   	 	= 0 0 2550 1590
+export DIE_AREA    	 	?= 0 0 2550 1590
+export CORE_AREA   	 	?= 0 0 2550 1590
 
 #---------------------------------------------------------
 # Place
@@ -104,8 +104,10 @@ export XCHIP_VALS		= 325 2225
 export YCHIP_VALS		= 325 1275
 # render smoothness in scad render
 export RES_VAL			= 120
+
 export PITCH            = 30
 # Default SCAD script arguments
+ifeq ($(SCAD_SCRIPT),../tools/scad_render/generator_v2.py)
 SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
 			--routing_file ${SCAD_ROUTING_LIBRARY} --scad_include $(SCAD_DESIGN_INCLUDE) \
 			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
@@ -113,3 +115,12 @@ SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
             --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
             --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
             --pitch $(PITCH) --res $(RES_VAL)
+else
+SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
+			--routing_file ${SCAD_ROUTING_LIBRARY} \
+			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
+            --platform "$(PLATFORM)" \
+            --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
+            --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
+            --pitch $(PITCH) --res $(RES_VAL)
+endif
