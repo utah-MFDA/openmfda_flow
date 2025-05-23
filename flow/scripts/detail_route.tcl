@@ -59,6 +59,7 @@ detailed_route -output_drc $::env(REPORTS_DIR)/3_route_drc.rpt \
                -output_maze $::env(RESULTS_DIR)/maze.log \
                -droute_end_iter 2 \
                -verbose 1 \
+               -clean_patches \
                {*}$additional_args
 
 report_wire_length -net {*} \

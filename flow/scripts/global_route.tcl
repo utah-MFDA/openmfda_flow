@@ -33,6 +33,8 @@ if {[info exist env(FASTROUTE_TCL)]} {
   # source $env(FASTROUTE_TCL)
   foreach fast_rt $::env(FASTROUTE_TCL) {
     source $fast_rt
+  # foreach fr_tcl $env(FASTROUTE_TCL) {
+  #   source $fr_tcl
   }
 } else {
   set_global_routing_layer_adjustment $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER) 0.5

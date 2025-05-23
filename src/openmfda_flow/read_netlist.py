@@ -27,7 +27,6 @@ class V_Graph():
     def get_graph(self):
         return self.graph
 
-
     def show_plot(self):
         nx.draw_spring(self.graph, with_labels=True)
         plt.show()
