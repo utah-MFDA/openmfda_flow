@@ -9,7 +9,7 @@ from math import sqrt
 def link_routes(route, route_devs, debug=False, design='', component_list=None,
                 components_lef=None, comp_dict=None, pin_list=None,
                 report_route=False, subsegment=True, def_scale=1000,
-                px_sz=7.6e-3, pt_err=0.05
+                px_sz=7.6e-3, pt_err=0.05, silent=False
 # =======
 # def link_routes(route, route_devs, debug=False, design='', component_list=None,
 #                     components_lef=None, comp_dict=None, pin_list=None,
@@ -28,7 +28,8 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
 
     if components_lef is not None:
         if component_list is not None:
-            print("Component list not passed!!!!")
+            if not silent:
+                print("Component list not passed!!!!")
         if comp_dict is None:
             print("Reading LEFs")
             import component_parse
@@ -38,14 +39,29 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
             comp_dict = {}
             if isinstance(components_lef, str):
                 comp_dict = component_parse.ComponentParser(
-                ).get_comp_pins_from_lef(components_lef, scale=s)
+# <<<<<<< HEAD
+#                 ).get_comp_pins_from_lef(components_lef, scale=s)
+#             elif isinstance(components_lef, list):
+#                 for c_lef in components_lef:
+#                     new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(c_lef, scale=s)
+#                     for cmp in new_dict.items():
+#                         if cmp[0] in comp_dict:
+#                             print(
+#                                 f"Component {cmp[0]} already read in, skipping")
+# =======
+                    ).get_comp_pins_from_lef(components_lef, scale=s, silent=silent)
             elif isinstance(components_lef, list):
                 for c_lef in components_lef:
-                    new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(c_lef, scale=s)
+                    new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(
+                        c_lef,
+                        scale=s,
+                        # silent=silent
+                    )
                     for cmp in new_dict.items():
                         if cmp[0] in comp_dict:
-                            print(
-                                f"Component {cmp[0]} already read in, skipping")
+                            if not silent:
+                                print(
+                                    f"Component {cmp[0]} already read in, skipping")
                         else:
                             comp_dict[cmp[0]] = cmp[1]
 
@@ -613,7 +629,7 @@ def do_lines_cross(A,B,C,D):
     return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
 
 
-def is_between(p1, p2, p3, fl_acc=0.00001, print_debug=False):
+def is_between(p1, p2, p3, fl_acc=0.00001, silent=False, print_debug=False):
     # check slope, they need to be equal to be on the same line
     # check they both equal zero
 
@@ -644,7 +660,7 @@ def is_between(p1, p2, p3, fl_acc=0.00001, print_debug=False):
         return False
 
 
-def check_net_intersections(net1, net2, fl_acc=0.00001):
+def check_net_intersections(net1, net2, fl_acc=0.0001, silent=False):
     intersections = []
 
     def is_via(pt1, pt2):
@@ -662,6 +678,16 @@ def check_net_intersections(net1, net2, fl_acc=0.00001):
             return abs(pt1[0]-pt2[0]) < fl_acc and \
                 abs(pt1[1]-pt2[1]) < fl_acc and \
                 abs(pt1[2]-pt2[2]) < fl_acc
+# =======
+#         if isinstance(pt1[2], float) or isinstance(pt1[2], int):
+#             return abs(pt1[0]-pt2[0]) < fl_acc and \
+#                 abs(pt1[1]-pt2[1]) < fl_acc and \
+#                 abs(pt1[2]-pt2[2]) < fl_acc
+#         # elif isinstance(pt1[2], int):
+#         #     return abs(pt1[0]-pt2[0]) < fl_acc and \
+#         #         abs(pt1[1]-pt2[1]) < fl_acc and \
+#         #         abs(pt1[2]-pt2[2]) < fl_acc
+# >>>>>>> main
         elif isinstance(pt1[2], str):
             return abs(pt1[0]-pt2[0]) < fl_acc and \
                 abs(pt1[1]-pt2[1]) < fl_acc and \
@@ -677,7 +703,8 @@ def check_net_intersections(net1, net2, fl_acc=0.00001):
                     is_via(sg2[0], sg2[1]):
                 # if check_pt_eq(ntpt1, ntpt2) and check_pt_eq(net1[i1+1], net2[i2]+1):
                 if check_pt_eq(ntpt1, ntpt2) and check_pt_eq(net1[i1+1], net2[i2+1]):
-                    print(f"Via {sg1} == {sg2}")
+                    if not silent:
+                        print(f"Via {sg1} == {sg2}")
                     # intersections.append((i1, i2))
                     intersections.append(("via", sg1, sg2))
                 elif check_pt_eq(sg1[0], sg2[0]):
@@ -695,20 +722,24 @@ def check_net_intersections(net1, net2, fl_acc=0.00001):
             elif is_via_sgmt(sg1):
                 if sg1[0][2] == sg2[0][2]:
                     if is_between(sg2[0], sg2[1], sg1[0], fl_acc, 1):
-                        print(f"(1.1) pt {sg1[0]} is in {sg2}")
+                        if not silent:
+                            print(f"(1.1) pt {sg1[0]} is in {sg2}")
                         intersections.append(('via_pt', sg1[0], sg2))
                 elif sg1[1][2] == sg2[0][2]:
                     if is_between(sg2[0], sg2[1], sg1[1], fl_acc, 1):
-                        print(f"(1.2) pt {sg1[1]} is in {sg2}")
+                        if not silent:
+                            print(f"(1.2) pt {sg1[1]} is in {sg2}")
                         intersections.append(('via_pt', sg1[1], sg2))
             elif is_via_sgmt(sg2):
                 if sg2[0][2] == sg1[0][2]:
                     if is_between(sg1[0], sg1[1], sg2[0], fl_acc, 1):
-                        print(f"(1.3) pt {sg2[0]} is in {sg1}")
+                        if not silent:
+                            print(f"(1.3) pt {sg2[0]} is in {sg1}")
                         intersections.append(('via_pt', sg1, sg2[0]))
                 elif sg2[1][2] == sg1[0][2]:
                     if is_between(sg1[0], sg1[1], sg2[1], fl_acc, 1):
-                        print(f"(1.4) pt {sg2[1]} is in {sg1}")
+                        if not silent:
+                            print(f"(1.4) pt {sg2[1]} is in {sg1}")
                         intersections.append(('via_pt', sg1, sg2[1]))
             # both are segments
             else:
