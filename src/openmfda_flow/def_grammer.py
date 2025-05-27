@@ -2,8 +2,8 @@ from lark import Lark
 
 
 def import_def_parser():
-                      
-#def_parser = 
+
+    # def_parser =
     return Lark("""
 
     start : def_f+
@@ -84,10 +84,12 @@ def import_def_parser():
 
     INT : /[-+]?(0|[1-9][0-9]*)/x
     VERSION : /[-+]?(0|[1-9][0-9]*)(\.[0-9]+)+/x
-    CNAME : /[a-zA-Z_][a-zA-Z0-9_]*/
+    CNAME : /[a-zA-Z_][a-zA-Z0-9_\.]*/
+    // MOD_NAME : /[a-zA-Z_][a-zA-Z0-9_.]*/
+    COMMENT : /\/\/.*$/
     %import common.ESCAPED_STRING
     %import common.WS
     %ignore WS
     """,
-        start='start',
-        lexer='basic')
+                start='start',
+                lexer='basic')

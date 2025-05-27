@@ -84,7 +84,7 @@ def import_def_parser():
 
     INT : /[-+]?(0|[1-9][0-9]*)/x
     VERSION : /[-+]?(0|[1-9][0-9]*)(\.[0-9]+)+/x
-    CNAME : /[a-zA-Z_][a-zA-Z0-9_]*/
+    CNAME : /[a-zA-Z_][a-zA-Z0-9_\.]*/
     %import common.ESCAPED_STRING
     %import common.WS
     %ignore WS

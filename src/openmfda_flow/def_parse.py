@@ -5,22 +5,33 @@ import os
 
 import openmfda_flow.def_grammer as def_grammer
 
+
 class Def_transformer(Transformer):
     def INT(self, i):
         # (i,) = i
         return int(i)
+
     def CNAME(self, s):
         return str(s)
+
+    # def MOD_NAME(self, s):
+    #     return str(s)
+
     def ORIENT(self, o):
         return str(o)
+
     def DIR(self, d):
         return str(d)
+
     def layer(self, l):
         return l[0]
+
     def pt(self, pt):
         return list(pt)
+
     def ESCAPED_STRING(self, es):
         return str(es)[1:-1]
+
     def VERSION(self, v):
         return str(v)
 
@@ -29,6 +40,7 @@ class Def_transformer(Transformer):
     def net_pt(self, s):
         return [s[0], s[1]]
     # need the rule passe
+
     def net_segment(self, ns):
         layer = ns[0]
         ns = [ns[1], ns[2]]
@@ -56,7 +68,7 @@ class Def_transformer(Transformer):
             return {str(prop[0]): prop[1]}
 
     def strnet(self, comp):
-        return {"COMPONENT": {"inst":comp[0], "port":comp[1]}}
+        return {"COMPONENT": {"inst": comp[0], "port": comp[1]}}
 
     def net_st(self, statement):
         net_name = statement[0]
@@ -101,15 +113,16 @@ class Def_transformer(Transformer):
     # via parsing
     def via_prop(self, p):
         if str(p[0]) == "DIRECTION" \
-            or str(p[0]) == "USE" \
-            or str(p[0]) == "NET":
+                or str(p[0]) == "USE" \
+                or str(p[0]) == "NET":
             return {str(p[0]): str(p[1])}
         elif str(p[0]) == "PORT":
             return {"PORT": True}
-        elif str(p[0]) == "FIXED" :
-            return {"FIXED": {"pt":p[1], "orientation":p[2]}}
-        else: # is a layer
+        elif str(p[0]) == "FIXED":
+            return {"FIXED": {"pt": p[1], "orientation": p[2]}}
+        else:  # is a layer
             return {"LAYER": [p[1], p[2], str(p[0])]}
+
     def via_st(self, st):
         # print ({st[0]:[{**x} for x in st[1:]]})
         temp = {}
@@ -117,6 +130,7 @@ class Def_transformer(Transformer):
             temp.update(p)
         return {st[0]: temp}
         # return {st[0]:[{**x} for x in st[1:]]}
+
     def via_block(self, vb):
         temp = {}
         for p in vb[1:]:
@@ -185,10 +199,10 @@ class Def_transformer(Transformer):
             elif d[1] == "GCELLGRID":
                 d_dict["GCELLGRID"].append(d[0])
             elif d[1] == "PINS" \
-                or d[1] == "COMPONENTS" \
-                or d[1] == "NETS" \
-                or d[1] == "DIEAREA" \
-                or d[1] == "UNITS":
+                    or d[1] == "COMPONENTS" \
+                    or d[1] == "NETS" \
+                    or d[1] == "DIEAREA" \
+                    or d[1] == "UNITS":
                 d_dict[d[1]] = d[0]
         return {db[0]: d_dict}
 
@@ -196,13 +210,13 @@ class Def_transformer(Transformer):
     # def parsing
 
     def busbitchars(self, bbchar):
-        return {"BUTBITCHARS":bbchar[0]}
+        return {"BUTBITCHARS": bbchar[0]}
 
-    def dividerchar(self, dchar): 
-        return {"BUTBITCHARS":dchar[0]}
+    def dividerchar(self, dchar):
+        return {"BUTBITCHARS": dchar[0]}
 
     def version(self, v):
-        return {"DEF_VERSION":v[0]}
+        return {"DEF_VERSION": v[0]}
 
     def def_f(self, d):
         temp = {}
@@ -221,12 +235,13 @@ def main(in_file, design=None, info_output=None, debug=False):
 
     info = get_info(in_file, design, info_output, debug)
 
-    if debug: print(info)
+    if debug:
+        print(info)
 
 
 def get_info(in_file, design=None, info_output=None, debug=False):
     f_dir = os.path.abspath(os.path.dirname(__file__))
-    #def_parser = Lark.open(f"{f_dir}/def_grammer.lark", lexer='basic')
+    # def_parser = Lark.open(f"{f_dir}/def_grammer.lark", lexer='basic')
     def_parser = def_grammer.import_def_parser()
 
     with open(in_file, 'r') as ifile:
@@ -240,9 +255,8 @@ def get_info(in_file, design=None, info_output=None, debug=False):
         print(f"outputing info {design}:{info_output}")
         for info in info_output:
             n_tree[info] = tr_tree[design][info]
-            #print(tr_tree[design][info])
+            # print(tr_tree[design][info])
         tr_tree = n_tree
-
 
     debug = True
     if debug:
@@ -255,12 +269,13 @@ def get_info(in_file, design=None, info_output=None, debug=False):
 def testing():
 
     in_fi = "test_3.def"
-    tree = def_parser.parse(open(in_fi, 'r').read())#.pretty()
+    tree = def_parser.parse(open(in_fi, 'r').read())  # .pretty()
     # print(tree)
 
     tree = Def_transformer().transform(tree)
     with open("temp_out", "w+") as of:
         of.write(json.dumps(tree, indent=3))
+
 
 if __name__ == "__main__":
     import argparse
@@ -274,4 +289,3 @@ if __name__ == "__main__":
     args = a_parser.parse_args()
 
     main(args.def_file, args.design, args.output_info)
-
