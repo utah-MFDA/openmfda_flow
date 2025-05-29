@@ -19,6 +19,10 @@ wire :   "wire" CNAME [("," CNAME)*] ";"
 component : CNAME CNAME "(" [cmp_port] [("," cmp_port)*] ")" ";"
 cmp_port : "." CNAME "(" CNAME ")" 
 
+
+COMMENT: "//" /.*$/
+
 %import common.CNAME
 %import common.WS
+%ignore COMMENT
 %ignore WS
