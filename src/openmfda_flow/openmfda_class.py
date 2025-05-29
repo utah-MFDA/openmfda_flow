@@ -146,7 +146,8 @@ class OpenMFDA:
             elif probe_type == "flow":
                 self.flow_probes.append([wire, device])
             else:
-                raise ValueError("probe_type must be pressure, flow, or concentration")
+                raise ValueError(
+                    "probe_type must be pressure, flow, or concentration")
 
         def add_eval(self, chemistry, wire, target_concentration, time=None):
             self.eval_probes.append(
@@ -169,7 +170,8 @@ class OpenMFDA:
         ):
             params = [param1, param2, param3, param4, param5]
             self.analysis_list.append(
-                {"type": analysis_type, "params": [x for x in params if x != None]}
+                {"type": analysis_type, "params": [
+                    x for x in params if x != None]}
             )
 
         def set_sim_config_file(self, sim_config_file):
@@ -295,25 +297,28 @@ class OpenMFDA:
 
         def check_path():
             if os.path.isdir(f"{path}/flow") and \
-                  os.path.isdir(f"{path}/tools"):
+                    os.path.isdir(f"{path}/tools"):
                 print("Found main flow and tools")
                 return True
             else:
                 print("Unable to find flow and tools, checkign for old version")
-                found_tools = {"xyce":False,"scad":False, "openroad":False}
+                found_tools = {"xyce": False, "scad": False, "openroad": False}
                 if os.path.isdir(f"{path}/xyce_flow"):
                     found_tools['xyce'] = True
-                    print(f"Found xyce flow at {os.path.abspath(f'{path}/xyce_flow')}")
+                    print(
+                        f"Found xyce flow at {os.path.abspath(f'{path}/xyce_flow')}")
                 if os.path.isdir(f"{path}/scad_flow"):
                     found_tools['scad'] = True
-                    print(f"Found scad flow at {os.path.abspath(f'{path}/scad_flow')}")
+                    print(
+                        f"Found scad flow at {os.path.abspath(f'{path}/scad_flow')}")
                 if os.path.isdir(f"{path}/openroad_flow"):
                     found_tools['openroad'] = True
-                    print(f"Found openroad flow at {os.path.abspath(f'{path}/openroad_flow')}")
+                    print(
+                        f"Found openroad flow at {os.path.abspath(f'{path}/openroad_flow')}")
 
                 if not found_tools['xyce'] and \
-                      not found_tools['scad'] and \
-                      not found_tools['openroad']:
+                        not found_tools['scad'] and \
+                        not found_tools['openroad']:
                     return False
                 else:
                     return True
@@ -322,15 +327,15 @@ class OpenMFDA:
             if check_path() or skip_ckeck:
                 self.openmfda_flow_path = path
             else:
-                raise ValueError(f"Not able to find ./flow or ./tools for OpenMFDA_flow path: {path}")
+                raise ValueError(
+                    f"Not able to find ./flow or ./tools for OpenMFDA_flow path: {path}")
         else:
             raise IsADirectoryError(f"{path} is not a valid directory")
 
-
-
     def get_openmfda_flow_path(self):
         if self.openmfda_flow_path is None:
-            raise ValueError("OpenMFDA flow path not set, either set enviroment variable 'OPENMFDA_ROOT' or set with set_openmfda_flow_path(<path>)")
+            raise ValueError(
+                "OpenMFDA flow path not set, either set enviroment variable 'OPENMFDA_ROOT' or set with set_openmfda_flow_path(<path>)")
         else:
             return self.openmfda_flow_path
 
@@ -386,7 +391,8 @@ class OpenMFDA:
 
     # def add_eval(self, chemistry, wire, target_concentration, time=None):
     def add_eval(self, chemistry, wire, target_concentration, time=None):
-        self.simulation_config.add_eval(chemistry, wire, target_concentration, time)
+        self.simulation_config.add_eval(
+            chemistry, wire, target_concentration, time)
 
     def add_analysis(
         self, analysis_type, param1, param2=None, param3=None, param4=None, param5=None
@@ -414,7 +420,8 @@ class OpenMFDA:
 
         if "init_density_coef" in replace_arg:
 
-            replace_arg["init_density_coef"] = str(replace_arg["init_density_coef"])
+            replace_arg["init_density_coef"] = str(
+                replace_arg["init_density_coef"])
         else:
             replace_arg["init_density_coef"] = "8e-5"
 
@@ -469,9 +476,12 @@ class OpenMFDA:
         fb = "{"
         bb = "}"
 
-        with open(replace_args_filename, "w") as f:
+        if not os.path.exists(os.path.dirname(replace_args_filename)):
+            os.mkdir(os.path.dirname(replace_args_filename))
+
+        with open(replace_args_filename, "w+") as f:
             print(
-            f"""
+                f"""
 # does not work
 set skip_initial_placement 0
 
@@ -533,11 +543,11 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
 
 #set ::env(GLOBAL_PLACEMENT_ARGS)
 """,
-            file=f,
+                file=f,
             )
 
-        os.environ['GLOBAL_PLACEMENT_ARGS_PATH'] = os.path.abspath(replace_args_filename)
-
+        os.environ['GLOBAL_PLACEMENT_ARGS_PATH'] = os.path.abspath(
+            replace_args_filename)
 
     def to_string_probes(self):
         return self.simulation_config.to_string_probes()
@@ -558,13 +568,15 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
         os.makedirs(xyce_run_dir, exist_ok=True)
 
         if self.verilog_file is not None:
-            shutil.copy(self.verilog_file, xyce_run_dir + "/" + os.path.basename(self.verilog_file))
-            #shutil.copy(netlist_file, xyce_run_dir + "/" + self.verilog_file)
+            shutil.copy(self.verilog_file, xyce_run_dir + "/" +
+                        os.path.basename(self.verilog_file))
+            # shutil.copy(netlist_file, xyce_run_dir + "/" + self.verilog_file)
             self.write_sim_config(xyce_run_dir)
 
     def build(self):
         if self.platform is None:
-            raise ValueError(f"Set platform for OpenMFDA_class: {self.design_name}")
+            raise ValueError(
+                f"Set platform for OpenMFDA_class: {self.design_name}")
         of.generate_config(
             self.verilog_file,
             self.design_name,
@@ -581,15 +593,16 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
 
     def run_flow(self, mk_targets="all", make_pre='', skip_if_no_length_file=False):
         if self.platform is None:
-            raise ValueError(f"Set platform for OpenMFDA_class: {self.design_name}")
+            raise ValueError(
+                f"Set platform for OpenMFDA_class: {self.design_name}")
         print(self.platform)
         of.run_flow(
             self.design_name,
-            #self.get_openmfda_flow_path(),
+            # self.get_openmfda_flow_path(),
             platform=self.platform,
             mk_targets=mk_targets,
-            #make_pre=make_pre,
-            #skip_if_no_length_file=skip_if_no_length_file,
+            # make_pre=make_pre,
+            # skip_if_no_length_file=skip_if_no_length_file,
         )
 
     def run_flow_iter_soln(
@@ -654,7 +667,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
             else:
                 of = open(o_len, "a")
 
-            of.write(",".join([str(x) for x in len_df.iloc[1].tolist()]) + "\n")
+            of.write(",".join([str(x)
+                     for x in len_df.iloc[1].tolist()]) + "\n")
             return o_len_n
 
         def report_chem(chem_file, o_chem, init=True):
@@ -722,8 +736,10 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                 for ov in overflow:
                                     iter_count += 1
                                     self.set_replace_arg("overflow", ov)
-                                    self.set_replace_arg("init_wire_coef", iwire)
-                                    self.set_replace_arg("init_density_coef", iden)
+                                    self.set_replace_arg(
+                                        "init_wire_coef", iwire)
+                                    self.set_replace_arg(
+                                        "init_density_coef", iden)
                                     self.set_replace_arg("max_phi", maxp)
                                     self.set_replace_arg("min_phi", minp)
                                     self.set_replace_arg("bin", bv)
@@ -735,7 +751,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                     self.build()
                                     try:
                                         self.run_flow(
-                                            mk_targets=["pnr", "render", "simulate"]
+                                            mk_targets=[
+                                                "pnr", "render", "simulate"]
                                         )
                                     except subprocess.CalledProcessError:
                                         # TODO report blank or missing entries
@@ -768,10 +785,12 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
 
                                     # report lengths
                                     if init:
-                                        nl = report_len(len_file, out_csv_len, init)
+                                        nl = report_len(
+                                            len_file, out_csv_len, init)
                                         if nl != None:
                                             out_csv_len = nl
-                                        nc, min_err = report_chem(eval_file, out_csv_chem, init)
+                                        nc, min_err = report_chem(
+                                            eval_file, out_csv_chem, init)
                                         if nc != None:
                                             out_csv_chem = nc
                                     else:
@@ -779,22 +798,25 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                         report_len(len_file, out_csv_len, init)
 
                                         # report eval
-                                        nnc, min_err = report_chem(eval_file, out_csv_chem, init)
+                                        nnc, min_err = report_chem(
+                                            eval_file, out_csv_chem, init)
 
                                     init = False
 
                                     if min_err is not None and min_err <= end_err:
-                                        print(f"found solution below {end_err}, actual error {min_err}")
-                                        print("Values:", ' '.join([f"{w_colns[id]}:{w_vals[id]}" for id in range(0,len(w_vals))]))
+                                        print(
+                                            f"found solution below {end_err}, actual error {min_err}")
+                                        print("Values:", ' '.join(
+                                            [f"{w_colns[id]}:{w_vals[id]}" for id in range(0, len(w_vals))]))
                                         print(f"Iteration: {iter_count}")
                                         return
-
 
     def run_flow_iter_soln_opt(
         self, iter_items, len_file, eval_file, out_csv_len, out_csv_chem, replace_config_loc,
         end_err=0, write_configs=True, gpl_arg_out_dir=None,
     ):
-        REPLACE_ARGS = ["bin", "overflow", "min_phi", "max_phi", "density", "init_wire_coef", "init_density_coef"]
+        REPLACE_ARGS = ["bin", "overflow", "min_phi", "max_phi",
+                        "density", "init_wire_coef", "init_density_coef"]
 
         # density_var = iter_list[0]
         # bin_var = iter_list[1]
@@ -868,7 +890,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
             else:
                 of = open(o_len, "a")
 
-            of.write(",".join([str(x) for x in len_df.iloc[1].tolist()]) + "\n")
+            of.write(",".join([str(x)
+                     for x in len_df.iloc[1].tolist()]) + "\n")
             return o_len_n
 
         def report_chem(chem_file, o_chem, init=True):
@@ -971,10 +994,12 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                     if write_configs:
                                         self.build()
                                     else:
-                                        self.write_replace_config(replace_config_loc)
+                                        self.write_replace_config(
+                                            replace_config_loc)
                                     try:
                                         self.run_flow(
-                                            mk_targets=["pnr", "render", "simulate"]
+                                            mk_targets=[
+                                                "pnr", "render", "simulate"]
                                         )
                                     except subprocess.CalledProcessError:
                                         # TODO report blank or missing entries
@@ -1001,7 +1026,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                         str(mfda_error),
                                     ]
                                     if init and (gpl_arg_out_dir is None):
-                                        re_arg_out = write_vals(w_colns, w_vals, init)
+                                        re_arg_out = write_vals(
+                                            w_colns, w_vals, init)
                                     elif init and (gpl_arg_out_dir is not None):
                                         write_vals(w_colns, w_vals, init,
                                                    out_file=f"'{gpl_arg_out_dir}/replace_vars.csv")
@@ -1009,17 +1035,20 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                         write_vals(w_colns, w_vals, init,
                                                    out_file=f"'{gpl_arg_out_dir}/replace_vars.csv")
                                     else:
-                                        write_vals(w_colns, w_vals, init, re_arg_out)
+                                        write_vals(w_colns, w_vals,
+                                                   init, re_arg_out)
 
                                     # report lengths
                                     if init:
-                                        #try:
-                                        nl = report_len(len_file, out_csv_len, init)
+                                        # try:
+                                        nl = report_len(
+                                            len_file, out_csv_len, init)
                                         if nl is not None:
                                             out_csv_len = nl
                                         # except FileNotFoundError:
                                         #     nl = report_len(len_file, out_csv_len, init, False)
-                                        nc, min_err = report_chem(eval_file, out_csv_chem, init)
+                                        nc, min_err = report_chem(
+                                            eval_file, out_csv_chem, init)
                                         if nc is not None:
                                             out_csv_chem = nc
                                     else:
@@ -1027,13 +1056,16 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                         report_len(len_file, out_csv_len, init)
 
                                         # report eval
-                                        nnc, min_err = report_chem(eval_file, out_csv_chem, init)
+                                        nnc, min_err = report_chem(
+                                            eval_file, out_csv_chem, init)
 
                                     init = False
 
                                     if min_err <= end_err:
-                                        print(f"found solution below {end_err}, actual error {min_err}")
-                                        print("Values:", ' '.join([f"{w_colns[id]}:{w_vals[id]}" for id in range(0,len(w_vals))]))
+                                        print(
+                                            f"found solution below {end_err}, actual error {min_err}")
+                                        print("Values:", ' '.join(
+                                            [f"{w_colns[id]}:{w_vals[id]}" for id in range(0, len(w_vals))]))
                                         print(f"Iteration: {iter_count}")
                                         return
 
@@ -1045,7 +1077,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
             raise ValueError("delim must be of type str")
 
         if len(iter_list) != 7:
-            raise ValueError("First arg (iter list) needs to have len 7 [density, bin, max_phi, min_phi, init_wire_len, init_den, overflow]")
+            raise ValueError(
+                "First arg (iter list) needs to have len 7 [density, bin, max_phi, min_phi, init_wire_len, init_den, overflow]")
 
         density_var = iter_list[0]
         bin_var = iter_list[1]
@@ -1058,9 +1091,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
         def reform_e(edge):
             e = str(edge)
             edge_reg = r'\s*\(\s*[\'\"]([_\w\d]+)[\'\"]\s*,\s*[\'\"]([_\w\d]+)[\'\"]\s*\)\s*'
-            edge_repl= r'\1-\2'
+            edge_repl = r'\1-\2'
             return re.sub(edge_reg, edge_repl, e)
-
 
         def write_vals(colns, val_list, distances_gp={}, distances_dp={}, init=True, out_file=None,
                        centers_gp={}, centers_dp={}, centers=False):
@@ -1086,15 +1118,17 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
             if init:
                 of = open(out_file, "w+")
                 of.write(delim.join(colns +
-                    [reform_e(comp)+'_gp' for comp in list(distances_gp.keys())] +
-                    [reform_e(comp)+'_dp' for comp in list(distances_dp.keys())]
-                         ) + "\n")
+                                    [reform_e(comp)+'_gp' for comp in list(distances_gp.keys())] +
+                                    [reform_e(
+                                        comp)+'_dp' for comp in list(distances_dp.keys())]
+                                    ) + "\n")
                 if centers:
                     ofc = open(out_centers, "w+")
                     ofc.write(delim.join(colns +
-                        [reform_e(comp)+'_cntr_gp' for comp in list(centers_gp.keys())] +
-                        [reform_e(comp)+'_cntr_dp' for comp in list(centers_dp.keys())]
-                            ) + '\n')
+                                         [reform_e(comp)+'_cntr_gp' for comp in list(centers_gp.keys())] +
+                                         [reform_e(
+                                             comp)+'_cntr_dp' for comp in list(centers_dp.keys())]
+                                         ) + '\n')
 
             else:
                 of = open(out_file, "a")
@@ -1102,12 +1136,12 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                     ofc = open(out_centers, "a")
 
             of.write(delim.join([str(x) for x in val_list] +
-                [str(v) for v in distances_gp.values()] +
-                [str(v) for v in distances_dp.values()]) + "\n")
+                                [str(v) for v in distances_gp.values()] +
+                                [str(v) for v in distances_dp.values()]) + "\n")
             if centers:
                 ofc.write(delim.join([str(x) for x in val_list] +
-                    [str(v) for v in centers_gp.values()] +
-                    [str(v) for v in centers_dp.values()]) + "\n")
+                                     [str(v) for v in centers_gp.values()] +
+                                     [str(v) for v in centers_dp.values()]) + "\n")
 
             return out_file_n
 
@@ -1123,8 +1157,10 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                 for ov in overflow:
                                     iter_count += 1
                                     self.set_replace_arg("overflow", ov)
-                                    self.set_replace_arg("init_wire_coef", iwire)
-                                    self.set_replace_arg("init_density_coef", iden)
+                                    self.set_replace_arg(
+                                        "init_wire_coef", iwire)
+                                    self.set_replace_arg(
+                                        "init_density_coef", iden)
                                     self.set_replace_arg("max_phi", maxp)
                                     self.set_replace_arg("min_phi", minp)
                                     self.set_replace_arg("bin", bv)
@@ -1139,7 +1175,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                     placement["detail_place"] = {}
                                     try:
                                         self.run_flow(
-                                            mk_targets=["pnr -e OR_MK_ARGS=place"]
+                                            mk_targets=[
+                                                "pnr -e OR_MK_ARGS=place"]
                                         )
                                         # results_root, self.design, verilog_file, lef_file)
                                         if centers:
@@ -1175,7 +1212,7 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                         str(mfda_error),
                                     ]
                                     if init:
-                                        #if centers:
+                                        # if centers:
                                         write_vals(
                                             w_colns,
                                             w_vals,
@@ -1199,10 +1236,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                             centers_gp=p_centers["global_place"],
                                             centers_dp=p_centers["detail_place"]
                                         )
-                                        #write_vals(w_colns, w_vals, placement["global_place"], placement["detail_place"], init)
+                                        # write_vals(w_colns, w_vals, placement["global_place"], placement["detail_place"], init)
                                     init = False
-
-
 
     def run_flow_remote(
         self,
@@ -1274,7 +1309,8 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
     ):
 
         dir_path = os.path.dirname(
-            os.path.normpath(os.path.realpath(__file__) + "/../../").replace("\\", "/")
+            os.path.normpath(os.path.realpath(__file__) +
+                             "/../../").replace("\\", "/")
         )
 
         if osplt.system() == "Windows":
@@ -1291,10 +1327,11 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
         if relative_path:
             local_path = f"{dir_path}/{local_path}"
 
-        wsl_cmd = lambda rs: f'wsl ~ -e bash -c "{rs}"'
+        def wsl_cmd(rs): return f'wsl ~ -e bash -c "{rs}"'
 
         for x in result_out:
-            rs_cmd = f"rsync -av -e ssh mfda_remote:{remote_dir}/{x} {local_path}/{x}".split()
+            rs_cmd = f"rsync -av -e ssh mfda_remote:{remote_dir}/{x} {local_path}/{x}".split(
+            )
 
             if osplt.system() == "Windows":
                 print("WSL cmd: " + wsl_cmd(" ".join(rs_cmd)))
@@ -1380,4 +1417,5 @@ if __name__ == "__main__":
     print("In module products __package__, __name__ ==", __package__, __name__)
     import sys
 
-    print("In module products sys.path[0], __package__ ==", sys.path[0], __package__)
+    print(
+        "In module products sys.path[0], __package__ ==", sys.path[0], __package__)

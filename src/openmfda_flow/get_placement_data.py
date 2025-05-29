@@ -74,6 +74,7 @@ def get_placement_distances(
 ):
 
     def_data = get_placement_data(results_root, design, design_varient)
+    print(f'Reading lef file: {lef_file}')
     lef_list = component_parse.ComponentParser().get_comp_pins_from_lef(lef_file)
     if verilog_file is not None:
         net_G = read_netlist.import_from_file(verilog_file)
