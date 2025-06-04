@@ -167,7 +167,16 @@ def get_pin_line(in_pin):
     return mo
 
 
-def write_pins(o_file, pin_list, bulk, tlef_properties, mets, mode='w+', debug=False):
+def write_pins(
+        o_file,
+        pin_list,
+        bulk,
+        tlef_properties,
+        mets,
+        use_def_io_size=False,
+        io_interface_size=None,
+        mode='w+',
+        debug=False):
 
     f = open(o_file, mode)
     f.write("\n// PINS")
@@ -175,8 +184,19 @@ def write_pins(o_file, pin_list, bulk, tlef_properties, mets, mode='w+', debug=F
     nl = '\n'
 
     shape = 'cube'
-    size = [0.1, 0.1, 0.1]
-    rot  = [0, [0,0,1]]
+    if not use_def_io_size:
+        if io_interface_size is None:
+            size = [0.1, 0.1, 0.1]
+        elif isinstance(io_interface_size, list) and len(io_interface_size) == 3:
+            size = io_interface_size
+        else:
+            raise ValueError(f'io_interface_size not correctly defined; got {io_interface_size} expecting len 3 list')
+    else:
+        print('use_def_io_size, not yet implemented used io_interface_size')
+        size = [0.1, 0.1, 0.1]
+        print(f'  default value {size}')
+
+    rot = [0, [0, 0, 1]]
 
     flp = tlef_properties
 
@@ -701,7 +721,8 @@ def write_nets(o_file, net_list, shape='cube',
                     elif len(pc_route) == len(n.route.nodes[r]) - 1:
                         pc_pt1 = [shape, convert_size(init_size), pt, rot]
                     else:
-                        pc_pt1 = [shape, rt_size, pt, rot]
+                        pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        #pc_pt1 = [shape, rt_size, pt, rot]
                     #pc_pt2 = [shape, size, pt2, rot]
 
                     pc_route.append(pc_pt1)
@@ -999,6 +1020,9 @@ def main(
         tlef,
         o_file,
         def_scale=1000,
+        routing_size=[14, 14, 10],
+        io_size=[14, 14, 10],
+        use_def_io=False,
         comp_file=None,
         pin_con_dir_f=None,
         pcell_file=None,
@@ -1101,6 +1125,8 @@ show_lefs=false ;
         bulk=bulk,
         tlef_properties=net_properties,
         mets=mets,
+        io_interface_size=io_size,
+        use_def_io_size=use_def_io,
         mode='a')
 
     if dimm_file is not None:
@@ -1144,7 +1170,7 @@ show_lefs=false ;
         o_file,
         nets_list,
         shape='cube',
-        size=[14,14,10],
+        size=routing_size,
         mode='a',
         dimm_file=dimm_,
         report_len_file=length_out_file,
@@ -1212,6 +1238,11 @@ if __name__ == "__main__":
     parser.add_argument('--transparent_bulk', action='store_true', default=False)
     parser.add_argument('--no_copy_include', action='store_true', default=False)
 
+    parser.add_argument('--routing_size', type=int, default=None, nargs='+')
+
+    parser.add_argument('--io_size', type=int, default=None, nargs='+')
+    parser.add_argument('--use_def_io_size', action='store_true', default=False)
+
     parser.add_argument('--scad_out_file', type=str, default=None)
 
     parser.add_argument('--component_file', type=str, default=None)
@@ -1225,6 +1256,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # --scad_out_file
     if args.scad_out_file is None:
         if '/' in args.design:
             o_file_basename = os.path.basename(args.design)
@@ -1232,12 +1264,48 @@ if __name__ == "__main__":
         else:
             args.scad_out_file = f"{args.results_dir}/{args.design}.scad"
 
+    # --tlef_file
     if args.tlef is not None and args.tlef_file is not None:
         raise ValueError("Cannot define both --tlef and --tlef_file")
     elif args.tlef is not None:
         pass
     elif args.tlef_file is not None:
         args.tlef = args.tlef_file
+
+    # -- routing_size
+    if args.routing_size is not None:
+        if len(args.routing_size) == 2:
+            routing_size = [
+                    args.routing_size[0],
+                    args.routing_size[0],
+                    args.routing_size[1]]
+        elif len(args.routing_size) == 3:
+            routing_size = args.routing_size
+        else:
+            raise ValueError(f'Too many arguments for --routing_size, expecting 2 or 3 got {len(args.routing_size)}')
+
+    else:
+        routing_size = [14, 14, 10]
+
+    if args.io_size is not None and args.use_def_io_size:
+        print('  Both io_size and use_def_io_size defined, the def io size will get priority')
+    if args.io_size is not None:
+        if len(args.io_size) == 2:
+            args.io_size = [
+                args.io_size[0] * args.px,
+                args.io_size[1] * args.px,
+                routing_size[2] * args.layer,
+            ]
+            print('  Defaulting io_size height to routing hieght')
+        elif len(args.io_size) == 3:
+            args.io_size = [
+                args.io_size[0] * args.px,
+                args.io_size[1] * args.px,
+                args.io_size[2] * args.layer,
+            ]
+            pass # nothing to be done
+        else:
+            raise ValueError(f'Incorrect amount of arguments expecting 2 or 3, got {len(args.io_size)}')
 
     if args.comp_file is not None and args.component_file is not None:
         raise ValueError("Cannot define both --comp_file and --component_file")
@@ -1281,6 +1349,9 @@ if __name__ == "__main__":
         args.tlef,
         o_file=args.scad_out_file,
         def_scale=args.def_scale,
+        routing_size=routing_size,
+        io_size=args.io_size,
+        use_def_io=args.use_def_io_size,
         comp_file=args.comp_file,
         pin_con_dir_f=args.pin_file,
         pcell_file=args.pcell_file,
