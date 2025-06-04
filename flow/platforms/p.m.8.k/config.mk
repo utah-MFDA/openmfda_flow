@@ -9,14 +9,16 @@ ifeq ($(BUILD_PDK_LIBRARY),)
 # General distribution files
 export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                       $(ADDITIONAL_GDS)
-export TECH_LEF = $(PLATFORM_DIR)/lef/h.r.3.3.tlef
-export SC_LEF = $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
+export TECH_LEF = $(PLATFORM_DIR)/lef/p.m.8.k.tlef
+export SC_LEF = $(PLATFORM_DIR)/lef/p.m.8.k_merged.lef
 
-export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
+export LIB_FILES = $(PLATFORM_DIR)/lib/p.m.8.k.lib \
                      $(ADDITIONAL_LIBS)
 #export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/scad/components.scad
-export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3_merged.scad
+export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/p.m.8.k_merged.scad
 export SCAD_ROUTING_LIBRARY = $(PLATFORM_DIR)/scad/routing.scad
+export XYCE_LIB = $(PLATFORM_DIR)/pdk/Components/verilogA_build/.libs/MFXyce.so
+
 else
 # Locally built distribution files
 #ROOT_DIR=$(PLATFORM_DIR)/pdk/Components
@@ -41,9 +43,9 @@ export PLACE_SITE = CoreSite
 export IO_PLACER_H = met3
 export IO_PLACER_V = met2
 
-# defaults specified here, override in local file as needed -  match with XBULK_VAL and YBULK_VAL
-export DIE_AREA    	 	= 0 0 2550 1590
-export CORE_AREA   	 	= 0 0 2550 1590
+# defaults specified here, override in local file as needed
+export DIE_AREA    	 	= 0 0 3409 1136
+export CORE_AREA   	 	= 0 0 3409 1136
 
 #---------------------------------------------------------
 # Place
@@ -82,27 +84,36 @@ export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/scad_include/polychannel_v2.sca
 #------------------------------------------------------------------------------
 # PRINTER PARAMETERS
 #------------------------------------------------------------------------------s
-# mm/px value - xy resolution of printer 
-export PX_VAL 			= 0.0076
-# mm/layer value - keep same to start 
+# mm/px value
+export PX_VAL 			= 0.022
+# mm/layer value
 export LAYER_VAL		= 0.01
-# layer number for the bottom layer - keep same to start
+# layer number for the bottom layer
 export BOT_LAYER_VAL	= 75
-# layers/via value - keep same to start 
-export LPV_VAL			= 20
-# bulk x value in pixels - number of pixels printer has in x direction; printer bed size 
-export XBULK_VAL		= 2550
-# bulk y value in pixels - number of pixels printer has in y direction; printer bed size 
-export YBULK_VAL		= 1600
-# bulk z value in layers - number of pixels printer has in z direction; printer bed size 
-export ZBULK_VAL		= 230
-# chip min and max x values in pixels - arbitrary
+# layers/via value
+export LPV_VAL			= 40
+# bulk x value in pixels
+# value for entire print volume = 7500
+# value for galss slide: 75 mm
+export XBULK_VAL		= 3409
+# bulk y value in pixels
+# value for entire print volume = 3272
+# value for galss slide: 25 mm
+export YBULK_VAL		= 1136
+# bulk z value in layers
+# value for entire print volume = 8181
+# realistic value: 15 mm
+export ZBULK_VAL		= 681
+# chip min and max x values in pixels
 export XCHIP_VALS		= 325 2225
-# chip min and max y values in pixels - arbitrary 
+# chip min and max y values in pixels
 export YCHIP_VALS		= 325 1275
-# render smoothness in scad render - keep same to start, for rendering 
+# render smoothness in scad render
 export RES_VAL			= 120
 export PITCH            = 30
+
+export SCAD_LIB ?= $(PLATFORM_DIR)/pdk/scad_lib
+
 # Default SCAD script arguments
 SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
 			--routing_file ${SCAD_ROUTING_LIBRARY} --scad_include $(SCAD_DESIGN_INCLUDE) \
@@ -110,4 +121,5 @@ SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
             --platform "$(PLATFORM)" \
             --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
             --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
-            --pitch $(PITCH) --res $(RES_VAL)
+            --pitch $(PITCH) --res $(RES_VAL) \
+            --io_size 9 9 --routing_size 9 16

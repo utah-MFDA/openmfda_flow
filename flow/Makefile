@@ -1,8 +1,8 @@
 # ==============================================================================
 # Uncomment or add the design to run
 # ==============================================================================
-PLATFORM ?= h.r.3.3
-export DESIGN ?= demo
+PLATFORM ?= p.m.8.k
+export DESIGN ?= test_lib
 
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
