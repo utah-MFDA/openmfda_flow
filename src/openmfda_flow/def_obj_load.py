@@ -10,7 +10,14 @@ import sys
 # else:
 if os.path.abspath(__file__) in sys.path:
     sys.path.append(os.path.abspath(__file__))
-import def_obj_grammer as def_grammer
+try:
+    import def_obj_grammer as def_grammer
+except ModuleNotFoundError:
+    if os.path.abspath(os.path.dirname(__file__)) not in sys.path:
+        sys.path.append(
+            os.path.abspath(os.path.dirname(__file__))
+        )
+        import def_obj_grammer as def_grammer
 # import def_obj_grammer as def_grammer
 
 
@@ -18,6 +25,17 @@ def write_def_header():
     return """VERSION 5.8 ;
 DIVIDERCHAR "/" ;
 BUSBITCHARS "[]" ;"""
+
+
+class Def_Graph:
+    def __init__(self):
+        self.graph = None
+
+    def set_graph(self, graph):
+        self.graph = graph
+
+    def get_graph(self):
+        return self.graph
 
 
 class Design:
@@ -86,6 +104,46 @@ class Design:
     def write_die_area(self):
         return f"DIEAREA ( {self.dieA[0][0]} {self.dieA[0][1]} ) ( {self.dieA[1][0]} {self.dieA[1][1]} ) ;"
 
+    def generate_netlist_graph(self, design_dict):
+
+        dgn_name = list(design_dict['design'].keys())[0]
+        dgn_obj = design_dict['design'][dgn_name]
+
+        Def_G = nx.Graph()
+
+        # iterate over pins
+        for pin in dgn_obj.pins.values():
+            Def_G.add_node(pin.pin_name, comp_type=pin.dir)
+            if pin.pin_name != pin.pin_net:
+                Def_G.add_node(pin.pin_net, comp_type="WIRE")
+                Def_G.add_edges_from(
+                    [(pin.pin_name, pin.pin_net, {"PIN": pin.dir})]
+                )
+
+        # iterate over nets
+        for net in dgn_obj.nets.values():
+            if net.net_name not in Def_G.nodes:
+                Def_G.add_node(net.net_name, comp_type='WIRE')
+            for comp, port in net.net_components.items():
+                if comp == 'PIN':
+                    continue
+                Def_G.add_edges_from(
+                    [(net.net_name, comp, {"PIN": port})]
+                )
+
+        # iterate over components
+        for comp in dgn_obj.components.values():
+            if comp.name not in Def_G.nodes:
+                Def_G.add_node(comp.name, comp_type=comp.component_type)
+            else:
+                # print(Def_G.nodes)
+                Def_G.nodes[comp.name]['comp_type'] = comp.component_type
+
+        DG_Obj = Def_Graph()
+        DG_Obj.set_graph(Def_G)
+
+        return DG_Obj
+
     def print_def(self, out_file=None):
         # with open(out_file, "w+") as def_of:
         print(write_def_header()+'\n')
@@ -150,9 +208,11 @@ class Row:
         self.step_y = step_y
 
     def write_row(self):
+        # fmt: off
         return f"ROW {self.rname} " + \
             f"{self.site} {self.origin_x} {self.origin_y} {self.orientation} " + \
             f"DO {self.num_x} BY {self.num_y} STEP {self.step_x} {self.step_y} ;"
+        # fmt: on
 
 
 class Tracks:
@@ -193,6 +253,7 @@ class Component:
         self.name = self.instance_name
         self.component_type = component_type
         self.is_placed = False
+        self.is_submodule = False
         self.pos = [0, 0]
         self.orientation = "N"
 
@@ -215,9 +276,11 @@ class Component:
         }
 
     def write_component(self):
+        # fmt: off
         return f"- {self.instance_name} {self.component_type} + " + \
             f"{'PLACED' if self.is_placed else ''} " + \
             f"( {self.pos[0]} {self.pos[1]} ) {self.orientation} ;"
+        # fmt: on
 
 
 class Pin:
@@ -451,9 +514,11 @@ class Def_transformer(Transformer):
     ##########################
     # via parsing
     def via_prop(self, p):
+        # fmt: off
         if str(p[0]) == "DIRECTION" \
                 or str(p[0]) == "USE" \
                 or str(p[0]) == "NET":
+        # fmt: on
             return {str(p[0]): str(p[1])}
         elif str(p[0]) == "PORT":
             return {"PORT": True}
@@ -599,11 +664,13 @@ class Def_transformer(Transformer):
             elif d[1] == "GCELLGRID":
                 # d_dict["GCELLGRID"].append(d[0])
                 d_class.gcellgrid.append(d[0])
+            # fmt: off
             elif d[1] == "PINS" \
                     or d[1] == "COMPONENTS" \
                     or d[1] == "NETS" \
                     or d[1] == "DIEAREA" \
                     or d[1] == "UNITS":
+            # fmt: on
                 d_dict[d[1]] = d[0]
                 if d[1] == "NETS":
                     d_class.nets = d[0]

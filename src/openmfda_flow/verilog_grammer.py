@@ -25,8 +25,11 @@ def import_verilog_parser():
     component : CNAME CNAME "(" [cmp_port] [("," cmp_port)*] ")" ";"
     cmp_port : "." CNAME "(" CNAME ")"
 
+    COMMENT: "//" /.*$/
+
     %import common.CNAME
     %import common.WS
+    %ignore COMMENT
     %ignore WS
     """,
                 start='start',

@@ -2,11 +2,12 @@ module smart_toilet(
     soln1,
     soln2,
     soln3,
-    out
+    out_1,
+    out_2
 );
 
 input   soln1, soln2, soln3;
-output  out;
+output  out_1, out_2;
 
 wire    connect01, connect02, connect0, connect1, connect2, connect3, connect5, connect6, connect31, connect32, connect33, connect34, connect35, connect36, connect37;
 
@@ -17,7 +18,6 @@ serpentine_200px_0  serp1     (.in_fluid(soln2), .out_fluid(connect0));
 serpentine_200px_0  serp1_1   (.in_fluid(connect0), .out_fluid(connect01));
 serpentine_200px_0  serp1_2   (.in_fluid(connect01), .out_fluid(connect02));
 serpentine_200px_0  serp2     (.in_fluid(connect02), .out_fluid(connect1));
-
 
 diffmix_25px_0      mix0      (.a_fluid(soln1), .b_fluid(connect1), .out_fluid(connect2));
 
@@ -35,6 +35,5 @@ serpentine_300px_2  serp6_10   (.in_fluid(connect37), .out_fluid(connect5));
 diffmix_25px_0      mix1    (.a_fluid(connect2), .b_fluid(connect5), .out_fluid(connect6));
 
 serpentine_200px_0  serp7  (.in_fluid(connect6), .out_fluid(out));
-
 
 endmodule

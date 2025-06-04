@@ -9,8 +9,8 @@ ifeq ($(BUILD_PDK_LIBRARY),)
 # General distribution files
 export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                       $(ADDITIONAL_GDS)
-export TECH_LEF = $(PLATFORM_DIR)/lef/h.r.3.3.tlef
-export SC_LEF = $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
+export TECH_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3.tlef
+export SC_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
 
 export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      $(ADDITIONAL_LIBS)
@@ -41,9 +41,9 @@ export PLACE_SITE = CoreSite
 export IO_PLACER_H = met3
 export IO_PLACER_V = met2
 
-# defaults specified here, override in local file as needed -  match with XBULK_VAL and YBULK_VAL
-export DIE_AREA    	 	= 0 0 2550 1590
-export CORE_AREA   	 	= 0 0 2550 1590
+# defaults specified here, override in local file as needed
+export DIE_AREA    	 	?= 0 0 2550 1590
+export CORE_AREA   	 	?= 0 0 2550 1590
 
 #---------------------------------------------------------
 # Place
@@ -79,6 +79,8 @@ export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/scad_include/polychannel_v2.sca
                              $(PLATFORM_DIR)/pdk/scad_include/lef_scad_config.scad \
 														 $(PLATFORM_DIR)/pdk/scad_include/lef_helper.scad
 
+export SCAD_LIB ?= $(PLATFORM_DIR)/pdk/scad_lib
+
 #------------------------------------------------------------------------------
 # PRINTER PARAMETERS
 #------------------------------------------------------------------------------s
@@ -102,8 +104,10 @@ export XCHIP_VALS		= 325 2225
 export YCHIP_VALS		= 325 1275
 # render smoothness in scad render - keep same to start, for rendering 
 export RES_VAL			= 120
+
 export PITCH            = 30
 # Default SCAD script arguments
+ifeq ($(SCAD_SCRIPT),../tools/scad_render/generator_v2.py)
 SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
 			--routing_file ${SCAD_ROUTING_LIBRARY} --scad_include $(SCAD_DESIGN_INCLUDE) \
 			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
@@ -111,3 +115,12 @@ SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
             --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
             --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
             --pitch $(PITCH) --res $(RES_VAL)
+else
+SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
+			--routing_file ${SCAD_ROUTING_LIBRARY} \
+			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
+            --platform "$(PLATFORM)" \
+            --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
+            --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
+            --pitch $(PITCH) --res $(RES_VAL)
+endif

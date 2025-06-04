@@ -219,7 +219,7 @@ def condense_solve_pts(
         # check if indexes are within previous solved route or are overlapping
         skip_solve_pt_pair = False
 
-        print("Solved indexes", onet_solved_pts)
+        # print("Solved indexes", onet_solved_pts)
         for slvd_net in onet_solved_pts:
             # pair are within
             if ft_pt1_i >= slvd_net[0] and ft_pt2_i <= slvd_net[1]:
@@ -279,8 +279,8 @@ def get_outter_sgmt_pts(lnk_rts, inter_pts_sgmts):
     onet_s = {}
 
     for net_o in inter_pts_sgmts.items():
-        net_ok = net_o[0]
-        net_opt = net_o[1]
+        net_ok = net_o[0]  # key
+        net_opt = net_o[1]  # pts
         if net_ok not in onet_s:
             onet_s[net_ok] = []
         print(f"Condense {net_ok}")
@@ -288,13 +288,13 @@ def get_outter_sgmt_pts(lnk_rts, inter_pts_sgmts):
         for net_i in net_opt.items():
             net_ik = net_i[0]
             net_ipt = net_i[1]
-            condense_solve_pts(
+            s_net_pt = condense_solve_pts(
                 lnk_rts,
                 net_ok,
                 net_opt,
                 net_ik,
                 net_ipt,
-                [],
+                s_net_pr,
                 onet_s[net_ok]
             )
 
@@ -314,19 +314,20 @@ def solve_rt(
     print("net name:", net_name)
     # for i, pt_pair in enumerate(onet_solved_pts):
     # net_o_solved_ind += [[]]
-    ft_pt1_i = pt_pair[0]
-    ft_pt2_i = pt_pair[1]
+    ft_pt1_i = pt_pair[0] - 1
+    ft_pt2_i = pt_pair[1] + 1
 
     rt = rt_dict[net_name].nodes['']['route']
 
-    ft_pt1 = [int(i) for i in rt[pt_pair[0] - 1]]
+    ft_pt1 = [int(i) for i in rt[ft_pt1_i]]
     try:
-        ft_pt2 = [int(i) for i in rt[pt_pair[1] + 1]]
+        ft_pt2 = [int(i) for i in rt[ft_pt2_i]]
 
     except IndexError:
         if net_name not in rt_dict:
             raise IndexError(f"Failed to find {net_name} in netlist")
-        if pt_pair[1] >= len(rt):
+        # if pt_pair[1] >= len(rt):
+        if ft_pt2_i-1 >= len(rt):
             raise IndexError(f"Cannot access {pt_pair[1]} in net len{len(rt)}")
 
     print("indexs:", ft_pt1_i, ft_pt2_i)
@@ -346,13 +347,15 @@ def solve_rt(
             grid,
             rt_dict[net_name
                     ].nodes['']['route'][:ft_pt1_i - 1],
-            v=write_2_grid_val
+            # v=write_2_grid_val
+            v=0
         )
         add_route_2_grid(
             grid,
             rt_dict[net_name
                     ].nodes['']['route'][ft_pt2_i + 1:],
-            v=write_2_grid_val
+            # v=write_2_grid_val
+            v=0
         )
 
         # Add back intersecting routes
@@ -413,7 +416,19 @@ def solve_rt(
     new_path['path'] = [[pt[2], pt[1], pt[0]]
                         for pt in new_path['path']]
 
+    # put new route in grid
+    if new_path is not None:
+        print("Adding path to grid: ", new_path['path'])
+        add_route_2_grid(
+            grid,
+            new_path['path'],
+            # rt_dict[net_i2[0]].nodes['']['route'],
+            v=0
+        )
+
     insert_stack.append(new_path)
+
+    return new_path
 
 
 def insert_rt(stack_net, rt_dict, rt_nd=''):
@@ -423,8 +438,8 @@ def insert_rt(stack_net, rt_dict, rt_nd=''):
     rt_dict[stack_net['net']].nodes[rt_nd]['route'] = insert_list_2_list(
         rt_alias,
         stack_net['path'],
-        stack_net['pt_ind'][0]-1,  # ft_pt1_i,
-        stack_net['pt_ind'][1]+1,  # ft_pt2_i
+        stack_net['pt_ind'][0],  # ft_pt1_i,
+        stack_net['pt_ind'][1],  # ft_pt2_i
     )
 
 
@@ -477,7 +492,7 @@ def fix_design_route_2(
     lef_list,
     grid_size,
     out_file=None,
-    skip_bad_routes=True
+    skip_bad_routes=False
 ):
 
     if out_file is not None:

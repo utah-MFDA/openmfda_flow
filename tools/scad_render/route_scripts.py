@@ -55,7 +55,7 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                     new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(
                         c_lef,
                         scale=s,
-                        #silent=silent
+                        # silent=silent
                     )
                     for cmp in new_dict.items():
                         if cmp[0] in comp_dict:

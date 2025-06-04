@@ -11,9 +11,11 @@ file_dir = os.path.dirname(os.path.abspath(__file__))
 img_dir = "/"
 img_flow = f"{img_dir}/flow"
 img_tools = f"{img_dir}/tools"
+img_src = f"{img_dir}/src"
 
 local_flow = f"{file_dir}/flow"
 local_tools = f"{file_dir}/tools"
+local_src = f"{file_dir}/src"
 
 pnr_img = "bgoenner/mfda_pnr_cp"
 
@@ -35,7 +37,9 @@ def run_mfdaflow_docker(
     # docker defs
 
     dname = "openmfda_docker"
-    d_mnt = f"""--mount type=bind,src={local_flow},dst={img_flow} --mount type=bind,src={local_tools},dst={img_tools}"""
+    d_mnt = f"""--mount type=bind,src={local_flow},dst={img_flow} \
+    --mount type=bind,src={local_tools},dst={img_tools} \
+    --mount type=bind,src={local_src},dst={img_src}"""
     d_wd = img_flow
     d_cmd = "make"
     d_cmd += ' '+' '.join(make_args_l)

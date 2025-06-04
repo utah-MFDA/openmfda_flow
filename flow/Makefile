@@ -95,8 +95,25 @@ endif
 $(info [INFO][FLOW] Using platform directory $(PLATFORM_DIR))
 include $(PLATFORM_DIR)/config.mk
 
+# additional modules 
+# 	the are includes below with evironment var defs
+
+# export FIX_DEF
+# 	call 'fix_route' or/and 'fix_render'
+export DEF_FIX_UTIL = ../tools/route_scripts/util.mk
+
 # Include design and platform configuration
 include $(DESIGN_CONFIG)
+
+ifneq (,$(strip $(DISTRIB_V)))
+export TECH_LEF = ./platforms/$(PLATFORM)/lef/$(PLATFORM)_$(DISTRIB_V).tlef
+export SC_LEF   = ./platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_$(DISTRIB_V).lef
+endif
+
+ifneq (,$(strip $(DESIGN_DIR)))
+export SDC_FILE ?= $(DESIGN_DIR)/constraint.sdc
+export IO_CONSTRAINTS ?= $(DESIGN_DIR)/io_constraints.tcl
+endif
 
 export FLOW_VARIANT ?= base
 
@@ -234,8 +251,10 @@ $(WRAPPED_LIBS):
 #.PHONY: gen_pcells
 #gen_pcells: $(PCELL_MERGE_LEF)
 
-DEF_FIX_UTIL = ../tools/route_scripts/util.mk
+
+ifdef FIX_DEF
 include $(DEF_FIX_UTIL)
+endif
 
 # ==============================================================================
 #  _     ___ ____  ____      _    ______   __
@@ -577,6 +596,8 @@ XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
+#<<<<<<< HEAD
+#$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
