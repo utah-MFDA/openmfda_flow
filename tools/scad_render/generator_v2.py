@@ -717,12 +717,14 @@ def write_nets(o_file, net_list, shape='cube',
                     #pt = r
 
                     if len(pc_route) == 0:
-                        pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        # pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        pc_pt1 = [shape, rt_size, pt, rot]
                     elif len(pc_route) == len(n.route.nodes[r]) - 1:
-                        pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        # pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        pc_pt1 = [shape, rt_size, pt, rot]
                     else:
-                        pc_pt1 = [shape, convert_size(init_size), pt, rot]
-                        #pc_pt1 = [shape, rt_size, pt, rot]
+                        # pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        pc_pt1 = [shape, rt_size, pt, rot]
                     #pc_pt2 = [shape, size, pt2, rot]
 
                     pc_route.append(pc_pt1)
