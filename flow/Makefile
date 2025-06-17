@@ -549,7 +549,7 @@ XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
-$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN).scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 ../tools/simulation/runMFDASim.py \
 		--output_dir $(RESULTS_DIR) \
