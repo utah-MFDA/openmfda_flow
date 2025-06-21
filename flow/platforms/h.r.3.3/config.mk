@@ -40,8 +40,8 @@ export IO_PLACER_H = met3
 export IO_PLACER_V = met2
 
 # defaults specified here, override in local file as needed
-export DIE_AREA    	 	= 0 0 2550 1590
-export CORE_AREA   	 	= 0 0 2550 1590
+export DIE_AREA    	 	= 0 0 2550 1600
+export CORE_AREA   	 	= 0 0 2550 1600
 
 #---------------------------------------------------------
 # Place

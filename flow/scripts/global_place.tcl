@@ -30,7 +30,10 @@ source $::env(PLATFORM_DIR)/setRC.tcl
 
 # set fastroute layer reduction
 if {[info exist env(FASTROUTE_TCL)]} {
-  source $env(FASTROUTE_TCL)
+  # source $env(FASTROUTE_TCL)
+  foreach fast_rt $::env(FASTROUTE_TCL) {
+    source $fast_rt
+  }
 } else {
   set_global_routing_layer_adjustment $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER) 0.5
   set_routing_layers -signal $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER)
@@ -51,10 +54,31 @@ if {[info exist ::env(PLACE_DENSITY_LB_ADDON)]} {
 }
 
 if { 0 != [llength [array get ::env GLOBAL_PLACEMENT_ARGS]] } {
+puts "GLOBAL PLACE ARGUMENTS"
+puts $::env(GLOBAL_PLACEMENT_ARGS)
+} else {
+puts "NO GPL ARGS"
+}
+
+if { 0 != [llength [array get ::env GLOBAL_PLACEMENT_ARGS]] } {
 global_placement -routability_driven -density $place_density \
     -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     -pad_right $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     $::env(GLOBAL_PLACEMENT_ARGS)
+} elseif {[info exist ::env(GLOBAL_PLACEMENT_ARGS_FILE)]} {
+  puts "Found GPL ARGS file"
+  source $::env(GLOBAL_PLACEMENT_ARGS_FILE)
+  global_placement -routability_driven -density $place_density \
+    -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
+    -pad_right $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
+    -bin_grid_count $bin_grid_count \
+    -init_density_penalty $init_density_penalty \
+    -init_wirelength_coef $init_wirelength_coef \
+    -min_phi_coef $min_phi_coef \
+    -max_phi_coef $max_phi_coef \
+    -overflow $overflow \
+    -initial_place_max_iter $initial_place_max_iter \
+    -initial_place_max_fanout $initial_place_max_fanout
 } else {
 global_placement -routability_driven -density $place_density \
     -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \

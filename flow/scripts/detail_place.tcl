@@ -40,5 +40,7 @@ report_metrics "detailed place"
 if {![info exists standalone] || $standalone} {
   # write output
   write_def $::env(RESULTS_DIR)/2_3_place_dp.def
+  write_verilog $::env(RESULTS_DIR)/2_place.v
   exit
 }
+

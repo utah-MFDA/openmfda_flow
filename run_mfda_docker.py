@@ -8,19 +8,25 @@ default_tag = "devel_0.0.1.5"
 
 file_dir = os.path.dirname(os.path.abspath(__file__))
 
-img_dir = "/"
+img_dir = ""
 img_flow = f"{img_dir}/flow"
 img_tools = f"{img_dir}/tools"
+img_src = f"{img_dir}/src"
 
 local_flow = f"{file_dir}/flow"
 local_tools = f"{file_dir}/tools"
+local_src = f"{file_dir}/src"
 
 pnr_img = "bgoenner/mfda_pnr_cp"
 
 
 def run_mfdaflow_docker(
-    design, mfda_platform, make_args, run_deps=False,
-    no_check=False
+    design,
+    mfda_platform,
+    make_args,
+    docker_env_vars=None,
+    run_deps=False,
+    no_check=False,
 ):
 
     # pnr_img = "bgoenner/mfda_pnr:latest"
@@ -35,7 +41,9 @@ def run_mfdaflow_docker(
     # docker defs
 
     dname = "openmfda_docker"
-    d_mnt = f"""--mount type=bind,src={local_flow},dst={img_flow} --mount type=bind,src={local_tools},dst={img_tools}"""
+    d_mnt = f"""--mount type=bind,src={local_flow},dst={img_flow} \
+    --mount type=bind,src={local_tools},dst={img_tools} \
+    --mount type=bind,src={local_src},dst={img_src}"""
     d_wd = img_flow
     d_cmd = "make"
     d_cmd += ' '+' '.join(make_args_l)
@@ -46,13 +54,21 @@ def run_mfdaflow_docker(
         d_cmd += " -B"
     # fmt: on
 
+    if isinstance(docker_env_vars, str):
+        docker_env_vars = [docker_env_vars]
+
+    if docker_env_vars is not None and len(docker_env_vars) > 0:
+        d_env_vars = ' '.join([f'-e {d_env}' for d_env in docker_env_vars])
+    else:
+        d_env_vars = ''
+
     cmd_full = f'''docker run -t
         {d_mnt}
         --user {os.getuid()}:{os.getuid()}
         --name {dname}
         --rm
         -w {d_wd}
-        -e "NEW_VER_FL_SITE=T"
+        -e "NEW_VER_FL_SITE=T" {d_env_vars}
         {dock_img} {d_cmd}'''
 
     if platform.system() == "Windows":

@@ -91,7 +91,9 @@ include $(PLATFORM_DIR)/config.mk
 # Include design and platform configuration
 include $(DESIGN_CONFIG)
 
+ifeq ($(strip $(GLOBAL_PLACEMENT_ARGS_FILE)),'')
 export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
+endif
 
 export FLOW_VARIANT ?= base
 
@@ -546,6 +548,9 @@ clean_simulate:
 XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 
 #ifneq ($(SIMULATION_CONFIG),)
+.PHONY: xyce_run_config
+xyce_run_config: $(RESULTS_DIR)/xyce_run.config
+
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
