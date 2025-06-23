@@ -576,7 +576,7 @@ $(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_ba
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
 
-render: $(RESULTS_DIR)/$(DESIGN)_base.scad
+render: $(RESULTS_DIR)/$(DESIGN)_base.stl
 slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
@@ -603,6 +603,9 @@ $(RESULTS)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_fin
 				--scad_include $(SCAD_INCLUDE_FILES) \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
+
+$(RESULTS)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
+	openscad $< -o $@
 
 %.stl: %.scad
 	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
