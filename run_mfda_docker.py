@@ -99,7 +99,7 @@ def run_mfdaflow_docker(
     if platform.system() == "Windows":
         WSL_prefix = "wsl --exec"
         print("Start OpenMFDA")
-        #win_d_cmd = f"{WSL_prefix} '{cmd_full}'"
+        # win_d_cmd = f"{WSL_prefix} '{cmd_full}'"
         win_d_cmd = f"{cmd_full}"
         print(win_d_cmd)
         subprocess.run(win_d_cmd.replace('\n', ' '), shell=True)
