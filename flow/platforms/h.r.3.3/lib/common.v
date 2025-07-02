@@ -5,17 +5,25 @@ module mux3_40px_0(input a, b, c, input sa, sb, sc, output y);
 endmodule
 
 module pump1_40px_0(input in, input pump1, output air_out, output out);
-    valve_40px_1 thing(.in_air(air_in), .out_air(air_out), .in_fluid(fluid_in), .out_fluid(fluid_out));
+    valve_40px_1 thing(.in_air(pump1), .out_air(air_out), .in_fluid(in), .out_fluid(out));
 endmodule
 
-module pump3_40px_0(inout in, inout out, input pump1, pump2, pump3, output air_out);
+module pump3_40px_0(inout in, inout out, input pump1, pump2, pump3, output air_out1, air_out2, air_out3);
   wire x, y;
-  valve_40px_1 thing1(.in_air(pump1), .out_air(air_out), .in_fluid(in), .out_fluid(x));
-  valve_40px_1 thing2(.in_air(pump2), .out_air(air_out), .in_fluid(x), .out_fluid(y));
-  valve_40px_1 thing3(.in_air(pump3), .out_air(air_out), .in_fluid(y), .out_fluid(out));
+  valve_40px_1 thing1(.in_air(pump1), .out_air(air_out1), .in_fluid(in), .out_fluid(x));
+  valve_40px_1 thing2(.in_air(pump2), .out_air(air_out2), .in_fluid(x), .out_fluid(y));
+  valve_40px_1 thing3(.in_air(pump3), .out_air(air_out3), .in_fluid(y), .out_fluid(out));
 endmodule
 
 module valve(inout fluid_in, inout fluid_out, input air_in, output air_out);
+  valve_40px_1 thing(.in_air(air_in), .out_air(air_out), .in_fluid(fluid_in), .out_fluid(fluid_out));
+endmodule
+
+module pump_valve(inout fluid_in, inout fluid_out, input air_in, output air_out);
+  valve_40px_1 thing(.in_air(air_in), .out_air(air_out), .in_fluid(fluid_in), .out_fluid(fluid_out));
+endmodule
+
+module sieve_valve(inout fluid_in, inout fluid_out, input air_in, output air_out);
   valve_40px_1 thing(.in_air(air_in), .out_air(air_out), .in_fluid(fluid_in), .out_fluid(fluid_out));
 endmodule
 
@@ -24,7 +32,7 @@ module mixer(inout a, b, inout y);
 endmodule
 
 module chamber(inout in, inout out);
-  serpentine_100px_0 thing(.in_fluid(in), .out_fluid(out));
+  serpentine_150px_0 thing(.in_fluid(in), .out_fluid(out));
 endmodule
 
 module serpentine(inout in, inout out);
@@ -53,7 +61,11 @@ module trap4(inout a, b, c, d);
   serpentine_50px_0 thing1(.a_fluid(a), .b_fluid(d));
 endmodule
 
-module interconnect_4x8(inout
+// module flush_hole_0(output pad, input connection);
+//   assign pad = connection;
+// endmodule
+
+module interconnect_8x4(inout
                         pin_0_0,
                         pin_0_1,
                         pin_0_2,
