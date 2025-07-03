@@ -7,20 +7,37 @@ make_io_sites -horizontal_site IO_SIDE \
     -rotation_vertical R90
 
 # THESE MUST HAVE NO SPACES AROUND THE PORT NAME
-place_pad -master pinhole_325px_42 -row IO_WEST -location 1030 {pinholes\[0\].in\[0\].hole}
-place_pad -master pinhole_325px_42 -row IO_WEST -location 1170 {pinholes\[0\].in\[1\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 330 {pinholes\[0\].in\[2\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 470 {pinholes\[1\].in\[0\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 610 {pinholes\[1\].in\[1\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 750 {pinholes\[1\].in\[2\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 890 {pinholes\[0\].out\[0\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 1030 {pinholes\[0\].out\[1\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 1170 {pinholes\[0\].out\[2\].hole}
-place_pad -master pinhole_325px_42 -row IO_EAST -location 1030 {pinholes\[0\].out\[3\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 1450 {pinholes\[1\].out\[0\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 1590  {pinholes\[1\].out\[1\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 1730  {pinholes\[1\].out\[2\].hole}
-place_pad -master pinhole_325px_42 -row IO_NORTH -location 1870 {pinholes\[1\].out\[3\].hole}
+place_pad -master pinhole_320px_0 -row IO_WEST -location 1120 {pinholes\[1\].out\[0\].hole}
+place_pad -master pinhole_320px_0 -row IO_WEST -location 640 {pinholes\[0\].in\[1\].hole}
+place_pad -master pinhole_320px_0 -row IO_WEST -location 960 {pinholes\[0\].in\[0\].hole}
+place_pad -master pinhole_320px_0 -row IO_NORTH -location 320 {pinholes\[0\].in\[2\].hole}
+place_pad -master pinhole_320px_0 -row IO_NORTH -location 640 {pinholes\[1\].in\[1\].hole}
+place_pad -master pinhole_320px_0 -row IO_NORTH -location 800 {pinholes\[1\].in\[2\].hole}
+place_pad -master pinhole_320px_0 -row IO_NORTH -location 960 {pinholes\[0\].out\[1\].hole}
+place_pad -master pinhole_320px_0 -row IO_NORTH -location 1120 {pinholes\[0\].out\[2\].hole}
+place_pad -master pinhole_320px_0 -row IO_NORTH -location 1760  {pinholes\[1\].out\[2\].hole}
+place_pad -master pinhole_320px_0 -row IO_NORTH -location 1920 {pinholes\[1\].out\[3\].hole}
+place_pad -master pinhole_320px_0 -row IO_EAST -location 960 {pinholes\[1\].in\[0\].hole}
+place_pad -master pinhole_320px_0 -row IO_EAST -location 800 {pinholes\[0\].out\[3\].hole}
+place_pad -master pinhole_320px_0 -row IO_SOUTH -location 480  {pinholes\[1\].out\[1\].hole}
+place_pad -master pinhole_320px_0 -row IO_SOUTH -location 640 {pinholes\[0\].out\[0\].hole}
+
+# place_pad -master pinhole_320px_0 -row IO_WEST -location 1030 {pinholes\[0\].in\[0\].hole}
+# place_pad -master pinhole_320px_0 -row IO_WEST -location 1170 {pinholes\[0\].in\[1\].hole}
+
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 470 {pinholes\[1\].in\[0\].hole}
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 610 {pinholes\[1\].in\[1\].hole}
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 750 {pinholes\[1\].in\[2\].hole}
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 890 {pinholes\[0\].out\[0\].hole}
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 1030 {pinholes\[0\].out\[1\].hole}
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 1170 {pinholes\[0\].out\[2\].hole}
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 1450 {pinholes\[1\].out\[0\].hole}plaplace_pad -master pinhole_320px_0 -row IO_NORTH -location 1590 {pinholes\[0\].in\[2\].hole}
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 1730  {pinholes\[1\].out\[2\].hole}
+# place_pad -master pinhole_320px_0 -row IO_NORTH -location 1870 {pinholes\[1\].out\[3\].hole}
+
+# place_pad -master pinhole_320px_0 -row IO_EAST -location 1030 {pinholes\[0\].out\[3\].hole}
+# place_pad -master pinhole_320px_0 -row IO_SOUTH -location 470  {pinholes\[1\].out\[1\].hole}
+
 
 place_io_terminals pinhole*/pad
 
