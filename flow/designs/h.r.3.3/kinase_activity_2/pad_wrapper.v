@@ -28,7 +28,7 @@ module kinase_activity_2(input `FLATTENED(IN_SIZE, flow_in_flat, SIZE),
         pinhole_320px_0 hole (.pad(flow_in[i][j]), .connection(flow_in_X[i][j]));
       end
       for (j = 0; j < 4; j = j + 1) begin: out
-        pinhole_320px_0 hole (.pad(flow_out[i][j]), .connection(flow_out_X[i][j]));
+        pinhole_320px_1 hole (.pad(flow_out[i][j]), .connection(flow_out_X[i][j]));
       end
     end
     for (j = 0; j < FLUSH_SIZE; j = j + 1) begin: flush
@@ -36,36 +36,36 @@ module kinase_activity_2(input `FLATTENED(IN_SIZE, flow_in_flat, SIZE),
     end
   endgenerate
 
-  interconnect_8x4 ic(.pin_0_0(ctrl_a_X[1]), .pin_0_0_pad(ctrl_a[1]),
-                      .pin_0_1(ctrl_a_X[9]), .pin_0_1_pad(ctrl_a[9]),
-                      .pin_0_2(ctrl_s_X[1]), .pin_0_2_pad(ctrl_s[1]),
-                      .pin_0_3(), .pin_0_3_pad(),
-                      .pin_1_0(ctrl_a_X[2]), .pin_1_0_pad(ctrl_a[2]),
-                      .pin_1_1(ctrl_a_X[10]), .pin_1_1_pad(ctrl_a[10]),
-                      .pin_1_2(ctrl_s_X[2]), .pin_1_2_pad(ctrl_s[2]),
-                      .pin_1_3(), .pin_1_3_pad(),
-                      .pin_2_0(ctrl_a_X[3]), .pin_2_0_pad(ctrl_a[3]),
-                      .pin_2_1(ctrl_a_X[11]), .pin_2_1_pad(ctrl_a[11]),
-                      .pin_2_2(ctrl_s_X[3]), .pin_2_2_pad(ctrl_s[3]),
-                      .pin_2_3(), .pin_2_3_pad(),
-                      .pin_3_0(ctrl_a_X[4]), .pin_3_0_pad(ctrl_a[4]),
-                      .pin_3_1(), .pin_3_1_pad(),
-                      .pin_3_2(), .pin_3_2_pad(),
-                      .pin_3_3(), .pin_3_3_pad(),
-                      .pin_4_0(ctrl_a_X[5]), .pin_4_0_pad(ctrl_a[5]),
-                      .pin_4_1(), .pin_4_1_pad(),
-                      .pin_4_2(pump_b_X[0]), .pin_4_2_pad(pump_b[0]),
-                      .pin_4_3(), .pin_4_3_pad(),
-                      .pin_5_0(ctrl_a_X[6]), .pin_5_0_pad(ctrl_a[6]),
-                      .pin_5_1(pump_a_X[1]), .pin_5_1_pad(pump_a[1]),
-                      .pin_5_2(pump_b_X[1]), .pin_5_2_pad(pump_b[1]),
-                      .pin_5_3(), .pin_5_3_pad(),
-                      .pin_6_0(ctrl_a_X[7]), .pin_6_0_pad(ctrl_a[7]),
-                      .pin_6_1(pump_a_X[2]), .pin_6_1_pad(pump_a[2]),
-                      .pin_6_2(), .pin_6_2_pad(),
-                      .pin_6_3(), .pin_6_3_pad(),
-                      .pin_7_0(ctrl_a_X[8]), .pin_7_0_pad(ctrl_a[8]),
-                      .pin_7_1(pump_a_X[0]), .pin_7_1_pad(pump_a[0]));
+  interconnect_8x4 interconnect(.connection_0_0(ctrl_a_X[1]), .pad_0_0(ctrl_a[1]),
+                      .connection_0_1(ctrl_a_X[9]), .pad_0_1(ctrl_a[9]),
+                      .connection_0_2(ctrl_s_X[1]), .pad_0_2(ctrl_s[1]),
+                      .connection_0_3(), .pad_0_3(),
+                      .connection_1_0(ctrl_a_X[2]), .pad_1_0(ctrl_a[2]),
+                      .connection_1_1(ctrl_a_X[10]), .pad_1_1(ctrl_a[10]),
+                      .connection_1_2(ctrl_s_X[2]), .pad_1_2(ctrl_s[2]),
+                      .connection_1_3(), .pad_1_3(),
+                      .connection_2_0(ctrl_a_X[3]), .pad_2_0(ctrl_a[3]),
+                      .connection_2_1(ctrl_a_X[11]), .pad_2_1(ctrl_a[11]),
+                      .connection_2_2(ctrl_s_X[3]), .pad_2_2(ctrl_s[3]),
+                      .connection_2_3(), .pad_2_3(),
+                      .connection_3_0(ctrl_a_X[4]), .pad_3_0(ctrl_a[4]),
+                      .connection_3_1(), .pad_3_1(),
+                      .connection_3_2(), .pad_3_2(),
+                      .connection_3_3(), .pad_3_3(),
+                      .connection_4_0(ctrl_a_X[5]), .pad_4_0(ctrl_a[5]),
+                      .connection_4_1(), .pad_4_1(),
+                      .connection_4_2(pump_b_X[0]), .pad_4_2(pump_b[0]),
+                      .connection_4_3(), .pad_4_3(),
+                      .connection_5_0(ctrl_a_X[6]), .pad_5_0(ctrl_a[6]),
+                      .connection_5_1(pump_a_X[1]), .pad_5_1(pump_a[1]),
+                      .connection_5_2(pump_b_X[1]), .pad_5_2(pump_b[1]),
+                      .connection_5_3(), .pad_5_3(),
+                      .connection_6_0(ctrl_a_X[7]), .pad_6_0(ctrl_a[7]),
+                      .connection_6_1(pump_a_X[2]), .pad_6_1(pump_a[2]),
+                      .connection_6_2(), .pad_6_2(),
+                      .connection_6_3(), .pad_6_3(),
+                      .connection_7_0(ctrl_a_X[8]), .pad_7_0(ctrl_a[8]),
+                      .connection_7_1(pump_a_X[0]), .pad_7_1(pump_a[0]));
   // generate
   //   genvar i;
   //   for (i = 0; i < SIZE; i = i + 1) begin: devices

@@ -29,8 +29,7 @@
 # [-min_distance_in_tracks] [-exclude region] [-group_pins pin_list]
 # [-annealing] [-write_pin_placement file_name]
 
-place_inst -name ic -origin { 960 570 } -orient R0 -status FIRM
-# place_pin -pin_name ctrl_a[1] -layer met10 -location { 960 930 } -pin_size {20 20}
+place_inst -name interconnect -origin { 960 570 } -orient R0 -status FIRM
 # place_pin -pin_name ctrl_a[9] -layer met10 -location { 960 840 } -pin_size {20 20}
 # place_pin -pin_name ctrl_s[1] -layer met10 -location { 960 750 } -pin_size {20 20}
 # # place_pin -pin_name in1_a -layer met10 -location { 960 660 } -pin_size {20 20}
