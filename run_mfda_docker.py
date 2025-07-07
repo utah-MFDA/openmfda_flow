@@ -28,6 +28,7 @@ else:
 
 pnr_img = "bgoenner/mfda_pnr_cp"
 
+
 def check_dir(in_path):
     if os.path.isdir(in_path):
         print(f"Found {in_path}")
@@ -82,11 +83,12 @@ def run_mfdaflow_docker(
     else:
         d_env_vars = ''
 
-
     if platform.system() == "Windows":
         user_arg = ""
     elif platform.system() == "Linux":
-        user_arg = "\n        --user {os.getuid()}:{os.getuid()}"
+        user_arg = f"\n        --user {os.getuid()}:{os.getuid()}"
+    elif platform.system() == "Darwin":
+        user_arg = f"\n        --user {os.getuid()}:{os.getuid()}"
 
     cmd_full = f'''docker run -t
         {d_mnt}{user_arg}
