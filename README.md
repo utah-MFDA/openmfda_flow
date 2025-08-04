@@ -17,6 +17,7 @@ the submodules are up to date.
 
 The following external tools are required.
 - OpenROAD
+- KLayout
 - Xyce (7.8)
     - must be built from source with the ADMS plugin
     - ADMS (2.3.7)
@@ -218,4 +219,5 @@ python3 run_mfda_docker.py -–design smart_toilet
 ```
 
 Results should be located in the `flow/results/smart_toilet/base` directory.
+
 
