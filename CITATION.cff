@@ -1,8 +1,8 @@
 
 cff-version: 1.2.0
 title: >-
-  An Open-source Toolchain for Design, Verification, and
-  Manufacture of 3D-printed Microfluidic Devices
+  An open source platform to automate the design, verification, and
+  manufacture of 3D printed microfluidic devices
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
@@ -46,5 +46,6 @@ abstract: >-
   functional microfluidic chip for use with real assays using previously developed EDA 
   tools.
 keywords:
+identifiers:
 
 license: MIT
