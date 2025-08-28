@@ -1,0 +1,44 @@
+import xgi
+import networkx as nx
+import json
+import sys
+
+input_file = sys.argv[1]
+G = nx.Graph()
+with open(input_file) as f:
+    y = json.load(f)
+
+m = y["modules"]["top"]
+for io, detail in m["ports"].items():
+    G.add_node(io, weight = 0.0, hyperedge=False)
+    for i in detail["bits"]:
+        if i not in G.nodes:
+            G.add_node(i, hyperedge=True)
+        G.add_edge(io, i)
+
+for cell, detail in m["cells"].items():
+    G.add_node(cell, weight=1.0, hyperedge=False)
+    for i, bits in detail["connections"].items():
+        for bit in bits:
+            if bit not in G.nodes:
+                G.add_node(bit, hyperedge=True)
+            G.add_edge(cell, bit)
+
+H = xgi.Hypergraph()
+for n in G.nodes:
+    if not G.nodes[n]["hyperedge"]:
+        H.add_node(n, weight=G.nodes[n]["weight"])
+    else:
+
+node = {n:i+1 for i, n in enumerate([n for n in G.nodes if not G.nodes[n]["hyperedge"]])}
+
+i = -1
+for n in G.nodes:
+    if G.nodes[n]["hyperedge"]:
+        i += 1
+        for s in G.neighbors(n):
+            if not G.nodes[s]["hyperedge"]:
+                output[i].append(node[s])
+print(maxi, len(node), "0")
+for o in output:
+    print(*o)
