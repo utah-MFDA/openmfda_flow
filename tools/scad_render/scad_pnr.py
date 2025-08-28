@@ -3,10 +3,13 @@ import operator
 import solid
 import solid.utils
 import os
+# TODO this is such overkill to write a csv
 import numpy as np
 import pandas as pd
+import random
 import opendbpy as odb
 from functools import reduce
+
 def wire_iter(wire):
     dec = odb.dbWireDecoder()
     dec.begin(wire)
@@ -28,7 +31,8 @@ def wire_iter(wire):
             wire_type = dec.getWireType()
             yield (opcode, layer, wire_type)
         elif opcode == odb.dbWireDecoder.POINT_EXT:
-            point = dec.getPoint_ext()
+            # point = dec.getPoint_ext()
+            point = dec.getPoint()
             yield (opcode, layer, point)
         elif opcode == odb.dbWireDecoder.POINT:
             point = dec.getPoint()
@@ -54,12 +58,12 @@ def segment_iter(wire):
     for (opcode, layer, vals) in wire_iter(wire):
         if opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
             last = None
-        elif opcode == odb.dbWireDecoder.POINT_EXT:
-            point = vals
-            if last is not None:
-                yield (layer, last, point)
-            last = point
-        elif opcode == odb.dbWireDecoder.POINT:
+        # elif opcode == odb.dbWireDecoder.POINT_EXT:
+        #     point = vals
+        #     if last is not None:
+        #         yield (layer, last, point)
+        #     last = point
+        elif opcode == odb.dbWireDecoder.POINT or opcode == odb.dbWireDecoder.POINT_EXT:
             (x,y) = vals
             width = layer.getWidth()
             # By default, no extension means half the width.
@@ -222,10 +226,14 @@ class place:
         self.db = db
         self.mapOrient = {"R180": "S",
                           "R0": "N",
+                          "R90": "W", # TODO this is a problem
+                          "R270": "E", # TODO this is a problem
                           "MY": "FN",
                           "MX": "FS",
-                          "MYR90": "FS",
-                          "MXR90": "FN"}
+                          "MYR90": "FE",
+                          "MXR90": "FW",
+                          "MY90": "FE",
+                          "MX90": "FW"}
     def get_components(self):
         block = self.db.getChip().getBlock()
         # TODO abstract dimension calculations
@@ -234,6 +242,7 @@ class place:
         layer_ = self.params.layer_
         for i in block.getInsts():
             name = i.getName()
+            print(name, i.getOrient())
             orient = self.mapOrient[i.getOrient()]
             macro = i.getMaster().getName()
             x, y = i.getLocation()
@@ -246,7 +255,7 @@ class place:
         components_placed = list(self.get_components())
 
         if len(components_placed) > 0:
-            return reduce(operator.add, components_placed)
+            return solid.union()(reduce(operator.add, components_placed))
         else:
             return scad_std_cell.empty_obj('NO COMPONENTS')
 
@@ -279,7 +288,9 @@ class route:
         ]
 
     def add_channel(self, layer, net, start, end):
-        dimm = self.generate_dimm(*self.params.scale_dimension(self.params.net_dimm(net)))
+        #dimm = self.generate_dimm(*self.params.scale_dimension(self.params.net_dimm(net)))
+        width = self.params.scale_value(layer.getWidth())
+        dimm = self.generate_dimm(width, width, width)
         ax, ay, aext = self.params.scale_point(start)
         if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
             height = self.params.layer_height(end.getBottomLayer())
@@ -287,6 +298,7 @@ class route:
             p0 = [ax, ay, height]
             p1 = [ax, ay, via_height]
             connect_matrix = [["z", p1, 2]]
+            color = "yellow"
         else:
             height = self.params.layer_height(layer)
             bx, by, bext = self.params.scale_point(end)
@@ -298,6 +310,8 @@ class route:
                 p0 = [ax - aext, ay, height]
                 p1 = [bx + bext, by, height]
                 connect_matrix = [["x", p1, 0]]
+            color = "blue" if self.params.layer_number(layer) % 2 else "red"
+        # return solid.color(color)(scad_routing.routing(p0, connect_matrix, dimm))
         return scad_routing.routing(p0, connect_matrix, dimm)
 
     def segment_length(self, layer, net, start, end):
@@ -324,6 +338,10 @@ class route:
         df = pd.DataFrame(lengths, index=['length (mm)'])
         df.to_csv(os.path.join(output_dir, design + "_lengths.csv"))
 
+    def generate_wire(self, net, wire):
+        for (layer, start, end) in segment_iter(wire):
+            yield self.add_channel(layer, net, start, end)
+
     def generate_channels(self):
         block = db.getChip().getBlock()
         nets = block.getNets()
@@ -331,13 +349,21 @@ class route:
             wire = net.getWire()
             if wire is None:
                 continue
-            for (layer, start, end) in segment_iter(wire):
-                yield self.add_channel(layer, net, start, end)
+            color = [random.random(), random.random(), random.random()]
+            yield solid.color(color)(solid.union()(solid.disable(solid.text(net.getName())),
+                                                   solid.union()(list(self.generate_wire(net, wire)))))
+            # yield (solid.union()(solid.disable(solid.text(net.getName())),
+            #                                        solid.union()(list(self.generate_wire(net, wire)))))
+
 
     def perform_routing(self):
         routing = list(self.generate_channels())
         if routing:
-            return reduce(operator.add, routing)
+            return solid.union()([solid.intersection()(x, y)
+                                  for i, x in enumerate(routing)
+                                  for j, y in enumerate(routing)
+                                  if i < j])
+            # return solid.union()(routing)
         else:
             return scad_std_cell.empty_obj('NO ROUTING')
 
@@ -487,7 +513,7 @@ class scad_generation:
                     f1.write(line)
         return out_file
 
-def scad_pnr(db, component_file, routing_file, platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, pitch, res, dimm_file = None):
+def scad_pnr(db, component_file, routing_file, platform, design, def_file, results_dir, px, layer, bottom_layer, lpv, xbulk, ybulk, zbulk, xchip, ychip, pitch, res, scad_outfile, dimm_file = None):
     """This function generates the entire SCAD flow by calling the classes above in their intended order."""
 
     print("------------------------------")
@@ -522,22 +548,22 @@ def scad_pnr(db, component_file, routing_file, platform, design, def_file, resul
     print("Initialization complete.")
 
     print(f"\nBuilding the design model for '{design}' from:\n'{def_file}'")
-    bulk = add_bulk(params).bulk()
+    bulk = solid.background(add_bulk(params).bulk())
     routing = route(db, params).perform_routing()
     components =  place(db, params).place_components()
-    pinholes = pin_place(db, params).place_pinholes()
+    # pinholes = pin_place(db, params).place_pinholes()
     interconnect, pins = pin_place(db, params).place_interconnect()
     marker = add_marker(params).marker()
-    negative = components + pinholes + pins + marker + solid.color("orange")(routing)
+    # negative = components + routing
     #model = bulk - negative  + solid.color("blue", alpha=0.1)(interconnect)
-    model = negative
+    model = components + routing
     print("Build complete\n")
 
     route(db, params).report_route_lengths(results_dir, design)
 
     print(f"Rendering build for '{design}'")
     solid.scad_render_to_file(model,
-                              f"{results_dir}/{design}.scad",
+                              scad_outfile,
                               file_header=f"$fn = {params.res_};",
                               include_orig_code=False)
     print(f"Rendering complete\n")
@@ -562,6 +588,8 @@ if __name__ == "__main__":
                     help="Path to .tlef file.")
     ap.add_argument('--lef_file', '-l', metavar='<path>', action='append', dest='lef_files', type=str,
                     help="Path to .lef file.")
+    ap.add_argument('--scad_include', '-i', metavar='<path>', action='append', dest='scad_includes', type=str,
+                    help="Path to .scad libraries.")
     ap.add_argument('--routing_file', metavar='<path>', dest='routing_file', type=str,
                     help="Path to the scad routing definitions.")
     ap.add_argument('--component_file', metavar='<path>', dest='component_file', type=str,
@@ -590,6 +618,8 @@ if __name__ == "__main__":
                     help="PNR pitch for the platform.")
     ap.add_argument('--res', metavar='<value>', dest='res', type=int,
                     help="Resolution of the scad rendering.")
+    ap.add_argument('--scad_out_file', metavar='<path>', dest='scad_outfile', type=str,
+                    help="Output filename.")
     ap.add_argument('--dimm_file', metavar='<path>', dest='dimm_file', type=str,
                     help="Optional .csv file with routing dimensions.", default = None)
     ap.add_argument('--pcell_file', metavar='<path>', dest='pcell_file', type=str,
@@ -597,6 +627,7 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
     db = odb.dbDatabase.create()
+    print(args.scad_includes)
     for tlef_file in args.tlef_files:
         odb.read_lef(db, tlef_file)
     for lef_file in args.lef_files:
@@ -620,4 +651,5 @@ if __name__ == "__main__":
              args.ychip,
              args.pitch,
              args.res,
+             args.scad_outfile,
              args.dimm_file)

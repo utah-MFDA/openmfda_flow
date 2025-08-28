@@ -8,7 +8,7 @@ OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
 OPENSCAD ?= openscad
-#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
 export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
 export BUILD_PDK_LIBRARY ?=
 
@@ -586,16 +586,13 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 #$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 $(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
+	cp ${PLATFORM_DIR}/pdk/scad_lib/*.scad $(RESULTS_DIR)
+	cp ${PLATFORM_DIR}/pdk/scad_include/*.scad $(RESULTS_DIR)
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
-				--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
+		--scad_out_file $@ \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
-	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
-
-				#--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
-# $(RESULTS_DIR)/5_scad.scad: $(RESULTS_DIR)/$(DESIGN).scad
-# 	cp $^ $@
 
 %.stl: %.scad
 	$(TIME_CMD) $(OPENSCAD) -m make -o $@ -d $@.deps $< 2>&1 | tee $(LOG_DIR)/5_2_stl_render.log

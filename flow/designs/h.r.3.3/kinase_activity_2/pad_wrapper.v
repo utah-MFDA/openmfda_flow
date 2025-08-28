@@ -1,16 +1,25 @@
-module kinase_activity_2(input `FLATTENED(IN_SIZE, flow_in_flat, SIZE),
-                         input `FLATTENED(OUT_SIZE, flow_out_flat, SIZE),
-                         input [12:0] ctrl_a,
-                         input [3:0] ctrl_s,
-                         input [2:0] pump_a,
-                         input [1:0] pump_b,
-                         output [FLUSH_SIZE-1:0] flush);
-  parameter FLUSH_SIZE = 21;
+module kinase_activity_2(
+// input `FLATTENED(IN_SIZE, flow_in_flat, SIZE),
+//                          input `FLATTENED(OUT_SIZE, flow_out_flat, SIZE),
+//                          input [12:0] ctrl_a,
+//                          input [3:0] ctrl_s,
+//                          input [2:0] pump_a,
+//                          input [1:0] pump_b,
+//                          output [FLUSH_SIZE-1:0] flush
+);
+  parameter FLUSH_SIZE = 22;
   parameter IN_SIZE = 3;
   parameter OUT_SIZE = 4;
   parameter SIZE = 2;
-  `UNFLATTEN(IN_SIZE, flow_in, SIZE) `FROM_FLATTENED(flow_in_flat)
-  `UNFLATTEN(OUT_SIZE, flow_out, SIZE) `FROM_FLATTENED(flow_out_flat)
+  wire [IN_SIZE-1:0] flow_in [SIZE];
+  wire [OUT_SIZE-1:0] flow_out [SIZE];
+  wire [FLUSH_SIZE-1:0] flush;
+//   `UNFLATTEN(IN_SIZE, flow_in, SIZE) `FROM_FLATTENED(flow_in_flat)
+//   `UNFLATTEN(OUT_SIZE, flow_out, SIZE) `FROM_FLATTENED(flow_out_flat)
+  wire [12:0] ctrl_a;
+  wire [3:0] ctrl_s;
+  wire [2:0] pump_a;
+  wire [1:0] pump_b;
 
 
   wire [IN_SIZE-1:0] flow_in_X [SIZE-1:0];
@@ -28,7 +37,7 @@ module kinase_activity_2(input `FLATTENED(IN_SIZE, flow_in_flat, SIZE),
         pinhole_320px_0 hole (.pad(flow_in[i][j]), .connection(flow_in_X[i][j]));
       end
       for (j = 0; j < 4; j = j + 1) begin: out
-        pinhole_320px_1 hole (.pad(flow_out[i][j]), .connection(flow_out_X[i][j]));
+        pinhole_320px_0 hole (.pad(flow_out[i][j]), .connection(flow_out_X[i][j]));
       end
     end
     for (j = 0; j < FLUSH_SIZE; j = j + 1) begin: flush

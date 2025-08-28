@@ -1,3 +1,13 @@
+set_global_routing_layer_adjustment met20 0
+set_global_routing_layer_adjustment met19 0
+set_global_routing_layer_adjustment met18 0
+set_global_routing_layer_adjustment met17 0
+set_global_routing_layer_adjustment met16 0
+set_global_routing_layer_adjustment met15 0
+set_global_routing_layer_adjustment met14 0
+set_global_routing_layer_adjustment met13 0
+set_global_routing_layer_adjustment met12 0
+set_global_routing_layer_adjustment met11 0
 set_global_routing_layer_adjustment met10 0
 set_global_routing_layer_adjustment met9 0
 set_global_routing_layer_adjustment met8 0
