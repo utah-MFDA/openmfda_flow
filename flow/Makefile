@@ -630,12 +630,10 @@ endif
 # \___ \| |     / _ \ | | | |
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
-# <<<<<<< HEAD
-# render: $(RESULTS_DIR)/4_final.scad
 # =======
 
+# render: $(RESULTS_DIR)/4_final.scad # old scad call
 render: $(RESULTS_DIR)/$(DESIGN)_base.scad
-#>>>>>>> main
 slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================

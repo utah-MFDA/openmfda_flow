@@ -107,8 +107,8 @@ export RES_VAL			= 120
 
 export PITCH            = 30
 # Default SCAD script arguments
-ifeq ($(SCAD_SCRIPT),../tools/scad_render/generator_v2.py)
-SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
+ifeq ($(abspath $(SCAD_SCRIPT)),$(abspath ../tools/scad_render/generator_v2.py))
+SCAD_ARGS += --component_file ${SCAD_COMPONENT_LIBRARY} \
 			--routing_file ${SCAD_ROUTING_LIBRARY} --scad_include $(SCAD_DESIGN_INCLUDE) \
 			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
             --platform "$(PLATFORM)" \
@@ -116,7 +116,7 @@ SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
             --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
             --pitch $(PITCH) --res $(RES_VAL)
 else
-SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
+SCAD_ARGS += --component_file ${SCAD_COMPONENT_LIBRARY} \
 			--routing_file ${SCAD_ROUTING_LIBRARY} \
 			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
             --platform "$(PLATFORM)" \
