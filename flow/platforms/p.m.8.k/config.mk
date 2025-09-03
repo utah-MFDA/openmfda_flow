@@ -44,8 +44,8 @@ export IO_PLACER_H = met3
 export IO_PLACER_V = met2
 
 # defaults specified here, override in local file as needed
-export DIE_AREA    	 	= 0 0 3409 1136
-export CORE_AREA   	 	= 0 0 3409 1136
+export DIE_AREA    	 	= 0 0 3408 1136
+export CORE_AREA   	 	= 0 0 3408 1136
 
 #---------------------------------------------------------
 # Place
@@ -95,7 +95,7 @@ export LPV_VAL			= 40
 # bulk x value in pixels
 # value for entire print volume = 7500
 # value for galss slide: 75 mm
-export XBULK_VAL		= 3409
+export XBULK_VAL		= 3408
 # bulk y value in pixels
 # value for entire print volume = 3272
 # value for galss slide: 25 mm
@@ -103,7 +103,7 @@ export YBULK_VAL		= 1136
 # bulk z value in layers
 # value for entire print volume = 8181
 # realistic value: 15 mm
-export ZBULK_VAL		= 681
+export ZBULK_VAL		= 1500
 # chip min and max x values in pixels
 export XCHIP_VALS		= 325 2225
 # chip min and max y values in pixels
@@ -122,4 +122,4 @@ SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
             --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
             --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
             --pitch $(PITCH) --res $(RES_VAL) \
-            --io_size 9 9 --routing_size 9 16
+            --io_size 9 9 --routing_size 9 9 20

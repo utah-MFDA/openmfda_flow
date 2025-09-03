@@ -13,3 +13,6 @@
 [submodule "tools/p_cell_generator"]
   path = tools/p_cell_generator
   url = https://github.com/utah-MFDA/pcell_generator
+[submodule "flow/platforms/p.m.8.k/pdk"]
+	path = flow/platforms/p.m.8.k/pdk
+	url = https://github.com/utah-MFDA/phrozen8k_pdk.git
