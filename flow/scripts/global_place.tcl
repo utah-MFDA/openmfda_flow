@@ -68,7 +68,9 @@ global_placement -routability_driven -density $place_density \
 } elseif {[info exist ::env(GLOBAL_PLACEMENT_ARGS_FILE)]} {
   puts "Found GPL ARGS file"
   source $::env(GLOBAL_PLACEMENT_ARGS_FILE)
-  global_placement -routability_driven -density $pl_density \
+  # renamed?
+  # global_placement -routability_driven -density $pl_density \
+  global_placement -routability_driven -density $place_density \
     -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     -pad_right $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     -bin_grid_count $bin_grid_count \

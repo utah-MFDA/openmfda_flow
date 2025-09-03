@@ -870,13 +870,8 @@ module diffmix_25px_0(xpos, ypos, zpos, orientation){
     dim  = [
             [[0,0],[-Wchan/2,Wchan/2],[0,hchan]],            [[-Wchan/2,Wchan/2],[0,0],[0,hchan]],                    
            ];
-
-    module obj(){
-      translate([-(30/2)*px,-(30/2)*px,0])
-      obj_prime();
-    }
     
-    module obj_prime(){
+    module obj(){
         pi_0 = [-7*px, 30*px, 0];
         pf_0 = [Wchan+16*px, 0, 0];
         connect_0 = [
@@ -909,23 +904,23 @@ module diffmix_25px_0(xpos, ypos, zpos, orientation){
     }
     
     if (orientation == "N"){
-        translate([45*px + xpos*px, 45*px + ypos*px, zpos*layer])
+        translate([30*px + xpos*px, 30*px + ypos*px, zpos*layer])
         obj();
     }
     if (orientation == "FN"){
-        translate([45*px + xpos*px, 45*px + ypos*px, zpos*layer])
         mirror([1, 0, 0])
+        translate([-2*30*px - xpos*px, 30*px + ypos*px, zpos*layer])
         obj([1, 0, 0]);
     }
     if (orientation == "S"){
-        translate([45*px + xpos*px, 45*px + ypos*px, zpos*layer])
         mirror([1, 0, 0])
         mirror([0, 1, 0])
+        translate([30*px + xpos*px, -2*30*px - ypos*px, zpos*layer])
         obj();
     }
     if (orientation == "FS"){
-        translate([45*px + xpos*px, 45*px + ypos*px, zpos*layer])
         mirror([0, 1, 0])
+        translate([-2*30*px - xpos*px, -2*30*px - ypos*px, zpos*layer])
         obj();
     }
     
@@ -2295,69 +2290,6 @@ module in_line_membrane(xpos, ypos, zpos, orientation,
             obj();
     
 }
-module lefdef_orient(direction, center=[0,0], size=[0,0]) {
-  module centertranslate() {
-    if (center[0] != 0 || center[1] != 0) {
-      if (size[0] > 0 || size[1] > 0)
-        echo("Both center and size defined, center wins") ;
-
-      translate([center[0], center[1], 0])
-        children() ;
-    }
-    else if (size[0] > 0 || size[1] > 0) {
-      translate([size[0]/2, size[1]/2, 0])
-        children() ;
-    }
-    else {
-      children() ;
-    }
-  }
-  if (direction == "N" || direction == "R0") {
-    centertranslate() 
-      children() ;
-  }
-  else if (direction == "S" || direction == "R180") {
-    centertranslate() 
-    rotate(180)
-      children() ;
-  }
-  else if (direction == "FN" || direction == "MX") {
-    centertranslate() 
-    mirror([1,0,0])
-      children() ;
-  }
-  else if (direction == "FS" || direction == "MY") {
-    centertranslate() 
-    mirror([0,1,0])
-      children() ;
-  }
-  else if (direction == "W" || direction == "R180") {
-    centertranslate() 
-    rotate(90)
-      children() ;
-  }
-  else if (direction == "E" || direction == "R180") {
-    centertranslate() 
-    rotate(270)
-      children() ;
-  }
-  else if (direction == "FW" || direction == "MX90") {
-    centertranslate() 
-    mirror([1,0,0])
-    rotate(90) 
-      children() ;
-  }
-  else if (direction == "FE" || direction == "MY90") {
-    centertranslate() 
-    mirror([0,1,0])
-    rotate(90)
-      children() ;
-  }
-  else {
-    echo("Invalid orientation for lefdef_orient ", direction) ;
-    children() ;
-  }
-}
 module marker(xpos, ypos, zpos){
     marker_height = 80*layer;
     marker_diameter = 200*px;
@@ -2824,7 +2756,8 @@ module p_serpentine_obj(xpos, ypos, zpos, orientation, L1, L2, turns,
             [shape, [chan_w*px, chan_w*px, chan_h*layer], pts_c[i], [0,[0,0,1]]] ];
         
         rotate([0,0,(rot?90:0)])
-        lefdef_orient(orientation)
+        mirror([(orientation=="FN"||orientation=="FS"?1:0),0,0])
+        mirror([0,(orientation=="S"||orientation=="FS"?1:0), 0])
         translate([-L1*px/2, -L2*px*(turns)/2, 0])
             polychannel(poly_pts, clr=clr) ;
     }
@@ -3084,6 +3017,7 @@ module p_tall_mixer(xpos, ypos, zpos, orientation,
 }
 module p_valve_4way(xpos, ypos, zpos, orientation,
     valve_r, mem_th, fl_chm_h, pn_chm_h, 
+    inport_center=false, 
     out_len=30, fl_out_h=10, fl_out_len=10, pn_out_len=10,
     fl_extra_sp=10, pn_extra_sp=10, pn_up_layers=10, rot_pn=false,
     px=7.6e-3, layer=10e-3, lpv=20, chan_h=10, chan_w=14, shape="cube", pitch=30, offset_layers=10,
@@ -3100,14 +3034,28 @@ module p_valve_4way(xpos, ypos, zpos, orientation,
             cylinder(pn_chm_h*layer, r=valve_r*px, center=true);
         
         
-        inp_pos = -((valve_r/4+fl_extra_sp)*px);
         
-        outp_pos= -inp_pos;
+        inp_pos = (inport_center?
+            0:
+            (fl_extra_sp=="fill"?
+                -(valve_r-chan_w/2-1)*px:
+                -((valve_r/4+fl_extra_sp)*px)));
+        
+        outp_pos= (inport_center?
+            (valve_r-chan_w/2+fl_extra_sp)*px:
+            -inp_pos);
+        
         
             
-        fl_len_0 = (valve_r*3/4-chan_w/2-fl_extra_sp+fl_out_len)*px;
+        fl_len_0 = (inport_center?
+            (valve_r-chan_w/2+fl_out_len)*px:
+                (fl_extra_sp=="fill"?(fl_out_len+1)*px:
+                    (valve_r*3/4-chan_w/2-fl_extra_sp+fl_out_len)*px));
         
-        fl_len_1 = (valve_r*3/4-chan_w/2-fl_extra_sp+fl_out_len)*px ;
+        fl_len_1 = (inport_center?
+            (fl_out_len-fl_extra_sp)*px:
+                (fl_extra_sp=="fill"?(fl_out_len+1)*px:
+                    (valve_r*3/4-chan_w/2-fl_extra_sp+fl_out_len)*px));
         
         polychannel(
             [[shape, chan_dimm, [inp_pos,0,-chan_h/2*layer], [0,[0,0,1]]],
@@ -3157,12 +3105,9 @@ module p_valve_4way(xpos, ypos, zpos, orientation,
     
     tran_offset = (out_len+valve_r)*px;
     
-    
     translate([xpos*px, ypos*px, zpos*layer])
-    
     translate([(pitch-chan_w/2)*px,(pitch-chan_w/2)*px,layer*offset_layers])
     translate([tran_offset,tran_offset,(20+chan_h)*layer])
-    lefdef_orient(orientation)
         obj();
 }
 module p_valve(xpos, ypos, zpos, orientation,

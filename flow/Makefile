@@ -115,6 +115,10 @@ export SDC_FILE ?= $(DESIGN_DIR)/constraint.sdc
 export IO_CONSTRAINTS ?= $(DESIGN_DIR)/io_constraints.tcl
 endif
 
+ifeq ($(strip $(GLOBAL_PLACEMENT_ARGS_FILE)),'')
+export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
+endif
+
 export FLOW_VARIANT ?= base
 
 # Setup working directories
@@ -593,12 +597,17 @@ ifneq ($(SIMULATION_CONFIG),)
 XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 
 #ifneq ($(SIMULATION_CONFIG),)
+.PHONY: xyce_run_config
+xyce_run_config: $(RESULTS_DIR)/xyce_run.config
+
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
 #<<<<<<< HEAD
 #$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+	# we want to work towards VVVVVVVVVVVVVVVV
+#$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
 		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
@@ -633,7 +642,8 @@ endif
 # =======
 
 # render: $(RESULTS_DIR)/4_final.scad # old scad call
-render: $(RESULTS_DIR)/$(DESIGN)_base.scad
+# render: $(RESULTS_DIR)/$(DESIGN)_base.scad # the stl is the new output
+render: $(RESULTS_DIR)/$(DESIGN)_base.stl
 slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
@@ -665,9 +675,8 @@ $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
 
-#--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
-# $(RESULTS_DIR)/5_scad.scad: $(RESULTS_DIR)/$(DESIGN).scad
-# 	cp $^ $@
+$(RESULTS)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
+	openscad $< -o $@
 
 %.stl: %.scad
 	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log

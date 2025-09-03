@@ -1,3 +1,4 @@
+# Not ready for integration with flow
 import os
 import platform
 import subprocess
@@ -13,27 +14,11 @@ img_flow = f"{img_dir}/flow"
 img_tools = f"{img_dir}/tools"
 img_src = f"{img_dir}/src"
 
-if platform.system() == "Linux":
-    local_flow = f"{file_dir}/flow"
-    local_tools = f"{file_dir}/tools"
-    local_src = f"{file_dir}/src"
-elif platform.system() == "Windows":
-    local_flow = f"{file_dir}\\flow"
-    local_tools = f"{file_dir}\\tools"
-    local_src = f"{file_dir}\\src"
-else:
-    local_flow = f"{file_dir}/flow"
-    local_tools = f"{file_dir}/tools"
-    local_src = f"{file_dir}/src"
+local_flow = f"{file_dir}/flow"
+local_tools = f"{file_dir}/tools"
+local_src = f"{file_dir}/src"
 
 pnr_img = "bgoenner/mfda_pnr_cp"
-
-
-def check_dir(in_path):
-    if os.path.isdir(in_path):
-        print(f"Found {in_path}")
-    else:
-        raise ValueError(f"Cannot find path for docker, {in_path}")
 
 
 def run_mfdaflow_docker(
@@ -60,11 +45,6 @@ def run_mfdaflow_docker(
     d_mnt = f"""--mount type=bind,src={local_flow},dst={img_flow} \
     --mount type=bind,src={local_tools},dst={img_tools} \
     --mount type=bind,src={local_src},dst={img_src}"""
-    # check directories exist
-    check_dir(local_flow)
-    check_dir(local_tools)
-    check_dir(local_src)
-
     d_wd = img_flow
     d_cmd = "make"
     d_cmd += ' '+' '.join(make_args_l)
@@ -83,16 +63,9 @@ def run_mfdaflow_docker(
     else:
         d_env_vars = ''
 
-
-   if platform.system() == "Windows":
-        user_arg = ""
-    elif platform.system() == "Linux":
-        user_arg = f"\n        --user {os.getuid()}:{os.getuid()}"
-    elif platform.system() == "Darwin":
-        user_arg = f"\n        --user {os.getuid()}:{os.getuid()}"
-
-   cmd_full = f'''docker run -t
-        {d_mnt}{user_arg}
+    cmd_full = f'''docker run -t
+        {d_mnt}
+        --user {os.getuid()}:{os.getuid()}
         --name {dname}
         --rm
         -w {d_wd}
@@ -102,8 +75,7 @@ def run_mfdaflow_docker(
     if platform.system() == "Windows":
         WSL_prefix = "wsl --exec"
         print("Start OpenMFDA")
-        # win_d_cmd = f"{WSL_prefix} '{cmd_full}'"
-        win_d_cmd = f"{cmd_full}"
+        win_d_cmd = f"{WSL_prefix} '{cmd_full}'"
         print(win_d_cmd)
         subprocess.run(win_d_cmd.replace('\n', ' '), shell=True)
 
@@ -176,5 +148,5 @@ if __name__ == "__main__":
         args.design,
         args.platform,
         ' '.join(make_args),  # make into one long string
-        run_deps=args.run_deps
+        args.run_deps
     )
