@@ -1,5 +1,0 @@
-Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%]
-ketone,2,106.10132503509521,101.05314517021179," 0 0 2550 1590
-",721800,22%," 2578 um.
-",9.887819999999998,connect0,5.159091999999999,5.473910000000002,4.9999999999999996e-06,2.6598403999999882
-,,,,,,,,,,,,0.000195,0.06820102564101915

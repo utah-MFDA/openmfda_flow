@@ -1,6 +1,0 @@
-Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%],Required Volume [mL]
-caffeine,3,11.074538946151733,11.035427570343018," 0 0 2550 1590
-",16200,1%,0," 359 um.
-",3.3659099999999977,connect3,2.865909999999998,2.865909999999998,3e-06,1.6055862511731196,0.0017920756223999993
-,,,,,,,,,,,,,0.00016199999999999998,0.2611504780538183,1.7418975049727987
-,,,,,,,,,,,,,0.00016199999999999998,0.290885678296096,1.7418975049727987

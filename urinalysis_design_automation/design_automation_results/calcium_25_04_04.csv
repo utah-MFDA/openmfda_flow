@@ -1,6 +1,0 @@
-Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%],Required Volume [mL]
-calcium,3,10.627392292022705,10.58224630355835," 0 0 2550 1590
-",16200,1%,0," 359 um.
-",3.3659099999999977,connect3,2.865909999999998,2.865909999999998,2e-06,0.35632135535643406,0.0037334908799999994
-,,,,,,,,,,,,,2.4999999999999998e-05,2.5728877234169003,0.8400354479999997
-,,,,,,,,,,,,,0.000225,0.2890437769249363,7.560319031999998
