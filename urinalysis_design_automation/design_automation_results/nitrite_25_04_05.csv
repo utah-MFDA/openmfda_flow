@@ -1,0 +1,6 @@
+Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%],Required Volume [mL]
+nitrite,3,289.92613530158997,289.8866648674011," 0 0 2550 1590
+",94500,3%,1650000," 2457 um.
+",5.017910000000001,soln3,3.4343874999999997,3.57791,9.999999999999999e-05,0.7648100000000047,6.63731712e-05
+,,,,,,,,,,,,,4.9999999999999996e-05,1.741218,0.0011947170816
+,,,,,,,,,,,,,4.9999999999999996e-05,0.48820379999999775,0.0023894341632

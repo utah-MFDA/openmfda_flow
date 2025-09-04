@@ -1,0 +1,7 @@
+Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%],Required Volume [mL]
+salicylic_acid,4,790.6899888515472,790.6499176025391," 0 0 2550 1590
+",1172700,36%,1650000," 6836 um.
+",11.117910000000002,soln1,6.196265454545454,5.222090000000001,3e-06,1.9174861801311325,0.0014749593599999997
+,,,,,,,,,,,,,0.00015,2.6511384372112006,0.004916531199999998
+,,,,,,,,,,,,,7.5e-05,2.7186400489581684,0.03687398399999999
+,,,,,,,,,,,,,9.999999999999999e-06,1.1442276828589788,0.07374796799999998

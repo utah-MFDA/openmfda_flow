@@ -1,0 +1,5 @@
+Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%],Channel Volume [mL],Required Volume [mL]
+cocaine,3,923.4059746265411,923.3552091121674," 0 0 2550 1590
+",287100,10%,1710000,55.76746,9.919819999999994,connect3,6.9709325,7.528000000000001,9e-06,0.3825777212543142,0.00047936179199999985,0.00047936179199999985
+,,,,,,,,,,,,,0.00013,0.7389259066369646,4.357834472727272e-06,0.05272979711999996
+,,,,,,,,,,,,,5.4999999999999995e-05,0.33910722602397925,1.8436991999999999e-06,0.12463406591999994

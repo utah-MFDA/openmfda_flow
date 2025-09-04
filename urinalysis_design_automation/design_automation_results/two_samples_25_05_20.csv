@@ -1,0 +1,5 @@
+Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%],Channel Volume [mL],Required Volume [mL]
+two_samples,2,59.963080644607544,59.928948640823364," 0 0 2550 1590
+",75600,2%,1500000," 1348 um.
+",5.929910000000001,soln2,3.289492,3.1939100000000002,24,1.8902045720523848,7.190426880000001e-05,7.190426880000001e-05
+,,,,,,,,,,,,,52,0.8724020953024495,1.8436991999999999e-06,0.0028042664832

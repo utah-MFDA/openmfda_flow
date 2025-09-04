@@ -1,0 +1,5 @@
+Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%],Channel Volume [mL],Required Volume [mL]
+ethyl,3,659.5059757232666,659.4713344573975," 0 0 2550 1590
+",85500,3%,1710000,40.33319,7.55391,connect0,5.04164875,4.530865,4e-06,1.953364863211356,0.0017422957439999999,0.0017422957439999999
+,,,,,,,,,,,,,0.00020999999999999998,1.3944000429923344,4.301964799999999e-06,0.70562977632
+,,,,,,,,,,,,,8.999999999999999e-05,0.5603917210839983,1.8436991999999999e-06,1.6464694780799998

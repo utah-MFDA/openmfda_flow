@@ -1,0 +1,7 @@
+Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%],Required Volume [mL]
+albumin,4,593.6730844974518,593.6357979774475," 0 0 2550 1590
+",1244700,39%,2850000," 4496 um.
+",7.151820000000002,connect0,4.215711818181819,4.561910000000002,6e-06,2.4950378666666646,0.0010570542079999998
+,,,,,,,,,,,,,0.000215,1.965935616000003,0.0017617570133333326
+,,,,,,,,,,,,,2.4999999999999998e-05,2.420630528000004,0.00440439253333333
+,,,,,,,,,,,,,9.999999999999999e-06,0.12040072930231914,0.03787777578666665

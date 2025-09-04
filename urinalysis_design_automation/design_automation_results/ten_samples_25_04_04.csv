@@ -1,0 +1,13 @@
+Name,Number of Samples,Runtime [s],Time to Best Design [s],Die Area,Design Area,% Area Utilization,Maximum X Coordinate,Total Wire Length,Max Wire Length,Max Wire Location,Mean Wire Length,Median Wire Length,Concentrations,Concentration Error [%]
+ten_samples,10,1895.7317321300507,1881.5043487548828," 0 0 2550 1590
+",432900,13%,3180000," 20629 um.
+",19.757910000000003,connect6,7.042791034482759,6.6139100000000015,100,53.9908418
+,,,,,,,,,,,,,100,60.124133400000005
+,,,,,,,,,,,,,100,71.4190604
+,,,,,,,,,,,,,100,33.05006699999999
+,,,,,,,,,,,,,100,58.071079999999995
+,,,,,,,,,,,,,100,54.953579
+,,,,,,,,,,,,,100,33.425811
+,,,,,,,,,,,,,100,0.0913879999999978
+,,,,,,,,,,,,,100,5.012736999999989
+,,,,,,,,,,,,,100,0.9293749999999962
