@@ -30,6 +30,7 @@ def read_yosys_json(input_file, top):
         G.add_node(cell, weight=weights[detail["type"]], hyperedge=False)
         for i, bits in detail["connections"].items():
             for bit in bits:
+                bit = str(bit)
                 if bit not in G.nodes:
                     G.add_node(bit, weight=0, hyperedge=True)
                 if not add_buffers:

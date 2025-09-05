@@ -6,6 +6,9 @@ import uuid
 from networkx_helpers import read_yosys_json
 import time
 import solid2
+import logging
+log = logging.getLogger(__name__)
+logging.basicConfig(filename='3d_route.log', level=logging.DEBUG)
 
 def vector(a, b):
     # return (a[0] - b[0], a[1] - b[1], a[2] - b[2])
@@ -63,7 +66,7 @@ def find_center(G):
                         # Create a relation
                         first = min(leaf,neighbor)
                         second = max(leaf, neighbor)
-                        G.nodes[leaf]["relations"].append((first, second, 0))
+                        G.nodes[leaf]["relations"].add((first, second, 0))
                         continue
                     # Parent, nothing to do
                     elif G.nodes[neighbor]["shell"] < shell:
@@ -81,11 +84,12 @@ def find_center(G):
                 dummy = str(uuid.uuid4())
                 G.add_node(dummy, shell=shell+1, dummy=True, setup=False, relations=set())
                 G.add_edge(leaf, dummy)
+                children.append(dummy)
                 nexts.append(dummy)
             # Pass your relations to your children
             for child in children:
                 for first, second, distance in G.nodes[leaf]["relations"]:
-                    G.nodes[neighbor]["relations"].add((first, second, distance + 1))
+                    G.nodes[child]["relations"].add((first, second, distance + 1))
             # Add a special relation for sibling children
             if len(children) > 1:
                 for child in children:
@@ -100,10 +104,13 @@ def find_center(G):
         # If all of the nodes are dummies, create a dummy root node
         elif all(G.nodes[node].get("dummy", False) for node in nexts):
             root = str(uuid.uuid4())
-            G.add_node(root, shell=shell+1, dummy=True)
-            for leaf in frontier:
-                G.add_edge(leaf, root)
-            return shell+1, root
+            G.add_node(root, shell=shell, dummy=True, relations=set())
+
+            for dummy in nexts:
+                for adj in G.adj[dummy]:
+                    G.add_edge(adj, root)
+                G.remove_node(dummy)
+            return shell, root
         else:
             frontier = nexts
             nexts = deque()
@@ -115,148 +122,127 @@ def setup(G):
     for node in G:
         # Reverse the order of the shells from inside to out
         G.nodes[node]["shell"] = shells - G.nodes[node]["shell"]
+        G.nodes[node]["visited"] = False
+    log.info("Finished generating spanning tree")
+    for node in G.nodes:
+        log.debug("Generated %s %s %s", node, G.nodes[node], G.adj[node])
     return root
 
-def relations_map(G):
-    constraints = dict()
-    for node, relations in G.nodes.data("relations"):
-        for first, second, distance in relations:
-            if (first, second) not in constraints:
-                constraints[(first, second)] = dict()
-            if distance not in constraints[(first, second)]:
-                constraints[(first, second)][distance] = set()
-            constraints[(first, second)][distance] += node
-    return constraints
+def add_position(G, M, node, width, height, depth):
+    x, y, z = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
+               for i, lb, ub
+               in [("x", -width//2, width//2),
+                   ("y", -height//2, height//2),
+                   ("z", -depth//2, depth//2)]]
+    G.nodes[node]["coordinates"] = (x, y, z)
 
-def no_overlap(M, G, a, b):
-    shell = G.nodes[a]["shell"]
-    ax, ay, az = G.nodes[a]["position"]
-    bx, by, bz = G.nodes[b]["position"]
-    ax0 = M.addVar(f"v_x0_{a}_{b}", vtype="B")
-    ay0 = M.addVar(f"v_y0_{a}_{b}", vtype="B")
-    az0 = M.addVar(f"v_z0_{a}_{b}", vtype="B")
-    # Detect which face is active
-    M.addCons(ax0*(ax - bx) == 0, name=f"over_x_{a}_{b}")
-    M.addCons(ay0*(ay - by) == 0, name=f"over_y_{a}_{b}")
-    M.addCons(az0*(az - bz) == 0, name=f"over_z_{a}_{b}")
-    M.addCons(ax0 + ay0 + az0 == 0)
-    return ax0, ay0, az0
+def solve_shell(G, frontier, shell, width, height, depth):
+    M = Model()
+    nexts = set()
+    log.info("Solving shell %d", shell)
+    for node in frontier:
+        add_position(G, M, node, width, height, depth)
+        assert(G.nodes[node]["shell"] == shell)
+        in_shell(G, M, node, shell)
+    for first in frontier:
+        for second in frontier:
+            if first < second:
+                not_overlap(G, M, first, second, shell)
 
-def on_shell(M, G, shell, node):
-    x, y, z = G.nodes[node]["position"]
-    # Shell boundary
-    bound = shell
-    M.addCons(x <= bound, name=f"sx0_{node}")
-    M.addCons(x >= -bound, name=f"sx1_{node}")
-    M.addCons(y <= bound, name=f"sy0_{node}")
-    M.addCons(y >= -bound, name=f"sy1_{node}")
-    M.addCons(z <= bound, name=f"sz0_{node}")
-    M.addCons(z >= -bound, name=f"sz1_{node}")
+    for node in frontier:
+        for neighbor in G.adj[node]:
+            n_shell = G.nodes[neighbor]["shell"]
+            # next shell, add to next frontier
+            if n_shell > shell:
+                nexts.add(neighbor)
+            elif shell == n_shell:
+                if G.nodes[neighbor]["visited"]:
+                    # relationships are symmetric. is already setup
+                    continue
+                else:
+                    # Same shell, setup proximity from constraints
+                    distance_shell(G, M, node, neighbor, shell)
+            else:
+                # Previous shell, setup direct proximity from position
+                attach_to_side(G, M, neighbor, node, shell)
+    # solve and extract position values
+    for var in M.getVars():
+         print(var)
+    for var in M.getConss():
+         print(var)
 
-    # First point face detection
-    ax0 = M.addVar(f"f_x0_{node}", vtype="B")
-    ay0 = M.addVar(f"f_y0_{node}", vtype="B")
-    az0 = M.addVar(f"f_z0_{node}", vtype="B")
-    ax1 = M.addVar(f"f_x1_{node}", vtype="B")
-    ay1 = M.addVar(f"f_y1_{node}", vtype="B")
-    az1 = M.addVar(f"f_z1_{node}", vtype="B")
-    # Detect which face is active
-    M.addCons(ax0*(x - bound) == 0, name=f"face_x0_{node}")
-    M.addCons(ax1*(x + bound) == 0, name=f"face_x1_{node}")
-    M.addCons(ay0*(y - bound) == 0, name=f"face_y0_{node}")
-    M.addCons(ay1*(y + bound) == 0, name=f"face_y1_{node}")
-    M.addCons(az0*(z - bound) == 0, name=f"face_z0_{node}")
-    M.addCons(az1*(z + bound) == 0, name=f"face_z1_{node}")
-    # At least one face is active
-    M.addCons(ax0+ax1+ay0+ay1+az0+az1 >= 1, name=f"face_{node}")
-    return (ax0,ax1,ay0,ay1,az0,az1)
+    M.optimize()
+    for node in frontier:
+        G.nodes[node]["coordinates"] = [i.getObj() for i in G.nodes[node]["coordinates"]]
+        log.debug("Final coordinates: %s %s", node, str(G.nodes[node]["coordinates"]))
+    return nexts
 
-def dist_same_shell(M, G, s, e, shell):
-    x, y, z = G.nodes[s]["position"]
+def distance_shell(G, M, s, e, shell):
+    x, y, z = G.nodes[s]["coordinates"]
     a_rel = G.nodes[s]["relations"]
-    nx, ny, nz = G.nodes[e]["position"]
-    b_rel = G.nodes[node]["relations"]
-    dist = a_rel.intersect(b_rel)
+    nx, ny, nz = G.nodes[e]["coordinates"]
+    b_rel = G.nodes[e]["relations"]
+    dist = a_rel.intersection(b_rel)
     # if no relationship constraint, bail
     if not len(dist):
         return
     # Find worst case distance requirement
     bound = min(d for _, _, d in dist)
-    # same_face(M, G, s, e)
-    M.addCons(nx - x <= bound, name=f"dx0_{s}_{e}")
-    M.addCons(nx - x >= -bound, name=f"dx1_{s}_{e}")
-    M.addCons(ny - y <= bound, name=f"dy0_{s}_{e}")
-    M.addCons(ny - y >= -bound, name=f"dy1_{s}_{e}")
-    M.addCons(nz - z <= bound, name=f"dz0_{s}_{e}")
-    M.addCons(nz - z >= -bound, name=f"dz1_{s}_{e}")
+    M.addCons(nx - x <= bound, name=f"distance_x0_{s}_{e}")
+    M.addCons(nx - x >= -bound, name=f"distance_x1_{s}_{e}")
+    M.addCons(ny - y <= bound, name=f"distance_y0_{s}_{e}")
+    M.addCons(ny - y >= -bound, name=f"distance_y1_{s}_{e}")
+    M.addCons(nz - z <= bound, name=f"distance_z0_{s}_{e}")
+    M.addCons(nz - z >= -bound, name=f"distance_z1_{s}_{e}")
 
-def same_face(M, G, s, e, shell):
-    M.addCons(sum(a * b for a, b in zip(G.nodes[s]["face"], G.nodes[e]["face"]) >= 1))
+def not_overlap(G, M, first, second, shell):
+    x, y, z = G.nodes[first]["coordinates"]
+    a, b, c = G.nodes[second]["coordinates"]
+    i = M.addVar(f"overlap_i_{first}_{second}", vtype="B")
+    j = M.addVar(f"overlap_j_{first}_{second}", vtype="B")
+    k = M.addVar(f"overlap_k_{first}_{second}", vtype="B")
+    M.addCons(i*(x - a) == 0, name=f"overlap_x_{first}_{second}")
+    M.addCons(j*(y - b) == 0, name=f"overlap_y_{first}_{second}")
+    M.addCons(k*(z - c) == 0, name=f"overlap_z_{first}_{second}")
+    M.addCons(i*j*k == 0, name=f"overlap_{first}_{second}")
 
-def dist_next_shell_out(M, s, e, constraints):
-    x, y, z = G.nodes[s]["position"]
-    nx, ny, nz = G.nodes[e]["position"]
-    bound = 1
-    M.addCons(nx - x <= bound, name=f"cx0_{s}_{e}")
-    M.addCons(nx - x >= -bound, name=f"cx1_{s}_{e}")
-    M.addCons(ny - y <= bound, name=f"cy0_{s}_{e}")
-    M.addCons(ny - y >= -bound, name=f"cy1_{s}_{e}")
-    M.addCons(nz - z <= bound, name=f"cz0_{s}_{e}")
-    M.addCons(nz - z >= -bound, name=f"cz1_{s}_{e}")
-    # Distance is +-1 on next shell. the on_shell requirement should simplify this during preprocessing
+def in_shell(G, M, node, shell):
+    w, h, d = shell, shell, shell
+    x, y, z = G.nodes[node]["coordinates"]
+    i = M.addVar(f"shell_i_{node}", vtype="B")
+    j = M.addVar(f"shell_j_{node}", vtype="B")
+    k = M.addVar(f"shell_k_{node}", vtype="B")
+    l = M.addVar(f"shell_l_{node}", vtype="B")
+    m = M.addVar(f"shell_m_{node}", vtype="B")
+    n = M.addVar(f"shell_n_{node}", vtype="B")
+    M.addCons(i*(x - w) == 0, name=f"shell_nx_{node}")
+    M.addCons(j*(x + w) == 0, name=f"shell_px_{node}")
+    M.addCons(k*(y - h) == 0, name=f"shell_ny_{node}")
+    M.addCons(l*(y + h) == 0, name=f"shell_py_{node}")
+    M.addCons(m*(z - d) == 0, name=f"shell_nz_{node}")
+    M.addCons(n*(z + d) == 0, name=f"shell_pz_{node}")
+    M.addCons(i + j + k + l + m + n == 1, name=f"shell_{node}")
 
-def run(G, width = 2560, height = 1600, depth = 1000):
+def attach_to_side(G, M, side, node, shell):
+    x, y, z = G.nodes[side]["coordinates"]
+    a, b, c = G.nodes[node]["coordinates"]
+    # Within +/- 1
+    M.addCons(a <= x + 1, name=f"attach_px_{side}_{node}")
+    M.addCons(a >= x - 1, name=f"attach_nz_{side}_{node}")
+    M.addCons(b <= y + 1, name=f"attach_py_{side}_{node}")
+    M.addCons(b >= y - 1, name=f"attach_ny_{side}_{node}")
+    M.addCons(c <= z + 1, name=f"attach_pz_{side}_{node}")
+    M.addCons(c >= z - 1, name=f"attach_nz_{side}_{node}")
+
+def run_by_shell(G, width = 2560, height = 1600, depth = 1000):
     root = setup(G)
-
-    M = Model()
-    for node in G.nodes:
-        G.nodes[node]["visited"] = False
-        x, y, z = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
-                   for i, lb, ub
-                   in [("x", -width//2, width//2),
-                       ("y", -height//2, height//2),
-                       ("z", -depth//2, depth//2)]]
-        G.nodes[node]["position"] = (x, y, z)
-
-    rx, ry, rz = G.nodes[root]["position"]
-    M.addCons(rx == 0, name="origin_x")
-    M.addCons(ry == 0, name="origin_y")
-    M.addCons(rz == 0, name="origin_z")
-
-
-    frontier = deque([root])
-    for node in G.nodes():
-        shell = G.nodes[node]["shell"]
-        G.nodes[node]["face"] = on_shell(M, G, shell, node)
-    overlaps = deque()
+    G.nodes[root]["coordinates"] = (0, 0, 0)
+    frontier = deque(G.adj[root])
+    shell = 1
     while frontier:
-        nexts = set()
-        # Everything in frontier is on the same shell
-        overlaps.extend(no_overlap(M, G, first, second)
-                        for first in frontier
-                        for second in frontier
-                        if first < second)
-
-        for node in frontier:
-            shell = G.nodes[node]["shell"]
-            G.nodes[node]["visited"] = True
-            for neighbor in G.adj[node]:
-                n_shell = G.nodes[neighbor]["shell"]
-                # next shell, add to next frontier
-                if n_shell > shell:
-                    nexts.add(neighbor)
-                # Same shell, setup proximity from constraints
-                elif shell == n_shell:
-                    if G.nodes[neighbor]["visited"]:
-                        # relationships are symmetric. is already setup
-                        continue
-                    else:
-                        dist_same_shell(M, node, neighbor, shell)
-                # Previous shell, setup direct proximity from position
-                else:
-                    dist_next_shell_out(M, neighbor, node, shell)
-        frontier = nexts
-    return M, overlaps
+        frontier = solve_shell(G, frontier, shell, width, height, depth)
+        shell += 1
+    return G
 
 def draw_channel(a, b, d):
     v = sub(a, b)
@@ -267,10 +253,10 @@ def draw_channel(a, b, d):
     angle = [0,180*acos(v[2]/length)/pi, 180*atan2(v[1], v[0])/pi]
     return solid2.translate(b)(solid2.rotate(angle)(solid2.cube(bounds)))
 
-def scad_render(G, M):
+def scad_render(G):
     for node in G.nodes:
         dimensions = G.nodes[node].get("dimensions", (1,1,1))
-        position = [i.getObj() for i in G.nodes[node]["position"]]
+        position = G.nodes[node]["coordinates"]
         # adj = sub(position, scale(1/2, dimensions))
         yield solid2.translate(position)(solid2.cube(dimensions))
     for edge in G.edges:
@@ -278,28 +264,29 @@ def scad_render(G, M):
         dimensions = G.edges[edge].get("dimensions", (1,1,1))
         start_pin = G.edges[edge].get("start_pin", (0, 0, 0))
         end_pin = G.edges[edge].get("end_pin", (0, 0, 0))
-        start = [i.getObj() for i in G.nodes[start]["position"]]
-        end = [i.getObj() for i in G.nodes[end]["position"]]
+        start = G.nodes[start]["coordinates"]
+        end = G.nodes[end]["coordinates"]
         front = add(start, start_pin)
         back = add(end, end_pin)
         yield draw_channel(front, back, dimensions)
 
 if __name__ == "__main__":
-    print("*"*32)
+    log.info("**************** Starting ****************")
     import sys
-    input_file = sys.argv[1]
-    G = read_yosys_json(input_file, "thing")
-    M, over = run(G, width = 256, height=160, depth=100)
-    print("Variables:", M.getVars())
-    print("Constraints:", M.getConss())
-    print("overlap count", len(over))
-    M.setObjective(quicksum(i for j in over for i in j), sense="minimize")
-    M.optimize()
-    # depth = depth_bound if depth_bound else solution["depth"]
+    # input_file = sys.argv[1]
+    # G = read_yosys_json(input_file, "thing")
+
+    G = nx.Graph()
+    for i in range(0, 10):
+        G.add_node(f"n_{i}")
+    for i, j in zip(range(0, 10), range(1,10)):
+        G.add_edge(f"n_{i}", f"n_{j}")
+    log.info(str(G))
+    G = run_by_shell(G, width = 256, height=160, depth=100)
     for x in G.nodes:
-        print(x, [i.getObj() for i in G.nodes[x]["position"]], [i.getObj() for i in  G.nodes[x]["face"]])
+        log.info("Final solution %s %s", x, str(G.nodes[x]["coordinates"]))
     scad = solid2.background()(solid2.cube([256,160,100]))
-    for i in scad_render(G, M):
+    for i in scad_render(G):
         scad += i
     scad.save_as_scad()
-    print("Done")
+    log.info("Done")
