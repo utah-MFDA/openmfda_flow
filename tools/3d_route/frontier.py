@@ -55,6 +55,7 @@ def find_center(G):
         G.nodes[leaf]["shell"] = shell
 
     while frontier:
+        log.info("Found shell of size %d", len(frontier))
         for leaf in frontier:
             if G.nodes[leaf]["setup"]:
                 continue
@@ -103,6 +104,7 @@ def find_center(G):
             return shell, nexts[0]
         # If all of the nodes are dummies, create a dummy root node
         elif all(G.nodes[node].get("dummy", False) for node in nexts):
+            log.info("Found terminal shell")
             root = str(uuid.uuid4())
             G.add_node(root, shell=shell, dummy=True, relations=set())
 
@@ -131,9 +133,9 @@ def setup(G):
 def add_position(G, M, node, width, height, depth):
     x, y, z = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
                for i, lb, ub
-               in [("x", -width//2, width//2),
-                   ("y", -height//2, height//2),
-                   ("z", -depth//2, depth//2)]]
+               in [("x", -width, width),
+                   ("y", -height, height),
+                   ("z", -depth, depth)]]
     G.nodes[node]["coordinates"] = (x, y, z)
 
 def solve_shell(G, frontier, shell, width, height, depth):
@@ -141,7 +143,7 @@ def solve_shell(G, frontier, shell, width, height, depth):
     nexts = set()
     log.info("Solving shell %d", shell)
     for node in frontier:
-        add_position(G, M, node, width, height, depth)
+        add_position(G, M, node, shell, shell, shell)
         assert(G.nodes[node]["shell"] == shell)
         in_shell(G, M, node, shell)
     for first in frontier:
@@ -165,6 +167,7 @@ def solve_shell(G, frontier, shell, width, height, depth):
             else:
                 # Previous shell, setup direct proximity from position
                 attach_to_side(G, M, neighbor, node, shell)
+
     # solve and extract position values
     for var in M.getVars():
          print(var)
@@ -172,12 +175,15 @@ def solve_shell(G, frontier, shell, width, height, depth):
          print(var)
 
     M.optimize()
+    log.info("Finished optimizing, %d solutions found", M.getNSols())
+    assert(M.getNSols() >= 1)
     for node in frontier:
-        G.nodes[node]["coordinates"] = [i.getObj() for i in G.nodes[node]["coordinates"]]
-        log.debug("Final coordinates: %s %s", node, str(G.nodes[node]["coordinates"]))
+        G.nodes[node]["coordinates"] = [M.getVal(i) for i in G.nodes[node]["coordinates"]]
+        log.debug("Final coordinates: %s %s", node, G.nodes[node]["coordinates"])
     return nexts
 
 def distance_shell(G, M, s, e, shell):
+    print("U****************************************************************")
     x, y, z = G.nodes[s]["coordinates"]
     a_rel = G.nodes[s]["relations"]
     nx, ny, nz = G.nodes[e]["coordinates"]
@@ -187,7 +193,8 @@ def distance_shell(G, M, s, e, shell):
     if not len(dist):
         return
     # Find worst case distance requirement
-    bound = min(d for _, _, d in dist)
+    bound = min(d for _, _, d in dist) + 1
+    log.debug("Distance constraint %d  %s to %s", bound, s, e)
     M.addCons(nx - x <= bound, name=f"distance_x0_{s}_{e}")
     M.addCons(nx - x >= -bound, name=f"distance_x1_{s}_{e}")
     M.addCons(ny - y <= bound, name=f"distance_y0_{s}_{e}")
@@ -195,15 +202,21 @@ def distance_shell(G, M, s, e, shell):
     M.addCons(nz - z <= bound, name=f"distance_z0_{s}_{e}")
     M.addCons(nz - z >= -bound, name=f"distance_z1_{s}_{e}")
 
+def is_equal(M, a, b, x, shell):
+    i = M.addVar(f"overlap_i{x}_{a}_{b}", vtype="B")
+    j = M.addVar(f"overlap_j{x}_{a}_{b}", vtype="B")
+    k = M.addVar(f"overlap_k{x}_{a}_{b}", vtype="B")
+    M.addCons(-shell*i + b*j + (b+1)*k <= a)
+    M.addCons(a <= (b-1)*i + b*j + shell*k)
+    M.addCons(j + i + k == 1)
+    return j
+
 def not_overlap(G, M, first, second, shell):
     x, y, z = G.nodes[first]["coordinates"]
     a, b, c = G.nodes[second]["coordinates"]
-    i = M.addVar(f"overlap_i_{first}_{second}", vtype="B")
-    j = M.addVar(f"overlap_j_{first}_{second}", vtype="B")
-    k = M.addVar(f"overlap_k_{first}_{second}", vtype="B")
-    M.addCons(i*(x - a) == 0, name=f"overlap_x_{first}_{second}")
-    M.addCons(j*(y - b) == 0, name=f"overlap_y_{first}_{second}")
-    M.addCons(k*(z - c) == 0, name=f"overlap_z_{first}_{second}")
+    i = is_equal(M, x, a, "x", shell)
+    j = is_equal(M, y, b, "y", shell)
+    k = is_equal(M, z, c, "z", shell)
     M.addCons(i*j*k == 0, name=f"overlap_{first}_{second}")
 
 def in_shell(G, M, node, shell):
@@ -215,13 +228,19 @@ def in_shell(G, M, node, shell):
     l = M.addVar(f"shell_l_{node}", vtype="B")
     m = M.addVar(f"shell_m_{node}", vtype="B")
     n = M.addVar(f"shell_n_{node}", vtype="B")
+    M.addCons(x <= w)
+    M.addCons(x >= -w)
+    M.addCons(y <= h)
+    M.addCons(y >= -h)
+    M.addCons(z <= d)
+    M.addCons(z >= -d)
     M.addCons(i*(x - w) == 0, name=f"shell_nx_{node}")
     M.addCons(j*(x + w) == 0, name=f"shell_px_{node}")
     M.addCons(k*(y - h) == 0, name=f"shell_ny_{node}")
     M.addCons(l*(y + h) == 0, name=f"shell_py_{node}")
     M.addCons(m*(z - d) == 0, name=f"shell_nz_{node}")
     M.addCons(n*(z + d) == 0, name=f"shell_pz_{node}")
-    M.addCons(i + j + k + l + m + n == 1, name=f"shell_{node}")
+    M.addCons(i + j + k + l + m + n >= 1, name=f"shell_{node}")
 
 def attach_to_side(G, M, side, node, shell):
     x, y, z = G.nodes[side]["coordinates"]
@@ -255,17 +274,17 @@ def draw_channel(a, b, d):
 
 def scad_render(G):
     for node in G.nodes:
-        dimensions = G.nodes[node].get("dimensions", (1,1,1))
+        dimensions = G.nodes[node].get("dimensions", (100,100,100))
         position = G.nodes[node]["coordinates"]
-        # adj = sub(position, scale(1/2, dimensions))
-        yield solid2.translate(position)(solid2.cube(dimensions))
+        adj = scale(110, position)
+        yield solid2.translate(adj)(solid2.cube(dimensions))
     for edge in G.edges:
         start, end = edge
         dimensions = G.edges[edge].get("dimensions", (1,1,1))
         start_pin = G.edges[edge].get("start_pin", (0, 0, 0))
         end_pin = G.edges[edge].get("end_pin", (0, 0, 0))
-        start = G.nodes[start]["coordinates"]
-        end = G.nodes[end]["coordinates"]
+        start = scale(110, G.nodes[start]["coordinates"])
+        end = scale(110, G.nodes[end]["coordinates"])
         front = add(start, start_pin)
         back = add(end, end_pin)
         yield draw_channel(front, back, dimensions)
@@ -273,15 +292,15 @@ def scad_render(G):
 if __name__ == "__main__":
     log.info("**************** Starting ****************")
     import sys
-    # input_file = sys.argv[1]
-    # G = read_yosys_json(input_file, "thing")
+    input_file = sys.argv[1]
+    G = read_yosys_json(input_file, "thing")
 
-    G = nx.Graph()
-    for i in range(0, 10):
-        G.add_node(f"n_{i}")
-    for i, j in zip(range(0, 10), range(1,10)):
-        G.add_edge(f"n_{i}", f"n_{j}")
-    log.info(str(G))
+    # G = nx.Graph()
+    # for i in range(0, 10):
+    #     G.add_node(f"n_{i}")
+    # for i, j in zip(range(0, 10), range(1,10)):
+    #     G.add_edge(f"n_{i}", f"n_{j}")
+    log.info("Loaded %s", G)
     G = run_by_shell(G, width = 256, height=160, depth=100)
     for x in G.nodes:
         log.info("Final solution %s %s", x, str(G.nodes[x]["coordinates"]))
