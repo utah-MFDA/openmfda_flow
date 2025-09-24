@@ -1,17 +1,5 @@
 import networkx as nx
 import json
-import sys
-
-add_buffers = False
-buffers = 4
-
-weights = {
-    "valve_40px_1": 14400,
-    "serpentine_150px_0": 57600,
-    "pinhole_320px_0": 38400,
-    "flush_hole_0": 3200,
-    "ctrl_hole_0": 8100
-    }
 
 def read_yosys_json(input_file, top):
     G = nx.Graph()
@@ -20,28 +8,47 @@ def read_yosys_json(input_file, top):
 
     m = y["modules"][top]
     for io, detail in m["ports"].items():
-        G.add_node(io, weight =0, hyperedge=False)
-        for i in detail["bits"]:
-            if i not in G.nodes:
-                G.add_node(i, weight=0, hyperedge=True)
-            G.add_edge(io, i, hyperedge=True)
+        G.add_node(io, weight=1, hyperedge=False, direction=detail["direction"], kind="port")
+        for bit in detail["bits"]:
+            bit = f"$_{bit}"
+            if bit not in G.nodes:
+                G.add_node(bit, weight=0, hyperedge=True)
+            G.add_edge(io, bit, hyperedge=True)
 
     for cell, detail in m["cells"].items():
-        G.add_node(cell, weight=weights[detail["type"]], hyperedge=False)
-        for i, bits in detail["connections"].items():
+        if detail["type"] == "$scopeinfo":
+            continue
+        G.add_node(cell, hyperedge=False, kind=detail["type"],
+                   parameters=detail["parameters"], attributes=detail["attributes"])
+        for port, bits in detail["connections"].items():
+            if "port_directions" in detail:
+                direction = detail["port_directions"][port]
+            else:
+                direction = "unknown"
             for bit in bits:
-                bit = str(bit)
+                bit = f"$_{bit}"
                 if bit not in G.nodes:
                     G.add_node(bit, weight=0, hyperedge=True)
-                if not add_buffers:
-                    G.add_edge(cell, bit, hyperedge=True)
-                else:
-                    G.add_node(f"{cell}_{i}_{bit}_0", weight=0, hyperedge=False)
-                    G.add_edge(cell, f"{cell}_{i}_{bit}_0", hyperedge=True)
-                    for c in range(1, buffers):
-                        G.add_node(f"{cell}_{i}_{bit}_{c}", weight=0, hyperedge=False)
-                        G.add_edge(f"{cell}_{i}_{bit}_{c-1}", f"{cell}_{i}_{bit}_{c}", hyperedge=True)
-                    G.add_node(f"{cell}_{i}_{bit}_{buffers-1}", weight=0, hyperedge=False)
-                    G.add_edge(f"{cell}_{i}_{bit}_{buffers-1}", bit, hyperedge=True)
+                G.add_edge(cell, bit, hyperedge=True, port=port, direction=direction)
+    for net, details in m["netnames"].items():
+        for index, bit in enumerate(details["bits"]):
+            bit = f"$_{bit}"
+            if bit not in G.nodes:
+                G.add_node(bit, weight=0, hyperedge=True)
+            if "hide_name" in details:
+                G.nodes[bit]["hide_name"] = details["hide_name"]
+            G.nodes[bit]["netname"] = net
+            G.nodes[bit]["index"] = index
+            G.nodes[bit]["attributes"] = details["attributes"]
+    return G
 
+def collapse_edges(G: nx.Graph):
+    rm = []
+    for node in G.nodes:
+        if G.nodes[node]["hyperedge"] and G.degree(node) == 2:
+            f, s = G.adj[node]
+            G.add_edge(f, s, hyperedge=False)
+            rm.append(node)
+    for node in rm:
+        G.remove_node(node)
     return G

@@ -10,42 +10,13 @@ import solid2
 import logging
 log = logging.getLogger(__name__)
 
-logging.basicConfig(filename='3d_route.log', level=logging.DEBUG)
-def vector(a, b):
-    # return (a[0] - b[0], a[1] - b[1], a[2] - b[2])
-    return (i - j for i, j in zip(a, b))
-
-def magnitude(a):
-    # x, y, z = a
-    # return sqrt(x**2 + y**2 + z**2)
-    return sqrt(sum(i**2 for i in a))
-
-def cross(a, b):
-    s0 = a[1]*b[2] - a[2]*b[1]
-    s1 = a[2]*b[0] - a[0]*b[2]
-    s2 = a[0]*b[1] - a[1]*b[0]
-    return (s0, s1, s2)
-
-def dot(a, b):
-    # return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
-    return [i * j for i, j in zip(a, b)]
-
-def add(a, b):
-    # return (a[0]+b[0], a[1]+b[1], a[2]+b[2]
-    return [i + j for i, j in zip(a, b)]
-
-def sub(a, b):
-    # return (a[0]+b[0], a[1]+b[1], a[2]+b[2]
-    return [i - j for i, j in zip(a, b)]
-
-def squared_magnitude(a):
-    # return a[0]**2 + a[1]**2 + a[2]**2
-    return scip.quicksum(i**2 for i in a)
-
-def scale(s, a):
-    return [s*i for i in a]
+logging.basicConfig(filename='3d_route.log', level=logging.INFO)
 
 def find_center(G):
+    orphaned = deque(node for node in G.nodes if G.degree(node) == 0)
+    for orphan in orphaned:
+        log.warn("Orphan node %s", orphan)
+        G.remove_node(orphan)
     frontier = deque(node for node in G.nodes if G.degree(node) == 1)
     nexts = deque()
     shell = 0
@@ -126,6 +97,8 @@ def setup(G):
     log.info("Starting at shell %d", start_shell)
     for node in G:
         # Reverse the order of the shells from inside to out
+        if "shell" not in G.nodes[node]:
+            log.error("Missing %s", node)
         G.nodes[node]["shell"] = shells + start_shell - G.nodes[node]["shell"]
     log.info("Finished generating spanning tree")
     for node in G.nodes:
@@ -137,26 +110,26 @@ def add_position(G, M, node, width, height, depth):
                for i, lb, ub
                in [("x", -width, width),
                    ("y", -height, height),
-                   ("z", 0, depth)]]
+                   ("z", 0, 2*depth)]]
     G.nodes[node]["coordinate_vars"] = (x, y, z)
 
 def in_shell(G, M, node, width, height, depth, shell, relax):
     x, y, z = G.nodes[node]["coordinate_vars"]
     M.addCons(z == shell)
 
-def solve_shell(G, frontier, shell, width, height, depth, start, relax = False):
+def solve_shell(G, frontier, shell, width, height, depth, start, relax = 0):
     M = scip.Model()
     M.setParam("limits/time", 120)
-    M.setParam("limits/solutions", 1)
+    # M.setParam("limits/solutions", 1)
     nexts = set()
     log.info("********************************")
     if relax:
-        log.info("Relaxing distance constraints")
+        log.info(f"Relaxing distance constraints by {relax}")
     log.info("Solving shell %d, %d nodes", shell, len(frontier))
     minim = []
     cache = 0
     for node in frontier:
-        add_position(G, M, node, 5, 5, 5)
+        add_position(G, M, node, width, height, depth)
         in_shell(G, M, node, width, height, depth, shell, relax)
         G.nodes[node]["visited"] = False
     for first in frontier:
@@ -186,19 +159,18 @@ def solve_shell(G, frontier, shell, width, height, depth, start, relax = False):
     M.optimize()
     log.info("Finished optimizing, %d solutions found", M.getNSols())
 
-    log.debug("Minim vars: %s", [M.getVal(i) for i in minim])
+    # log.debug("Minim vars: %s", [M.getVal(i) for i in minim])
     if M.getNSols() >= 1:
         for node in frontier:
             G.nodes[node]["coordinates"] = [M.getVal(i) for i in G.nodes[node]["coordinate_vars"]]
             log.debug("Final coordinates: %s %s", node, G.nodes[node]["coordinates"])
-        return nexts
+        return relax, nexts
     else:
         log.warning("Unable to find solution")
-        assert(not relax)
-        return solve_shell(G, frontier, shell, width, height, depth, start, True)
+        return solve_shell(G, frontier, shell, width, height, depth, start, relax+1)
 
 def within_distance(G, M, a, b, d, relax):
-    X = 0 if not relax else M.addVar(vtype="I", lb=0)
+    X = 0 if not relax else M.addVar(vtype="I", lb=0, ub=relax)
     M.addCons(abs(a - b) <= d + X)
     if relax:
         return [X]
@@ -240,25 +212,28 @@ def attach_to_side(G, M, side, node, shell, relax = False):
     x, y, z = G.nodes[side]["coordinates"]
     a, b, c = G.nodes[node]["coordinate_vars"]
     # Within +/- 1
-    a = within_distance(G, M, x, a, 2, relax)
-    b = within_distance(G, M, y, b, 2, relax)
+    bound = 1
+    a = within_distance(G, M, x, a, bound, relax)
+    b = within_distance(G, M, y, b, bound, relax)
     log.debug("Child\t%s\t%s\t1", node, str((x, y, z)))
     return a + b
 
-def run_by_shell(G, width = 2560, height = 1600, depth = 1000):
+def run_by_shell(G, width = 40, height = 25, depth = 25):
+    w, d, h = [(i-1)//2 for i in [width,height,depth]]
     shell, roots = setup(G)
     frontier = deque(roots)
     start_shell = shell
+    relax = 0
     while frontier:
-        frontier = solve_shell(G, frontier, shell, width, height, depth, start_shell)
+        relax, frontier = solve_shell(G, frontier, shell, width, height, depth, start_shell, 0)
         render_scad(G)
         write_cache(G)
         shell += 1
     return G
 
 def draw_channel(a, b, d):
-    v = sub(a, b)
-    length = magnitude(v)
+    v = [i - j for i, j in zip(a, b)]
+    length = sqrt(sum((i-j)**2 for i, j in zip(a, b)))
     bounds = d[0], d[1], length
     if length == 0.0:
         length += 0.000001
@@ -282,12 +257,17 @@ def load_cache(G):
 
 def scad_render_nodes(G):
     for node in G.nodes:
-        if "coordinates" not in G.nodes[node] or G.nodes[node].get("dummy", False):
+        if "coordinates" not in G.nodes[node]:
 #            log.warning("Missing coordinates for node %s", node)
             continue
+
         dimensions = G.nodes[node].get("dimensions", [1, 1, 1])
         position = G.nodes[node]["coordinates"]
-        yield solid2.translate(position)(solid2.cube(dimensions))
+        s = solid2.translate(position)(solid2.cube(dimensions))
+        if G.nodes[node].get("dummy", False):
+            yield solid2.color("lightblue", alpha=0.1)(s)
+        else:
+            yield s
 
 def scad_render_edges(G):
     for edge in G.edges:
@@ -314,8 +294,8 @@ def render_scad(G):
     nodes = solid2.background()(solid2.cube([0,0,0]))
     for node in scad_render_nodes(G):
         nodes += node
-    scad = solid2.background()(solid2.union()(nodes)) + \
-        solid2.union()(edges)
+    scad = solid2.translate([-0.5, -0.5, 0])(solid2.background()(solid2.union()(nodes)) + \
+                                             solid2.union()(edges))
     scad.save_as_scad()
 
 if __name__ == "__main__":
@@ -325,7 +305,8 @@ if __name__ == "__main__":
     G = read_yosys_json(input_file, "thing")
     log.info("Loaded %s", G)
     # load_cache(G)
-    G = run_by_shell(G, width = 256, height=160, depth=100)
+    # 1600/64 = 25, 2560/64 = 40
+    G = run_by_shell(G, width = 40, height=25, depth=25)
     for x in G.nodes:
         log.debug("Final solution %s %s", x, G.nodes[x].get("coordinates", "none"))
     render_scad(G)
