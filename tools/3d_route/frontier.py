@@ -3,192 +3,118 @@ from math import sqrt, acos, atan2, pi, ceil
 from collections import deque
 import networkx as nx
 import pyscipopt as scip
-import uuid
-from networkx_helpers import hypergraph_to_graph, read_yosys_json, read_yosys_json_hyper
-import time
+from networkx_helpers import read_yosys_json
 import solid2
 import logging
 log = logging.getLogger(__name__)
 
-logging.basicConfig(filename='3d_route.log', level=logging.INFO)
+logging.basicConfig(filename='3d_route.log', level=logging.DEBUG)
 
-def find_center_pipo(G):
-    frontier = deque(node for node in G.nodes if G.degree(node) == 1)
-    return find_center(G, frontier, set())
-def find_center_pi(G):
-    frontier = deque(node for node in G.nodes if G.nodes[node]["isPI"])
-    end = set(node for node in G.nodes if G.nodes[node]["isPO"])
-    return find_center(G, frontier, end)
+def is_flow_input_port(G, node):
+    return G.nodes[node]["cell"] == "$_flow_port" \
+        and G.nodes[node]["direction"] == "input"
 
-def find_center_fluid(G):
-    frontier = deque(node for node in G.nodes if G.nodes[node]["type"] == "port" and G.nodes[node][""])
-    orphaned = deque(node for node in G.nodes if G.degree(node) == 0)
-    for orphan in orphaned:
-        log.warning("Orphan node %s", orphan)
-        G.remove_node(orphan)
-    nexts = deque()
-    shell = 0
-    for node in G.nodes:
-        G.nodes[node]["relations"] = set()
-        G.nodes[node]["setup"] = False
-    for leaf in frontier:
-        G.nodes[leaf]["shell"] = shell
+def is_flow_output_port(G, node):
+    return G.nodes[node]["cell"] == "$_flow_port" \
+        and G.nodes[node]["direction"] in {"output", "inout"}
 
+def add_shell(G, is_start):
+    starts = deque(node for node in G.nodes if is_start(G, node))
+    for start in starts:
+        G.nodes[start]["shell"] = 0
+    frontier = starts
+    shell = -1
     while frontier:
-        log.info("Found shell of size %d", len(frontier))
+        shell += 1
+        nexts = deque()
+        log.info("Traversing %d nodes in shell %d", len(frontier), shell)
         for leaf in frontier:
-            if G.nodes[leaf]["setup"]:
-                continue
             children = deque()
             for neighbor in G.adj[leaf]:
                 if "shell" in G.nodes[neighbor]:
-                    # Direct relation in current shell
-                    if G.nodes[neighbor]["shell"] == shell:
-                        # Create a relation
-                        first = min(leaf,neighbor)
-                        second = max(leaf, neighbor)
-                        G.nodes[leaf]["relations"].add((first, second, 0))
-                        continue
-                    # Parent, nothing to do
-                    elif G.nodes[neighbor]["shell"] < shell:
-                        continue
-                    # Child already visited by others
-                    else:
-                        children.append(neighbor)
-                # Child unvisited
+                    continue
                 else:
                     G.nodes[neighbor]["shell"] = shell + 1
-                    children.append(neighbor)
                     nexts.append(neighbor)
-            # Childless, create a dummy child for traversal later
-            if len(children) == 0:
-                dummy = leaf + "_"
-                G.add_node(dummy, shell=shell+1, dummy=True, setup=False, relations=set())
-                G.add_edge(leaf, dummy)
-                children.append(dummy)
-                nexts.append(dummy)
-            # Pass your relations to your children
-            for child in children:
-                for first, second, distance in G.nodes[leaf]["relations"]:
-                    G.nodes[child]["relations"].add((first, second, distance + 1))
-            # Add a special relation for sibling children
-            if len(children) > 1:
-                for child in children:
-                    # Siblings descend from their parent
-                    G.nodes[child]["relations"].add((leaf, leaf, 1))
-            # More than one child, create a sibling relationship
-            G.nodes[leaf]["setup"] = True
-        shell += 1
-        # If there happens to be only one node, it is the root
-        if len(nexts) == 1:
-            return shell, nexts[0]
-        # If all of the nodes are dummies, create a dummy root node
-        elif all(G.nodes[node].get("dummy", False) for node in nexts):
-            log.info("Found terminal shell")
-            # root = str(uuid.uuid4())
-            # G.add_node(root, shell=shell, dummy=True, relations=set())
+        frontier = nexts
+    # for node in G.nodes:
+    #     G.nodes[node]["shell"] = shell - G.nodes[node]["shell"]
+    #     log.debug("Node %d %s", G.nodes[node]["shell"], node)
+    return shell, starts
 
-            # for dummy in nexts:
-            #     for adj in G.adj[dummy]:
-            #         G.add_edge(adj, root)
-            #     G.remove_node(dummy)
-            return shell, nexts
-        else:
-            frontier = nexts
-            nexts = deque()
-    raise
-
-def find_center(G, frontier, end):
-    orphaned = deque(node for node in G.nodes if G.degree(node) == 0)
-    for orphan in orphaned:
-        log.warning("Orphan node %s", orphan)
-        G.remove_node(orphan)
-    nexts = deque()
+def add_buffers(G, start, depth):
     shell = 0
-    for node in G.nodes:
-        G.nodes[node]["relations"] = set()
-        G.nodes[node]["setup"] = False
-    for leaf in frontier:
-        G.nodes[leaf]["shell"] = shell
-
-    while frontier:
-        log.info("Found shell of size %d", len(frontier))
-        for leaf in frontier:
-            if G.nodes[leaf]["setup"]:
-                continue
-            children = deque()
-            for neighbor in G.adj[leaf]:
-                if "shell" in G.nodes[neighbor]:
-                    # Direct relation in current shell
-                    if G.nodes[neighbor]["shell"] == shell:
-                        # Create a relation
-                        first = min(leaf,neighbor)
-                        second = max(leaf, neighbor)
-                        G.nodes[leaf]["relations"].add((first, second, 0))
-                        continue
-                    # Parent, nothing to do
-                    elif G.nodes[neighbor]["shell"] < shell:
-                        continue
-                    # Child already visited by others
-                    else:
-                        children.append(neighbor)
-                # Child unvisited
+    frontier = set(start)
+    # frontier = [n for n in G.nodes if G.nodes[n]["shell"] == 0]
+    while True:
+        assert(shell <= depth+1)
+        log.info("Shell buffer insertion %d for %d nodes", shell, len(frontier))
+        if all(G.nodes[n]["cell"] == "$_dummy" for n in frontier):
+            actual = set()
+            for dummy in frontier:
+                for adj in G.adj[dummy]:
+                    # should always be size one
+                    actual.add(adj)
+            for dummy in frontier:
+                G.remove_node(dummy)
+            return shell - 1, actual
+        nexts = set()
+        for node in frontier:
+            props = G.nodes[node]
+            assert(shell == props["shell"])
+            children = 0
+            for adj in G.adj[node]:
+                aprops = G.nodes[adj]
+                if aprops["shell"] <= shell:
+                    continue
                 else:
-                    G.nodes[neighbor]["shell"] = shell + 1
-                    children.append(neighbor)
-                    nexts.append(neighbor)
-            # Childless, create a dummy child for traversal later
-            if len(children) == 0:
-                dummy = leaf + "_"
-                G.add_node(dummy, shell=shell+1, dummy=True, setup=False, relations=set())
-                G.add_edge(leaf, dummy)
-                children.append(dummy)
-                nexts.append(dummy)
-            # Pass your relations to your children
-            for child in children:
-                for first, second, distance in G.nodes[leaf]["relations"]:
-                    G.nodes[child]["relations"].add((first, second, distance + 1))
-            # Add a special relation for sibling children
-            if len(children) > 1:
-                for child in children:
-                    # Siblings descend from their parent
-                    G.nodes[child]["relations"].add((leaf, leaf, 1))
-            # More than one child, create a sibling relationship
-            G.nodes[leaf]["setup"] = True
+                    nexts.add(adj)
+                    children += 1
+            if children == 0:
+                dummy = f"{node}_"
+                G.add_node(dummy, shell=shell+1, cell="$_dummy")
+                G.add_edge(node, dummy, dummy=True)
+                nexts.add(dummy)
+        frontier = nexts
         shell += 1
-        # If there happens to be only one node, it is the root
-        if len(nexts) == 1:
-            return shell, nexts[0]
-        # If all of the nodes are dummies, create a dummy root node
-        elif all(G.nodes[node].get("dummy", False) for node in nexts):
-            log.info("Found terminal shell")
-            # root = str(uuid.uuid4())
-            # G.add_node(root, shell=shell, dummy=True, relations=set())
+def find_center_pio(G):
+    shell, start = add_shell(G, is_flow_input_port)
+    unreachable = [_ for _, p in G.nodes.items() if "shell" not in p]
+    if unreachable:
+        log.error("Total %d Unreachable %d", len(G.nodes), len(unreachable))
+        assert(len(unreachable) == 0)
 
-            # for dummy in nexts:
-            #     for adj in G.adj[dummy]:
-            #         G.add_edge(adj, root)
-            #     G.remove_node(dummy)
-            return shell, nexts
-        else:
-            frontier = nexts
-            nexts = deque()
-    raise
+    shell, center = add_buffers(G, start, shell)
+    assert(len(center) > 0)
+    precalc_dist(G)
+    return shell, center
 
-def setup(G, start=None):
-    shells, roots = find_center_pipo(G)
-    # Setup root node at center
-    start_shell = start if start else ceil(len(roots)**(1/3))//2
-    log.info("Starting at shell %d", start_shell)
-    for node in G:
-        # Reverse the order of the shells from inside to out
-        if "shell" not in G.nodes[node]:
-            log.error("Missing %s", node)
-        G.nodes[node]["shell"] = shells + start_shell - G.nodes[node]["shell"]
-    log.info("Finished generating spanning tree")
+def gather_children(G, n):
+    props = G.nodes[n]
+    # skip non fluid
+    if "descendents" not in props:
+        props["descendents"] = set()
+        shell = props["shell"]
+        children = 0
+        for adj in G.adj[n]:
+            adj_shell = G.nodes[adj]["shell"]
+            if shell > adj_shell:
+                continue
+            elif shell == adj_shell:
+                raise
+            else:
+                children += 1
+                props["descendents"] |= gather_children(G, adj)
+        props["diverges"] = children > 1
+        log.debug("Descend %s %s", n, ",".join(props["descendents"]))
+    return props["descendents"] | set([n])
+def precalc_dist(G):
     for node in G.nodes:
-        log.debug("Generated %s %s %s", node, G.nodes[node], G.adj[node])
-    return start_shell, roots
+        x = gather_children(G, node)
+    # This could probably be smaller by limiting to only diverging cases.
+    # for node, props in G.nodes.items():
+        # if not props["diverges"]:
+            # del props["descendents"]
 
 def add_position(G, M, node, width, height, depth):
     x, y, z = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
@@ -230,17 +156,38 @@ def in_shell(G, M, node, w, h, d, shell, relax):
     # M.addCons(z == shell)i
     return [i, j, k]
 
+def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, relax):
+    if G.nodes[ancestor]["diverges"]:
+        dist = abs(shell - G.nodes[ancestor]["shell"])
+        group = G.nodes[ancestor]["descendents"].intersection(set(frontier))
+        if group:
+            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
+            Uz = M.addVar(f"{ancestor}_bound_z", vtype="I")
+            Lz = M.addVar(f"{ancestor}_bound_z", vtype="I")
+            M.addCons(Uz - Lz <= dist)
+            Uy = M.addVar(f"{ancestor}_bound_y", vtype="I")
+            Ly = M.addVar(f"{ancestor}_bound_y", vtype="I")
+            M.addCons(Uy - Ly <= dist)
+            for node in group:
+                x, y, z = G.nodes[node]["coordinate_vars"]
+                M.addCons(z <= Uz - 1)
+                M.addCons(z >= Lz)
+                M.addCons(y <= Uy - 1)
+                M.addCons(y >= Ly)
+    return []
+
 def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, height, depth, start, relax = 0):
     M = scip.Model()
     M.setParam("limits/time", 120)
     # M.setParam("limits/solutions", 1)
     nexts = set()
-    log.info("********************************")
     if relax:
-        log.info(f"Relaxing distance constraints by {relax}")
+        log.warning("Relaxing distance constraints by %d", relax)
     log.info("Solving shell %d, %d nodes", shell, len(frontier))
     minim = []
+
     for node in frontier:
+        assert(shell == G.nodes[node]["shell"])
         add_position(G, M, node, width, height, depth)
         inside(G, M, node, width, height, depth, shell, relax)
         G.nodes[node]["visited"] = False
@@ -248,13 +195,16 @@ def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, 
         for second in frontier:
             if first < second:
                 not_overlap(G, M, first, second, shell, relax)
-                minim += distance(G, M, first, second, shell, relax)
+                # minim += distance(G, M, first, second, shell, relax)
+    fset = set(frontier)
+    for ancestor in G.nodes:
+        minim += distance(G, M, ancestor, fset, shell, relax)
     for node in frontier:
         for neighbor in G.adj[node]:
             n_shell = G.nodes[neighbor]["shell"]
             # next shell, add to next frontier
-            if n_shell > shell:
-                assert(n_shell == shell+1)
+            if n_shell < shell:
+                assert(n_shell == shell-1)
                 nexts.add(neighbor)
             elif shell == n_shell:
                 minim += proximate(G, M, neighbor, node, shell, relax)
@@ -274,11 +224,13 @@ def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, 
     # log.debug("Minim vars: %s", [M.getVal(i) for i in minim])
     if M.getNSols() >= 1:
         for node in frontier:
-            G.nodes[node]["coordinates"] = [M.getVal(i) for i in G.nodes[node]["coordinate_vars"]]
-            log.debug("Final coordinates: %s %s", node, G.nodes[node]["coordinates"])
+            props = G.nodes[node]
+            props["coordinates"] = [M.getVal(i) for i in props["coordinate_vars"]]
+            log.debug("Final coordinates: %s %s", node, props["coordinates"])
         return relax, nexts
     else:
-        log.warning("Unable to find solution")
+        log.warning(f"Unable to find solution at {shell}")
+        assert(relax < 10)
         return solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, height, depth, start, relax+1)
 
 def within_distance(G, M, a, b, d, relax):
@@ -294,6 +246,13 @@ def proximate_layer(G, M, s, e, shell, relax):
     b = G.nodes[e]["coordinate_vars"]
     return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, 1, relax)]
 
+def proximate_layer_non_ctrl(G, M, s, e, shell, relax):
+    # if G.nodes[s]["cell"] in {"$_ctrl_port", "$_flush_port"} or G.nodes[e]["cell"] in {"$_ctrl_port", "$_flush_port"}:
+    #     return []
+    # else:
+    #     return proximate_layer(G, M, s, e, shell, relax)
+    return []
+
 def distance_shell(G, M, s, e, shell, relax):
     a = G.nodes[s]["coordinate_vars"]
     a_rel = G.nodes[s]["relations"]
@@ -306,8 +265,13 @@ def distance_shell(G, M, s, e, shell, relax):
     else:
         # Find worst case distance requirement
         bound = min(d for _, _, d in dist) + 1
-        log.debug("Cousins\t%s\t%s\t%d", s, e, bound)
         return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, bound, relax)]
+
+def distance_shell_non_ctrl(G, M, s, e, shell, relax):
+    if G.nodes[s]["cell"] in {"$_ctrl_port", "$_flush_port"} or G.nodes[e]["cell"] in {"$_ctrl_port", "$_flush_port"}:
+        return []
+    else:
+        return distance_shell(G, M,s, e, shell, relax)
 
 def not_overlap(G, M, first, second, shell, relax):
     a = G.nodes[first]["coordinate_vars"]
@@ -315,17 +279,35 @@ def not_overlap(G, M, first, second, shell, relax):
     return [M.addCons(scip.quicksum(abs(x - y) for x, y in zip(a, b)) >= 1)]
 
 def attach_to_side(G, M, side, node, shell, relax = False):
+    log.debug("Attaching %s to %s", node, side)
     a = G.nodes[side]["coordinates"]
     b = G.nodes[node]["coordinate_vars"]
+    log.debug("Starting at %s", a)
     # Within +/- 1
-    log.debug("Attaching %s to %s at %s", node, side, a)
     return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, 1, relax)]
+
+def attach_to_side_non_ctrl(G, M, side, node, shell, relax = False):
+    if G.nodes[node]["cell"] in {"$_ctrl_port", "$_flush_port"}:
+        M.addCons(G.nodes[node]["coordinate_vars"][2] == 0)
+        return []
+    else:
+        return attach_to_side(G, M, side, node, shell, relax)
 
 def run_by_hemicube(G, outfile, width = 40, height = 25, depth = 25):
         return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
 
+def noop(G, M, neighbor, node, shell, relax):
+    return []
 def run_by_horizontal(G, outfile, width = 40, height = 25, depth = 25):
-        return run_by_shell(G, outfile, proximate_layer, distance_shell, in_horizontal, attach_to_side,width,height,depth)
+        return run_by_shell(G,
+                            outfile,
+                            noop,
+                            bounded_descendent_horizontal,
+                            in_horizontal,
+                            attach_to_side,
+                            width,
+                            height,
+                            depth)
 
 def run_by_cube(G, outfile, width = 40, height = 25, depth = 25):
         return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
@@ -339,18 +321,18 @@ def run_by_flat(G, outfile, width = 40, height = 25, depth = 25):
 def run_by_vertical(G, outfile, width = 40, height = 25, depth = 25):
         return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
 
-def run_by_shell(G, outfile, proximate, distance, inside, attach, width = 40, height = 25, depth = 25):
-    w, d, h = [(i-1)//2 for i in [width,height,depth]]
-    shell, roots = setup(G)
+def run_by_shell(G, outfile, proximate, distance, inside, attach, width = 40, height = 25, depth = 25, start=None):
+    shells, roots = find_center_pio(G)
+    # start_shell = start if start else ceil(len(roots)**(1/3))//2
     frontier = deque(roots)
-    start_shell = shell
     relax = 0
+    shell = shells
     while frontier:
         relax, frontier = solve_shell(G, proximate, distance, inside, attach,
-                                      frontier, shell, width, height, depth, start_shell, relax)
+                                      frontier, shell, width, height, depth, shells, relax)
         render_scad(G, outfile)
         write_cache(G)
-        shell += 1
+        shell -= 1
     return G
 
 def draw_channel(a, b, d):
@@ -377,27 +359,29 @@ def load_cache(G):
             if node in G:
                 G.nodes[node]["coordinates"] = coord
 
-def scad_render_nodes(G):
+def scad_render_nodes(G,final):
     for node in G.nodes:
         if "coordinates" not in G.nodes[node]:
-#            log.warning("Missing coordinates for node %s", node)
+            if final:
+               log.warning("Missing coordinates for node %s", node)
             continue
 
         dimensions = G.nodes[node].get("dimensions", [1, 1, 1])
         position = G.nodes[node]["coordinates"]
         s = solid2.translate(position)(solid2.cube(dimensions))
-        if G.nodes[node].get("dummy", False):
+        if G.nodes[node]["cell"] == "$_dummy":
             yield solid2.color("lightblue", alpha=0.1)(s)
-        elif G.nodes[node].get("hyperedge", False):
+        elif G.nodes[node]["cell"] == "$_wire":
             yield solid2.color("lightgreen", alpha=0.1)(s)
         else:
             yield s
 
-def scad_render_edges(G):
+def scad_render_edges(G, final):
     for edge in G.edges:
         start, end = edge
         if "coordinates" not in G.nodes[end] or "coordinates" not in G.nodes[start]:
-#            log.warning("Missing coordinates for edge from %s to %s", start, end)
+            if final:
+                log.warning("Missing coordinates for edge from %s to %s", start, end)
             continue
         end_orig = G.nodes[end]["coordinates"]
         end_dim = G.nodes[end].get("dimensions", [1,1,1])
@@ -411,12 +395,25 @@ def scad_render_edges(G):
         back = [i + j for i, j in zip(end_orig, end_pin)]
         yield draw_channel(front, back, channel_dim)
 
-def render_scad(G,outfile):
+def to_directed(G):
+    H = nx.DiGraph()
+    for node in G.nodes:
+        H.add_node(node)
+        for edge in G.adj[node]:
+            if G.nodes[node]["shell"] < G.nodes[edge]["shell"]:
+                H.add_edge(node, edge)
+    return H
+
+def render_scad(G,outfile, final=False):
+    # H = nx.Graph()
+    # H.add_nodes_from(g)
+    # H.add_edges_from(g.edges)
+    nx.nx_pydot.write_dot(to_directed(G), f"{outfile}.dot")
     edges = solid2.background()(solid2.cube([0,0,0]))
-    for edge in scad_render_edges(G):
+    for edge in scad_render_edges(G, final):
         edges += edge
     nodes = solid2.background()(solid2.cube([0,0,0]))
-    for node in scad_render_nodes(G):
+    for node in scad_render_nodes(G, final):
         nodes += node
     scad = solid2.translate([-0.5, -0.5, 0])(solid2.background()(solid2.union()(nodes)) + \
                                              solid2.union()(edges))
@@ -448,6 +445,6 @@ if __name__ == "__main__":
         raise
     for x in g.nodes:
         log.debug("Final solution %s %s", x, g.nodes[x].get("coordinates", "none"))
-    render_scad(g, outfile)
+    render_scad(g, outfile, final=True)
     write_cache(g)
     log.info("Done")
