@@ -7,18 +7,11 @@ def read_yosys_json(input_file, top):
         y = json.load(f)
 
     m = y["modules"][top]
-    for io, detail in m["ports"].items():
-        G.add_node(io, weight=1, hyperedge=False, direction=detail["direction"], kind="port")
-        for bit in detail["bits"]:
-            bit = f"$_{bit}"
-            if bit not in G.nodes:
-                G.add_node(bit, weight=0, hyperedge=True)
-            G.add_edge(io, bit, hyperedge=True)
 
     for cell, detail in m["cells"].items():
         if detail["type"] == "$scopeinfo":
             continue
-        G.add_node(cell, hyperedge=False, kind=detail["type"],
+        G.add_node(cell, hyperedge=False, cell=detail["type"],
                    parameters=detail["parameters"], attributes=detail["attributes"])
         for port, bits in detail["connections"].items():
             if "port_directions" in detail:
@@ -28,18 +21,25 @@ def read_yosys_json(input_file, top):
             for bit in bits:
                 bit = f"$_{bit}"
                 if bit not in G.nodes:
-                    G.add_node(bit, weight=0, hyperedge=True)
+                    # If this is an input/output/inout, it will get marked from netnames section
+                    G.add_node(bit, weight=0, hyperedge=True, cell="$_wire", netnames=set())
+                assert((cell, bit) not in G.edges) # this would for a multigraph
                 G.add_edge(cell, bit, hyperedge=True, port=port, direction=direction)
     for net, details in m["netnames"].items():
+        # Multiple named nets will be attached to the same bit, last one wins.
         for index, bit in enumerate(details["bits"]):
             bit = f"$_{bit}"
-            if bit not in G.nodes:
-                G.add_node(bit, weight=0, hyperedge=True)
-            if "hide_name" in details:
-                G.nodes[bit]["hide_name"] = details["hide_name"]
-            G.nodes[bit]["netname"] = net
-            G.nodes[bit]["index"] = index
+            assert(bit in G.nodes)
+            if not details.get("hide_name", 0):
+                G.nodes[bit]["netnames"].add((net, details.get("index", 0)))
+                # there is a possible offset, ignoring
             G.nodes[bit]["attributes"] = details["attributes"]
+            if "type" in details["attributes"]:
+                G.nodes[bit]["type"] = details["attributes"]["type"]
+            # If the wire type is input/output/inout, mark here
+            if net in m["ports"]:
+                direction = m["ports"][net]["direction"]
+                G.nodes[bit]["cell"] = f"$_{direction}"
     return G
 
 def collapse_edges(G: nx.Graph):

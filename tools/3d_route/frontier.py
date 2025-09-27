@@ -10,22 +10,40 @@ log = logging.getLogger(__name__)
 
 logging.basicConfig(filename='3d_route.log', level=logging.DEBUG)
 
-def is_flow_input_port(G, node):
-    return G.nodes[node]["cell"] == "$_flow_port" \
-        and G.nodes[node]["direction"] == "input"
 
-def is_flow_output_port(G, node):
-    return G.nodes[node]["cell"] == "$_flow_port" \
-        and G.nodes[node]["direction"] in {"output", "inout"}
+def is_net(G, node):
+    return G.nodes[node]["cell"] in {"$_output", "$_inout", "$_wire", "$_input"}
 
-def add_shell(G, is_start):
-    starts = deque(node for node in G.nodes if is_start(G, node))
+def is_port(G, node):
+    return G.nodes[node]["cell"] in {"$_output", "$_inout", "$_input"}
+
+def is_input_port(G, node):
+    return G.nodes[node]["cell"] == "$_input"
+
+def is_inout_port(G, node):
+    return G.nodes[node]["cell"] == "$_inout"
+def is_output_port(G, node):
+    return G.nodes[node]["cell"] == "$_output"
+
+def is_flow(G, node):
+    return is_net(G, node) and G.nodes[node]["type"] == "flow"
+def is_control(G, node):
+    return is_net(G, node) and G.nodes[node]["type"] == "ctrl"
+
+def is_flush(G, node):
+    return is_net(G, node) and G.nodes[node]["type"] == "flush"
+
+def is_unknown(G, node):
+    return is_net(G, node) and G.nodes[node]["type"] == "unknown"
+def is_wire(G, node):
+    return G.nodes[node]["cell"] == "$_wire"
+
+def add_shell(G, starts):
     for start in starts:
         G.nodes[start]["shell"] = 0
     frontier = starts
-    shell = -1
+    shell = 0
     while frontier:
-        shell += 1
         nexts = deque()
         log.info("Traversing %d nodes in shell %d", len(frontier), shell)
         for leaf in frontier:
@@ -37,10 +55,62 @@ def add_shell(G, is_start):
                     G.nodes[neighbor]["shell"] = shell + 1
                     nexts.append(neighbor)
         frontier = nexts
+        shell += 1
     # for node in G.nodes:
     #     G.nodes[node]["shell"] = shell - G.nodes[node]["shell"]
     #     log.debug("Node %d %s", G.nodes[node]["shell"], node)
-    return shell, starts
+    return shell
+
+def is_dummy(G, node):
+    return G.nodes[node]["cell"] == "$_dummy"
+
+def add_buffers_output(G, depth):
+    targets = [node for node in G.nodes
+                if is_output_port(G, node) and is_flow(G, node)]
+    for target in targets:
+        shell = G.nodes[target]["shell"]
+        if shell+1 == depth:
+            continue
+        for i in range(shell+1, depth):
+            G.add_node(f"{target}__{i}", cell="$_dummy", shell=i)
+        G.add_edge(target, f"{target}__{shell+1}", dummy=True)
+        for i in range(shell+2, depth):
+            G.add_edge(f"{target}__{i-1}", f"{target}__{i}", dummy=True)
+
+def is_control_cell(G, n):
+    return G.nodes[n]["cell"] == "ctrl_hole_0"
+
+def is_flush_cell(G, n):
+    return G.nodes[n]["cell"] == "flush_hole_0"
+
+def report_stats(G):
+    num_port = sum(1 for i in G.nodes if is_port(G, i))
+    num_input = sum(1 for i in G.nodes if is_input_port(G, i))
+    num_output = sum(1 for i in G.nodes if is_output_port(G, i))
+    num_inout = sum(1 for i in G.nodes if is_inout_port(G, i))
+    num_wire = sum(1 for i in G.nodes if is_net(G, i))
+    num_cells = len(G.nodes) - num_wire
+    log.info("Starting with %d ports (%d input %d output %d inout) %d nets and %d cells", num_port, num_input, num_output, num_inout, num_wire, num_cells)
+
+def find_center(G):
+    report_stats(G)
+    start = [n for n in G.nodes if is_input_port(G, n) and is_flow(G, n)]
+    assert(len(start) > 0)
+    # remove = [n for n in G if is_control(G, n) or is_flush(G, n) or is_flush_cell(G,n) or is_control_cell(G,n)]
+    # G.remove_nodes_from(remove)
+    shell = add_shell(G, start)
+    render_dot(G, "shell.dot")
+    add_buffers_output(G, shell)
+    render_dot(G, "buffer.dot")
+
+    unreachable = [_ for _, p in G.nodes.items() if "shell" not in p]
+    if unreachable:
+        for u in unreachable:
+            log.error(u)
+        log.error("Total %d Unreachable %d", len(G.nodes), len(unreachable))
+        assert(len(unreachable) == 0)
+    precalc_dist(G)
+    return shell
 
 def add_buffers(G, start, depth):
     shell = 0
@@ -77,17 +147,6 @@ def add_buffers(G, start, depth):
                 nexts.add(dummy)
         frontier = nexts
         shell += 1
-def find_center_pio(G):
-    shell, start = add_shell(G, is_flow_input_port)
-    unreachable = [_ for _, p in G.nodes.items() if "shell" not in p]
-    if unreachable:
-        log.error("Total %d Unreachable %d", len(G.nodes), len(unreachable))
-        assert(len(unreachable) == 0)
-
-    shell, center = add_buffers(G, start, shell)
-    assert(len(center) > 0)
-    precalc_dist(G)
-    return shell, center
 
 def gather_children(G, n):
     props = G.nodes[n]
@@ -98,19 +157,19 @@ def gather_children(G, n):
         children = 0
         for adj in G.adj[n]:
             adj_shell = G.nodes[adj]["shell"]
-            if shell > adj_shell:
-                continue
-            elif shell == adj_shell:
+            if shell == adj_shell:
                 raise
-            else:
+            elif shell < adj_shell and not is_control(G, adj) or is_flush(G, adj):
                 children += 1
                 props["descendents"] |= gather_children(G, adj)
+            else:
+                continue
         props["diverges"] = children > 1
-        log.debug("Descend %s %s", n, ",".join(props["descendents"]))
     return props["descendents"] | set([n])
+
 def precalc_dist(G):
     for node in G.nodes:
-        x = gather_children(G, node)
+        gather_children(G, node)
     # This could probably be smaller by limiting to only diverging cases.
     # for node, props in G.nodes.items():
         # if not props["diverges"]:
@@ -158,9 +217,9 @@ def in_shell(G, M, node, w, h, d, shell, relax):
 
 def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, relax):
     if G.nodes[ancestor]["diverges"]:
-        dist = abs(shell - G.nodes[ancestor]["shell"])
+        dist = abs(shell - G.nodes[ancestor]["shell"]) + 1
         group = G.nodes[ancestor]["descendents"].intersection(set(frontier))
-        if group:
+        if len(group) > 1:
             log.debug("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
             Uz = M.addVar(f"{ancestor}_bound_z", vtype="I")
             Lz = M.addVar(f"{ancestor}_bound_z", vtype="I")
@@ -180,7 +239,6 @@ def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, 
     M = scip.Model()
     M.setParam("limits/time", 120)
     # M.setParam("limits/solutions", 1)
-    nexts = set()
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
     log.info("Solving shell %d, %d nodes", shell, len(frontier))
@@ -198,14 +256,14 @@ def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, 
                 # minim += distance(G, M, first, second, shell, relax)
     fset = set(frontier)
     for ancestor in G.nodes:
-        minim += distance(G, M, ancestor, fset, shell, relax)
+        if G.nodes[ancestor]["shell"] <= shell:
+            minim += distance(G, M, ancestor, fset, shell, relax)
     for node in frontier:
         for neighbor in G.adj[node]:
             n_shell = G.nodes[neighbor]["shell"]
             # next shell, add to next frontier
             if n_shell < shell:
                 assert(n_shell == shell-1)
-                nexts.add(neighbor)
             elif shell == n_shell:
                 minim += proximate(G, M, neighbor, node, shell, relax)
             else:
@@ -227,10 +285,10 @@ def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, 
             props = G.nodes[node]
             props["coordinates"] = [M.getVal(i) for i in props["coordinate_vars"]]
             log.debug("Final coordinates: %s %s", node, props["coordinates"])
-        return relax, nexts
+        return relax
     else:
         log.warning(f"Unable to find solution at {shell}")
-        assert(relax < 10)
+        assert(relax < 1)
         return solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, height, depth, start, relax+1)
 
 def within_distance(G, M, a, b, d, relax):
@@ -283,6 +341,8 @@ def attach_to_side(G, M, side, node, shell, relax = False):
     a = G.nodes[side]["coordinates"]
     b = G.nodes[node]["coordinate_vars"]
     log.debug("Starting at %s", a)
+    if is_control(G, node) or is_flush(G, node) or is_control(G, side) or is_flush(G, side):
+        return []
     # Within +/- 1
     return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, 1, relax)]
 
@@ -322,17 +382,16 @@ def run_by_vertical(G, outfile, width = 40, height = 25, depth = 25):
         return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
 
 def run_by_shell(G, outfile, proximate, distance, inside, attach, width = 40, height = 25, depth = 25, start=None):
-    shells, roots = find_center_pio(G)
+    shells = find_center(G)
+    render_dot(G, "test.dot")
     # start_shell = start if start else ceil(len(roots)**(1/3))//2
-    frontier = deque(roots)
     relax = 0
-    shell = shells
-    while frontier:
-        relax, frontier = solve_shell(G, proximate, distance, inside, attach,
-                                      frontier, shell, width, height, depth, shells, relax)
+    for shell in range(shells-1, -1, -1):
+        current = [node for node, d in G.nodes.items() if d["shell"] == shell]
+        relax = solve_shell(G, proximate, distance, inside, attach,
+                            current, shell, width, height, depth, shells, relax)
         render_scad(G, outfile)
         write_cache(G)
-        shell -= 1
     return G
 
 def draw_channel(a, b, d):
@@ -399,16 +458,20 @@ def to_directed(G):
     H = nx.DiGraph()
     for node in G.nodes:
         H.add_node(node)
+        if "shell" not in G.nodes[node]:
+            log.warning("Missing shell %s", node)
+            continue
         for edge in G.adj[node]:
+            if "shell" not in G.nodes[edge]:
+                log.warning("Missing shell %s", edge)
+                continue
             if G.nodes[node]["shell"] < G.nodes[edge]["shell"]:
                 H.add_edge(node, edge)
     return H
+def render_dot(G, outfile):
+    nx.nx_pydot.write_dot(to_directed(G), outfile)
 
 def render_scad(G,outfile, final=False):
-    # H = nx.Graph()
-    # H.add_nodes_from(g)
-    # H.add_edges_from(g.edges)
-    nx.nx_pydot.write_dot(to_directed(G), f"{outfile}.dot")
     edges = solid2.background()(solid2.cube([0,0,0]))
     for edge in scad_render_edges(G, final):
         edges += edge
