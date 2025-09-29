@@ -31,7 +31,7 @@ def is_control_cell(G, n):
 def is_flush_cell(G, n):
     return G.nodes[n]["cell"] == "flush_hole_0"
 
-def is_pinhole_cell(G, n):
+def is_pinhole(G, n):
     return G.nodes[n]["cell"] == "pinhole_320px_0"
 
 def add_shell(G, starts):
@@ -178,7 +178,7 @@ def in_horizontal(G, M, node, width, height, depth, shell, relax):
     x, y, z = G.nodes[node]["coordinate_vars"]
     M.addCons(x == shell)
 
-def in_column(G, M, node, width, height, depth, shell, relax):
+def in_cylinder(G, M, node, width, height, depth, shell, relax):
     x, y, z = G.nodes[node]["coordinate_vars"]
     M.addCons(abs(x) == shell)
     M.addCons(abs(y) == shell)
@@ -205,7 +205,7 @@ def in_shell(G, M, node, w, h, d, shell, relax):
 def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, relax):
     if G.nodes[ancestor]["diverges"]:
         dist = abs(shell - G.nodes[ancestor]["shell"]) + 1
-        group = G.nodes[ancestor]["descendents"].intersection(set(frontier))
+        group = G.nodes[ancestor]["descendents"].intersection(frontier)
         if len(group) > 1:
             log.debug("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
             Uz = M.addVar(f"{ancestor}_bound_z", vtype="I")
@@ -359,7 +359,7 @@ def run_by_horizontal(G, outfile, width = 40, height = 25, depth = 25):
 def run_by_cube(G, outfile, width = 40, height = 25, depth = 25):
         return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
 
-def run_by_pillar(G, outfile, width = 40, height = 25, depth = 25):
+def run_by_cylinder(G, outfile, width = 40, height = 25, depth = 25):
         return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
 
 def run_by_flat(G, outfile, width = 40, height = 25, depth = 25):
@@ -489,8 +489,8 @@ if __name__ == "__main__":
         g = run_by_horizontal(g, outfile, width=width, height=height, depth=depth)
     elif style == "hemicube":
         g = run_by_hemicube(g, outfile, width=width, height=height, depth=depth)
-    elif style == "pillar":
-        g = run_by_pillar(g, outfile, width=width, height=height, depth=depth)
+    elif style == "cylinder":
+        g = run_by_cylinder(g, outfile, width=width, height=height, depth=depth)
     else:
         raise
     for x in g.nodes:
