@@ -42,6 +42,23 @@ def read_yosys_json(input_file, top):
                 G.nodes[bit]["cell"] = f"$_{direction}"
     return G
 
+def is_net(G, node):
+    return G.nodes[node]["cell"] in {"$_output", "$_inout", "$_wire", "$_input"}
+
+def is_port(G, node):
+    return G.nodes[node]["cell"] in {"$_output", "$_inout", "$_input"}
+
+def is_input_port(G, node):
+    return G.nodes[node]["cell"] == "$_input"
+
+def is_inout_port(G, node):
+    return G.nodes[node]["cell"] == "$_inout"
+def is_output_port(G, node):
+    return G.nodes[node]["cell"] == "$_output"
+
+def is_wire(G, node):
+    return G.nodes[node]["cell"] == "$_wire"
+
 def collapse_edges(G: nx.Graph):
     rm = []
     for node in G.nodes:

@@ -3,30 +3,19 @@ from math import sqrt, acos, atan2, pi, ceil
 from collections import deque
 import networkx as nx
 import pyscipopt as scip
-from networkx_helpers import read_yosys_json
+from networkx_helpers import *
 import solid2
 import logging
 log = logging.getLogger(__name__)
 
 logging.basicConfig(filename='3d_route.log', level=logging.DEBUG)
 
-
-def is_net(G, node):
-    return G.nodes[node]["cell"] in {"$_output", "$_inout", "$_wire", "$_input"}
-
-def is_port(G, node):
-    return G.nodes[node]["cell"] in {"$_output", "$_inout", "$_input"}
-
-def is_input_port(G, node):
-    return G.nodes[node]["cell"] == "$_input"
-
-def is_inout_port(G, node):
-    return G.nodes[node]["cell"] == "$_inout"
-def is_output_port(G, node):
-    return G.nodes[node]["cell"] == "$_output"
+def is_dummy(G, node):
+    return G.nodes[node]["cell"] == "$_dummy"
 
 def is_flow(G, node):
     return is_net(G, node) and G.nodes[node]["type"] == "flow"
+
 def is_control(G, node):
     return is_net(G, node) and G.nodes[node]["type"] == "ctrl"
 
@@ -35,8 +24,15 @@ def is_flush(G, node):
 
 def is_unknown(G, node):
     return is_net(G, node) and G.nodes[node]["type"] == "unknown"
-def is_wire(G, node):
-    return G.nodes[node]["cell"] == "$_wire"
+
+def is_control_cell(G, n):
+    return G.nodes[n]["cell"] == "ctrl_hole_0"
+
+def is_flush_cell(G, n):
+    return G.nodes[n]["cell"] == "flush_hole_0"
+
+def is_pinhole_cell(G, n):
+    return G.nodes[n]["cell"] == "pinhole_320px_0"
 
 def add_shell(G, starts):
     for start in starts:
@@ -61,9 +57,6 @@ def add_shell(G, starts):
     #     log.debug("Node %d %s", G.nodes[node]["shell"], node)
     return shell
 
-def is_dummy(G, node):
-    return G.nodes[node]["cell"] == "$_dummy"
-
 def add_buffers_output(G, depth):
     targets = [node for node in G.nodes
                 if is_output_port(G, node) and is_flow(G, node)]
@@ -76,12 +69,6 @@ def add_buffers_output(G, depth):
         G.add_edge(target, f"{target}__{shell+1}", dummy=True)
         for i in range(shell+2, depth):
             G.add_edge(f"{target}__{i-1}", f"{target}__{i}", dummy=True)
-
-def is_control_cell(G, n):
-    return G.nodes[n]["cell"] == "ctrl_hole_0"
-
-def is_flush_cell(G, n):
-    return G.nodes[n]["cell"] == "flush_hole_0"
 
 def report_stats(G):
     num_port = sum(1 for i in G.nodes if is_port(G, i))
@@ -212,7 +199,7 @@ def in_shell(G, M, node, w, h, d, shell, relax):
     M.addCons(j*(abs(y) - h) == 0, name=f"shell_ny_{node}")
     M.addCons(k*(abs(z) - d) == 0, name=f"shell_nz_{node}")
     M.addCons(i + j + k >= 1, name=f"shell_{node}")
-    # M.addCons(z == shell)i
+    # M.addCons(z == shell)
     return [i, j, k]
 
 def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, relax):
