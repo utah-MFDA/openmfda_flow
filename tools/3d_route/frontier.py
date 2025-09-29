@@ -83,10 +83,11 @@ def find_center(G):
     report_stats(G)
     start = [n for n in G.nodes if is_input_port(G, n) and is_flow(G, n)]
     assert(len(start) > 0)
-    # remove = [n for n in G if is_control(G, n) or is_flush(G, n) or is_flush_cell(G,n) or is_control_cell(G,n)]
-    # G.remove_nodes_from(remove)
+    remove = [n for n in G if is_control(G, n) or is_flush(G, n) or is_flush_cell(G,n) or is_control_cell(G,n)]
+    G.remove_nodes_from(remove)
     shell = add_shell(G, start)
     render_dot(G, "shell.dot")
+    # add_buffers(G, start, shell)
     add_buffers_output(G, shell)
     render_dot(G, "buffer.dot")
 
@@ -146,7 +147,7 @@ def gather_children(G, n):
             adj_shell = G.nodes[adj]["shell"]
             if shell == adj_shell:
                 raise
-            elif shell < adj_shell and not is_control(G, adj) or is_flush(G, adj):
+            elif shell < adj_shell and not (is_control(G, adj) or is_flush(G, adj)):
                 children += 1
                 props["descendents"] |= gather_children(G, adj)
             else:
@@ -199,7 +200,6 @@ def in_shell(G, M, node, w, h, d, shell, relax):
     M.addCons(j*(abs(y) - h) == 0, name=f"shell_ny_{node}")
     M.addCons(k*(abs(z) - d) == 0, name=f"shell_nz_{node}")
     M.addCons(i + j + k >= 1, name=f"shell_{node}")
-    # M.addCons(z == shell)
     return [i, j, k]
 
 def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, relax):
@@ -218,6 +218,31 @@ def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, relax):
                 x, y, z = G.nodes[node]["coordinate_vars"]
                 M.addCons(z <= Uz - 1)
                 M.addCons(z >= Lz)
+                M.addCons(y <= Uy - 1)
+                M.addCons(y >= Ly)
+    return []
+
+def bounded_descendent(G, M, ancestor, frontier, shell, relax):
+    if G.nodes[ancestor]["diverges"]:
+        dist = abs(shell - G.nodes[ancestor]["shell"]) + 1
+        group = G.nodes[ancestor]["descendents"].intersection(frontier)
+        if len(group) > 1:
+            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
+            Uz = M.addVar(f"{ancestor}_bound_z", vtype="I")
+            Lz = M.addVar(f"{ancestor}_bound_z", vtype="I")
+            M.addCons(Uz - Lz <= dist)
+            Ux = M.addVar(f"{ancestor}_bound_x", vtype="I")
+            Lx = M.addVar(f"{ancestor}_bound_x", vtype="I")
+            M.addCons(Ux - Lx <= dist)
+            Uy = M.addVar(f"{ancestor}_bound_y", vtype="I")
+            Ly = M.addVar(f"{ancestor}_bound_y", vtype="I")
+            M.addCons(Uy - Ly <= dist)
+            for node in group:
+                x, y, z = G.nodes[node]["coordinate_vars"]
+                M.addCons(z <= Uz - 1)
+                M.addCons(z >= Lz)
+                M.addCons(x <= Ux - 1)
+                M.addCons(x >= Lx)
                 M.addCons(y <= Uy - 1)
                 M.addCons(y >= Ly)
     return []
@@ -275,7 +300,7 @@ def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, 
         return relax
     else:
         log.warning(f"Unable to find solution at {shell}")
-        assert(relax < 1)
+        assert(relax < 15)
         return solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, height, depth, start, relax+1)
 
 def within_distance(G, M, a, b, d, relax):
