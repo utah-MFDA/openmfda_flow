@@ -36,6 +36,8 @@ def read_yosys_json(input_file, top):
             G.nodes[bit]["attributes"] = details["attributes"]
             if "type" in details["attributes"]:
                 G.nodes[bit]["type"] = details["attributes"]["type"]
+            else:
+                G.nodes[bit]["type"] = "unknown"
             # If the wire type is input/output/inout, mark here
             if net in m["ports"]:
                 direction = m["ports"][net]["direction"]
