@@ -1,5 +1,5 @@
 TEE=>
-library.v: common.v kinase_activity.v kinase_pads_parallel.v
+library.v: common.v kinase_activity.v kinase_pads.v
 	cat $^ > $@
 
 force:

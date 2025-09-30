@@ -57,7 +57,8 @@ def is_pinhole(G, n):
 def add_shell(G, starts):
     assert(len(starts) > 0)
     for start in starts:
-        print(start)
+        log.debug("Starting %s", start)
+
         G.nodes[start]["shell"] = 0
     frontier = starts
     shell = 0
@@ -69,15 +70,16 @@ def add_shell(G, starts):
                 if "shell" in G.nodes[neighbor]:
                     continue
                 else:
+                    log.debug("Found %s", neighbor)
                     G.nodes[neighbor]["shell"] = shell + 1
                     nexts.append(neighbor)
         frontier = nexts
         shell += 1
     for node in G.nodes:
-        if "shell" not in G.nodes:
+        if "shell" not in G.nodes[node]:
             log.error("Shell missing %s", node)
     for node in G.nodes:
-        assert("shell" in G.nodes)
+        assert("shell" in G.nodes[node])
         G.nodes[node]["shell"] = shell - G.nodes[node]["shell"] - 1
         log.debug("Node %d %s", G.nodes[node]["shell"], node)
     return shell
@@ -245,6 +247,7 @@ def in_shell(G, M, node, width, height, depth, shell, offset, relax):
 def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax):
     if G.nodes[ancestor]["diverges"]:
         dist = abs(G.nodes[ancestor]["shell"] - shell) + relax
+        assert(dist > 0)
         group = G.nodes[ancestor]["descendents"].intersection(frontier)
         if len(group) > 1:
             log.debug("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
@@ -266,6 +269,7 @@ def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax
 def bounded_descendent(G, M, ancestor, frontier, shell, offset, relax):
     if G.nodes[ancestor]["diverges"]:
         dist = abs(G.nodes[ancestor]["shell"] - shell) + relax
+        assert(dist > 0)
         group = G.nodes[ancestor]["descendents"].intersection(frontier)
         if len(group) > 1:
             log.debug("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
