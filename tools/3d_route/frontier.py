@@ -165,42 +165,56 @@ def precalc_dist(G):
 
 def add_position(G, M, node, width, height, depth):
     x, y, z = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
-               for i, lb, ub
-               in [("x", -width, width),
-                   ("y", -height, height),
-                   ("z", -depth, depth)]]
+               for i, (lb, ub)
+               in [("x", width),
+                   ("y", height),
+                   ("z", depth)]]
     G.nodes[node]["coordinate_vars"] = (x, y, z)
+    return x, y, z
 
 def in_vertical(G, M, node, width, height, depth, shell, relax):
-    x, y, z = G.nodes[node]["coordinate_vars"]
-    M.addCons(z == shell)
+    add_position(G, M, node,
+               (-width, width),
+               (-height, height),
+               (shell, shell))
+
+def in_hemicube(G, M, node, width, height, depth, shell, relax):
+    add_position(G, M, node,
+               (-shell, shell),
+               (-shell, shell),
+               (0, shell))
 
 def in_horizontal(G, M, node, width, height, depth, shell, relax):
-    x, y, z = G.nodes[node]["coordinate_vars"]
-    M.addCons(x == shell)
+    add_position(G, M, node,
+               (shell, shell),
+               (-height, height),
+               (-depth, depth))
 
 def in_cylinder(G, M, node, width, height, depth, shell, relax):
-    x, y, z = G.nodes[node]["coordinate_vars"]
-    M.addCons(abs(x) == shell)
-    M.addCons(abs(y) == shell)
+    x, y, z = add_position(G, M, node,
+                           (-shell, shell),
+                           (-shell, shell),
+                           (-depth, depth))
+    i = M.addVar(f"shell_i_{node}", vtype="B")
+    j = M.addVar(f"shell_j_{node}", vtype="B")
+    M.addCons(i*(abs(x) - shell) == 0, name=f"shell_nx_{node}")
+    M.addCons(j*(abs(y) - shell) == 0, name=f"shell_ny_{node}")
+    M.addCons(i + j >= 1, name=f"shell_{node}")
+    return []
 
-def in_shell(G, M, node, w, h, d, shell, relax):
-    x, y, z = G.nodes[node]["coordinate_vars"]
+def in_shell(G, M, node, width, height, depth, shell, relax):
+    x, y, z = add_position(G, M, node,
+                           (-shell, shell),
+                           (-shell, shell),
+                           (-shell, shell))
     i = M.addVar(f"shell_i_{node}", vtype="B")
     j = M.addVar(f"shell_j_{node}", vtype="B")
     k = M.addVar(f"shell_k_{node}", vtype="B")
-    # Should be implicit with the variable bounds previously set
-    # M.addCons(x <= w)
-    # M.addCons(x >= -w)
-    # M.addCons(y <= h)
-    # M.addCons(y >= -h)
-    # M.addCons(z <= d)
-    # M.addCons(z >= -d)
-    M.addCons(i*(abs(x) - w) == 0, name=f"shell_nx_{node}")
-    M.addCons(j*(abs(y) - h) == 0, name=f"shell_ny_{node}")
-    M.addCons(k*(abs(z) - d) == 0, name=f"shell_nz_{node}")
+    M.addCons(i*(abs(x) - shell) == 0, name=f"shell_nx_{node}")
+    M.addCons(j*(abs(y) - shell) == 0, name=f"shell_ny_{node}")
+    M.addCons(k*(abs(z) - shell) == 0, name=f"shell_nz_{node}")
     M.addCons(i + j + k >= 1, name=f"shell_{node}")
-    return [i, j, k]
+    return []
 
 def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, relax):
     if G.nodes[ancestor]["diverges"]:
@@ -247,10 +261,11 @@ def bounded_descendent(G, M, ancestor, frontier, shell, relax):
                 M.addCons(y >= Ly)
     return []
 
-def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, height, depth, start, relax = 0):
+def solve_shell(G, proximate, distance, inside, attach, ahead, frontier,
+                shell, width, height, depth, start, relax = 0, limit=8):
     M = scip.Model()
-    M.setParam("limits/time", 120)
-    # M.setParam("limits/solutions", 1)
+    M.setParam("limits/time", 60)
+    M.setParam("limits/solutions", 1)
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
     log.info("Solving shell %d, %d nodes", shell, len(frontier))
@@ -258,30 +273,26 @@ def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, 
 
     for node in frontier:
         assert(shell == G.nodes[node]["shell"])
-        add_position(G, M, node, width, height, depth)
         inside(G, M, node, width, height, depth, shell, relax)
-        G.nodes[node]["visited"] = False
     for first in frontier:
         for second in frontier:
             if first < second:
                 not_overlap(G, M, first, second, shell, relax)
-                # minim += distance(G, M, first, second, shell, relax)
-    fset = set(frontier)
     for ancestor in G.nodes:
-        if G.nodes[ancestor]["shell"] <= shell:
-            minim += distance(G, M, ancestor, fset, shell, relax)
+        if G.nodes[ancestor]["shell"] < shell:
+            minim += distance(G, M, ancestor, frontier, shell, relax)
     for node in frontier:
         for neighbor in G.adj[node]:
             n_shell = G.nodes[neighbor]["shell"]
             # next shell, add to next frontier
             if n_shell < shell:
                 assert(n_shell == shell-1)
+                minim += ahead(G, M, neighbor, node, shell, relax)
             elif shell == n_shell:
                 minim += proximate(G, M, neighbor, node, shell, relax)
             else:
                 # Previous shell, setup direct proximity from position
                 minim += attach(G, M, neighbor, node, shell, relax)
-        G.nodes[node]["visited"] = True
     # solve and extract position values
     if minim:
         M.setObjective(scip.quicksum(minim), sense="minimize")
@@ -300,8 +311,9 @@ def solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, 
         return relax
     else:
         log.warning(f"Unable to find solution at {shell}")
-        assert(relax < 15)
-        return solve_shell(G, proximate, distance, inside, attach, frontier, shell, width, height, depth, start, relax+1)
+        assert(relax < limit)
+        return solve_shell(G, proximate, distance, inside, attach, ahead, frontier,
+                            shell, width, height, depth, start, relax+1)
 
 def within_distance(G, M, a, b, d, relax):
     X = 0 if not relax else M.addVar(vtype="I", lb=0, ub=relax)
@@ -366,42 +378,72 @@ def attach_to_side_non_ctrl(G, M, side, node, shell, relax = False):
         return attach_to_side(G, M, side, node, shell, relax)
 
 def run_by_hemicube(G, outfile, width = 40, height = 25, depth = 25):
-        return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
+    return run_by_shell(G, outfile,
+                        noop,
+                        bounded_descendent,
+                        in_hemicube,
+                        attach_to_side,
+                        noop,
+                        width,
+                        height,
+                        depth)
 
 def noop(G, M, neighbor, node, shell, relax):
     return []
 def run_by_horizontal(G, outfile, width = 40, height = 25, depth = 25):
-        return run_by_shell(G,
-                            outfile,
-                            noop,
-                            bounded_descendent_horizontal,
-                            in_horizontal,
-                            attach_to_side,
-                            width,
-                            height,
-                            depth)
+    return run_by_shell(G, outfile,
+                        noop,
+                        bounded_descendent_horizontal,
+                        in_horizontal,
+                        attach_to_side,
+                        noop,
+                        width,
+                        height,
+                        depth)
 
 def run_by_cube(G, outfile, width = 40, height = 25, depth = 25):
-        return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
+    return run_by_shell(G, outfile,
+                        noop,
+                        bounded_descendent,
+                        in_shell,
+                        attach_to_side,
+                        noop,
+                        width,
+                        height,
+                        depth)
 
 def run_by_cylinder(G, outfile, width = 40, height = 25, depth = 25):
-        return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
-
-def run_by_flat(G, outfile, width = 40, height = 25, depth = 25):
-        return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
+    return run_by_shell(G, outfile,
+                        noop,
+                        bounded_descendent,
+                        in_cylinder,
+                        attach_to_side,
+                        noop,
+                        width,
+                        height,
+                        depth)
 
 def run_by_vertical(G, outfile, width = 40, height = 25, depth = 25):
-        return run_by_shell(G, outfile, proximate_layer, distance_shell, in_shell, attach_to_side,width,height,depth)
+    return run_by_shell(G, outfile,
+                        noop,
+                        bounded_descendent_horizontal,
+                        in_vertical,
+                        attach_to_side,
+                        noop,
+                        width,
+                        height,
+                        depth)
 
-def run_by_shell(G, outfile, proximate, distance, inside, attach, width = 40, height = 25, depth = 25, start=None):
-    shells = find_center(G)
+def run_by_shell(G, outfile, proximate, distance, inside, attach, ahead, width = 40, height = 25, depth = 25, start=None):
+    start = [n for n in G.nodes if (is_input_port(G, n) or is_output_port(G, n)) and is_flow(G, n)]
+    shells = find_center(G, start)
     render_dot(G, "test.dot")
     # start_shell = start if start else ceil(len(roots)**(1/3))//2
     relax = 0
     for shell in range(shells-1, -1, -1):
-        current = [node for node, d in G.nodes.items() if d["shell"] == shell]
-        relax = solve_shell(G, proximate, distance, inside, attach,
-                            current, shell, width, height, depth, shells, relax)
+        current = {node for node, d in G.nodes.items() if d["shell"] == shell}
+        relax = solve_shell(G, proximate, distance, inside, attach, ahead, current,
+                            shell, width, height, depth, shells, relax)
         render_scad(G, outfile)
         write_cache(G)
     return G
