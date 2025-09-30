@@ -57,9 +57,7 @@ def add_shell(G, starts):
     #     log.debug("Node %d %s", G.nodes[node]["shell"], node)
     return shell
 
-def add_buffers_output(G, depth):
-    targets = [node for node in G.nodes
-                if is_output_port(G, node) and is_flow(G, node)]
+def add_buffers_output(G, depth, targets):
     for target in targets:
         shell = G.nodes[target]["shell"]
         if shell+1 == depth:
@@ -79,16 +77,17 @@ def report_stats(G):
     num_cells = len(G.nodes) - num_wire
     log.info("Starting with %d ports (%d input %d output %d inout) %d nets and %d cells", num_port, num_input, num_output, num_inout, num_wire, num_cells)
 
-def find_center(G):
+def find_center(G, start):
     report_stats(G)
-    start = [n for n in G.nodes if is_input_port(G, n) and is_flow(G, n)]
     assert(len(start) > 0)
     remove = [n for n in G if is_control(G, n) or is_flush(G, n) or is_flush_cell(G,n) or is_control_cell(G,n)]
     G.remove_nodes_from(remove)
     shell = add_shell(G, start)
     render_dot(G, "shell.dot")
-    # add_buffers(G, start, shell)
-    add_buffers_output(G, shell)
+    add_buffers(G, start, shell)
+    # targets = [node for node in G.nodes
+    #             if is_output_port(G, node) and is_flow(G, node)]
+    # add_buffers_output(G, shell, targets)
     render_dot(G, "buffer.dot")
 
     unreachable = [_ for _, p in G.nodes.items() if "shell" not in p]
