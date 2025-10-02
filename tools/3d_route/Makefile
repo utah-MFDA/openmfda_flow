@@ -8,13 +8,13 @@ force:
 	yosys -p "read_verilog library.v; read_verilog $<; hierarchy -top thing; proc; flatten; write_json $@" $(TEE) $@.log
 
 %.cylinder.scad: %.json frontier.py force
-	python3 frontier.py $< cylinder $@
+	python3 frontier.py $< cylinder $@ 3
 
 %.horizontal.scad: %.json frontier.py force
-	python3 frontier.py $< horizontal $@
+	python3 frontier.py $< horizontal $@ 0
 
 %.cube.scad: %.json frontier.py force
-	python3 frontier.py $< cube $@
+	python3 frontier.py $< cube $@ 0
 
 %.pdf: %.dot
 	dot -Tpdf -o $@ $<
