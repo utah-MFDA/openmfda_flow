@@ -213,7 +213,7 @@ def add_position(G, M, node, width, height, depth):
                in [("x", width),
                    ("y", height),
                    ("z", depth)]]
-    G.nodes[node]["coordinate_vars"] = (x, y, z)
+    G.nodes[node]["coordinates"] = (x, y, z)
     return x, y, z
 
 def in_vertical(G, M, node, width, height, depth, shell, offset, relax):
@@ -234,7 +234,7 @@ def in_horizontal(G, M, node, width, height, depth, shell, offset, relax):
                for i, (lb, ub)
                in [("y", (-height, height)),
                    ("z", (-depth, depth))]]
-    G.nodes[node]["coordinate_vars"] = (y, z)
+    G.nodes[node]["coordinates"] = (y, z)
 
 def in_cylinder(G, M, node, width, height, depth, shell, offset, relax):
     layer = shell+offset
@@ -276,8 +276,8 @@ def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax
         if len(group) == 1:
             log.info("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
             for node in group:
-                ay, az = G.nodes[ancestor]["coordinate_vars"]
-                y, z = G.nodes[node]["coordinate_vars"]
+                ay, az = G.nodes[ancestor]["coordinates"]
+                y, z = G.nodes[node]["coordinates"]
                 M.addCons(abs(ay - y) <= dist)
                 M.addCons(abs(az - z) <= dist)
         elif len(group) > 1:
@@ -289,7 +289,7 @@ def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax
             Ly = M.addVar(f"{ancestor}_lbound_y", vtype="I")
             M.addCons(Uy - Ly <= dist)
             for node in group:
-                y, z = G.nodes[node]["coordinate_vars"]
+                y, z = G.nodes[node]["coordinates"]
                 M.addCons(z <= Uz - 1)
                 M.addCons(z >= Lz)
                 M.addCons(y <= Uy - 1)
@@ -308,8 +308,8 @@ def bounded_ancestor_horizontal(G, M, descendent, frontier, shell, offset, relax
         if len(group) == 1:
             log.info("Adding bounds for %s at distance %d to %d children on layer %d", descendent, dist, len(group), shell)
             for node in group:
-                ay, az = G.nodes[descendent]["coordinate_vars"]
-                y, z = G.nodes[node]["coordinate_vars"]
+                ay, az = G.nodes[descendent]["coordinates"]
+                y, z = G.nodes[node]["coordinates"]
                 M.addCons(abs(ay - y) <= dist)
                 M.addCons(abs(az - z) <= dist)
         elif len(group) > 1:
@@ -321,7 +321,7 @@ def bounded_ancestor_horizontal(G, M, descendent, frontier, shell, offset, relax
             Ly = M.addVar(f"{descendent}_anc_lbound_y", vtype="I")
             M.addCons(Uy - Ly <= dist)
             for node in group:
-                y, z = G.nodes[node]["coordinate_vars"]
+                y, z = G.nodes[node]["coordinates"]
                 M.addCons(z <= Uz - 1)
                 M.addCons(z >= Lz)
                 M.addCons(y <= Uy - 1)
@@ -346,7 +346,7 @@ def bounded_descendent(G, M, ancestor, frontier, shell, offset, relax):
             Ly = M.addVar(f"{ancestor}_lbound_y", vtype="I")
             M.addCons(Uy - Ly <= dist)
             for node in group:
-                x, y, z = G.nodes[node]["coordinate_vars"]
+                x, y, z = G.nodes[node]["coordinates"]
                 M.addCons(z <= Uz - 1)
                 M.addCons(z >= Lz)
                 M.addCons(x <= Ux - 1)
@@ -390,7 +390,7 @@ def solve_everything(G, width, height, depth, relax):
     if M.getNSols() == 0:
         raise
     for node, props in G.nodes.items():
-        props["coordinates"] = [props["shell"]]+[M.getVal(i) for i in props["coordinate_vars"]]
+        props["coordinates"] = [props["shell"]]+[M.getVal(i) for i in props["coordinates"]]
         # log.debug("Final coordinates: %s %s", node, props["coordinates"])
     return G
 
@@ -440,7 +440,7 @@ def solve_shell(G, proximate, distance, inside, attach, ahead, frontier,
     if M.getNSols() >= 1:
         for node in frontier:
             props = G.nodes[node]
-            props["coordinates"] = [M.getVal(i) for i in props["coordinate_vars"]]
+            props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
             log.debug("Final coordinates: %s %s", node, props["coordinates"])
         return relax
     else:
@@ -459,14 +459,14 @@ def within_distance(G, M, a, b, d, relax):
     return []
 
 def proximate_layer(G, M, s, e, shell, offset, relax):
-    a = G.nodes[s]["coordinate_vars"]
-    b = G.nodes[e]["coordinate_vars"]
+    a = G.nodes[s]["coordinates"]
+    b = G.nodes[e]["coordinates"]
     return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, 1, relax)]
 
 def distance_shell(G, M, s, e, shell, offset, relax):
-    a = G.nodes[s]["coordinate_vars"]
+    a = G.nodes[s]["coordinates"]
     a_rel = G.nodes[s]["relations"]
-    b = G.nodes[e]["coordinate_vars"]
+    b = G.nodes[e]["coordinates"]
     b_rel = G.nodes[e]["relations"]
     dist = a_rel.intersection(b_rel)
     # if no relationship constraint, bail
@@ -478,15 +478,15 @@ def distance_shell(G, M, s, e, shell, offset, relax):
         return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, bound, relax)]
 
 def not_overlap(G, M, first, second, shell, offset, relax):
-    a = G.nodes[first]["coordinate_vars"]
-    b = G.nodes[second]["coordinate_vars"]
+    a = G.nodes[first]["coordinates"]
+    b = G.nodes[second]["coordinates"]
     M.addCons(scip.quicksum(abs(x - y) for x, y in zip(a, b)) >= 1)
     return []
 
 def attach_to_side(G, M, side, node, shell, offset, relax):
     log.debug("Attaching %s to %s", node, side)
     a = G.nodes[side]["coordinates"]
-    b = G.nodes[node]["coordinate_vars"]
+    b = G.nodes[node]["coordinates"]
     log.debug("Starting at %s", a)
     # if is_control(G, node) or is_flush(G, node):# or is_control(G, side) or is_flush(G, side):
         # M.addCons(a[2] == 0)
