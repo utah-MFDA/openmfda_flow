@@ -269,19 +269,20 @@ def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax
     ashell =  G.nodes[ancestor]["shell"]
     if ashell > shell:
         descendents = G.nodes[ancestor]["descendents"]
-        dist = 2*abs(ashell - shell) + relax
+        dist = 2*(abs(ashell - shell) - 1)+ relax
         group = descendents.intersection(frontier)
         if dist <= 0:
             return []
+        if group:
+            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
         if len(group) == 1:
-            log.info("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
             for node in group:
-                ay, az = G.nodes[ancestor]["coordinates"]
-                y, z = G.nodes[node]["coordinates"]
-                M.addCons(abs(ay - y) <= dist)
-                M.addCons(abs(az - z) <= dist)
+                if "coordinates" in G.nodes[ancestor]:
+                    ay, az = G.nodes[ancestor]["coordinates"]
+                    y, z = G.nodes[node]["coordinates"]
+                    M.addCons(abs(ay - y) <= dist)
+                    M.addCons(abs(az - z) <= dist)
         elif len(group) > 1:
-            log.info("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
             Uz = M.addVar(f"{ancestor}_ubound_z", vtype="I")
             Lz = M.addVar(f"{ancestor}_lbound_z", vtype="I")
             M.addCons(Uz - Lz <= dist)
@@ -300,20 +301,21 @@ def bounded_ancestor_horizontal(G, M, descendent, frontier, shell, offset, relax
     ashell =  G.nodes[descendent]["shell"]
     # if G.nodes[descendent]["diverges_ancestor"]:
     if ashell < shell:
-        dist = 2*abs(ashell - shell) + relax
+        dist = 2*(abs(ashell - shell)) -1 + relax
         ancestors = G.nodes[descendent]["ancestors"]
         group = ancestors.intersection(frontier)
         if dist <= 0:
             return []
+        if group:
+            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", descendent, dist, len(group), shell)
         if len(group) == 1:
-            log.info("Adding bounds for %s at distance %d to %d children on layer %d", descendent, dist, len(group), shell)
             for node in group:
-                ay, az = G.nodes[descendent]["coordinates"]
-                y, z = G.nodes[node]["coordinates"]
-                M.addCons(abs(ay - y) <= dist)
-                M.addCons(abs(az - z) <= dist)
+                if "coordinates" in G.nodes[descendent]:
+                    ay, az = G.nodes[descendent]["coordinates"]
+                    y, z = G.nodes[node]["coordinates"]
+                    M.addCons(abs(ay - y) <= dist)
+                    M.addCons(abs(az - z) <= dist)
         elif len(group) > 1:
-            log.info("Adding bounds for %s at distance %d to %d children on layer %d", descendent, dist, len(group), shell)
             Uz = M.addVar(f"{descendent}_anc_ubound_z", vtype="I")
             Lz = M.addVar(f"{descendent}_anc_lbound_z", vtype="I")
             M.addCons(Uz - Lz <= dist)
@@ -354,6 +356,65 @@ def bounded_descendent(G, M, ancestor, frontier, shell, offset, relax):
                 M.addCons(y <= Uy - 1)
                 M.addCons(y >= Ly)
     return []
+
+def run_by_slice(G, outfile, width = 40, height = 25, depth = 25):
+    # render_dot_undir(G, "raw.dot")
+    start = [n for n in G.nodes if (is_input_port(G, n) or is_output_port(G, n)) and is_flow(G, n)]
+    shells = find_center(G, start)
+    # render_dot(G, "test.dot")
+    for shell in range(0, shells):
+        relax = 0
+        current = {node for node, d in G.nodes.items() if d["shell"] == shell}
+        while relax < min(height, depth):
+            try:
+                solve_slice(G, current, width, height, depth, shell, relax)
+                break
+            except:
+                relax += 1
+        render_scad(G, outfile)
+        # write_cache(G)
+    for node, props in G.nodes.items():
+        y, z = props["coordinates"]
+        props["coordinates"] = [props["shell"], y, z]
+    return G
+
+def solve_slice(G, frontier, width, height, depth, shell, relax):
+    if relax:
+        log.warning("Relaxing distance constraints by %d", relax)
+    M = scip.Model()
+    # M.setParam("limits/time", 60)
+    M.setParam("limits/solutions", 1)
+    for node in frontier:
+        in_horizontal(G, M, node, width, height, depth, shell, 0, relax)
+    minim = []
+    for first in frontier:
+        for second in frontier:
+            if first < second:
+                minim += not_overlap(G, M, first, second, shell, offset, relax)
+    for node in G.nodes:
+        minim += bounded_descendent_horizontal(G, M, node, frontier, shell, 0, relax)
+        minim += bounded_ancestor_horizontal(G, M, node, frontier, shell, 0, relax)
+
+    if minim:
+        log.info("Running with minimization")
+        M.setObjective(scip.quicksum(minim), sense="minimize")
+    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.presolve()
+    log.info("Start optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.optimize()
+    log.info("Finished optimizing, %d solutions found", M.getNSols())
+
+    # log.debug("Minim vars: %s", [M.getVal(i) for i in minim])
+    if M.getNSols() == 0:
+        for node in frontier:
+            props = G.nodes[node]
+            del props["coordinates"]
+        raise
+    for node in frontier:
+        props = G.nodes[node]
+        props["coordinates"] =[M.getVal(i) for i in props["coordinates"]]
+        # log.debug("Final coordinates: %s %s", node, props["coordinates"])
+    return G
 
 def solve_everything(G, width, height, depth, relax):
     if relax:
@@ -412,8 +473,7 @@ def solve_shell(G, proximate, distance, inside, attach, ahead, frontier,
             if first < second:
                 not_overlap(G, M, first, second, shell, offset, relax)
     for ancestor in G.nodes:
-        if is_older(G, ancestor, shell):
-            minim += distance(G, M, ancestor, frontier, shell, offset, relax)
+        minim += distance(G, M, ancestor, frontier, shell, offset, relax)
     for node in frontier:
         for neighbor in G.adj[node]:
             # next shell, add to next frontier
@@ -509,15 +569,17 @@ def run_by_hemicube(G, outfile, width = 40, height = 25, depth = 25, offset = No
                         depth, offset)
 
 def run_by_horizontal(G, outfile, width = 40, height = 25, depth = 25, offset = None):
-    # return run_by_shell(G, outfile,
-    #                     noop,
-    #                     bounded_descendent_horizontal,
-    #                     in_horizontal,
-    #                     attach_to_side,
-    #                     noop,
-    #                     width,
-    #                     height,
-    #                     depth, offset)
+    return run_by_shell(G, outfile,
+                        noop,
+                        bounded_descendent_horizontal,
+                        in_horizontal,
+                        attach_to_side,
+                        noop,
+                        width,
+                        height,
+                        depth, offset)
+
+def run_by_horizontal_everything(G, outfile, width = 40, height = 25, depth = 25, offset = None):
     relax = 0
     while relax < height:
         try:
@@ -609,13 +671,24 @@ def scad_render_nodes(G,final):
 
         dimensions = G.nodes[node].get("dimensions", [1, 1, 1])
         position = G.nodes[node]["coordinates"]
+        if len(position) == 2:
+            position = [G.nodes[node]["shell"]] + position
         s = solid2.translate(position)(solid2.cube(dimensions))
-        if G.nodes[node]["cell"] == "$_dummy":
-            yield solid2.color("lightblue", alpha=0.1)(s)
-        elif G.nodes[node]["cell"] == "$_wire":
-            yield solid2.color("lightgreen", alpha=0.1)(s)
+        cell = G.nodes[node]["cell"]
+        if is_dummy(G, node):
+            color = "lightblue"
+        elif is_net(G, node):
+            if is_flow(G, node):
+                color = "pink"
+            elif is_control(G, node):
+                color = "orange"
+            elif is_flush(G, node):
+                color = "yellow"
+            else:
+                color = "lightgreen"
         else:
-            yield s
+            color = "black"
+        yield solid2.color(color, alpha=0.1)(s)
 
 def scad_render_edges(G, final):
     for edge in G.edges:
@@ -625,8 +698,13 @@ def scad_render_edges(G, final):
                 log.warning("Missing coordinates for edge from %s to %s", start, end)
             continue
         end_orig = G.nodes[end]["coordinates"]
+        if len(end_orig) == 2:
+            end_orig = [G.nodes[end]["shell"]] + end_orig
+
         end_dim = G.nodes[end].get("dimensions", [1,1,1])
         start_orig = G.nodes[start]["coordinates"]
+        if len(start_orig) == 2:
+            start_orig = [G.nodes[start]["shell"]] + start_orig
         start_dim = G.nodes[start].get("dimensions", [1,1,1])
         channel_dim = G.edges[edge].get("dimensions", (0.125,0.125, 0.125))
         start_pin = G.edges[edge].get("start_pin", (0.5, 0.5, 0.5))
@@ -683,7 +761,8 @@ if __name__ == "__main__":
     elif style == "vertical":
         g = run_by_vertical(g, outfile, width=width, height=height, depth=depth, offset=offset)
     elif style == "horizontal":
-        g = run_by_horizontal(g, outfile, width=width, height=height, depth=depth, offset=offset)
+        # g = run_by_horizontal(g, outfile, width=width, height=height, depth=depth, offset=offset)
+        g = run_by_slice(g, outfile, width, height, depth)
     elif style == "hemicube":
         g = run_by_hemicube(g, outfile, width=width, height=height, depth=depth, offset=offset)
     elif style == "cylinder":
