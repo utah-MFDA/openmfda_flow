@@ -264,30 +264,31 @@ def in_shell(G, M, node, width, height, depth, shell, offset, relax):
     M.addCons(i + j + k >= 1, name=f"shell_{node}")
     return []
 
-def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax):
-    # if G.nodes[ancestor]["diverges"]:
-    ashell =  G.nodes[ancestor]["shell"]
-    if ashell > shell:
-        descendents = G.nodes[ancestor]["descendents"]
-        dist = 2*(abs(ashell - shell) - 1)+ relax
-        group = descendents.intersection(frontier)
+def bounded_plane(G, M, direction, orientation, relative, frontier, shell, offset, relax):
+    ashell =  G.nodes[relative]["shell"]
+    if direction(ashell, shell):
+        relations = G.nodes[relative][orientation]
+        dist = 2*(abs(ashell - shell)) - 1
+        group = relations.intersection(frontier)
         if dist <= 0:
             return []
+        X = 0 if not relax else M.addVar(vtype="I", lb=0, ub=relax)
+        dist += X
         if group:
-            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", ancestor, dist, len(group), shell)
+            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", relative, dist, len(group), shell)
         if len(group) == 1:
             for node in group:
-                if "coordinates" in G.nodes[ancestor]:
-                    ay, az = G.nodes[ancestor]["coordinates"]
+                if "coordinates" in G.nodes[relative]:
+                    ay, az = G.nodes[relative]["coordinates"]
                     y, z = G.nodes[node]["coordinates"]
                     M.addCons(abs(ay - y) <= dist)
                     M.addCons(abs(az - z) <= dist)
         elif len(group) > 1:
-            Uz = M.addVar(f"{ancestor}_ubound_z", vtype="I")
-            Lz = M.addVar(f"{ancestor}_lbound_z", vtype="I")
+            Uz = M.addVar(f"{relative}_ubound_z", vtype="I")
+            Lz = M.addVar(f"{relative}_lbound_z", vtype="I")
             M.addCons(Uz - Lz <= dist)
-            Uy = M.addVar(f"{ancestor}_ubound_y", vtype="I")
-            Ly = M.addVar(f"{ancestor}_lbound_y", vtype="I")
+            Uy = M.addVar(f"{relative}_ubound_y", vtype="I")
+            Ly = M.addVar(f"{relative}_lbound_y", vtype="I")
             M.addCons(Uy - Ly <= dist)
             for node in group:
                 y, z = G.nodes[node]["coordinates"]
@@ -295,44 +296,21 @@ def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax
                 M.addCons(z >= Lz)
                 M.addCons(y <= Uy - 1)
                 M.addCons(y >= Ly)
+        if relax:
+            return [X]
+        else:
+            return []
     return []
 
+def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax):
+    return bounded_plane(G, M, lambda x,y: x > y, "descendents", ancestor, frontier, shell, offset, relax)
+
 def bounded_ancestor_horizontal(G, M, descendent, frontier, shell, offset, relax):
-    ashell =  G.nodes[descendent]["shell"]
-    # if G.nodes[descendent]["diverges_ancestor"]:
-    if ashell < shell:
-        dist = 2*(abs(ashell - shell)) -1 + relax
-        ancestors = G.nodes[descendent]["ancestors"]
-        group = ancestors.intersection(frontier)
-        if dist <= 0:
-            return []
-        if group:
-            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", descendent, dist, len(group), shell)
-        if len(group) == 1:
-            for node in group:
-                if "coordinates" in G.nodes[descendent]:
-                    ay, az = G.nodes[descendent]["coordinates"]
-                    y, z = G.nodes[node]["coordinates"]
-                    M.addCons(abs(ay - y) <= dist)
-                    M.addCons(abs(az - z) <= dist)
-        elif len(group) > 1:
-            Uz = M.addVar(f"{descendent}_anc_ubound_z", vtype="I")
-            Lz = M.addVar(f"{descendent}_anc_lbound_z", vtype="I")
-            M.addCons(Uz - Lz <= dist)
-            Uy = M.addVar(f"{descendent}_anc_ubound_y", vtype="I")
-            Ly = M.addVar(f"{descendent}_anc_lbound_y", vtype="I")
-            M.addCons(Uy - Ly <= dist)
-            for node in group:
-                y, z = G.nodes[node]["coordinates"]
-                M.addCons(z <= Uz - 1)
-                M.addCons(z >= Lz)
-                M.addCons(y <= Uy - 1)
-                M.addCons(y >= Ly)
-    return []
+    return bounded_plane(G, M, lambda x,y: x < y, "ancestors", descendent, frontier, shell, offset, relax)
 
 def bounded_descendent(G, M, ancestor, frontier, shell, offset, relax):
     if G.nodes[ancestor]["diverges"]:
-        dist = 2*abs(G.nodes[ancestor]["shell"] - shell) + relax
+        dist = 2*abs(G.nodes[ancestor]["shell"] - shell) + relax - 1
         assert(dist > 0)
         group = G.nodes[ancestor]["descendents"].intersection(frontier)
         if len(group) > 1:
@@ -382,7 +360,7 @@ def solve_slice(G, frontier, width, height, depth, shell, relax):
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
     M = scip.Model()
-    # M.setParam("limits/time", 60)
+    M.setParam("limits/time", 30)
     M.setParam("limits/solutions", 1)
     for node in frontier:
         in_horizontal(G, M, node, width, height, depth, shell, 0, relax)
