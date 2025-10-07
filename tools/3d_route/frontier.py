@@ -211,27 +211,42 @@ def precalc_dist(G):
 
 ################# Constraints ##################
 def add_position(G, M, node, width, height, depth):
-    x, y, z = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
+    coord = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
                for i, (lb, ub)
                in [("x", width),
                    ("y", height),
                    ("z", depth)]]
-    G.nodes[node]["coordinates"] = [x, y, z]
-    return x, y, z
+    G.nodes[node]["coordinates"] = coord
+    return coord
+
+def hemicube_bound(width, height, depth, shell, offset):
+    layer = shell+offset
+    return [(-layer, layer), (-layer, layer), (0, shell)]
 
 def in_hemicube(G, M, node, width, height, depth, shell, offset, relax):
     layer = shell+offset
     add_position(G, M, node,
                  (-layer, layer),
                  (-layer, layer),
-                 (0, shell))
+                 (0, layer))
+    return []
+
+def horizontal_bound(width, height, depth, shell, offset):
+    return [(-height, height), (-depth, depth)]
 
 def in_horizontal(G, M, node, width, height, depth, shell, offset, relax):
-    y, z = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
+    coord = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
              for i, (lb, ub)
              in [("y", (-height, height)),
                   ("z", (-depth, depth))]]
-    G.nodes[node]["coordinates"] = [y, z]
+    G.nodes[node]["coordinates"] = coord
+    return []
+
+def cylinder_bound(width, height, depth, shell, offset):
+    layer = shell+offset
+    return [ (-layer, layer),
+               (-layer, layer),
+               (-depth, depth)]
 
 def in_cylinder(G, M, node, width, height, depth, shell, offset, relax):
     layer = shell+offset
@@ -246,6 +261,11 @@ def in_cylinder(G, M, node, width, height, depth, shell, offset, relax):
     M.addCons(i + j >= 1, name=f"shell_{node}")
     return []
 
+def shell_bound(width, height, depth, shell, offset):
+    layer = shell+offset
+    return [ (-layer, layer),
+               (-layer, layer),
+               (-layer, layer)]
 def in_shell(G, M, node, width, height, depth, shell, offset, relax):
     layer = shell+offset
     x, y, z = add_position(G, M, node,
@@ -261,7 +281,7 @@ def in_shell(G, M, node, width, height, depth, shell, offset, relax):
     M.addCons(i + j + k >= 1, name=f"shell_{node}")
     return []
 
-def bounded_dimension(G, M, direction, orientation, relative, frontier, shell, offset, relax):
+def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding, shell, offset, relax):
     ashell =  G.nodes[relative]["shell"]
     if direction(ashell, shell):
         relations = G.nodes[relative][orientation]
@@ -269,31 +289,31 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, shell, o
         group = relations.intersection(frontier)
         if dist <= 0:
             return []
-        X = relax
-        # X = 0 if not relax else M.addVar(vtype="I", lb=0, ub=relax)
+        X = 0 if not relax else M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
         dist += X
         if len(group) > 1:
             log.debug("Adding bounds for %s at distance %d to %d children on layer %d", relative, dist, len(group), shell)
-            bounds = [(M.addVar(f"{relative}_ubound_{i}", vtype="I"),
-                        M.addVar(f"{relative}_lbound_{i}", vtype="I"))
-                        for i in range(len(G.nodes[next(iter(group))]["coordinates"]))]
+            bounds = [(M.addVar(f"{relative}_ubound_{i}", vtype="I", lb=lb, ub=ub),
+                        M.addVar(f"{relative}_lbound_{i}", vtype="I", lb=lb, ub=ub))
+                        for i, (lb, ub) in enumerate(bounding)]
             for U, L in bounds:
+                M.addCons(U - L >= 1)
                 M.addCons(U - L <= dist)
             for node in group:
                 for coord, (U, L) in zip(G.nodes[node]["coordinates"], bounds):
                     M.addCons(coord <= U - 1)
                     M.addCons(coord >= L)
-            # for first in group:
-                # fd = G.nodes[first]["coordinates"]
-                # for second in group:
-                    # sd = G.nodes[second]["coordinates"]
-                    # if first != second:
-                        # for a, b in zip(fd, sd):
-                            # M.addCons(abs(a-b) <= dist)
-        # if relax:
-            # return [X]
-        # else:
-            # return []
+        #     for first in group:
+        #         fd = G.nodes[first]["coordinates"]
+        #         for second in group:
+        #           sd = G.nodes[second]["coordinates"]
+        #           if first != second:
+        #             for a, b in zip(fd, sd):
+        #                 M.addCons(abs(a-b) <= dist)
+        if relax:
+            return [X]
+        else:
+            return []
     return []
 
 def bounded_plane(G, M, direction, orientation, relative, frontier, shell, offset, relax):
@@ -337,15 +357,15 @@ def bounded_horizontal(G, M, relative, frontier, shell, offset, relax):
     return bounded_descendent_horizontal(G, M, relative, frontier, shell, offset, relax) + \
         bounded_ancestor_horizontal(G, M, relative, frontier, shell, offset, relax)
 
-def bounded_descendent(G, M, ancestor, frontier, shell, offset, relax):
-    return bounded_dimension(G, M, lambda x,y: x > y, "descendents", ancestor, frontier, shell, offset, relax)
+def bounded_descendent(G, M, ancestor, frontier, shell, bounding, offset, relax):
+    return bounded_dimension(G, M, lambda x,y: x > y, "descendents", ancestor, frontier, bounding, shell, offset, relax)
 
-def bounded_ancestor(G, M, descendent, frontier, shell, offset, relax):
-    return bounded_dimension(G, M, lambda x,y: x < y, "ancestors", descendent, frontier, shell, offset, relax)
+def bounded_ancestor(G, M, descendent, frontier, shell, bounding, offset, relax):
+    return bounded_dimension(G, M, lambda x,y: x < y, "ancestors", descendent, frontier, bounding, shell, offset, relax)
 
-def bounded(G, M, relative, frontier, shell, offset, relax):
-    return bounded_descendent(G, M, relative, frontier, shell, offset, relax) + \
-        bounded_ancestor(G, M, relative, frontier, shell, offset, relax)
+def bounded(G, M, relative, frontier, shell, bounding, offset, relax):
+    return bounded_descendent(G, M, relative, frontier, bounding, shell, offset, relax) + \
+        bounded_ancestor(G, M, relative, frontier, bounding, shell, offset, relax)
 
 def within_distance(G, M, a, b, d, relax):
     X = 0 if not relax else M.addVar(vtype="I", lb=0, ub=relax)
@@ -405,16 +425,19 @@ def noop(G, M, neighbor, node, shell, offset, relax):
 ################### Runnning ###################
 def run_by_dimension(G, solver, outfile, start_condition, buffer_condition,
                  overlap, inside, distance, proximate, ahead, attach,
-                 width = 40, height = 25, depth = 25,
+                 bounding, width = 40, height = 25, depth = 25,
                  offset=0, limit=10, timeout=60):
     render_dot_undir(G, "raw.dot")
     shells = find_center(G, start_condition, buffer_condition)
     for shell in range(0, shells):
         relax = 0
         current = {node for node, d in G.nodes.items() if d["shell"] == shell}
+        bounds = bounding(width, height, depth, shell, offset)
+        flat = [i for j in bounds for i in j]
+        log.info("Bounded " + "(%d, %d) "*len(bounds), *flat)
         while True:
             success = solver(G, overlap, inside, distance, proximate, ahead, attach,
-                             current, shell, width, height, depth, offset, shells, relax, limit, timeout)
+                             current, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout)
             if success:
                 break
             if relax > limit:
@@ -424,7 +447,7 @@ def run_by_dimension(G, solver, outfile, start_condition, buffer_condition,
     return G
 
 def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
-                frontier, shell, width, height, depth, offset, max_shell,
+                frontier, shell, width, height, depth, bounding, offset, max_shell,
                 relax = 0, limit=4, timeout=30):
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
@@ -439,7 +462,7 @@ def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
             if first < second:
                 minim += overlap(G, M, first, second, shell, offset, relax)
     for node in G.nodes:
-        minim += bounded(G, M, node, frontier, shell, offset, relax)
+        minim += distance(G, M, node, frontier, bounding, shell, offset, relax)
     for node in frontier:
         for neighbor in G.adj[node]:
             if G.nodes[neighbor]["shell"] == shell - 1:
@@ -465,7 +488,7 @@ def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
     return True
 
 def solve_shell(G, overlap, inside, distance, proximate, ahead, attach,
-                frontier, shell, width, height, depth, offset, max_shell,
+                frontier, shell, width, height, depth, bounding, offset, max_shell,
                 relax = 0, limit=4, timeout=30):
     M = scip.Model()
     M.setParam("limits/time", timeout)
@@ -483,7 +506,7 @@ def solve_shell(G, overlap, inside, distance, proximate, ahead, attach,
             if first < second:
                 not_overlap(G, M, first, second, shell, offset, relax)
     for ancestor in G.nodes:
-        minim += distance(G, M, ancestor, frontier, shell, offset, relax)
+        minim += distance(G, M, ancestor, frontier, bounding, shell, offset, relax)
     for node in frontier:
         for neighbor in G.adj[node]:
             # next shell, add to next frontier
@@ -649,23 +672,28 @@ if __name__ == "__main__":
 
     if args.orientation == "cube":
         orientation = in_shell
+        shell_bound = shell_bound
     elif args.orientation == "horizontal":
         orientation = in_horizontal
-        bound = bounded_horizontal
+        # bound = bounded_horizontal
+        shell_bound = horizontal_bound
         start = lambda G, n: is_input_port(G, n) and is_flow(G, n)
-        if args.add_buffers:
-            buffer = lambda G, n: is_output_port(G, n) and is_flow(G, n)
+        # if args.add_buffers:
+        buffer = lambda G, n: is_output_port(G, n) and is_flow(G, n)
     elif args.orientation == "hemicube":
         orientation = in_hemicube
+        shell_bound = hemicube_bound
     elif args.orientation == "cylinder":
         orientation = in_cylinder
+        shell_bound = cylinder_bound
     else:
         raise
     # unconstrained = lambda G, n: is_control(G, node) or is_flush(G, node)
     run_by_dimension(g, solve_shell, args.output, start, buffer,
-                 not_overlap, orientation, bound, noop, noop, attach_to_side,
-                 args.width, args.height, args.depth,
-                 args.offset, args.relax, args.timeout)
+                     not_overlap, orientation, bound, noop, noop, attach_to_side,
+                     shell_bound,
+                     args.width, args.height, args.depth,
+                     args.offset, args.relax, args.timeout)
     # horizontal does only two dimensionals and has implicit x dimension of the shell
     if args.orientation == "horizontal":
         for node, props in g.nodes.items():
