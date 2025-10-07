@@ -411,8 +411,8 @@ def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
     M = scip.Model()
-    M.setParam("limits/time", 30)
-    M.setParam("limits/solutions", 1)
+    M.setParam("limits/time", timeout)
+    # M.setParam("limits/solutions", 1)
     for node in frontier:
         inside(G, M, node, width, height, depth, shell, offset, relax)
     minim = []
