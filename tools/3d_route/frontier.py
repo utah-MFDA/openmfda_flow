@@ -443,8 +443,8 @@ def run_by_dimension(G, solver, outfile, start_condition, buffer_condition,
             if relax > limit:
                 raise
             relax += 1
-        render_scad(G, outfile)
-    return G
+        render_scad(G, outfile, shells)
+    return shells
 
 def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
@@ -550,11 +550,9 @@ def draw_channel(a, b, d):
     angle = [0,180*acos(v[2]/length)/pi, 180*atan2(v[1], v[0])/pi]
     return solid2.translate(b)(solid2.rotate(angle)(solid2.cube(bounds)))
 
-def scad_render_nodes(G,final):
-    for node in G.nodes:
+def scad_render_nodes(G,nodes):
+    for node in nodes:
         if "coordinates" not in G.nodes[node]:
-            if final:
-               log.warning("Missing coordinates for node %s", node)
             continue
 
         dimensions = G.nodes[node].get("dimensions", [1, 1, 1])
@@ -578,12 +576,10 @@ def scad_render_nodes(G,final):
             color = "black"
         yield solid2.color(color, alpha=0.1)(s)
 
-def scad_render_edges(G, final):
-    for edge in G.edges:
+def scad_render_edges(G, edges):
+    for edge in edges:
         start, end = edge
         if "coordinates" not in G.nodes[end] or "coordinates" not in G.nodes[start]:
-            if final:
-                log.warning("Missing coordinates for edge from %s to %s", start, end)
             continue
         end_orig = G.nodes[end]["coordinates"]
         if len(end_orig) == 2:
@@ -623,15 +619,27 @@ def render_dot(G, outfile):
 def render_dot_undir(G, outfile):
     nx.nx_pydot.write_dot(G, outfile)
 
-def render_scad(G,outfile, final=False):
-    edges = solid2.background()(solid2.cube([0,0,0]))
-    for edge in scad_render_edges(G, final):
-        edges += edge
-    nodes = solid2.background()(solid2.cube([0,0,0]))
-    for node in scad_render_nodes(G, final):
-        nodes += node
-    scad = solid2.translate([-0.5, -0.5, 0])(solid2.background()(solid2.union()(nodes)) + \
-                                             solid2.union()(edges))
+
+def render_shell(G, shell):
+    nodes = [n for n, d in G.nodes.items() if d["shell"] == shell]
+    edges = [(s, e) for s, e in G.edges
+            if max(G.nodes[s]["shell"], G.nodes[e]["shell"]) == shell+1 and
+               min(G.nodes[s]["shell"], G.nodes[e]["shell"]) == shell]
+    scad_nodes = scad_comment(f"Nodes shell {shell}")(solid2.union()(*scad_render_nodes(G, nodes)))
+    scad_edges = scad_comment(f"Edges shell {shell}")(solid2.union()(*scad_render_edges(G, edges)))
+    return scad_comment(f"Shell {shell}")(solid2.union()(solid2.background()(scad_nodes),scad_edges))
+
+@solid2.register_access_syntax
+class scad_comment(solid2.object_base.ObjectBase, solid2.object_base.AccessSyntaxMixin, solid2.object_base.OperatorMixin):
+    def __init__(self, comment):
+        super().__init__()
+        self.comment = comment
+    def _render(self):
+        return f"/*{self.comment}*/\n" + super()._render()
+
+def render_scad(G,outfile,shells):
+    final = (render_shell(G, shell) for shell in range(0, shells))
+    scad = solid2.translate([-0.5, -0.5, 0])(*final)
     scad.save_as_scad(outfile)
 
 
@@ -689,11 +697,11 @@ if __name__ == "__main__":
     else:
         raise
     # unconstrained = lambda G, n: is_control(G, node) or is_flush(G, node)
-    run_by_dimension(g, solve_shell, args.output, start, buffer,
-                     not_overlap, orientation, bound, noop, noop, attach_to_side,
-                     shell_bound,
-                     args.width, args.height, args.depth,
-                     args.offset, args.relax, args.timeout)
+    shells = run_by_dimension(g, solve_shell, args.output, start, buffer,
+                                 not_overlap, orientation, bound, noop, noop, attach_to_side,
+                                 shell_bound,
+                                 args.width, args.height, args.depth,
+                                 args.offset, args.relax, args.timeout)
     # horizontal does only two dimensionals and has implicit x dimension of the shell
     if args.orientation == "horizontal":
         for node, props in g.nodes.items():
@@ -703,5 +711,5 @@ if __name__ == "__main__":
 
     for x in g.nodes:
         log.debug("Final solution %s %s", x, g.nodes[x].get("coordinates", "none"))
-    render_scad(g, args.output, final=True)
+    render_scad(g, args.output, shells)
     log.info("Done")
