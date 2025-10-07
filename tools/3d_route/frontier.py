@@ -316,47 +316,6 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
             return []
     return []
 
-def bounded_plane(G, M, direction, orientation, relative, frontier, shell, offset, relax):
-    ashell =  G.nodes[relative]["shell"]
-    if direction(ashell, shell):
-        relations = G.nodes[relative][orientation]
-        dist = 2*(abs(ashell - shell)) - 1
-        group = relations.intersection(frontier)
-        if dist <= 0:
-            return []
-        X = relax
-        # X = 0 if not relax else M.addVar(vtype="I", lb=0, ub=relax)
-        dist += X
-        if len(group) > 1:
-            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", relative, dist, len(group), shell)
-            Uz = M.addVar(f"{relative}_ubound_z", vtype="I")
-            Lz = M.addVar(f"{relative}_lbound_z", vtype="I")
-            M.addCons(Uz - Lz <= dist)
-            Uy = M.addVar(f"{relative}_ubound_y", vtype="I")
-            Ly = M.addVar(f"{relative}_lbound_y", vtype="I")
-            M.addCons(Uy - Ly <= dist)
-            for node in group:
-                y, z = G.nodes[node]["coordinates"]
-                M.addCons(z <= Uz - 1)
-                M.addCons(z >= Lz)
-                M.addCons(y <= Uy - 1)
-                M.addCons(y >= Ly)
-        # if relax:
-            # return [X]
-        # else:
-            # return []
-    return []
-
-def bounded_descendent_horizontal(G, M, ancestor, frontier, shell, offset, relax):
-    return bounded_plane(G, M, lambda x,y: x > y, "descendents", ancestor, frontier, shell, offset, relax)
-
-def bounded_ancestor_horizontal(G, M, descendent, frontier, shell, offset, relax):
-    return bounded_plane(G, M, lambda x,y: x < y, "ancestors", descendent, frontier, shell, offset, relax)
-
-def bounded_horizontal(G, M, relative, frontier, shell, offset, relax):
-    return bounded_descendent_horizontal(G, M, relative, frontier, shell, offset, relax) + \
-        bounded_ancestor_horizontal(G, M, relative, frontier, shell, offset, relax)
-
 def bounded_descendent(G, M, ancestor, frontier, shell, bounding, offset, relax):
     return bounded_dimension(G, M, lambda x,y: x > y, "descendents", ancestor, frontier, bounding, shell, offset, relax)
 
