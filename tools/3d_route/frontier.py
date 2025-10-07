@@ -2,6 +2,7 @@ import json
 from math import ceil, sqrt, acos, atan2, pi
 from collections import deque
 import networkx as nx
+from numpy.testing._private.utils import break_cycles
 import pyscipopt as scip
 from networkx_helpers import *
 import solid2
@@ -10,6 +11,8 @@ log = logging.getLogger(__name__)
 
 logging.basicConfig(filename='3d_route.log', level=logging.INFO)
 
+
+################ Node type helpers ################
 def get_shell(G, node):
     return G.nodes[node]["shell"]
 
@@ -54,6 +57,7 @@ def is_flush_cell(G, n):
 def is_pinhole(G, n):
     return G.nodes[n]["cell"] == "pinhole_320px_0"
 
+##################### Setup #####################
 def add_shell(G, starts):
     assert(len(starts) > 0)
     for start in starts:
@@ -104,14 +108,15 @@ def report_stats(G):
     num_cells = len(G.nodes) - num_wire
     log.info("Starting with %d ports (%d input %d output %d inout) %d nets and %d cells", num_port, num_input, num_output, num_inout, num_wire, num_cells)
 
-def find_center(G, start, buffers):
+def find_center(G, start_condition, buffer_condition):
     report_stats(G)
-    assert(len(start) > 0)
     # remove = [n for n in G if is_control(G, n) or is_flush(G, n) or is_flush_cell(G,n) or is_control_cell(G,n)]
     # G.remove_nodes_from(remove)
+    start = {node for node in G.nodes if start_condition(G, node)}
+    assert(len(start) > 0)
     shell = add_shell(G, start)
     render_dot(G, "shell.dot")
-    targets = {node for node in G.nodes if buffers(G, node)}
+    targets = {node for node in G.nodes if buffer_condition(G, node)}
     add_buffers_output(G, shell, targets)
     render_dot(G, "buffer.dot")
 
@@ -204,13 +209,14 @@ def precalc_dist(G):
         # if not props["diverges"]:
             # del props["descendents"]
 
+################# Constraints ##################
 def add_position(G, M, node, width, height, depth):
     x, y, z = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
                for i, (lb, ub)
                in [("x", width),
                    ("y", height),
                    ("z", depth)]]
-    G.nodes[node]["coordinates"] = (x, y, z)
+    G.nodes[node]["coordinates"] = [x, y, z]
     return x, y, z
 
 def in_hemicube(G, M, node, width, height, depth, shell, offset, relax):
@@ -225,7 +231,7 @@ def in_horizontal(G, M, node, width, height, depth, shell, offset, relax):
              for i, (lb, ub)
              in [("y", (-height, height)),
                   ("z", (-depth, depth))]]
-    G.nodes[node]["coordinates"] = (y, z)
+    G.nodes[node]["coordinates"] = [y, z]
 
 def in_cylinder(G, M, node, width, height, depth, shell, offset, relax):
     layer = shell+offset
@@ -341,128 +347,6 @@ def bounded(G, M, relative, frontier, shell, offset, relax):
     return bounded_descendent(G, M, relative, frontier, shell, offset, relax) + \
         bounded_ancestor(G, M, relative, frontier, shell, offset, relax)
 
-def run_by_slice(G, outfile, inside, overlap, bounded, attach, width = 40, height = 25, depth = 25, offset = 0, limit = 10):
-    start_condition = lambda G, n: (is_input_port(G, n) or is_output_port(G, n)) and is_flow(G, n)
-
-    G = run_by_dimension(G, outfile, start_condition, inside, overlap, bounded, attach, width, height, depth, offset, limit)
-    for node, props in G.nodes.items():
-        y, z = props["coordinates"]
-        props["coordinates"] = [props["shell"], y, z]
-    return G
-
-def run_by_dimension(G, outfile, start_condition, buffer_condition,
-                     inside, overlap, bounded, attach,
-                     width = 40, height = 25, depth = 25, offset = 0, limit=10):
-    start = [n for n in G.nodes if start_condition(G, n)]
-    shells = find_center(G, start, buffer_condition)
-    for shell in range(0, shells):
-        relax = 0
-        current = {node for node, d in G.nodes.items() if d["shell"] == shell}
-        while True:
-            if relax > limit:
-                raise
-            try:
-                solve_slice(G, current, inside, overlap, bounded, attach, width, height, depth, shell, offset, relax)
-                break
-            except:
-                relax += 1
-        render_scad(G, outfile)
-    return G
-
-def solve_slice(G, frontier, inside, overlap, bounded, attach, width, height, depth, shell, offset, relax):
-    if relax:
-        log.warning("Relaxing distance constraints by %d", relax)
-    M = scip.Model()
-    M.setParam("limits/time", 30)
-    M.setParam("limits/solutions", 1)
-    for node in frontier:
-        inside(G, M, node, width, height, depth, shell, offset, relax)
-    minim = []
-    for first in frontier:
-        for second in frontier:
-            if first < second:
-                minim += overlap(G, M, first, second, shell, offset, relax)
-    for node in G.nodes:
-        minim += bounded(G, M, node, frontier, shell, offset, relax)
-    for node in frontier:
-        for neighbor in G.adj[node]:
-            if G.nodes[neighbor]["shell"] == shell - 1:
-                minim += attach(G, M, neighbor, node, shell, offset, relax)
-    if minim:
-        log.info("Running with minimization")
-        M.setObjective(scip.quicksum(minim), sense="minimize")
-    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.presolve()
-    log.info("Start optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.optimize()
-    log.info("Finished optimizing, %d solutions found", M.getNSols())
-
-    # log.debug("Minim vars: %s", [M.getVal(i) for i in minim])
-    if M.getNSols() == 0:
-        for node in frontier:
-            props = G.nodes[node]
-            del props["coordinates"]
-        raise
-    for node in frontier:
-        props = G.nodes[node]
-        props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
-        # log.debug("Final coordinates: %s %s", node, props["coordinates"])
-    return G
-
-def solve_shell(G, proximate, distance, inside, attach, ahead, frontier,
-                shell, width, height, depth, offset, max_shell, relax = 0, limit=4, timeout=30):
-    M = scip.Model()
-    M.setParam("limits/time", timeout)
-    M.setParam("limits/solutions", 1)
-    if relax:
-        log.warning("Relaxing distance constraints by %d", relax)
-    log.info("Solving shell %d, %d nodes", shell, len(frontier))
-    minim = []
-
-    for node in frontier:
-        assert(shell == G.nodes[node]["shell"])
-        inside(G, M, node, width, height, depth, shell, offset, relax)
-    for first in frontier:
-        for second in frontier:
-            if first < second:
-                not_overlap(G, M, first, second, shell, offset, relax)
-    for ancestor in G.nodes:
-        minim += distance(G, M, ancestor, frontier, shell, offset, relax)
-    for node in frontier:
-        for neighbor in G.adj[node]:
-            # next shell, add to next frontier
-            if is_ancestor(G, neighbor, node):
-                # assert(n_shell == shell-1)
-                minim += ahead(G, M, neighbor, node, shell, offset, relax)
-            elif is_peer(G, neighbor, node):
-                minim += proximate(G, M, neighbor, node, shell, offset, relax)
-            elif is_descendent(G, neighbor, node):
-                # Previous shell, setup direct proximity from position
-                minim += attach(G, M, neighbor, node, shell, offset, relax)
-            else:
-                raise
-    # solve and extract position values
-    if minim:
-        M.setObjective(scip.quicksum(minim), sense="minimize")
-    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.presolve()
-    log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.optimize()
-    log.info("Finished optimizing, %d solutions found", M.getNSols())
-
-    # log.debug("Minim vars: %s", [M.getVal(i) for i in minim])
-    if M.getNSols() >= 1:
-        for node in frontier:
-            props = G.nodes[node]
-            props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
-            log.debug("Final coordinates: %s %s", node, props["coordinates"])
-        return relax
-    else:
-        log.warning(f"Unable to find solution at {shell}")
-        assert(relax < limit)
-        return solve_shell(G, proximate, distance, inside, attach, ahead, frontier,
-                            shell, width, height, depth, offset, max_shell, relax+1)
-
 def within_distance(G, M, a, b, d, relax):
     X = 0 if not relax else M.addVar(vtype="I", lb=0, ub=relax)
     # X = relax
@@ -518,24 +402,122 @@ def attach_to_side(G, M, side, node, shell, offset, relax):
 def noop(G, M, neighbor, node, shell, offset, relax):
     return []
 
-def run_by_shell(G, outfile, start_condition, buffer_condition, proximate, distance, inside, attach, ahead,
+################### Runnning ###################
+def run_by_dimension(G, solver, outfile, start_condition, buffer_condition,
+                 overlap, inside, distance, proximate, ahead, attach,
                  width = 40, height = 25, depth = 25,
                  offset=0, limit=10, timeout=60):
-
     render_dot_undir(G, "raw.dot")
-    start = [n for n in G.nodes if start_condition(G, n)]
-    shells = find_center(G, start, buffer_condition)
-    render_dot(G, "test.dot")
-    if offset is None:
-        offset = ceil(len(start)**(1/3))//2
-    relax = 0
+    shells = find_center(G, start_condition, buffer_condition)
     for shell in range(0, shells):
+        relax = 0
         current = {node for node, d in G.nodes.items() if d["shell"] == shell}
-        relax = solve_shell(G, proximate, distance, inside, attach, ahead, current,
-                            shell, width, height, depth, offset, shells, relax, limit, timeout)
+        while True:
+            success = solver(G, overlap, inside, distance, proximate, ahead, attach,
+                             current, shell, width, height, depth, offset, shells, relax, limit, timeout)
+            if success:
+                break
+            if relax > limit:
+                raise
+            relax += 1
         render_scad(G, outfile)
     return G
 
+def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
+                frontier, shell, width, height, depth, offset, max_shell,
+                relax = 0, limit=4, timeout=30):
+    if relax:
+        log.warning("Relaxing distance constraints by %d", relax)
+    M = scip.Model()
+    M.setParam("limits/time", 30)
+    M.setParam("limits/solutions", 1)
+    for node in frontier:
+        inside(G, M, node, width, height, depth, shell, offset, relax)
+    minim = []
+    for first in frontier:
+        for second in frontier:
+            if first < second:
+                minim += overlap(G, M, first, second, shell, offset, relax)
+    for node in G.nodes:
+        minim += bounded(G, M, node, frontier, shell, offset, relax)
+    for node in frontier:
+        for neighbor in G.adj[node]:
+            if G.nodes[neighbor]["shell"] == shell - 1:
+                minim += attach(G, M, neighbor, node, shell, offset, relax)
+    if minim:
+        log.info("Running with minimization")
+        M.setObjective(scip.quicksum(minim), sense="minimize")
+    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.presolve()
+    log.info("Start optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.optimize()
+    log.info("Finished optimizing, %d solutions found", M.getNSols())
+
+    if M.getNSols() == 0:
+        for node in frontier:
+            props = G.nodes[node]
+            del props["coordinates"]
+        return False
+    for node in frontier:
+        props = G.nodes[node]
+        props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
+        # log.debug("Final coordinates: %s %s", node, props["coordinates"])
+    return True
+
+def solve_shell(G, overlap, inside, distance, proximate, ahead, attach,
+                frontier, shell, width, height, depth, offset, max_shell,
+                relax = 0, limit=4, timeout=30):
+    M = scip.Model()
+    M.setParam("limits/time", timeout)
+    M.setParam("limits/solutions", 1)
+    if relax:
+        log.warning("Relaxing distance constraints by %d", relax)
+    log.info("Solving shell %d, %d nodes", shell, len(frontier))
+    minim = []
+
+    for node in frontier:
+        assert(shell == G.nodes[node]["shell"])
+        inside(G, M, node, width, height, depth, shell, offset, relax)
+    for first in frontier:
+        for second in frontier:
+            if first < second:
+                not_overlap(G, M, first, second, shell, offset, relax)
+    for ancestor in G.nodes:
+        minim += distance(G, M, ancestor, frontier, shell, offset, relax)
+    for node in frontier:
+        for neighbor in G.adj[node]:
+            # next shell, add to next frontier
+            if is_ancestor(G, neighbor, node):
+                # assert(n_shell == shell-1)
+                minim += ahead(G, M, neighbor, node, shell, offset, relax)
+            elif is_peer(G, neighbor, node):
+                minim += proximate(G, M, neighbor, node, shell, offset, relax)
+            elif is_descendent(G, neighbor, node):
+                # Previous shell, setup direct proximity from position
+                minim += attach(G, M, neighbor, node, shell, offset, relax)
+            else:
+                raise
+    # solve and extract position values
+    if minim:
+        M.setObjective(scip.quicksum(minim), sense="minimize")
+    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.presolve()
+    log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.optimize()
+    log.info("Finished optimizing, %d solutions found", M.getNSols())
+
+    if M.getNSols() == 0:
+        for node in frontier:
+            props = G.nodes[node]
+            del props["coordinates"]
+        return False
+    for node in frontier:
+        props = G.nodes[node]
+        props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
+        # log.debug("Final coordinates: %s %s", node, props["coordinates"])
+    return True
+
+################# Rendering ##################
 def draw_channel(a, b, d):
     v = [i - j for i, j in zip(a, b)]
     length = sqrt(sum((i-j)**2 for i, j in zip(a, b)))
@@ -629,6 +611,9 @@ def render_scad(G,outfile, final=False):
                                              solid2.union()(edges))
     scad.save_as_scad(outfile)
 
+
+################# Main #########################
+
 if __name__ == "__main__":
     log.info("**************** Starting ****************")
     import sys
@@ -658,25 +643,36 @@ if __name__ == "__main__":
 
     bound = bounded
     start = lambda G, n: (is_input_port(G, n) or is_output_port(G, n)) and is_flow(G, n)
+    buffer = lambda G, n: False
+    if args.add_buffers:
+        buffer = lambda G, n: not any(is_descendent(G, adj, node) for adj in G.adj[node])
+
     if args.orientation == "cube":
         orientation = in_shell
     elif args.orientation == "horizontal":
         orientation = in_horizontal
         bound = bounded_horizontal
         start = lambda G, n: is_input_port(G, n) and is_flow(G, n)
+        if args.add_buffers:
+            buffer = lambda G, n: is_output_port(G, n) and is_flow(G, n)
     elif args.orientation == "hemicube":
         orientation = in_hemicube
     elif args.orientation == "cylinder":
         orientation = in_cylinder
     else:
         raise
-    buffer = lambda G, n: False
-    # buffer = lambda G, n: is_output_port(G, node) and is_flow(G, node)
-    # buffer = lambda G, n: not any(is_descendent(G, adj, node) for adj in G.adj[node])
     # unconstrained = lambda G, n: is_control(G, node) or is_flush(G, node)
-    run_by_shell(g, args.output, start, buffer, noop, bound, orientation, attach_to_side,
-                 noop, args.width, args.height, args.depth, args.offset,
-                 args.relax, args.timeout)
+    run_by_dimension(g, solve_shell, args.output, start, buffer,
+                 not_overlap, orientation, bound, noop, noop, attach_to_side,
+                 args.width, args.height, args.depth,
+                 args.offset, args.relax, args.timeout)
+    # horizontal does only two dimensionals and has implicit x dimension of the shell
+    if args.orientation == "horizontal":
+        for node, props in g.nodes.items():
+            if len(props["coordinates"]) == 2:
+                y, z = props["coordinates"]
+                props["coordinates"] = [props["shell"], y, z]
+
     for x in g.nodes:
         log.debug("Final solution %s %s", x, g.nodes[x].get("coordinates", "none"))
     render_scad(g, args.output, final=True)
