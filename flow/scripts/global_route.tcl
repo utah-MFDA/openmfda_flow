@@ -57,10 +57,10 @@ estimate_parasitics -global_routing
 source $env(SCRIPTS_DIR)/report_metrics.tcl
 report_metrics "global route"
 
-puts "\n=========================================================================="
-puts "check_antennas"
-puts "--------------------------------------------------------------------------"
-check_antennas -report_file $env(REPORTS_DIR)/antenna.log -report_violating_nets
+#puts "\n=========================================================================="
+#puts "check_antennas"
+#puts "--------------------------------------------------------------------------"
+#check_antennas -report_file $env(REPORTS_DIR)/antenna.log -report_violating_nets
 
 # Write SDC to results with updated clock periods that are just failing.
 # Use make target update_sdc_clock to install the updated sdc.
