@@ -316,13 +316,13 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
             return []
     return []
 
-def bounded_descendent(G, M, ancestor, frontier, shell, bounding, offset, relax):
+def bounded_descendent(G, M, ancestor, frontier, bounding, shell, offset, relax):
     return bounded_dimension(G, M, lambda x,y: x > y, "descendents", ancestor, frontier, bounding, shell, offset, relax)
 
-def bounded_ancestor(G, M, descendent, frontier, shell, bounding, offset, relax):
+def bounded_ancestor(G, M, descendent, frontier, bounding, shell, offset, relax):
     return bounded_dimension(G, M, lambda x,y: x < y, "ancestors", descendent, frontier, bounding, shell, offset, relax)
 
-def bounded(G, M, relative, frontier, shell, bounding, offset, relax):
+def bounded(G, M, relative, frontier, bounding, shell, offset, relax):
     return bounded_descendent(G, M, relative, frontier, bounding, shell, offset, relax) + \
         bounded_ancestor(G, M, relative, frontier, bounding, shell, offset, relax)
 
