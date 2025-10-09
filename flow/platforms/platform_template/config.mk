@@ -7,19 +7,19 @@ export GENERAL_MAP_FILE = $(PLATFORM_DIR)/lib/common.v
 
 ifeq ($(BUILD_PDK_LIBRARY),)
 # General distribution files
-# export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
-                      $(ADDITIONAL_GDS)
-export TECH_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3.tlef
-export SC_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
-export ADDITIONAL_LEFS =
-# export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
-                     $(ADDITIONAL_LIBS)
-export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3_merged.scad
+#export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
+                      #$(ADDITIONAL_GDS)
+export TECH_LEF = $(PLATFORM_DIR)/lef/$(PLATFORM).tlef
+export SC_LEF = $(PLATFORM_DIR)/lef/$(PLATFORM)_merged.lef
+
+#export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
+                     #$(ADDITIONAL_LIBS)
+export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/scad/components.scad
 export SCAD_ROUTING_LIBRARY = $(PLATFORM_DIR)/scad/routing.scad
 else
 # Locally built distribution files
-ROOT_DIR=$(PLATFORM_DIR)/pdk
-include $(PLATFORM_DIR)/pdk/Componets/Makefile
+ROOT_DIR=$(PLATFORM_DIR)/pdk/Components
+include $(PLATFORM_DIR)/pdk/Components/Makefile
 export LIBRARY_DEPS = $(SC_LEF) $(TECH_LEF) $(LIB_FILES) $(SCAD_COMPONENT_LIBRARY) $(SCAD_ROUTING_LIBRARY) $(GDS_FILES) $(XYCE_LIB)
 endif
 
@@ -51,7 +51,7 @@ export IO_PLACER_V = met2
 
 # defaults specified here, override in local file as needed
 #export DIE_AREA    	 	= 0 0 2550 1600
-export DIE_AREA    	 	?= 0 0 $(XBULK_VAL) $(YBULK_VAL)
+export DIE_AREA    	 	= 0 0 $(XBULK_VAL) $(YBULK_VAL)
 #export CORE_AREA   	 	= 0 0 2550 1600
 # does arithmetic in make throuh shell call
 CORE_X1 = $(shell echo $$(( 0 + $(EDGE_PADDING) )))
@@ -59,7 +59,7 @@ CORE_X2 = $(shell echo $$(( $(XBULK_VAL) - $(EDGE_PADDING) )))
 CORE_Y1 = $(shell echo $$(( 0 + $(EDGE_PADDING) )))
 CORE_Y2 = $(shell echo $$(( $(YBULK_VAL) - $(EDGE_PADDING) )))
 
-export CORE_AREA   	 	?= $(CORE_X1) $(CORE_Y1) $(CORE_X2) $(CORE_Y2)
+export CORE_AREA   	 	= $(CORE_X1) $(CORE_Y1) $(CORE_X2) $(CORE_Y2)
 
 #---------------------------------------------------------
 # Place
@@ -89,20 +89,10 @@ export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
 export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
 
 # Default SCAD script arguments
-ifeq ($(SCAD_SCRIPT),../tools/scad_render/generator_v2.py)
-SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
-			--routing_file ${SCAD_ROUTING_LIBRARY} --scad_include $(SCAD_DESIGN_INCLUDE) \
-			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
-            --platform "$(PLATFORM)" \
-            --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
-            --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
-            --pitch $(PITCH) --res $(RES_VAL)
-else
 SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
 			--routing_file ${SCAD_ROUTING_LIBRARY} \
-			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
+			--lef_file ${SC_LEF} --tlef_file ${TECH_LEF} \
             --platform "$(PLATFORM)" \
             --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
             --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
             --pitch $(PITCH) --res $(RES_VAL)
-endif
