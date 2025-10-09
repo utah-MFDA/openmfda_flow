@@ -492,11 +492,13 @@ def solve_shell(G, overlap, inside, distance, proximate, ahead, attach,
         for node in frontier:
             props = G.nodes[node]
             del props["coordinates"]
+        del M
         return False
     for node in frontier:
         props = G.nodes[node]
         props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
         # log.debug("Final coordinates: %s %s", node, props["coordinates"])
+    del M
     return True
 
 ################# Rendering ##################
