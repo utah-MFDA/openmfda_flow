@@ -382,7 +382,7 @@ def noop(G, M, neighbor, node, shell, offset, relax):
     return []
 
 ################### Runnning ###################
-def run_by_dimension(G, solver, outfile, start_condition, buffer_condition,
+def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
                  overlap, inside, distance, proximate, ahead, attach,
                  bounding, width = 40, height = 25, depth = 25,
                  offset=0, limit=10, timeout=60):
@@ -395,8 +395,8 @@ def run_by_dimension(G, solver, outfile, start_condition, buffer_condition,
         flat = [i for j in bounds for i in j]
         log.info("Bounded " + "(%d, %d) "*len(bounds), *flat)
         while True:
-            success = solver(G, overlap, inside, distance, proximate, ahead, attach,
-                             current, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout)
+            success = solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
+                                 current, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout)
             if success:
                 break
             if relax > limit:
@@ -446,7 +446,7 @@ def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
         # log.debug("Final coordinates: %s %s", node, props["coordinates"])
     return True
 
-def solve_shell(G, overlap, inside, distance, proximate, ahead, attach,
+def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
                 relax = 0, limit=4, timeout=30):
     M = scip.Model()
@@ -456,6 +456,7 @@ def solve_shell(G, overlap, inside, distance, proximate, ahead, attach,
         log.warning("Relaxing distance constraints by %d", relax)
     log.info("Solving shell %d, %d nodes", shell, len(frontier))
     minim = []
+    frontier = {node for node in frontier if not skip(G, node)}
 
     for node in frontier:
         assert(shell == G.nodes[node]["shell"])
@@ -465,9 +466,16 @@ def solve_shell(G, overlap, inside, distance, proximate, ahead, attach,
             if first < second:
                 not_overlap(G, M, first, second, shell, offset, relax)
     for ancestor in G.nodes:
+        if skip(G, ancestor):
+            continue
         minim += distance(G, M, ancestor, frontier, bounding, shell, offset, relax)
     for node in frontier:
+
+        if skip(G, node):
+            continue
         for neighbor in G.adj[node]:
+            if skip(G, neighbor):
+                continue
             # next shell, add to next frontier
             if is_ancestor(G, neighbor, node):
                 # assert(n_shell == shell-1)
@@ -614,6 +622,7 @@ if __name__ == "__main__":
     parser.add_argument("input_file")
     parser.add_argument("-o", "--output", required=True)
     parser.add_argument("--add_buffers", action="store_true", default=False)
+    parser.add_argument("--flow_only", action="store_true", default=False)
     parser.add_argument("--offset", default=0, type=int)
     parser.add_argument("--orientation",
                         choices=["cube", "horizontal", "hemicube", "cylinder"],
@@ -657,8 +666,11 @@ if __name__ == "__main__":
         shell_bound = cylinder_bound
     else:
         raise
-    # unconstrained = lambda G, n: is_control(G, node) or is_flush(G, node)
-    shells = run_by_dimension(g, solve_shell, args.output, start, buffer,
+    if args.flow_only:
+        skip = lambda G, node: is_control(G, node) or is_flush(G, node)
+    else:
+        skip = lambda G, node: False
+    shells = run_by_dimension(g, skip, args.output, start, buffer,
                                  not_overlap, orientation, bound, noop, noop, attach_to_side,
                                  shell_bound,
                                  args.width, args.height, args.depth,
@@ -666,6 +678,8 @@ if __name__ == "__main__":
     # horizontal does only two dimensionals and has implicit x dimension of the shell
     if args.orientation == "horizontal":
         for node, props in g.nodes.items():
+            if not "coordinates" in props:
+                continue
             if len(props["coordinates"]) == 2:
                 y, z = props["coordinates"]
                 props["coordinates"] = [props["shell"], y, z]
