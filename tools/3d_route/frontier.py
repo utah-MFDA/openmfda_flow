@@ -285,35 +285,35 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
     ashell =  G.nodes[relative]["shell"]
     if direction(ashell, shell):
         relations = G.nodes[relative][orientation]
-        dist = 2*(abs(ashell - shell)) - 1
+        dist = 2*(abs(ashell - shell)) + 1
         group = relations.intersection(frontier)
-        if dist <= 0:
-            return []
-        X = 0 if not relax else M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
-        dist += X
+        minim = []
         if len(group) > 1:
             log.debug("Adding bounds for %s at distance %d to %d children on layer %d", relative, dist, len(group), shell)
-            bounds = [(M.addVar(f"{relative}_ubound_{i}", vtype="I", lb=lb, ub=ub),
-                        M.addVar(f"{relative}_lbound_{i}", vtype="I", lb=lb, ub=ub))
-                        for i, (lb, ub) in enumerate(bounding)]
-            for U, L in bounds:
-                M.addCons(U - L >= 1)
-                M.addCons(U - L <= dist)
-            for node in group:
-                for coord, (U, L) in zip(G.nodes[node]["coordinates"], bounds):
-                    M.addCons(coord <= U - 1)
-                    M.addCons(coord >= L)
-        #     for first in group:
-        #         fd = G.nodes[first]["coordinates"]
-        #         for second in group:
-        #           sd = G.nodes[second]["coordinates"]
-        #           if first != second:
-        #             for a, b in zip(fd, sd):
-        #                 M.addCons(abs(a-b) <= dist)
-        if relax:
-            return [X]
-        else:
-            return []
+            X = 0 if not relax else M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
+            # bounds = [(M.addVar(f"{relative}_ubound_{i}", vtype="I", lb=lb, ub=ub),
+            #             M.addVar(f"{relative}_lbound_{i}", vtype="I", lb=lb, ub=ub))
+            #             for i, (lb, ub) in enumerate(bounding)]
+            # for U, L in bounds:
+            #     M.addCons(U - L >= 1)
+            #     M.addCons(U - L <= dist + X)
+            # for node in group:
+            #     for coord, (U, L) in zip(G.nodes[node]["coordinates"], bounds):
+            #         M.addCons(coord <= U - 1)
+            #         M.addCons(coord >= L)
+            for first in group:
+                fd = G.nodes[first]["coordinates"]
+                for second in group:
+                    if first != second:
+                        sd = G.nodes[second]["coordinates"]
+                        for a, b in zip(fd, sd):
+                            # minim += within_distance(G, M, a, b, abs(ashell-shell), relax)
+                            M.addCons(abs(a-b) <= dist + X)
+        # return minim
+            if relax:
+                return [X]
+            else:
+                return []
     return []
 
 def bounded_descendent(G, M, ancestor, frontier, bounding, shell, offset, relax):
