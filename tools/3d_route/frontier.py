@@ -543,7 +543,7 @@ def scad_render_nodes(G,nodes):
                 color = "lightgreen"
         else:
             color = "black"
-        yield solid2.color(color, alpha=0.1)(s)
+        yield scad_comment(f"Node {node}") (solid2.color(color, alpha=0.1)(s))
 
 def scad_render_edges(G, edges):
     for edge in edges:
@@ -565,8 +565,8 @@ def scad_render_edges(G, edges):
 #        log.debug("edge from %s %s to %s %s", start, start_orig, end, end_orig)
         front = [i + j for i, j in zip(start_orig, start_pin)]
         back = [i + j for i, j in zip(end_orig, end_pin)]
-        yield draw_channel(front, back, channel_dim)
-
+        bit = G.edges[edge]["bit"]
+        yield scad_comment(f"Edge {bit} from {start} to {end}")(draw_channel(front, back, channel_dim))
 def to_directed(G):
     H = nx.DiGraph()
     for node in G.nodes:
