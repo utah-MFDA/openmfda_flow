@@ -19,12 +19,12 @@ def read_yosys_json(input_file, top):
             else:
                 direction = "unknown"
             for bit in bits:
-                bit = f"$_{bit}"
-                if bit not in G.nodes:
+                name = f"$_{bit}"
+                if name not in G.nodes:
                     # If this is an input/output/inout, it will get marked from netnames section
-                    G.add_node(bit, weight=0, hyperedge=True, cell="$_wire", netnames=set())
-                assert((cell, bit) not in G.edges) # this would for a multigraph
-                G.add_edge(cell, bit, hyperedge=True, port=port, direction=direction)
+                    G.add_node(name, weight=0, hyperedge=True, cell="$_wire", netnames=set(), bit=bit)
+                assert((cell, name) not in G.edges) # this would for a multigraph
+                G.add_edge(cell, name, hyperedge=True, bit=bit, port=port, direction=direction)
     for net, details in m["netnames"].items():
         # Multiple named nets will be attached to the same bit, last one wins.
         for index, bit in enumerate(details["bits"]):
@@ -66,7 +66,7 @@ def collapse_edges(G: nx.Graph):
     for node in G.nodes:
         if G.nodes[node]["hyperedge"] and G.degree(node) == 2:
             f, s = G.adj[node]
-            G.add_edge(f, s, hyperedge=False)
+            G.add_edge(f, s, hyperedge=False, bit=G.nodes[node]["bit"])
             rm.append(node)
     for node in rm:
         G.remove_node(node)

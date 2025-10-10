@@ -635,11 +635,14 @@ if __name__ == "__main__":
     parser.add_argument("--depth", default=25, type=int)
     parser.add_argument("--top", default="thing")
     parser.add_argument("--log", default="INFO")
+    parser.add_argument("--collapse_hyperedge", default=False, action="store_true")
     args = parser.parse_args()
 
     log.setLevel(args.log)
 
     g = read_yosys_json(args.input_file,args.top)
+    if args.collapse_hyperedge:
+        g = collapse_edges(g)
     log.info("Loaded %s", g)
 
     bound = bounded
