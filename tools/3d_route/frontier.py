@@ -461,10 +461,9 @@ def not_overlap(G, M, first, second, shell, offset, relax, minimize):
     return []
 
 def attach_to_side(G, M, side, node, shell, offset, relax, minimize):
-    log.debug("Attaching %s to %s", node, side)
     a = G.nodes[side]["coordinates"]
     b = G.nodes[node]["coordinates"]
-    log.debug("Starting at %s", a)
+    log.debug("Attaching %s to %s starting at %s", node, side, a)
     # if is_control(G, node) or is_flush(G, node):# or is_control(G, side) or is_flush(G, side):
         # M.addCons(a[2] == 0)
         # return []
