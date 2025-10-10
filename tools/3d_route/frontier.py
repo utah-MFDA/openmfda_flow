@@ -257,6 +257,62 @@ def in_cylinder(G, M, node, width, height, depth, shell, offset, relax, minimize
     M.addCons(i + j >= 1, name=f"shell_{node}")
     return []
 
+def in_hex(G, M, coord):
+    return all(i % 2 == 0 for i in coord) or all(i % 2 == 1 for i in coord)
+
+def hex_neighbor_z(G, M, node, neighbor, shell, offset, relax, minimize):
+    ax, ay, az = G.nodes[node]["coordinates"]
+    bx, by, bz = G.nodes[neighbor]["coordinates"]
+
+    i = M.addVar(f"hex_i_{node}", vtype="B")
+    j = M.addVar(f"hex_j_{node}", vtype="B")
+    k = M.addVar(f"hex_k_{node}", vtype="B")
+    dx = bz - ax
+    dy = bx - ay
+    dz = by - az
+    M.addCons(i*dx == 0)
+    M.addCons(j*(dx-1) + j*(dz) + j*(dy - 1)*(dy + 1) == 0)
+    M.addCons(k*(dx+1) + k*(dy) + j*(dz - 1)*(dz + 1) == 0)
+    M.addCons(i + j  + k >= 1, name=f"shell_{node}")
+    return []
+
+
+def hex_neighbor_x2(G, M, node, neighbor, shell, offset, relax, minimize):
+    ax, ay, az = G.nodes[node]["coordinates"]
+    bx, by, bz = G.nodes[neighbor]["coordinates"]
+
+    i = M.addVar(f"hex_i_{node}", vtype="B")
+    j = M.addVar(f"hex_j_{node}", vtype="B")
+    k = M.addVar(f"hex_k_{node}", vtype="B")
+    l = M.addVar(f"hex_l_{node}", vtype="B")
+    dx = by - az
+    dy = bz - ax
+    dz = bx - ay
+    M.addCons(i*(dx+1) + i*(abs(dy)-1) == 0)
+    M.addCons(j*dx + j*(dy-1) == 0)
+    M.addCons(k*(dx - 1) + j*(abs(dz)-1) == 0)
+    M.addCons(l*(dx + 1) + j*dz == 0)
+    M.addCons(i+j+k+l == 0)
+    return []
+
+def hex_neighbor_x(G, M, node, neighbor, shell, offset, relax, minimize):
+    if relax:
+        return attach_to_side(G, M, node, neighbor, shell, offset, relax, minimize)
+    ax, ay, az = G.nodes[node]["coordinates"]
+    bx, by, bz = G.nodes[neighbor]["coordinates"]
+
+    i = M.addVar(f"hex_i_{node}", vtype="B")
+    j = M.addVar(f"hex_j_{node}", vtype="B")
+    k = M.addVar(f"hex_k_{node}", vtype="B")
+    dx = bz - ax
+    dy = bx - ay
+    dz = by - az
+    M.addCons(i*dz == 0)
+    M.addCons(j*dy + j*dx + j*(dz-1) == 0)
+    M.addCons(abs(dx) + abs(dy) >= 0)
+    M.addCons(i + j >= 1)
+    return []
+
 def shell_bound(width, height, depth, shell, offset):
     layer = shell+offset
     return [ (-layer, layer),
