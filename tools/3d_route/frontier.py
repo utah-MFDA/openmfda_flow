@@ -95,9 +95,9 @@ def add_buffers_output(G, depth, targets):
             continue
         for i in range(0, shell):
             G.add_node(f"{target}__{i}", cell="$_dummy", shell=i)
-        G.add_edge(target, f"{target}__{shell-1}", dummy=True)
+        G.add_edge(target, f"{target}__{shell-1}", dummy=True, hyperedge=False, bit=-1)
         for i in range(0, shell-1):
-            G.add_edge(f"{target}__{i}", f"{target}__{i+1}", dummy=True)
+            G.add_edge(f"{target}__{i}", f"{target}__{i+1}", dummy=True, hyperedge=False, bit=-1)
 
 def report_stats(G):
     num_port = sum(1 for i in G.nodes if is_port(G, i))
