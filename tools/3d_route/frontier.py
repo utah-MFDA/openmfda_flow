@@ -169,9 +169,7 @@ def gather_children(G, n):
         desc = set()
         children = 0
         for adj in G.adj[n]:
-            if is_peer(G, n, adj):
-                raise
-            elif is_descendent(G, adj, n):
+            if is_descendent(G, adj, n):
                 children += 1
                 desc |= gather_children(G, adj)
             else:
@@ -188,9 +186,7 @@ def gather_ancestors(G, n):
         desc = set()
         children = 0
         for adj in G.adj[n]:
-            if is_peer(G, n, adj):
-                raise
-            elif is_ancestor(G, adj, n):
+            if is_ancestor(G, adj, n):
                 children += 1
                 desc |= gather_ancestors(G, adj)
             else:
@@ -223,7 +219,7 @@ def hemicube_bound(width, height, depth, shell, offset):
     layer = shell+offset
     return [(-layer, layer), (-layer, layer), (0, shell)]
 
-def in_hemicube(G, M, node, width, height, depth, shell, offset, relax):
+def in_hemicube(G, M, node, width, height, depth, shell, offset, relax, minimize):
     layer = shell+offset
     add_position(G, M, node,
                  (-layer, layer),
@@ -234,7 +230,7 @@ def in_hemicube(G, M, node, width, height, depth, shell, offset, relax):
 def horizontal_bound(width, height, depth, shell, offset):
     return [(-height, height), (-depth, depth)]
 
-def in_horizontal(G, M, node, width, height, depth, shell, offset, relax):
+def in_horizontal(G, M, node, width, height, depth, shell, offset, relax, minimize):
     coord = [M.addVar(f"{node}_{i}", vtype="INTEGER", lb=lb, ub=ub)
              for i, (lb, ub)
              in [("y", (-height, height)),
@@ -248,7 +244,7 @@ def cylinder_bound(width, height, depth, shell, offset):
                (-layer, layer),
                (-depth, depth)]
 
-def in_cylinder(G, M, node, width, height, depth, shell, offset, relax):
+def in_cylinder(G, M, node, width, height, depth, shell, offset, relax, minimize):
     layer = shell+offset
     x, y, z = add_position(G, M, node,
                            (-layer, layer),
@@ -266,7 +262,7 @@ def shell_bound(width, height, depth, shell, offset):
     return [ (-layer, layer),
                (-layer, layer),
                (-layer, layer)]
-def in_shell(G, M, node, width, height, depth, shell, offset, relax):
+def in_shell(G, M, node, width, height, depth, shell, offset, relax, minimize):
     layer = shell+offset
     x, y, z = add_position(G, M, node,
                            (-layer, layer),
@@ -281,7 +277,7 @@ def in_shell(G, M, node, width, height, depth, shell, offset, relax):
     M.addCons(i + j + k >= 1, name=f"shell_{node}")
     return []
 
-def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding, shell, offset, relax):
+def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding, shell, offset, relax, minimize):
     ashell =  G.nodes[relative]["shell"]
     if direction(ashell, shell):
         relations = G.nodes[relative][orientation]
@@ -289,8 +285,12 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
         group = relations.intersection(frontier)
         minim = []
         if len(group) > 1:
-            log.debug("Adding bounds for %s at distance %d to %d children on layer %d", relative, dist, len(group), shell)
-            X = 0 if not relax else M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
+            log.debug("Adding bounds for %s %s at distance %d to %d children on layer %d", orientation, relative, dist, len(group), shell)
+            if relax and minimize:
+                X = M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
+                minim.append(X)
+            else:
+                X = relax
             # bounds = [(M.addVar(f"{relative}_ubound_{i}", vtype="I", lb=lb, ub=ub),
             #             M.addVar(f"{relative}_lbound_{i}", vtype="I", lb=lb, ub=ub))
             #             for i, (lb, ub) in enumerate(bounding)]
@@ -309,38 +309,75 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
                         for a, b in zip(fd, sd):
                             # minim += within_distance(G, M, a, b, abs(ashell-shell), relax)
                             M.addCons(abs(a-b) <= dist + X)
-        # return minim
-            if relax:
-                return [X]
-            else:
-                return []
+        return minim
     return []
 
-def bounded_descendent(G, M, ancestor, frontier, bounding, shell, offset, relax):
-    return bounded_dimension(G, M, lambda x,y: x > y, "descendents", ancestor, frontier, bounding, shell, offset, relax)
+def bounded_peer(G, M, orientation, relative, frontier, bounding, shell, offset, relax, minimize):
+    ashell =  G.nodes[relative]["shell"]
+    if ashell == shell:
+        minim = []
+        for adj in G.adj[relative]:
+            if relative < adj and is_peer(G, adj, relative):
+                left = G.nodes[relative][orientation]
+                right = G.nodes[adj][orientation]
+                group = left.union(right).intersection(frontier)
+                dist = 2*(abs(ashell - shell)+1)
+                if len(group) > 1:
+                    log.debug("Adding bounds for peers %s %s at distance %d to %d children on layer %d", relative, adj, dist, len(group), shell)
+                    if relax and minimize:
+                        X = M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
+                        minim.append(X)
+                    else:
+                        X = relax
+                    # bounds = [(M.addVar(f"{relative}_ubound_{i}", vtype="I", lb=lb, ub=ub),
+                    #             M.addVar(f"{relative}_lbound_{i}", vtype="I", lb=lb, ub=ub))
+                    #             for i, (lb, ub) in enumerate(bounding)]
+                    # for U, L in bounds:
+                    #     M.addCons(U - L >= 1)
+                    #     M.addCons(U - L <= dist + X)
+                    # for node in group:
+                    #     for coord, (U, L) in zip(G.nodes[node]["coordinates"], bounds):
+                    #         M.addCons(coord <= U - 1)
+                    #         M.addCons(coord >= L)
+                    for first in group:
+                        fd = G.nodes[first]["coordinates"]
+                        for second in group:
+                            if first != second:
+                                sd = G.nodes[second]["coordinates"]
+                                for a, b in zip(fd, sd):
+                                    # minim += within_distance(G, M, a, b, abs(ashell-shell), relax)
+                                    M.addCons(abs(a-b) <= dist + X)
+        return minim
+    return []
 
-def bounded_ancestor(G, M, descendent, frontier, bounding, shell, offset, relax):
-    return bounded_dimension(G, M, lambda x,y: x < y, "ancestors", descendent, frontier, bounding, shell, offset, relax)
+def bounded_descendent(G, M, ancestor, frontier, bounding, shell, offset, relax, minimize):
+    return bounded_dimension(G, M, lambda x,y: x > y, "descendents", ancestor, frontier, bounding, shell, offset, relax, minimize)
 
-def bounded(G, M, relative, frontier, bounding, shell, offset, relax):
-    return bounded_descendent(G, M, relative, frontier, bounding, shell, offset, relax) + \
-        bounded_ancestor(G, M, relative, frontier, bounding, shell, offset, relax)
+def bounded_ancestor(G, M, descendent, frontier, bounding, shell, offset, relax, minimize):
+    return bounded_dimension(G, M, lambda x,y: x < y, "ancestors", descendent, frontier, bounding, shell, offset, relax, minimize)
 
-def within_distance(G, M, a, b, d, relax):
-    X = 0 if not relax else M.addVar(vtype="I", lb=0, ub=relax)
-    # X = relax
-    M.addCons(abs(a - b) <= d + X)
-    if relax:
-        return [X]
+def bounded(G, M, relative, frontier, bounding, shell, offset, relax, minimize):
+    return bounded_descendent(G, M, relative, frontier, bounding, shell, offset, relax, minimize) + \
+        bounded_ancestor(G, M, relative, frontier, bounding, shell, offset, relax, minimize) + \
+        bounded_peer(G, M, "descendents", relative, frontier, bounding, shell, offset, relax, minimize) + \
+        bounded_peer(G, M, "ancestors", relative, frontier, bounding, shell, offset, relax, minimize)
+
+def within_distance(G, M, a, b, d, relax, minimize):
+    minim = []
+    if relax and minimize:
+        X = M.addVar(f"{a}_{b}_relax", vtype="I", lb=0, ub=relax)
+        minim.append(X)
     else:
-        return []
+        X = relax
+    M.addCons(abs(a-b) <= d + relax)
+    return minim
 
-def proximate_layer(G, M, s, e, shell, offset, relax):
+def proximate_layer(G, M, s, e, shell, offset, relax, minimize):
     a = G.nodes[s]["coordinates"]
     b = G.nodes[e]["coordinates"]
-    return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, 1, relax)]
+    return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, 1, relax, minimize)]
 
-def distance_shell(G, M, s, e, shell, offset, relax):
+def distance_shell(G, M, s, e, shell, offset, relax, minimize):
     a = G.nodes[s]["coordinates"]
     a_rel = G.nodes[s]["relations"]
     b = G.nodes[e]["coordinates"]
@@ -352,7 +389,7 @@ def distance_shell(G, M, s, e, shell, offset, relax):
     else:
         # Find worst case distance requirement
         bound = min(d for _, _, d in dist) + 1
-        return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, bound, relax)]
+        return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, bound, relax, minimize)]
 
 def max_distance(G, M, first, second, shell, offset, relax):
     a = G.nodes[first]["coordinates"]
@@ -361,13 +398,13 @@ def max_distance(G, M, first, second, shell, offset, relax):
     M.addCons(scip.quicksum(abs(x - y) for x, y in zip(a, b)) >= X)
     return [X]
 
-def not_overlap(G, M, first, second, shell, offset, relax):
+def not_overlap(G, M, first, second, shell, offset, relax, minimize):
     a = G.nodes[first]["coordinates"]
     b = G.nodes[second]["coordinates"]
     M.addCons(scip.quicksum(abs(x - y) for x, y in zip(a, b)) >= 1)
     return []
 
-def attach_to_side(G, M, side, node, shell, offset, relax):
+def attach_to_side(G, M, side, node, shell, offset, relax, minimize):
     log.debug("Attaching %s to %s", node, side)
     a = G.nodes[side]["coordinates"]
     b = G.nodes[node]["coordinates"]
@@ -376,16 +413,16 @@ def attach_to_side(G, M, side, node, shell, offset, relax):
         # M.addCons(a[2] == 0)
         # return []
     # Within +/- 1
-    return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, 1, relax)]
+    return [i for x, y in zip(a, b) for i in within_distance(G, M, x, y, 1, relax, minimize)]
 
-def noop(G, M, neighbor, node, shell, offset, relax):
+def noop(G, M, neighbor, node, shell, offset, relax, minimize):
     return []
 
 ################### Runnning ###################
 def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
                  overlap, inside, distance, proximate, ahead, attach,
                  bounding, width = 40, height = 25, depth = 25,
-                 offset=0, limit=10, timeout=60):
+                 offset=0, limit=10, timeout=60, minimize=False):
     render_dot_undir(G, "raw.dot")
     shells = find_center(G, start_condition, buffer_condition)
     for shell in range(0, shells):
@@ -396,7 +433,7 @@ def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
         log.info("Bounded " + "(%d, %d) "*len(bounds), *flat)
         while True:
             success = solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
-                                 current, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout)
+                                 current, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout, minimize)
             if success:
                 break
             if relax > limit:
@@ -407,25 +444,25 @@ def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
 
 def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
-                relax = 0, limit=4, timeout=30):
+                relax = 0, limit=4, timeout=30, minimize=False):
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
     M = scip.Model()
     M.setParam("limits/time", timeout)
     # M.setParam("limits/solutions", 1)
     for node in frontier:
-        inside(G, M, node, width, height, depth, shell, offset, relax)
+        inside(G, M, node, width, height, depth, shell, offset, relax, minimize)
     minim = []
     for first in frontier:
         for second in frontier:
             if first < second:
-                minim += overlap(G, M, first, second, shell, offset, relax)
+                minim += overlap(G, M, first, second, shell, offset, relax, minimize)
     for node in G.nodes:
-        minim += distance(G, M, node, frontier, bounding, shell, offset, relax)
+        minim += distance(G, M, node, frontier, bounding, shell, offset, relax, minimize)
     for node in frontier:
         for neighbor in G.adj[node]:
             if G.nodes[neighbor]["shell"] == shell - 1:
-                minim += attach(G, M, neighbor, node, shell, offset, relax)
+                minim += attach(G, M, neighbor, node, shell, offset, relax, minimize)
     if minim:
         log.info("Running with minimization")
         M.setObjective(scip.quicksum(minim), sense="minimize")
@@ -448,7 +485,7 @@ def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
 
 def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
-                relax = 0, limit=4, timeout=30):
+                relax = 0, limit=4, timeout=30, minimize=False):
     M = scip.Model()
     M.setParam("limits/time", timeout)
     M.setParam("limits/solutions", 1)
@@ -460,15 +497,15 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
 
     for node in frontier:
         assert(shell == G.nodes[node]["shell"])
-        inside(G, M, node, width, height, depth, shell, offset, relax)
+        inside(G, M, node, width, height, depth, shell, offset, relax, minimize)
     for first in frontier:
         for second in frontier:
             if first < second:
-                not_overlap(G, M, first, second, shell, offset, relax)
+                not_overlap(G, M, first, second, shell, offset, relax, minimize)
     for ancestor in G.nodes:
         if skip(G, ancestor):
             continue
-        minim += distance(G, M, ancestor, frontier, bounding, shell, offset, relax)
+        minim += distance(G, M, ancestor, frontier, bounding, shell, offset, relax, minimize)
     for node in frontier:
 
         if skip(G, node):
@@ -479,12 +516,12 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
             # next shell, add to next frontier
             if is_ancestor(G, neighbor, node):
                 # assert(n_shell == shell-1)
-                minim += ahead(G, M, neighbor, node, shell, offset, relax)
+                minim += ahead(G, M, neighbor, node, shell, offset, relax, minimize)
             elif is_peer(G, neighbor, node):
-                minim += proximate(G, M, neighbor, node, shell, offset, relax)
+                minim += proximate(G, M, neighbor, node, shell, offset, relax, minimize)
             elif is_descendent(G, neighbor, node):
                 # Previous shell, setup direct proximity from position
-                minim += attach(G, M, neighbor, node, shell, offset, relax)
+                minim += attach(G, M, neighbor, node, shell, offset, relax, minimize)
             else:
                 raise
     # solve and extract position values
@@ -636,6 +673,7 @@ if __name__ == "__main__":
     parser.add_argument("--top", default="thing")
     parser.add_argument("--log", default="INFO")
     parser.add_argument("--collapse_hyperedge", default=False, action="store_true")
+    parser.add_argument("--minimize", default=False, action="store_true")
     args = parser.parse_args()
 
     log.setLevel(args.log)
@@ -674,10 +712,10 @@ if __name__ == "__main__":
     else:
         skip = lambda G, node: False
     shells = run_by_dimension(g, skip, args.output, start, buffer,
-                                 not_overlap, orientation, bound, noop, noop, attach_to_side,
+                                 not_overlap, orientation, bound, proximate_layer, noop, attach_to_side,
                                  shell_bound,
                                  args.width, args.height, args.depth,
-                                 args.offset, args.relax, args.timeout)
+                                 args.offset, args.relax, args.timeout, args.minimize)
     # horizontal does only two dimensionals and has implicit x dimension of the shell
     if args.orientation == "horizontal":
         for node, props in g.nodes.items():
