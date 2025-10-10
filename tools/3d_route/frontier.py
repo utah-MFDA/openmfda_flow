@@ -461,6 +461,8 @@ def not_overlap(G, M, first, second, shell, offset, relax, minimize):
     return []
 
 def attach_to_side(G, M, side, node, shell, offset, relax, minimize):
+    if "coordinates" not in G.nodes[side]:
+        return []
     a = G.nodes[side]["coordinates"]
     b = G.nodes[node]["coordinates"]
     log.debug("Attaching %s to %s starting at %s", node, side, a)
@@ -494,6 +496,51 @@ def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
             if relax > limit:
                 raise
             relax += 1
+        render_scad(G, outfile, shells)
+    return shells
+
+def run_backwards(G, skip, outfile, start_condition, buffer_condition,
+                 overlap, inside, distance, proximate, ahead, attach,
+                 bounding, width = 40, height = 25, depth = 25,
+                 offset=0, limit=10, timeout=60, minimize=False):
+    render_dot_undir(G, "raw.dot")
+    shells = find_center(G, start_condition, buffer_condition)
+    working = 0
+    reversed = False
+    relax = 0
+    borked = 0
+    while working < shells:
+        if reversed:
+            direction = range(working, -1, -1)
+        else:
+            direction = range(working, shells)
+        for shell in direction:
+            latest = {node for node, d in G.nodes.items() if d["shell"] == shell}
+            bounds = bounding(width, height, depth, shell, offset)
+            flat = [i for j in bounds for i in j]
+            log.info("Bounded " + "(%d, %d) "*len(bounds), *flat)
+            if not reversed:
+                a, b = ahead, attach
+            else:
+                b, a= ahead, attach
+            success = solve_shell(G, skip, overlap, inside, distance, proximate, a, b,
+                                     latest, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout, minimize)
+            if success:
+                if not reversed or (working == shell and reversed):
+                    working = shell + 1
+                if reversed and shell == 0:
+                    reversed = False
+            else:
+                borked += 1
+                if borked > limit:
+                    raise
+                if reversed:
+                    working += 1
+                    relax += 1
+                else:
+                    working = shell
+                reversed = True
+                break
         render_scad(G, outfile, shells)
     return shells
 
@@ -546,7 +593,7 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
     M.setParam("limits/solutions", 1)
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
-    log.info("Solving shell %d, %d nodes", shell, len(frontier))
+    log.warn("Solving shell %d, %d nodes", shell, len(frontier))
     minim = []
     frontier = {node for node in frontier if not skip(G, node)}
 
@@ -586,14 +633,16 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
     M.presolve()
     log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
     M.optimize()
-    log.info("Finished optimizing, %d solutions found", M.getNSols())
 
     if M.getNSols() == 0:
+        log.warn("Finished optimizing, no solutions found")
         for node in frontier:
             props = G.nodes[node]
             del props["coordinates"]
         del M
         return False
+
+    log.info("Finished optimizing, %d solutions found", M.getNSols())
     for node in frontier:
         props = G.nodes[node]
         props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
@@ -729,6 +778,7 @@ if __name__ == "__main__":
     parser.add_argument("--log", default="INFO")
     parser.add_argument("--collapse_hyperedge", default=False, action="store_true")
     parser.add_argument("--minimize", default=False, action="store_true")
+    parser.add_argument("--backtrack", default=False, action="store_true")
     args = parser.parse_args()
 
     log.setLevel(args.log)
@@ -766,8 +816,12 @@ if __name__ == "__main__":
         skip = lambda G, node: is_control(G, node) or is_flush(G, node)
     else:
         skip = lambda G, node: False
-    shells = run_by_dimension(g, skip, args.output, start, buffer,
-                                 not_overlap, orientation, bound, proximate_layer, noop, attach_to_side,
+    if args.backtrack:
+        runner = run_backwards
+    else:
+        runner = run_by_dimension
+    shells = runner(g, skip, args.output, start, buffer,
+                                 not_overlap, orientation, bound, attach_to_side, noop, attach_to_side,
                                  shell_bound,
                                  args.width, args.height, args.depth,
                                  args.offset, args.relax, args.timeout, args.minimize)
