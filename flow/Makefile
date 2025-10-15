@@ -643,6 +643,7 @@ endif
 
 # render: $(RESULTS_DIR)/4_final.scad # old scad call
 # render: $(RESULTS_DIR)/$(DESIGN)_base.scad # the stl is the new output
+scad: $(RESULTS_DIR)/$(DESIGN)_base.scad
 render: $(RESULTS_DIR)/$(DESIGN)_base.stl
 slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
