@@ -16,9 +16,10 @@ def replace_iter(
     lef_files=None,
     design_var='base',
     place_step='global',
-    cv=7.6e-3,
+    cv=1,
     use_docker=False,
     overwrite_replace_output=False,
+    # 'overwrite_replace_output'
     include_center_loc=False
 ):
 
@@ -159,6 +160,10 @@ def replace_iter(
 
     repl_ot_file = f'{repl_test_dir}/repl_data_{start_time}.csv'
 
+    if 'GLOBAL_PLACEMENT_ARGS_FILE' not in os.environ:
+        print(f"Setting 'GLOBAL_PLACEMENT_ARGS_FILE' as {write_repl_out}")
+        os.environ['GLOBAL_PLACEMENT_ARGS_FILE'] = write_repl_out
+
     omfda_cl = openmfda_class.OpenMFDA(
         design_name=design,
         verilog_file=verilog_file if verilog_file is not None else f'{flow_home}/designs/src/{design}/{design}.v',
@@ -167,7 +172,8 @@ def replace_iter(
 
     run_init = True
 
-    docker_env_vars = f'GLOBAL_PLACEMENT_ARGS_FILE={write_repl_out_rel}'
+    if use_docker:
+        docker_env_vars = f'GLOBAL_PLACEMENT_ARGS_FILE={write_repl_out_rel}'
 
     for iwl in iwl_list:
         for idn in idn_list:
@@ -204,10 +210,10 @@ def replace_iter(
                                         except:
                                             fail = True
                                     else:
-                                        fail = False
                                         try:
+                                            fail = False
                                             omfda_cl.run_flow(
-                                                mk_targets='replace -B'
+                                                mk_targets='replace'
                                             )
                                         except:
                                             fail = True
