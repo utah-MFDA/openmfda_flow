@@ -7,17 +7,19 @@ export DESIGN ?= demo
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
-
-# add a space to the below to definition to build library
+OPENSCAD ?= openscad
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
 export BUILD_PDK_LIBRARY ?=
 
 # The docker image does not have the OpenROAD OpenBD
 # 	references a compatible version
-ifeq (HAS_OPENDB,T)
-export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
-else
-export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
-endif
+#### vvvvv removed merge with kicad
+#ifeq (HAS_OPENDB,T)
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+#else
+#export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
+#endif
 
 
 # Add design configure paths here
@@ -162,6 +164,7 @@ endif
 export NUM_CORES := $(NPROC)
 
 #-------------------------------------------------------------------------------
+XVFB_CMD=xvfb-run
 # setup all commands used within this flow
 TIME_CMD=/usr/bin/time --verbose
 # TIME_TEST = $(shell $(TIME_CMD) echo foo 2>/dev/null)
@@ -328,11 +331,6 @@ $(RESULTS_DIR)/$(DESIGN_NAME).sdc: $(SDC_FILE)
 floorplan: $(RESULTS_DIR)/1_floorplan.def
 # ==============================================================================
 
-ifneq ($(FOOTPRINT),)
-IS_CHIP = 1
-else ifneq ($(FOOTPRINT_TCL),)
-IS_CHIP = 1
-endif
 
 # STEP 1: Translate verilog to def
 #-------------------------------------------------------------------------------
@@ -605,9 +603,9 @@ $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 
 #<<<<<<< HEAD
 #$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
-$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	# we want to work towards VVVVVVVVVVVVVVVV
 #$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
 		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
@@ -643,9 +641,12 @@ endif
 
 # render: $(RESULTS_DIR)/4_final.scad # old scad call
 # render: $(RESULTS_DIR)/$(DESIGN)_base.scad # the stl is the new output
+.PHONY: scad render slice zip
 scad: $(RESULTS_DIR)/$(DESIGN)_base.scad
+#$(RESULTS_DIR)/4_final.scad
 render: $(RESULTS_DIR)/$(DESIGN)_base.stl
 slice: $(RESULTS_DIR)/$(DESIGN).slices
+#slice: $(RESULTS_DIR)/slices/1.png
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
@@ -680,10 +681,10 @@ $(RESULTS)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
 	openscad $< -o $@
 
 %.stl: %.scad
-	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
+	$(TIME_CMD) $(OPENSCAD) -m make -o $@ -d $@.deps $< 2>&1 | tee $(LOG_DIR)/5_2_stl_render.log
 
 %.slices: %.stl
-	$(TIME_CMD) xvfb-run python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_HEIGHT} $@ 2>&1 | tee $@.log
+	$(TIME_CMD) $(XBUF) python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_VAL} $@ 2>&1 | tee $(LOG_DIR)/5_3_slicer.log
 
 ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip: ${RESULTS_DIR}/${DESIGN}.slices
 	7z a -tzip $@ ${RESULTS_DIR}

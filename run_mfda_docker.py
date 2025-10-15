@@ -83,15 +83,14 @@ def run_mfdaflow_docker(
     else:
         d_env_vars = ''
 
-
-   if platform.system() == "Windows":
+    if platform.system() == "Windows":
         user_arg = ""
     elif platform.system() == "Linux":
         user_arg = f"\n        --user {os.getuid()}:{os.getuid()}"
     elif platform.system() == "Darwin":
         user_arg = f"\n        --user {os.getuid()}:{os.getuid()}"
 
-   cmd_full = f'''docker run -t
+    cmd_full = f'''docker run -t
         {d_mnt}{user_arg}
         --name {dname}
         --rm

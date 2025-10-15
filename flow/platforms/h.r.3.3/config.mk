@@ -7,6 +7,7 @@ export GENERAL_MAP_FILE = $(PLATFORM_DIR)/lib/common.v
 
 ifeq ($(BUILD_PDK_LIBRARY),)
 # General distribution files
+<<<<<<< HEAD
 # gds files are not required
 # export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                       # $(ADDITIONAL_GDS)
@@ -16,12 +17,10 @@ export SC_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
 # lib file is not required
 #export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      $(ADDITIONAL_LIBS)
-#export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/scad/components.scad
 export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3_merged.scad
 export SCAD_ROUTING_LIBRARY = $(PLATFORM_DIR)/scad/routing.scad
 else
 # Locally built distribution files
-#ROOT_DIR=$(PLATFORM_DIR)/pdk/Components
 ROOT_DIR=$(PLATFORM_DIR)/pdk
 include $(PLATFORM_DIR)/pdk/Componets/Makefile
 export LIBRARY_DEPS = $(SC_LEF) $(TECH_LEF) $(LIB_FILES) $(SCAD_COMPONENT_LIBRARY) $(SCAD_ROUTING_LIBRARY) $(GDS_FILES) $(XYCE_LIB)
@@ -55,7 +54,7 @@ export IO_PLACER_V = met2
 
 # defaults specified here, override in local file as needed
 #export DIE_AREA    	 	= 0 0 2550 1600
-export DIE_AREA    	 	= 0 0 $(XBULK_VAL) $(YBULK_VAL)
+export DIE_AREA    	 	?= 0 0 $(XBULK_VAL) $(YBULK_VAL)
 #export CORE_AREA   	 	= 0 0 2550 1600
 # does arithmetic in make throuh shell call
 CORE_X1 = $(shell echo $$(( 0 + $(EDGE_PADDING) )))
@@ -63,7 +62,7 @@ CORE_X2 = $(shell echo $$(( $(XBULK_VAL) - $(EDGE_PADDING) )))
 CORE_Y1 = $(shell echo $$(( 0 + $(EDGE_PADDING) )))
 CORE_Y2 = $(shell echo $$(( $(YBULK_VAL) - $(EDGE_PADDING) )))
 
-export CORE_AREA   	 	= $(CORE_X1) $(CORE_Y1) $(CORE_X2) $(CORE_Y2)
+export CORE_AREA   	 	?= $(CORE_X1) $(CORE_Y1) $(CORE_X2) $(CORE_Y2)
 
 #---------------------------------------------------------
 # Place
@@ -91,43 +90,6 @@ export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
 
 # KLayout technology file
 export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
-
-# Moved to config_3dp.mk
-# # export SCAD_DESIGN_INCLUDE=$(PLATFORM_DIR)/pdk/Components/scad_use/lef_helper.scad \
-# # 									 $(PLATFORM_DIR)/pdk/Components/scad_use/lef_scad_config.scad \
-# # 									 $(PLATFORM_DIR)/pdk/Components/scad_use/polychannel_v2.scad
-#
-# export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/scad_include/polychannel_v2.scad \
-#                              $(PLATFORM_DIR)/pdk/scad_include/lef_scad_config.scad \
-# 														 $(PLATFORM_DIR)/pdk/scad_include/lef_helper.scad
-#
-# export SCAD_LIB ?= $(PLATFORM_DIR)/pdk/scad_lib
-#
-# #------------------------------------------------------------------------------
-# # PRINTER PARAMETERS
-# #------------------------------------------------------------------------------s
-# # mm/px value
-# export PX_VAL 			= 0.0076
-# # mm/layer value
-# export LAYER_VAL		= 0.01
-# # layer number for the bottom layer
-# export BOT_LAYER_VAL	= 75
-# # layers/via value
-# export LPV_VAL			= 20
-# # bulk x value in pixels
-# export XBULK_VAL		= 2550
-# # bulk y value in pixels
-# export YBULK_VAL		= 1600
-# # bulk z value in layers
-# export ZBULK_VAL		= 230
-# # chip min and max x values in pixels
-# export XCHIP_VALS		= 325 2225
-# # chip min and max y values in pixels
-# export YCHIP_VALS		= 325 1275
-# # render smoothness in scad render
-# export RES_VAL			= 120
-#
-# export PITCH            = 30
 
 # Default SCAD script arguments
 ifeq ($(abspath $(SCAD_SCRIPT)),$(abspath ../tools/scad_render/generator_v2.py))
