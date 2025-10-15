@@ -17,6 +17,8 @@ export BOT_LAYER_VAL	= 75
 # layers/via value
 export LPV_VAL			= 20
 
+export PRINTER_PX_RES = 2560 1950
+
 # bulk x value in pixels
 export XBULK_VAL		= 2550
 

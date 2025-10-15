@@ -38,6 +38,10 @@ ifndef DISPLAY
 export QT_QPA_PLATFORM ?= offscreen
 endif
 
+PYTHON3 ?= python3
+
+SLICER_SCRIPT = ../tools/simple_slicer/slice_geom.py
+
 # Global override Floorplan
 # export CORE_UTILIZATION := 30
 # export CORE_ASPECT_RATIO := 1
@@ -607,7 +611,7 @@ $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 #$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
-	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
+	$(TIME_CMD) $(PYTHON3) $(SIMULATION_SCRIPT) \
 		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
 		--netlist $(RESULTS_DIR)/4_final.v \
 		--sim_config $(SIMULATION_CONFIG) \
@@ -639,14 +643,14 @@ endif
 # |____/ \____/_/   \_\____/
 # =======
 
+<<<<<<< HEAD
 # render: $(RESULTS_DIR)/4_final.scad # old scad call
 # render: $(RESULTS_DIR)/$(DESIGN)_base.scad # the stl is the new output
 .PHONY: scad render slice zip
 scad: $(RESULTS_DIR)/$(DESIGN)_base.scad
-#$(RESULTS_DIR)/4_final.scad
 render: $(RESULTS_DIR)/$(DESIGN)_base.stl
-slice: $(RESULTS_DIR)/$(DESIGN).slices
-#slice: $(RESULTS_DIR)/slices/1.png
+slice: $(RESULTS_DIR)/slices/1.png # we reference first png slice
+#slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
@@ -669,7 +673,7 @@ endif
 #$(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
-	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
+	$(TIME_CMD) $(PYTHON3) $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
 				--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
@@ -677,7 +681,7 @@ $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
 
-$(RESULTS)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
+$(RESULTS_DIR)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
 	openscad $< -o $@
 
 %.stl: %.scad
@@ -685,6 +689,14 @@ $(RESULTS)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
 
 %.slices: %.stl
 	$(TIME_CMD) $(XBUF) python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_VAL} $@ 2>&1 | tee $(LOG_DIR)/5_3_slicer.log
+
+$(RESULTS_DIR)/slices/1.png: $(RESULTS_DIR)/$(DESIGN)_base.stl
+	$(PYTHON3) $(SLICER_SCRIPT) \
+		--stl $< \
+		--out_dir $(RESULTS_DIR)/slices \
+		--resolution $(PRINTER_PX_RES) \
+		--layer_height $(LAYER_VAL)
+
 
 ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip: ${RESULTS_DIR}/${DESIGN}.slices
 	7z a -tzip $@ ${RESULTS_DIR}
