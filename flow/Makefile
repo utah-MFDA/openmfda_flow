@@ -33,7 +33,7 @@ ifndef DISPLAY
 export QT_QPA_PLATFORM ?= offscreen
 endif
 
-PYTHON3 =? python3
+PYTHON3 ?= python3
 
 SLICER_SCRIPT = ../tools/simple_slicer/slice_geom.py
 
@@ -610,7 +610,7 @@ $(RESULTS)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_fin
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
 
-$(RESULTS)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
+$(RESULTS_DIR)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
 	openscad $< -o $@
 
 %.stl: %.scad
@@ -619,9 +619,9 @@ $(RESULTS)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
 %.slices: %.stl
 	$(TIME_CMD) xvfb-run python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_HEIGHT} $@ 2>&1 | tee $@.log
 
-$(RESULTS_DIR)/slices/1.png: $(DESIGN)_base.stl
+$(RESULTS_DIR)/slices/1.png: $(RESULTS_DIR)/$(DESIGN)_base.stl
 	$(PYTHON3) $(SLICER_SCRIPT) \
-		--stl $(DESIGN)_base.stl \
+		--stl $< \
 		--out_dir $(RESULTS_DIR)/slices \
 		--resolution $(PRINTER_PX_RES) \
 		--layer_height $(LAYER_VAL)
