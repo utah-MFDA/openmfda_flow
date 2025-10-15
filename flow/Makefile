@@ -95,7 +95,9 @@ include $(PLATFORM_DIR)/config.mk
 # Include design and platform configuration
 include $(DESIGN_CONFIG)
 
+ifeq ($(strip $(GLOBAL_PLACEMENT_ARGS_FILE)),'')
 export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
+endif
 
 export FLOW_VARIANT ?= base
 
@@ -550,6 +552,9 @@ clean_simulate:
 XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 
 #ifneq ($(SIMULATION_CONFIG),)
+.PHONY: xyce_run_config
+xyce_run_config: $(RESULTS_DIR)/xyce_run.config
+
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
@@ -575,9 +580,10 @@ $(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_ba
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
 
-render: $(RESULTS_DIR)/$(DESIGN)_base.scad
-#slice: $(RESULTS_DIR)/$(DESIGN).slices
+scad: $(RESULTS_DIR)/$(DESIGN)_base.scad
+render: $(RESULTS_DIR)/$(DESIGN)_base.stl
 slice: $(RESULTS_DIR)/slices/1.png # we reference first png slice
+#slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
@@ -603,6 +609,9 @@ $(RESULTS)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_fin
 				--scad_include $(SCAD_INCLUDE_FILES) \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
+
+$(RESULTS)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
+	openscad $< -o $@
 
 %.stl: %.scad
 	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
