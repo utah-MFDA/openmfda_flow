@@ -367,7 +367,12 @@ class ComponentParser:
         # for c in p_out.items():
         # print(c[0], c[1].values())
 
-    def get_comp_pins_from_lef(self, in_file, scale=1, silent=False):
+    def get_comp_pins_from_lef(
+        self,
+        in_file,
+        scale=1,
+        # silent=False
+    ):
         par_f = self.parser_multi_file(in_file)
         if par_f is None:
             return {}
@@ -391,8 +396,9 @@ class ComponentParser:
                     # for p in pin[1]["PORT"]["RECT"]
                     # ]
                 }
-            if not silent:
-                print("SIZE:", [i * scale for i in c[1]["SIZE"]])
+
+            #if not silent:
+            #    print("SIZE:", [i * scale for i in c[1]["SIZE"]])
             c_list[c[0]] = Component(
                 c[0], pins, [i * scale for i in c[1]["SIZE"]])
         return c_list

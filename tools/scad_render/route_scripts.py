@@ -39,13 +39,23 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
             comp_dict = {}
             if isinstance(components_lef, str):
                 comp_dict = component_parse.ComponentParser(
+# <<<<<<< HEAD
+#                 ).get_comp_pins_from_lef(components_lef, scale=s)
+#             elif isinstance(components_lef, list):
+#                 for c_lef in components_lef:
+#                     new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(c_lef, scale=s)
+#                     for cmp in new_dict.items():
+#                         if cmp[0] in comp_dict:
+#                             print(
+#                                 f"Component {cmp[0]} already read in, skipping")
+# =======
                     ).get_comp_pins_from_lef(components_lef, scale=s, silent=silent)
             elif isinstance(components_lef, list):
                 for c_lef in components_lef:
                     new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(
                         c_lef,
                         scale=s,
-                        silent=silent
+                        # silent=silent
                     )
                     for cmp in new_dict.items():
                         if cmp[0] in comp_dict:
@@ -660,14 +670,24 @@ def check_net_intersections(net1, net2, fl_acc=0.0001, silent=False):
         return not (sg[0][2] == sg[1][2])
 
     def check_pt_eq(pt1, pt2):
-        if isinstance(pt1[2], float) or isinstance(pt1[2], int):
+        if isinstance(pt1[2], float):
             return abs(pt1[0]-pt2[0]) < fl_acc and \
                 abs(pt1[1]-pt2[1]) < fl_acc and \
                 abs(pt1[2]-pt2[2]) < fl_acc
-        # elif isinstance(pt1[2], int):
-        #     return abs(pt1[0]-pt2[0]) < fl_acc and \
-        #         abs(pt1[1]-pt2[1]) < fl_acc and \
-        #         abs(pt1[2]-pt2[2]) < fl_acc
+        elif isinstance(pt1[2], int):
+            return abs(pt1[0]-pt2[0]) < fl_acc and \
+                abs(pt1[1]-pt2[1]) < fl_acc and \
+                abs(pt1[2]-pt2[2]) < fl_acc
+# =======
+#         if isinstance(pt1[2], float) or isinstance(pt1[2], int):
+#             return abs(pt1[0]-pt2[0]) < fl_acc and \
+#                 abs(pt1[1]-pt2[1]) < fl_acc and \
+#                 abs(pt1[2]-pt2[2]) < fl_acc
+#         # elif isinstance(pt1[2], int):
+#         #     return abs(pt1[0]-pt2[0]) < fl_acc and \
+#         #         abs(pt1[1]-pt2[1]) < fl_acc and \
+#         #         abs(pt1[2]-pt2[2]) < fl_acc
+# >>>>>>> main
         elif isinstance(pt1[2], str):
             return abs(pt1[0]-pt2[0]) < fl_acc and \
                 abs(pt1[1]-pt2[1]) < fl_acc and \
