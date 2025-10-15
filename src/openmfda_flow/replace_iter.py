@@ -204,9 +204,13 @@ def replace_iter(
                                         except:
                                             fail = True
                                     else:
-                                        omfda_cl.run_flow(
-                                            mk_targets='replace'
-                                        )
+                                        fail = False
+                                        try:
+                                            omfda_cl.run_flow(
+                                                mk_targets='replace -B'
+                                            )
+                                        except:
+                                            fail = True
 
                                     # extract results
                                     repl_vars = [
