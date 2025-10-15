@@ -477,7 +477,7 @@ class OpenMFDA:
         bb = "}"
 
         if not os.path.exists(os.path.dirname(replace_args_filename)):
-            os.mkdir(os.path.dirname(replace_args_filename))
+            os.makedirs(os.path.dirname(replace_args_filename))
 
         with open(replace_args_filename, "w+") as f:
             print(

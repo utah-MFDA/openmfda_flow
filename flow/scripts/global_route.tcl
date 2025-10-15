@@ -39,11 +39,7 @@ if {[info exist env(FASTROUTE_TCL)]} {
   }
   puts "fastroute files loaded"
 } else {
-<<<<<<< HEAD
-  puts "no fastroute tcl"
-=======
   puts "No FASTROUTE file supplied"
->>>>>>> ed5d5a3de420ae01932356892a05050092169a28
   set_global_routing_layer_adjustment $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER) 0.5
   set_routing_layers -signal $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER)
   set_macro_extension 2

@@ -7,7 +7,6 @@ export GENERAL_MAP_FILE = $(PLATFORM_DIR)/lib/common.v
 
 ifeq ($(BUILD_PDK_LIBRARY),)
 # General distribution files
-<<<<<<< HEAD
 # gds files are not required
 # export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
                       # $(ADDITIONAL_GDS)

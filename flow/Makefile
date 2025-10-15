@@ -643,7 +643,6 @@ endif
 # |____/ \____/_/   \_\____/
 # =======
 
-<<<<<<< HEAD
 # render: $(RESULTS_DIR)/4_final.scad # old scad call
 # render: $(RESULTS_DIR)/$(DESIGN)_base.scad # the stl is the new output
 .PHONY: scad render slice zip
