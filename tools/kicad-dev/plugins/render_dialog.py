@@ -21,8 +21,11 @@ class RenderSubprocDialog(wx.Dialog):
         self.mfda_home = None
         self.render_file = scad_file
 
-        start_btn = wx.Button(panel, label='Run OpenSCAD')
-        start_btn.Bind(wx.EVT_BUTTON, self.start)
+        self.rebuildAll_chkbx = wx.CheckBox(panel, label='Rebuild all files')
+        genScad_btn = wx.Button(panel, label='Generate SCAD')
+        genScad_btn.Bind(wx.EVT_BUTTON, self.gen_scad)
+        startScad_btn = wx.Button(panel, label='View in OpenSCAD')
+        startScad_btn.Bind(wx.EVT_BUTTON, self.run_openscad)
         halt_btn = wx.Button(panel, label='Halt')
         halt_btn.Bind(wx.EVT_BUTTON, self.halt)
 
@@ -42,21 +45,25 @@ class RenderSubprocDialog(wx.Dialog):
 
         sizer_v_main.Add(mfda_home_btn, 0, wx.ALL, 7)
         sizer_v_main.Add(self.mfda_home_text, 0, wx.EXPAND | wx.ALL, 7)
-        sizer_v_main.Add(start_btn, 0, wx.ALL, 7)
+        sizer_v_main.Add(self.rebuildAll_chkbx, 0, 0, 7)
+        sizer_v_main.Add(genScad_btn, 0, wx.ALL, 7)
+        sizer_v_main.Add(startScad_btn, 0, wx.ALL, 7)
         sizer_v_main.Add(halt_btn, 0, wx.ALL, 7)
         sizer_v_main.Add(self.log, 1, wx.ALL | wx.EXPAND, 7)
 
         panel.SetSizer(sizer_v_main)
 
+        self.SetInitialSize(wx.Size(450, 550))
+
     def halt(self, event):
         if self.proc:
             self.proc.terminate()
 
-    def start(self, event):
-        # self.log.write('WD:'+os.path.abspath(self.mfda_home)+'\n')
-        self.log.write(' '.join(self.cmd))
+    def gen_scad(self, event):
+        cmd_B = ['-B'] if self.rebuildAll_chkbx.IsChecked() else []
+        self.log.write(' '.join(self.cmd)+'\n')
         self.proc = subprocess.Popen(
-            self.cmd,
+            self.cmd + cmd_B,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
 
@@ -68,16 +75,24 @@ class RenderSubprocDialog(wx.Dialog):
             else:
                 break
         self.proc.wait()
-        self.run_openscad(None)
+        # self.run_openscad(None)
         # wx.MessageBox("Done.")
 
     def run_openscad(self, event):
         openscad_cmd = ['openscad', self.render_file]
-        self.log.write(' '.join(openscad_cmd))
+        self.log.write(' '.join(openscad_cmd)+'\n')
         subprocess.Popen(
             openscad_cmd,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
+        while True:
+            wx.Yield()
+            line = self.proc.stdout.readline()
+            if line:
+                self.log.write(line)
+            else:
+                break
+        self.proc.wait()
 
     def set_mfda_home(self, event):
 

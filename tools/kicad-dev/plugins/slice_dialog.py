@@ -25,6 +25,7 @@ class SliceSubprocDialog(wx.Dialog):
         self.proc = None
         self.mfda_home = None
 
+        self.rebuildAll_chkbx = wx.CheckBox(panel, label='Rebuild all files')
         render_btn = wx.Button(panel, label='Render')
         render_btn.Bind(wx.EVT_BUTTON, self.render)
         slice_btn = wx.Button(panel, label='Slice')
@@ -44,11 +45,12 @@ class SliceSubprocDialog(wx.Dialog):
         mfda_home_btn = wx.Button(panel, label="Set OpenMFDA home")
         mfda_home_btn.Bind(wx.EVT_BUTTON, self.set_mfda_home)
 
-        # ----- sizer
+        # ----- sizer -----
         sizer_v_main = wx.BoxSizer(wx.VERTICAL)
 
         sizer_v_main.Add(mfda_home_btn, 0, wx.ALL, 7)
         sizer_v_main.Add(self.mfda_home_text, 0, wx.EXPAND | wx.ALL, 7)
+        sizer_v_main.Add(self.rebuildAll_chkbx, 0, 0, 7)
         sizer_v_main.Add(render_btn, 0, wx.ALL, 7)
         sizer_v_main.Add(slice_btn, 0, wx.ALL, 7)
         sizer_v_main.Add(halt_btn, 0, wx.ALL, 7)
@@ -57,15 +59,17 @@ class SliceSubprocDialog(wx.Dialog):
 
         panel.SetSizer(sizer_v_main)
 
+        self.SetInitialSize(wx.Size(450, 550))
+
     def halt(self, event):
         if self.proc:
             self.proc.terminate()
 
     def render(self, event):
-        # self.log.write('WD:'+os.path.abspath(self.mfda_home)+'\n')
-        self.log.write(' '.join(self.cmd))
+        cmd_B = ['-B'] if self.rebuildAll_chkbx.IsChecked() else []
+        self.log.write(' '.join(self.cmd)+'\n')
         self.proc = subprocess.Popen(
-            self.cmd,
+            self.cmd + cmd_B,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
 

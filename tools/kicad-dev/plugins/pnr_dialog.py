@@ -21,6 +21,7 @@ class PnRSubprocDialog(wx.Dialog):
         self.proc = None
         self.mfda_home = None
 
+        self.rebuildAll_chkbx = wx.CheckBox(panel, label='Rebuild all files')
         start_btn = wx.Button(panel, label='Start')
         start_btn.Bind(wx.EVT_BUTTON, self.start)
         halt_btn = wx.Button(panel, label='Halt')
@@ -40,6 +41,7 @@ class PnRSubprocDialog(wx.Dialog):
 
         sizer_v_main.Add(mfda_home_btn, 0, wx.ALL, 7)
         sizer_v_main.Add(self.mfda_home_text, 0, wx.EXPAND | wx.ALL, 7)
+        sizer_v_main.Add(self.rebuildAll_chkbx, 0, 0, 7)
         sizer_v_main.Add(start_btn, 0, wx.ALL, 7)
         sizer_v_main.Add(halt_btn, 0, wx.ALL, 7)
         # sizer_v_main.Add(wx.TextCtrl(), 0, wx.ALL, 7) # log text
@@ -47,17 +49,17 @@ class PnRSubprocDialog(wx.Dialog):
 
         panel.SetSizer(sizer_v_main)
 
-        # panel.SetSizer(sizer_h)
+        self.SetInitialSize(wx.Size(450, 550))
 
     def halt(self, event):
         if self.proc:
             self.proc.terminate()
 
     def start(self, event):
-        # self.log.write('WD:'+os.path.abspath(self.mfda_home)+'\n')
-        self.log.write(' '.join(self.cmd))
+        cmd_B = ['-B'] if self.rebuildAll_chkbx.IsChecked() else []
+        self.log.write(' '.join(self.cmd)+'\n')
         self.proc = subprocess.Popen(
-            self.cmd,
+            self.cmd + cmd_B,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
 
