@@ -659,6 +659,11 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # $(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 # =======
 # additional pcell files to include
+
+ifeq ($(SCAD_LIB),)
+SCAD_LIB = $(PLATFORM_DIR)/pdk/scad_lib
+endif
+
 ifneq ($(SCAD_INCLUDE_FILES),)
 SCAD_INCLUDE_FILES += $(SCAD_LIB)/polychannel_v2.scad $(SCAD_LIB)/lef_helper.scad $(SCAD_LIB)/lef_scad_config.scad
 else

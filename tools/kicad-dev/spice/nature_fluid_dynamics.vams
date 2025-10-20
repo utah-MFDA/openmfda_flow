@@ -1,0 +1,57 @@
+
+nature Pressure
+     units = "Pa";
+     access = P;
+     idt_nature = DynViscosity;
+     //abstol = 1;
+endnature
+
+nature Volume
+    units = "L";
+    access = L;
+ddt_nature = FluidFlow;
+endnature
+
+nature FluidFlow
+     units = "L/s";
+     access = Qfl;
+     idt_nature = Volume;
+     //abstol = 1u;
+endnature
+
+nature DynViscosity
+     units= "Pa*s";
+     access = Pas;
+     ddt_nature = Pressure;
+endnature
+
+nature Concentration_ppm
+     units = "ppm";
+     access = PPM;
+     //abstol = 1;
+endnature
+
+// mol/L, molar concentration
+nature Concentration_mole
+     units = "M";
+     access = C;
+     //abstol = 1;
+endnature
+
+nature Concentration_current
+     units = "M";
+     access = Ci;
+     //abstol = 1;
+endnature
+
+discipline fluidDynamics
+     domain continous;
+     potential Pressure;
+     flow FluidFlow;
+enddiscipline
+
+discipline concentration
+    domain continous;
+    potential Concentration_mole;
+    flow Concentration_current;
+enddiscipline
