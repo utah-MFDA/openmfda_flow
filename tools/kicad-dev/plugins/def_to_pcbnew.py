@@ -135,7 +135,8 @@ class DefToPcbnew:
                     via.SetX(int(self.convert_x(sx)))
                     via.SetY(int(self.convert_y(sy)))
                     via.SetWidth(width)
-                    via.SetViaType(pcbnew.VIATYPE_BLIND_BURIED)
+                    # causes error in new versions
+                    # via.SetViaType(pcbnew.VIATYPE_BLIND_BURIED)
                     via.SetNetCode(knet.GetNetCode())
                     via.SetTopLayer(top_id)
                     via.SetBottomLayer(bottom_id)

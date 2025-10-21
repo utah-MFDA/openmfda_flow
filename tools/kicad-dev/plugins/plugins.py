@@ -168,15 +168,21 @@ class PnRPlugin(pcbnew.ActionPlugin):
         def_file = str(directory / "results" / "4_final.def")
         tlef_files, lef_files = lef_from_env()
         if os.path.exists(def_file):
+            print("Load db")
             db = load_db(def_file, tlef_files, lef_files)
 
             board = pcbnew.GetBoard()
+            print("Get Tracks")
             for tr in board.GetTracks():
                 board.Remove(tr)
 
+            print("Init Def to PCBNEW")
             d = DefToPcbnew(db, board)
+            print("Extract layers")
             d.extract_layers()
+            print("Place")
             d.place()
+            print("Route")
             d.route()
             pcbnew.Refresh()
 

@@ -40,7 +40,7 @@ nets_block_reg = r'^NETS\s*\d*\s*;\w*\n([\s\S]*)^\s*END\s*NETS$'
 #nets_line_reg = r'^[ ]*-\s*(?P<net>\w*)\s*(?P<dev_groups>(\(\s*\w*\s*\w*\s*\))\s*(\(\s*\w*\s*\w*\s*\)\s*?)+)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
 #nets_line_reg = r'^[ ]*-\s*(?P<net>\w*)\s*(?P<dev_groups>(\(\s*\w*\s*\w*\s*\)\s*?)+)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
 #nets_line_reg = r'^[ ]*-\s*(?P<net>[\w\.]*)\s*(?P<dev_groups>[\(\s\w\.\)]*?)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n?(?|\s*NEW.*)*;$' # last implemenation
-nets_line_reg = r'^[ ]*-\s*(?P<net>[\w\.]*)\s*(?P<dev_groups>[\(\s\w\.\)]*?)\s*\+\s*USE\s+SIGNAL.*\s*\+\s*ROUTED.*\n?(?:[\s\S]*?);$'
+nets_line_reg = r'^[ ]*-\s*(?P<net>[\w\.]*)\s*(?P<dev_groups>[\(\s\w\.\)\-]*?)\s*\+\s*USE\s+SIGNAL.*\s*\+\s*ROUTED.*\n?(?:[\s\S]*?);$'
 nets_route_reg= r'(?:ROUTED|NEW)\s*(?P<layer>\w*)\s*((?:\(\s*(?P<x1>[\d\*]*)\s*(?P<y1>[\d\*]*)\s*(?P<z1>[\d\*]*)\s*\)))\s((?:\(\s*(?P<x2>[\d\*]*)\s*(?P<y2>[\d\*]*)\s*(?P<z2>[\d\*]*)\s*\)|(?P<via>\w*)))'
 
 # solid imports
