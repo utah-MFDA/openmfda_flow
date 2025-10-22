@@ -5,7 +5,7 @@ import networkx as nx
 from numpy.testing._private.utils import break_cycles
 import pyscipopt as scip
 from networkx_helpers import *
-import solid2
+from render import *
 import logging
 log = logging.getLogger(__name__)
 
@@ -342,11 +342,11 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
         minim = []
         if len(group) > 1:
             log.debug("Adding bounds for %s %s at distance %d to %d children on layer %d", orientation, relative, dist, len(group), shell)
-            if relax and minimize:
-                X = M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
-                minim.append(X)
-            else:
-                X = relax
+            # if relax and minimize:
+                # X = M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
+                # minim.append(X)
+            # else:
+            X = dist + relax
             # bounds = [(M.addVar(f"{relative}_ubound_{i}", vtype="I", lb=lb, ub=ub),
             #             M.addVar(f"{relative}_lbound_{i}", vtype="I", lb=lb, ub=ub))
             #             for i, (lb, ub) in enumerate(bounding)]
@@ -364,7 +364,7 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
                         sd = G.nodes[second]["coordinates"]
                         for a, b in zip(fd, sd):
                             # minim += within_distance(G, M, a, b, abs(ashell-shell), relax)
-                            M.addCons(abs(a-b) <= dist + X)
+                            M.addCons(abs(a-b) <= X)
         return minim
     return []
 
@@ -380,11 +380,11 @@ def bounded_peer(G, M, orientation, relative, frontier, bounding, shell, offset,
                 dist = 2*(abs(ashell - shell)+1)
                 if len(group) > 1:
                     log.debug("Adding bounds for peers %s %s at distance %d to %d children on layer %d", relative, adj, dist, len(group), shell)
-                    if relax and minimize:
-                        X = M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
-                        minim.append(X)
-                    else:
-                        X = relax
+                    # if relax and minimize:
+                    #     X = M.addVar(f"{relative}_relax", vtype="I", lb=0, ub=relax)
+                    #     minim.append(X)
+                    # else:
+                    X = dist + relax
                     # bounds = [(M.addVar(f"{relative}_ubound_{i}", vtype="I", lb=lb, ub=ub),
                     #             M.addVar(f"{relative}_lbound_{i}", vtype="I", lb=lb, ub=ub))
                     #             for i, (lb, ub) in enumerate(bounding)]
@@ -402,7 +402,7 @@ def bounded_peer(G, M, orientation, relative, frontier, bounding, shell, offset,
                                 sd = G.nodes[second]["coordinates"]
                                 for a, b in zip(fd, sd):
                                     # minim += within_distance(G, M, a, b, abs(ashell-shell), relax)
-                                    M.addCons(abs(a-b) <= dist + X)
+                                    M.addCons(abs(a-b) <= X)
         return minim
     return []
 
@@ -425,8 +425,8 @@ def within_distance(G, M, a, b, d, relax, minimize):
         minim.append(X)
     else:
         X = relax
-    M.addCons(abs(a-b) <= d + relax)
-    return minim
+    M.addCons(abs(a-b) <= d + X)
+    return [32*i for i in minim]
 
 def proximate_layer(G, M, s, e, shell, offset, relax, minimize):
     a = G.nodes[s]["coordinates"]
@@ -482,8 +482,8 @@ def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
                  offset=0, limit=10, timeout=60, minimize=False):
     render_dot_undir(G, "raw.dot")
     shells = find_center(G, start_condition, buffer_condition)
+    relax = 0
     for shell in range(0, shells):
-        relax = 0
         current = {node for node, d in G.nodes.items() if d["shell"] == shell}
         bounds = bounding(width, height, depth, shell, offset)
         flat = [i for j in bounds for i in j]
@@ -544,53 +544,12 @@ def run_backwards(G, skip, outfile, start_condition, buffer_condition,
         render_scad(G, outfile, shells)
     return shells
 
-def solve_slice(G, overlap, inside, distance, proximate, ahead, attach,
-                frontier, shell, width, height, depth, bounding, offset, max_shell,
-                relax = 0, limit=4, timeout=30, minimize=False):
-    if relax:
-        log.warning("Relaxing distance constraints by %d", relax)
-    M = scip.Model()
-    M.setParam("limits/time", timeout)
-    # M.setParam("limits/solutions", 1)
-    for node in frontier:
-        inside(G, M, node, width, height, depth, shell, offset, relax, minimize)
-    minim = []
-    for first in frontier:
-        for second in frontier:
-            if first < second:
-                minim += overlap(G, M, first, second, shell, offset, relax, minimize)
-    for node in G.nodes:
-        minim += distance(G, M, node, frontier, bounding, shell, offset, relax, minimize)
-    for node in frontier:
-        for neighbor in G.adj[node]:
-            if G.nodes[neighbor]["shell"] == shell - 1:
-                minim += attach(G, M, neighbor, node, shell, offset, relax, minimize)
-    if minim:
-        log.info("Running with minimization")
-        M.setObjective(scip.quicksum(minim), sense="minimize")
-    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.presolve()
-    log.info("Start optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.optimize()
-    log.info("Finished optimizing, %d solutions found", M.getNSols())
-
-    if M.getNSols() == 0:
-        for node in frontier:
-            props = G.nodes[node]
-            del props["coordinates"]
-        return False
-    for node in frontier:
-        props = G.nodes[node]
-        props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
-        # log.debug("Final coordinates: %s %s", node, props["coordinates"])
-    return True
-
 def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
                 relax = 0, limit=4, timeout=30, minimize=False):
     M = scip.Model()
     M.setParam("limits/time", timeout)
-    M.setParam("limits/solutions", 1)
+#     M.setParam("limits/solutions", 1)
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
     log.warn("Solving shell %d, %d nodes", shell, len(frontier))
@@ -650,109 +609,6 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
     del M
     return True
 
-################# Rendering ##################
-def draw_channel(a, b, d):
-    v = [i - j for i, j in zip(a, b)]
-    length = sqrt(sum((i-j)**2 for i, j in zip(a, b)))
-    bounds = d[0], d[1], length
-    if length == 0.0:
-        length += 0.000001
-    angle = [0,180*acos(v[2]/length)/pi, 180*atan2(v[1], v[0])/pi]
-    return solid2.translate(b)(solid2.rotate(angle)(solid2.cube(bounds)))
-
-def scad_render_nodes(G,nodes):
-    for node in nodes:
-        if "coordinates" not in G.nodes[node]:
-            continue
-
-        dimensions = G.nodes[node].get("dimensions", [1, 1, 1])
-        position = G.nodes[node]["coordinates"]
-        if len(position) == 2:
-            position = [G.nodes[node]["shell"]] + position
-        s = solid2.translate(position)(solid2.cube(dimensions))
-        cell = G.nodes[node]["cell"]
-        if is_dummy(G, node):
-            color = "lightblue"
-        elif is_net(G, node):
-            if is_flow(G, node):
-                color = "pink"
-            elif is_control(G, node):
-                color = "orange"
-            elif is_flush(G, node):
-                color = "yellow"
-            else:
-                color = "lightgreen"
-        else:
-            color = "black"
-        yield scad_comment(f"Node {node}") (solid2.color(color, alpha=0.1)(s))
-
-def scad_render_edges(G, edges):
-    for edge in edges:
-        start, end = edge
-        if "coordinates" not in G.nodes[end] or "coordinates" not in G.nodes[start]:
-            continue
-        end_orig = G.nodes[end]["coordinates"]
-        if len(end_orig) == 2:
-            end_orig = [G.nodes[end]["shell"]] + end_orig
-
-        end_dim = G.nodes[end].get("dimensions", [1,1,1])
-        start_orig = G.nodes[start]["coordinates"]
-        if len(start_orig) == 2:
-            start_orig = [G.nodes[start]["shell"]] + start_orig
-        start_dim = G.nodes[start].get("dimensions", [1,1,1])
-        channel_dim = G.edges[edge].get("dimensions", (0.125,0.125, 0.125))
-        start_pin = G.edges[edge].get("start_pin", (0.5, 0.5, 0.5))
-        end_pin = G.edges[edge].get("end_pin", (0.5, 0.5, 0.5))
-#        log.debug("edge from %s %s to %s %s", start, start_orig, end, end_orig)
-        front = [i + j for i, j in zip(start_orig, start_pin)]
-        back = [i + j for i, j in zip(end_orig, end_pin)]
-        bit = G.edges[edge]["bit"]
-        yield scad_comment(f"Edge {bit} from {start} to {end}")(draw_channel(front, back, channel_dim))
-def to_directed(G):
-    H = nx.DiGraph()
-    for node in G.nodes:
-        H.add_node(node)
-        if "shell" not in G.nodes[node]:
-            log.warning("Missing shell %s", node)
-            continue
-        for edge in G.adj[node]:
-            if "shell" not in G.nodes[edge]:
-                log.warning("Missing shell %s", edge)
-                continue
-            if is_descendent(G, edge, node):
-                H.add_edge(node, edge)
-    return H
-
-def render_dot(G, outfile):
-    nx.nx_pydot.write_dot(to_directed(G), outfile)
-
-def render_dot_undir(G, outfile):
-    nx.nx_pydot.write_dot(G, outfile)
-
-
-def render_shell(G, shell):
-    nodes = [n for n, d in G.nodes.items() if d["shell"] == shell]
-    edges = [(s, e) for s, e in G.edges
-            if max(G.nodes[s]["shell"], G.nodes[e]["shell"]) == shell+1 and
-               min(G.nodes[s]["shell"], G.nodes[e]["shell"]) == shell]
-    scad_nodes = scad_comment(f"Nodes shell {shell}")(solid2.union()(*scad_render_nodes(G, nodes)))
-    scad_edges = scad_comment(f"Edges shell {shell}")(solid2.union()(*scad_render_edges(G, edges)))
-    return scad_comment(f"Shell {shell}")(solid2.union()(solid2.background()(scad_nodes),scad_edges))
-
-@solid2.register_access_syntax
-class scad_comment(solid2.object_base.ObjectBase, solid2.object_base.AccessSyntaxMixin, solid2.object_base.OperatorMixin):
-    def __init__(self, comment):
-        super().__init__()
-        self.comment = comment
-    def _render(self):
-        return f"/*{self.comment}*/\n" + super()._render()
-
-def render_scad(G,outfile,shells):
-    final = (render_shell(G, shell) for shell in range(0, shells))
-    scad = solid2.translate([-0.5, -0.5, 0])(*final)
-    scad.save_as_scad(outfile)
-
-
 ################# Main #########################
 
 if __name__ == "__main__":
@@ -792,7 +648,7 @@ if __name__ == "__main__":
     start = lambda G, n: (is_input_port(G, n) or is_output_port(G, n)) and is_flow(G, n)
     buffer = lambda G, n: False
     if args.add_buffers:
-        buffer = lambda G, n: not any(is_descendent(G, adj, node) for adj in G.adj[node])
+        buffer = lambda G, node: not any(is_descendent(G, adj, node) for adj in G.adj[node])
 
     if args.orientation == "cube":
         orientation = in_shell
