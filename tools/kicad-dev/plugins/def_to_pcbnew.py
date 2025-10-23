@@ -2,6 +2,7 @@ import opendbpy as odb
 import pcbnew
 from .opendb_helpers import wire_iter, segment_iter
 
+
 class DefToPcbnew:
     def __init__(self, db, board):
         self.db = db
@@ -34,7 +35,8 @@ class DefToPcbnew:
                     self.board.SetLayerName(31, layer.getName())
                 else:
                     # top layer is 0, so set layers in reverse order
-                    self.board.SetLayerName(num_layers - i - 1, layer.getName())
+                    self.board.SetLayerName(
+                        num_layers - i - 1, layer.getName())
         # Stackup is optional, may need to set
 
     def convert_location(self, comp, master):
@@ -48,7 +50,6 @@ class DefToPcbnew:
         # same placement location."
         # Rotation is counterclockwise positive (regular cartesian)
         # Flip happens before rotation happens
-
 
         # KiCad behavior:
         # Grid is pos y is down
@@ -84,7 +85,8 @@ class DefToPcbnew:
         elif ori == "MY90" or ori == "FE" or ori == "MYR90":
             return (x + h, y - w, -90.0, True)
         else:
-            raise ValueError(f"Unexpected orientation '{ori}', should be one of R0, R180, R90, R270, MY, MX, MX90, MXR90, MY90, or MYR90. Or N,S,E,W,FN,FS,FE, or FW")
+            raise ValueError(
+                f"Unexpected orientation '{ori}', should be one of R0, R180, R90, R270, MY, MX, MX90, MXR90, MY90, or MYR90. Or N,S,E,W,FN,FS,FE, or FW")
 
     def place(self):
         block = self.db.getChip().getBlock()
@@ -93,8 +95,15 @@ class DefToPcbnew:
             x, y, angle, flip = self.convert_location(comp, master)
             name = comp.getConstName()
             module = master.getConstName()
-            print("placing", name, module, x/1000000, y/1000000, comp.getOrient(), angle, flip)
+            print("placing", name, module, x/1000000, y /
+                  1000000, comp.getOrient(), angle, flip)
             for foot in self.board.GetFootprints():
+                if foot.GetFPIDAsString() == "h.r.3.3:interconnect_4x8":
+                    foot.SetOrientationDegrees(0)
+                    foot.SetX(127000000)
+                    foot.SetY(127000000)
+                    foot.SetIsPlaced(True)
+                    foot.SetNeedsPlaced(False)
                 # O(n**2), fix later
                 if foot.GetReference() == name:
                     # reset everything, flipping is stateful.
@@ -124,7 +133,8 @@ class DefToPcbnew:
                 sx, sy, sext = map(self.scale, start)
                 knet = self.board.FindNet(net.getName())
                 if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
-                    bottom_id = self.board.GetLayerID(end.getBottomLayer().getName())
+                    bottom_id = self.board.GetLayerID(
+                        end.getBottomLayer().getName())
                     top_id = self.board.GetLayerID(end.getTopLayer().getName())
                     print("routing net", net.getName(),
                           "via at ", sx/1000000, sy/1000000,
