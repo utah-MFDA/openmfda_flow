@@ -4,9 +4,8 @@ import pandas as pd
 
 def find_least_impactful(adj: pd.DataFrame) -> tuple[pd.DataFrame, pd.Index]:
     dim = adj.copy() # just need same rows
-    for column in adj.columns:
-        dim[column] = adj.drop(column, axis=1).duplicated()
-
+    # for column in adj.columns:
+    #     dim[column] = adj.drop(column, axis=1).duplicated()
     best = dim.sum().idxmin()
     return dim, best
 
@@ -16,11 +15,12 @@ def squash(adj: pd.DataFrame, impacts: pd.DataFrame, dropped: pd.Index) -> pd.Da
     series = adj[dropped]
     possible = dim.copy()
     possible += series
-    possible_dupes = (possible.drop(column, axis=1).duplicated() for column in dim.columns)
-    errors = pd.concat(possible_dupes, keys=dim.columns, axis=1)
-    # for column in possible.columns:
-    #     errors[column] = possible.drop(column, axis=1).duplicated()
-    target = errors.sum().idxmin()
+    # possible_dupes = (possible.drop(column, axis=1).duplicated() for column in dim.columns)
+    # errors = pd.concat(possible_dupes, keys=dim.columns, axis=1)
+    # target = errors.sum().idxmin()
+    target = possible.sum().idxmin()
+
+    dupes = dim.duplicated()
     dim[target] = dim[target] + adj[dropped]
     return dim
 
@@ -39,9 +39,19 @@ G = collapse_edges(G)
 labels = {node: f"{i:03}" for i, node in enumerate(G.nodes)}
 nx.relabel_nodes(G, labels, copy=False)
 p = nx.to_pandas_adjacency(G, dtype=int)
-r = reduce_dimension(p)
-r.to_csv("kinase_1.dimension.csv")
-for node, coords in r.iterrows():
-    G.nodes[node]["coordinates"] = coords.array
+
+from sklearn.decomposition import PCA
+pca = PCA(n_components=3)
+pca.fit(p)
+import numpy as np
+# r = reduce_dimension(p)
+# r.to_csv("kinase_1.dimension.csv")
+cmp = pca.components_
+d = pd.DataFrame({"x":cmp[0], "y":cmp[1], "z":cmp[2]}, index=p.index)
+d /= d.abs().min()
+print(d.abs().min())
+print(d)
+for node, coord in d.iterrows():
+    G.nodes[node]["coordinates"] = coord.array
 s = render_flat(G)
 s.save_as_scad("benchmarks/kinase_1.dimension.scad")
