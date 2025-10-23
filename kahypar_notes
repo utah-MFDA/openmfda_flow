@@ -1,0 +1,32 @@
+Eventually landed on this for installation
+
+CC=gcc-8 CXX=g++-8 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/home/snelgrov/.local/share/boost_1_87_0/stage/lib/cmake/Boost-1.87.0/ -DCMAKE_INCLUDE_PATH=/home/snelgrov/.local/include/ -DCMAKE_LIBRARY_PATH=/home/snelgrov/.local/lib -DKAHYPAR_DOWNLOAD_TBB=On -DCMAKE_INSTALL_PREFIX=/home/snelgrov/.local -DKAHYPAR_ENABLE_STEINER_TREE_METRIC=On -DKAHYPAR_ENABLE_GRAPH_PARTITIONING_FEATURES=On ..
+
+% ~/nas/mt-kahypar/build/mt-kahypar/application/MtKaHyPar -v 1  \
+    --input-file-format metis \
+    --hypergraph ~/nas/lsoracle/benchmarks/4elt.graph \
+    --target-graph-file ~/nas/lsoracle/benchmarks/lego.graph \
+    --blocks 13 \
+    --epsilon 0.5 \
+    --preset-type=default \
+    --objective steiner_tree \
+    --s-num-threads 64 \
+    --show-advanced-cut-analysis 1 \
+    --write-partition-file 1 \
+    --partition-output-folder .
+
+lego.graph (metis format)
+13 16
+5
+5 7
+7
+5 10
+1 2 4 6
+5 7 10 12
+2 3 6 8
+7 12
+10
+4 6 9 11
+10 12
+6 8 11 13
+12

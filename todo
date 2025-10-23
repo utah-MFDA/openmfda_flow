@@ -1,0 +1,43 @@
+Priority:
+Flatpak fully working
+PDK stable
+lnissrv flatpak desktop application link
+
+Workshop todo:
+* Publish packages:
+Flathub
+https://docs.flatpak.org/en/latest/hosting-a-repository.html
+Debian package for kicad
+Recent Debian version package for openroad
+Opendb python (manually compiled and installed)
+
+Using python with openroad?
+Other missing tools?
+
+* USB key
+Brute force - install flatpak
+Better - install deb packages
+
+* Kicad plugin
+Testing.
+Handle errors without crashing
+Fix paths for pdk installation
+localization for units
+
+* PDK
+Consolidate all the branches and outstanding shit
+Check with Erika again
+Reconfigure cells for depth
+
+* Feasibility
+Error on infeasible.
+Rerun infeasible
+Bradey's reroute fix
+Fluid only PnR
+Hierarchical stacking
+
+* Prep
+More example circuits.
+
+* 3D routing
+Planar version.

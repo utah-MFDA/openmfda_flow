@@ -1,0 +1,20 @@
+Warnings are errors that don't cause an immediate crash at compile time. Any warning is an indication that something is wrong, don't ignore them.
+Routing currently generates 4 warnings per segment. This yielded 1700 warnings for a medium size device. Any other warning is lost in the noise - including 4 that were actually critical to solve the issue I was investigating.
+
+Fail quickly and fail loudly. If there is ever a condition which is unexpected, immediately crash the program. Silently succeeding without notifying the user leads to unexplainable behavior that will require searching the entire code path to find where the behavior is. I could not figure out why my device would not render. The code was silently treating an unexpected value as 0 rather than failing.
+
+Always handle every possible case. If there is the possibility of an unexpected or invalid case, throw an error. Prefer to use if/else if/else rather than falling through.
+
+Prefer parameters over global variables. This includes
+
+Deserialize data at the top level as soon as possible.
+
+Don't use behavior flags.
+
+Don't accept multiple types of data for the same parameter.
+
+Use structured data over arrays or dictionaries.
+
+Use verbose names for variables.
+
+Don't make lines too long. Break up into intermediate results.

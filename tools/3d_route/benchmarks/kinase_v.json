@@ -1,0 +1,3260 @@
+{
+  "creator": "Yosys 0.55+194 (git sha1 8576d2d14, g++ 8.5.0 -fPIC -O3)",
+  "modules": {
+    "thing": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "kinase_1.v:1.1-23.10"
+      },
+      "ports": {
+        "pad_flow_in": {
+          "direction": "input",
+          "bits": [ 2, 3, 4 ]
+        },
+        "pad_flow_out": {
+          "direction": "output",
+          "bits": [ 5, 6, 7, 8 ]
+        },
+        "pad_ctrl_a": {
+          "direction": "input",
+          "bits": [ 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+        },
+        "pad_ctrl_s": {
+          "direction": "input",
+          "bits": [ 22, 23, 24, 25 ]
+        },
+        "pad_pump_a": {
+          "direction": "input",
+          "bits": [ 26, 27, 28 ]
+        },
+        "pad_pump_b": {
+          "direction": "input",
+          "bits": [ 29, 30 ]
+        },
+        "pad_flush_ctrl_a": {
+          "direction": "output",
+          "bits": [ 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 ]
+        },
+        "pad_flush_ctrl_s": {
+          "direction": "output",
+          "bits": [ 44, 45, 46, 47 ]
+        },
+        "pad_flush_pump_a": {
+          "direction": "output",
+          "bits": [ 48, 49, 50 ]
+        },
+        "pad_flush_pump_b": {
+          "direction": "output",
+          "bits": [ 51, 52 ]
+        }
+      },
+      "cells": {
+        "one": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "kinase_1.v:12.29-22.51",
+            "module": "$paramod\\kinase_activity_pads\\SIZE=s32'00000000000000000000000000000001",
+            "module_hdlname": "kinase_activity_pads",
+            "module_src": "kinase_pads.v:1.1-75.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.ctrl_a[0].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[0].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 53 ],
+            "pad": [ 31 ]
+          }
+        },
+        "one.ctrl_a[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 54 ],
+            "pad": [ 9 ]
+          }
+        },
+        "one.ctrl_a[10].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[10].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 55 ],
+            "pad": [ 41 ]
+          }
+        },
+        "one.ctrl_a[10].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[10].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 56 ],
+            "pad": [ 19 ]
+          }
+        },
+        "one.ctrl_a[11].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[11].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 57 ],
+            "pad": [ 42 ]
+          }
+        },
+        "one.ctrl_a[11].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[11].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 58 ],
+            "pad": [ 20 ]
+          }
+        },
+        "one.ctrl_a[12].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[12].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 59 ],
+            "pad": [ 43 ]
+          }
+        },
+        "one.ctrl_a[12].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[12].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 60 ],
+            "pad": [ 21 ]
+          }
+        },
+        "one.ctrl_a[1].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[1].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 61 ],
+            "pad": [ 32 ]
+          }
+        },
+        "one.ctrl_a[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 62 ],
+            "pad": [ 10 ]
+          }
+        },
+        "one.ctrl_a[2].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[2].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 63 ],
+            "pad": [ 33 ]
+          }
+        },
+        "one.ctrl_a[2].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 64 ],
+            "pad": [ 11 ]
+          }
+        },
+        "one.ctrl_a[3].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[3].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 65 ],
+            "pad": [ 34 ]
+          }
+        },
+        "one.ctrl_a[3].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 66 ],
+            "pad": [ 12 ]
+          }
+        },
+        "one.ctrl_a[4].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[4].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 67 ],
+            "pad": [ 35 ]
+          }
+        },
+        "one.ctrl_a[4].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[4].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 68 ],
+            "pad": [ 13 ]
+          }
+        },
+        "one.ctrl_a[5].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[5].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 69 ],
+            "pad": [ 36 ]
+          }
+        },
+        "one.ctrl_a[5].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[5].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 70 ],
+            "pad": [ 14 ]
+          }
+        },
+        "one.ctrl_a[6].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[6].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 71 ],
+            "pad": [ 37 ]
+          }
+        },
+        "one.ctrl_a[6].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[6].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 72 ],
+            "pad": [ 15 ]
+          }
+        },
+        "one.ctrl_a[7].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[7].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 73 ],
+            "pad": [ 38 ]
+          }
+        },
+        "one.ctrl_a[7].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[7].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 74 ],
+            "pad": [ 16 ]
+          }
+        },
+        "one.ctrl_a[8].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[8].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 75 ],
+            "pad": [ 39 ]
+          }
+        },
+        "one.ctrl_a[8].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[8].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 76 ],
+            "pad": [ 17 ]
+          }
+        },
+        "one.ctrl_a[9].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[9].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:51.20-51.82"
+          },
+          "connections": {
+            "connection": [ 77 ],
+            "pad": [ 40 ]
+          }
+        },
+        "one.ctrl_a[9].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[9].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:50.19-50.68"
+          },
+          "connections": {
+            "connection": [ 78 ],
+            "pad": [ 18 ]
+          }
+        },
+        "one.ctrl_s[0].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[0].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:63.20-63.82"
+          },
+          "connections": {
+            "connection": [ 79 ],
+            "pad": [ 44 ]
+          }
+        },
+        "one.ctrl_s[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:62.19-62.68"
+          },
+          "connections": {
+            "connection": [ 80 ],
+            "pad": [ 22 ]
+          }
+        },
+        "one.ctrl_s[1].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[1].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:63.20-63.82"
+          },
+          "connections": {
+            "connection": [ 81 ],
+            "pad": [ 45 ]
+          }
+        },
+        "one.ctrl_s[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:62.19-62.68"
+          },
+          "connections": {
+            "connection": [ 82 ],
+            "pad": [ 23 ]
+          }
+        },
+        "one.ctrl_s[2].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[2].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:63.20-63.82"
+          },
+          "connections": {
+            "connection": [ 83 ],
+            "pad": [ 46 ]
+          }
+        },
+        "one.ctrl_s[2].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:62.19-62.68"
+          },
+          "connections": {
+            "connection": [ 84 ],
+            "pad": [ 24 ]
+          }
+        },
+        "one.ctrl_s[3].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[3].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:63.20-63.82"
+          },
+          "connections": {
+            "connection": [ 85 ],
+            "pad": [ 47 ]
+          }
+        },
+        "one.ctrl_s[3].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:62.19-62.68"
+          },
+          "connections": {
+            "connection": [ 86 ],
+            "pad": [ 25 ]
+          }
+        },
+        "one.devices[0].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_pads.v:67.23-71.100",
+            "hdlname": "one devices[0].thingy",
+            "module": "kinase_activity",
+            "module_src": "kinase_activity.v:1.1-45.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.circulate1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:32.11-32.42",
+            "hdlname": "one devices[0].thingy circulate1",
+            "module": "chamber",
+            "module_src": "common.v:34.1-36.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.circulate1.thing": {
+          "hide_name": 0,
+          "type": "serpentine_150px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy circulate1 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:35.22-35.59"
+          },
+          "connections": {
+            "in_fluid": [ 87 ],
+            "out_fluid": [ 88 ]
+          }
+        },
+        "one.devices[0].thingy.circulate2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:33.11-33.45",
+            "hdlname": "one devices[0].thingy circulate2",
+            "module": "chamber",
+            "module_src": "common.v:34.1-36.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.circulate2.thing": {
+          "hide_name": 0,
+          "type": "serpentine_150px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy circulate2 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:35.22-35.59"
+          },
+          "connections": {
+            "in_fluid": [ 89 ],
+            "out_fluid": [ 90 ]
+          }
+        },
+        "one.devices[0].thingy.column_lower": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:35.11-35.45",
+            "hdlname": "one devices[0].thingy column_lower",
+            "module": "chamber",
+            "module_src": "common.v:34.1-36.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.column_lower.thing": {
+          "hide_name": 0,
+          "type": "serpentine_150px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy column_lower thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:35.22-35.59"
+          },
+          "connections": {
+            "in_fluid": [ 91 ],
+            "out_fluid": [ 92 ]
+          }
+        },
+        "one.devices[0].thingy.column_upper": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:34.11-34.45",
+            "hdlname": "one devices[0].thingy column_upper",
+            "module": "chamber",
+            "module_src": "common.v:34.1-36.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.column_upper.thing": {
+          "hide_name": 0,
+          "type": "serpentine_150px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy column_upper thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:35.22-35.59"
+          },
+          "connections": {
+            "in_fluid": [ 93 ],
+            "out_fluid": [ 94 ]
+          }
+        },
+        "one.devices[0].thingy.v0": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:18.9-18.100",
+            "hdlname": "one devices[0].thingy v0",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v0.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v0 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 54 ],
+            "in_fluid": [ 95 ],
+            "out_air": [ 96 ],
+            "out_fluid": [ 97 ]
+          }
+        },
+        "one.devices[0].thingy.v1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:19.9-19.97",
+            "hdlname": "one devices[0].thingy v1",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v1.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v1 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 62 ],
+            "in_fluid": [ 98 ],
+            "out_air": [ 99 ],
+            "out_fluid": [ 100 ]
+          }
+        },
+        "one.devices[0].thingy.v10": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:28.9-28.94",
+            "hdlname": "one devices[0].thingy v10",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v10.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v10 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 56 ],
+            "in_fluid": [ 101 ],
+            "out_air": [ 102 ],
+            "out_fluid": [ 103 ]
+          }
+        },
+        "one.devices[0].thingy.v11": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:29.9-29.101",
+            "hdlname": "one devices[0].thingy v11",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v11.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v11 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 58 ],
+            "in_fluid": [ 101 ],
+            "out_air": [ 104 ],
+            "out_fluid": [ 105 ]
+          }
+        },
+        "one.devices[0].thingy.v12": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:30.9-30.103",
+            "hdlname": "one devices[0].thingy v12",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v12.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v12 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 60 ],
+            "in_fluid": [ 95 ],
+            "out_air": [ 106 ],
+            "out_fluid": [ 107 ]
+          }
+        },
+        "one.devices[0].thingy.v2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:20.9-20.97",
+            "hdlname": "one devices[0].thingy v2",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v2.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v2 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 64 ],
+            "in_fluid": [ 108 ],
+            "out_air": [ 109 ],
+            "out_fluid": [ 100 ]
+          }
+        },
+        "one.devices[0].thingy.v3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:21.9-21.97",
+            "hdlname": "one devices[0].thingy v3",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v3.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v3 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 66 ],
+            "in_fluid": [ 110 ],
+            "out_air": [ 111 ],
+            "out_fluid": [ 100 ]
+          }
+        },
+        "one.devices[0].thingy.v4": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:22.9-22.89",
+            "hdlname": "one devices[0].thingy v4",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v4.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v4 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 68 ],
+            "in_fluid": [ 100 ],
+            "out_air": [ 112 ],
+            "out_fluid": [ 113 ]
+          }
+        },
+        "one.devices[0].thingy.v5": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:23.9-23.90",
+            "hdlname": "one devices[0].thingy v5",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v5.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v5 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 70 ],
+            "in_fluid": [ 113 ],
+            "out_air": [ 114 ],
+            "out_fluid": [ 89 ]
+          }
+        },
+        "one.devices[0].thingy.v6": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:24.9-24.90",
+            "hdlname": "one devices[0].thingy v6",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v6.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v6 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 72 ],
+            "in_fluid": [ 113 ],
+            "out_air": [ 115 ],
+            "out_fluid": [ 116 ]
+          }
+        },
+        "one.devices[0].thingy.v7": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:25.9-25.89",
+            "hdlname": "one devices[0].thingy v7",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v7.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v7 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 74 ],
+            "in_fluid": [ 88 ],
+            "out_air": [ 117 ],
+            "out_fluid": [ 118 ]
+          }
+        },
+        "one.devices[0].thingy.v8": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:26.9-26.98",
+            "hdlname": "one devices[0].thingy v8",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v8.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v8 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 76 ],
+            "in_fluid": [ 88 ],
+            "out_air": [ 119 ],
+            "out_fluid": [ 120 ]
+          }
+        },
+        "one.devices[0].thingy.v9": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:27.9-27.89",
+            "hdlname": "one devices[0].thingy v9",
+            "module": "valve",
+            "module_src": "common.v:18.1-20.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.v9.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy v9 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:19.16-19.101"
+          },
+          "connections": {
+            "in_air": [ 78 ],
+            "in_fluid": [ 118 ],
+            "out_air": [ 121 ],
+            "out_fluid": [ 101 ]
+          }
+        },
+        "one.devices[0].thingy.vp0": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:40.14-40.101",
+            "hdlname": "one devices[0].thingy vp0",
+            "module": "pump_valve",
+            "module_src": "common.v:22.1-24.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vp0.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp0 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:23.16-23.101"
+          },
+          "connections": {
+            "in_air": [ 122 ],
+            "in_fluid": [ 90 ],
+            "out_air": [ 123 ],
+            "out_fluid": [ 124 ]
+          }
+        },
+        "one.devices[0].thingy.vp1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:41.14-41.99",
+            "hdlname": "one devices[0].thingy vp1",
+            "module": "pump_valve",
+            "module_src": "common.v:22.1-24.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vp1.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp1 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:23.16-23.101"
+          },
+          "connections": {
+            "in_air": [ 125 ],
+            "in_fluid": [ 124 ],
+            "out_air": [ 126 ],
+            "out_fluid": [ 127 ]
+          }
+        },
+        "one.devices[0].thingy.vp2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:42.14-42.99",
+            "hdlname": "one devices[0].thingy vp2",
+            "module": "pump_valve",
+            "module_src": "common.v:22.1-24.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vp2.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp2 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:23.16-23.101"
+          },
+          "connections": {
+            "in_air": [ 128 ],
+            "in_fluid": [ 127 ],
+            "out_air": [ 129 ],
+            "out_fluid": [ 87 ]
+          }
+        },
+        "one.devices[0].thingy.vp3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:43.14-43.99",
+            "hdlname": "one devices[0].thingy vp3",
+            "module": "pump_valve",
+            "module_src": "common.v:22.1-24.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vp3.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp3 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:23.16-23.101"
+          },
+          "connections": {
+            "in_air": [ 130 ],
+            "in_fluid": [ 131 ],
+            "out_air": [ 132 ],
+            "out_fluid": [ 93 ]
+          }
+        },
+        "one.devices[0].thingy.vp4": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:44.14-44.98",
+            "hdlname": "one devices[0].thingy vp4",
+            "module": "pump_valve",
+            "module_src": "common.v:22.1-24.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vp4.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp4 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:23.16-23.101"
+          },
+          "connections": {
+            "in_air": [ 133 ],
+            "in_fluid": [ 94 ],
+            "out_air": [ 134 ],
+            "out_fluid": [ 135 ]
+          }
+        },
+        "one.devices[0].thingy.vs0": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:36.15-36.99",
+            "hdlname": "one devices[0].thingy vs0",
+            "module": "sieve_valve",
+            "module_src": "common.v:26.1-28.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vs0.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs0 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:27.16-27.101"
+          },
+          "connections": {
+            "in_air": [ 80 ],
+            "in_fluid": [ 92 ],
+            "out_air": [ 136 ],
+            "out_fluid": [ 95 ]
+          }
+        },
+        "one.devices[0].thingy.vs1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:37.15-37.99",
+            "hdlname": "one devices[0].thingy vs1",
+            "module": "sieve_valve",
+            "module_src": "common.v:26.1-28.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vs1.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs1 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:27.16-27.101"
+          },
+          "connections": {
+            "in_air": [ 82 ],
+            "in_fluid": [ 116 ],
+            "out_air": [ 137 ],
+            "out_fluid": [ 131 ]
+          }
+        },
+        "one.devices[0].thingy.vs2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:38.15-38.98",
+            "hdlname": "one devices[0].thingy vs2",
+            "module": "sieve_valve",
+            "module_src": "common.v:26.1-28.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vs2.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs2 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:27.16-27.101"
+          },
+          "connections": {
+            "in_air": [ 84 ],
+            "in_fluid": [ 135 ],
+            "out_air": [ 138 ],
+            "out_fluid": [ 118 ]
+          }
+        },
+        "one.devices[0].thingy.vs3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "kinase_activity.v:39.15-39.100",
+            "hdlname": "one devices[0].thingy vs3",
+            "module": "sieve_valve",
+            "module_src": "common.v:26.1-28.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.devices[0].thingy.vs3.thing": {
+          "hide_name": 0,
+          "type": "valve_40px_1",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs3 thing",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "common.v:27.16-27.101"
+          },
+          "connections": {
+            "in_air": [ 86 ],
+            "in_fluid": [ 103 ],
+            "out_air": [ 139 ],
+            "out_fluid": [ 91 ]
+          }
+        },
+        "one.pinholes[0].in[0].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].in[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "reprocess_after": "\\pinhole_320px_0",
+            "src": "kinase_pads.v:43.25-43.83"
+          },
+          "connections": {
+            "connection": [ 98 ],
+            "pad": [ 2 ]
+          }
+        },
+        "one.pinholes[0].in[1].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].in[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "reprocess_after": "\\pinhole_320px_0",
+            "src": "kinase_pads.v:43.25-43.83"
+          },
+          "connections": {
+            "connection": [ 108 ],
+            "pad": [ 3 ]
+          }
+        },
+        "one.pinholes[0].in[2].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].in[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "reprocess_after": "\\pinhole_320px_0",
+            "src": "kinase_pads.v:43.25-43.83"
+          },
+          "connections": {
+            "connection": [ 110 ],
+            "pad": [ 4 ]
+          }
+        },
+        "one.pinholes[0].out[0].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].out[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "reprocess_after": "\\pinhole_320px_0",
+            "src": "kinase_pads.v:46.25-46.85"
+          },
+          "connections": {
+            "connection": [ 107 ],
+            "pad": [ 5 ]
+          }
+        },
+        "one.pinholes[0].out[1].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].out[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "reprocess_after": "\\pinhole_320px_0",
+            "src": "kinase_pads.v:46.25-46.85"
+          },
+          "connections": {
+            "connection": [ 120 ],
+            "pad": [ 6 ]
+          }
+        },
+        "one.pinholes[0].out[2].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].out[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "reprocess_after": "\\pinhole_320px_0",
+            "src": "kinase_pads.v:46.25-46.85"
+          },
+          "connections": {
+            "connection": [ 105 ],
+            "pad": [ 7 ]
+          }
+        },
+        "one.pinholes[0].out[3].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].out[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "reprocess_after": "\\pinhole_320px_0",
+            "src": "kinase_pads.v:46.25-46.85"
+          },
+          "connections": {
+            "connection": [ 97 ],
+            "pad": [ 8 ]
+          }
+        },
+        "one.pump_a[0].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[0].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:59.20-59.82"
+          },
+          "connections": {
+            "connection": [ 140 ],
+            "pad": [ 48 ]
+          }
+        },
+        "one.pump_a[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:58.19-58.68"
+          },
+          "connections": {
+            "connection": [ 122 ],
+            "pad": [ 26 ]
+          }
+        },
+        "one.pump_a[1].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[1].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:59.20-59.82"
+          },
+          "connections": {
+            "connection": [ 141 ],
+            "pad": [ 49 ]
+          }
+        },
+        "one.pump_a[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:58.19-58.68"
+          },
+          "connections": {
+            "connection": [ 125 ],
+            "pad": [ 27 ]
+          }
+        },
+        "one.pump_a[2].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[2].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:59.20-59.82"
+          },
+          "connections": {
+            "connection": [ 142 ],
+            "pad": [ 50 ]
+          }
+        },
+        "one.pump_a[2].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:58.19-58.68"
+          },
+          "connections": {
+            "connection": [ 128 ],
+            "pad": [ 28 ]
+          }
+        },
+        "one.pump_b[0].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_b[0].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:55.20-55.82"
+          },
+          "connections": {
+            "connection": [ 143 ],
+            "pad": [ 51 ]
+          }
+        },
+        "one.pump_b[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_b[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:54.19-54.68"
+          },
+          "connections": {
+            "connection": [ 130 ],
+            "pad": [ 29 ]
+          }
+        },
+        "one.pump_b[1].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_b[1].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:55.20-55.82"
+          },
+          "connections": {
+            "connection": [ 144 ],
+            "pad": [ 52 ]
+          }
+        },
+        "one.pump_b[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_b[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_pads.v:54.19-54.68"
+          },
+          "connections": {
+            "connection": [ 133 ],
+            "pad": [ 30 ]
+          }
+        }
+      },
+      "netnames": {
+        "$flatten\\one.$0\\flow_out[0][3:0]": {
+          "hide_name": 1,
+          "bits": [ 107, 120, 105, 97 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$0\\serial_ctrl_a[0][12:0]": {
+          "hide_name": 1,
+          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$0\\serial_ctrl_a[1][12:0]": {
+          "hide_name": 1,
+          "bits": [ 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$0\\serial_ctrl_s[0][3:0]": {
+          "hide_name": 1,
+          "bits": [ 80, 82, 84, 86 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$0\\serial_ctrl_s[1][3:0]": {
+          "hide_name": 1,
+          "bits": [ 96, 99, 109, 111 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$0\\serial_pump_a[0][2:0]": {
+          "hide_name": 1,
+          "bits": [ 122, 125, 128 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$0\\serial_pump_a[1][2:0]": {
+          "hide_name": 1,
+          "bits": [ 123, 126, 129 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$0\\serial_pump_b[0][1:0]": {
+          "hide_name": 1,
+          "bits": [ 130, 133 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$0\\serial_pump_b[1][1:0]": {
+          "hide_name": 1,
+          "bits": [ 132, 134 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\ctrl_a$kinase_pads.v:67$74": {
+          "hide_name": 1,
+          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\ctrl_s$kinase_pads.v:67$75": {
+          "hide_name": 1,
+          "bits": [ 80, 82, 84, 86 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\flow_in$kinase_pads.v:67$72": {
+          "hide_name": 1,
+          "bits": [ 98, 108, 110 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\flow_out$kinase_pads.v:67$73": {
+          "hide_name": 1,
+          "bits": [ 107, 120, 105, 97 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\flush_ctrl_a$kinase_pads.v:67$78": {
+          "hide_name": 1,
+          "bits": [ 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\flush_ctrl_a$kinase_pads.v:67$79": {
+          "hide_name": 1,
+          "bits": [ 96, 99, 109, 111, 112, 114, 115, 117, 119, 121, 102, 104, 106 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\flush_pump_a$kinase_pads.v:67$80": {
+          "hide_name": 1,
+          "bits": [ 123, 126, 129 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\flush_pump_b$kinase_pads.v:67$81": {
+          "hide_name": 1,
+          "bits": [ 132, 134 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\pump_a$kinase_pads.v:67$76": {
+          "hide_name": 1,
+          "bits": [ 122, 125, 128 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "$flatten\\one.$indirect$\\pump_b$kinase_pads.v:67$77": {
+          "hide_name": 1,
+          "bits": [ 130, 133 ],
+          "attributes": {
+            "src": "kinase_pads.v:0.0-0.0"
+          }
+        },
+        "one.ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
+          "attributes": {
+            "hdlname": "one ctrl_a",
+            "src": "kinase_pads.v:18.32-18.38",
+            "type": "ctrl"
+          }
+        },
+        "one.ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 80, 82, 84, 86 ],
+          "attributes": {
+            "hdlname": "one ctrl_s",
+            "src": "kinase_pads.v:19.31-19.37",
+            "type": "ctrl"
+          }
+        },
+        "one.devices[0].thingy.circ2o": {
+          "hide_name": 0,
+          "bits": [ 90 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy circ2o",
+            "src": "kinase_activity.v:16.25-16.31",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.circulate1.in": {
+          "hide_name": 0,
+          "bits": [ 87 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy circulate1 in",
+            "src": "common.v:34.22-34.24"
+          }
+        },
+        "one.devices[0].thingy.circulate1.out": {
+          "hide_name": 0,
+          "bits": [ 88 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy circulate1 out",
+            "src": "common.v:34.32-34.35"
+          }
+        },
+        "one.devices[0].thingy.circulate2.in": {
+          "hide_name": 0,
+          "bits": [ 89 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy circulate2 in",
+            "src": "common.v:34.22-34.24"
+          }
+        },
+        "one.devices[0].thingy.circulate2.out": {
+          "hide_name": 0,
+          "bits": [ 90 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy circulate2 out",
+            "src": "common.v:34.32-34.35"
+          }
+        },
+        "one.devices[0].thingy.clo": {
+          "hide_name": 0,
+          "bits": [ 92 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy clo",
+            "src": "kinase_activity.v:17.30-17.33",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.column_lower.in": {
+          "hide_name": 0,
+          "bits": [ 91 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy column_lower in",
+            "src": "common.v:34.22-34.24"
+          }
+        },
+        "one.devices[0].thingy.column_lower.out": {
+          "hide_name": 0,
+          "bits": [ 92 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy column_lower out",
+            "src": "common.v:34.32-34.35"
+          }
+        },
+        "one.devices[0].thingy.column_upper.in": {
+          "hide_name": 0,
+          "bits": [ 93 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy column_upper in",
+            "src": "common.v:34.22-34.24"
+          }
+        },
+        "one.devices[0].thingy.column_upper.out": {
+          "hide_name": 0,
+          "bits": [ 94 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy column_upper out",
+            "src": "common.v:34.32-34.35"
+          }
+        },
+        "one.devices[0].thingy.ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy ctrl_a",
+            "src": "kinase_activity.v:3.55-3.61",
+            "type": "ctrl"
+          }
+        },
+        "one.devices[0].thingy.ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 80, 82, 84, 86 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy ctrl_s",
+            "src": "kinase_activity.v:4.54-4.60",
+            "type": "ctrl"
+          }
+        },
+        "one.devices[0].thingy.cuo": {
+          "hide_name": 0,
+          "bits": [ 94 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy cuo",
+            "src": "kinase_activity.v:17.25-17.28",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.flow_in": {
+          "hide_name": 0,
+          "bits": [ 98, 108, 110 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy flow_in",
+            "src": "kinase_activity.v:1.54-1.61",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.flow_out": {
+          "hide_name": 0,
+          "bits": [ 107, 120, 105, 97 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy flow_out",
+            "src": "kinase_activity.v:2.55-2.63",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 96, 99, 109, 111, 112, 114, 115, 117, 119, 121, 102, 104, 106 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy flush_ctrl_a",
+            "src": "kinase_activity.v:7.57-7.69",
+            "type": "flush"
+          }
+        },
+        "one.devices[0].thingy.flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 136, 137, 138, 139 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy flush_ctrl_s",
+            "src": "kinase_activity.v:8.56-8.68",
+            "type": "flush"
+          }
+        },
+        "one.devices[0].thingy.flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 123, 126, 129 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy flush_pump_a",
+            "src": "kinase_activity.v:9.56-9.68",
+            "type": "flush"
+          }
+        },
+        "one.devices[0].thingy.flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 132, 134 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy flush_pump_b",
+            "src": "kinase_activity.v:10.56-10.68",
+            "type": "flush"
+          }
+        },
+        "one.devices[0].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 113 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy j1",
+            "src": "kinase_activity.v:12.25-12.27",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 118 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy j2",
+            "src": "kinase_activity.v:12.29-12.31",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.j3": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy j3",
+            "src": "kinase_activity.v:12.33-12.35",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.j4": {
+          "hide_name": 0,
+          "bits": [ 100 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy j4",
+            "src": "kinase_activity.v:12.37-12.39",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.j5": {
+          "hide_name": 0,
+          "bits": [ 88 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy j5",
+            "src": "kinase_activity.v:12.41-12.43",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.pump_a": {
+          "hide_name": 0,
+          "bits": [ 122, 125, 128 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy pump_a",
+            "src": "kinase_activity.v:5.54-5.60",
+            "type": "ctrl"
+          }
+        },
+        "one.devices[0].thingy.pump_b": {
+          "hide_name": 0,
+          "bits": [ 130, 133 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy pump_b",
+            "src": "kinase_activity.v:6.54-6.60",
+            "type": "ctrl"
+          }
+        },
+        "one.devices[0].thingy.v0.air_in": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v0 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v0.air_out": {
+          "hide_name": 0,
+          "bits": [ 96 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v0 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v0.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 95 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v0 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v0.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 97 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v0 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v1.air_in": {
+          "hide_name": 0,
+          "bits": [ 62 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v1 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v1.air_out": {
+          "hide_name": 0,
+          "bits": [ 99 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v1 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v1.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 98 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v1 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v1.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 100 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v1 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v10.air_in": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v10 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v10.air_out": {
+          "hide_name": 0,
+          "bits": [ 102 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v10 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v10.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v10 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v10.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 103 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v10 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v10o": {
+          "hide_name": 0,
+          "bits": [ 103 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v10o",
+            "src": "kinase_activity.v:13.35-13.39",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.v11.air_in": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v11 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v11.air_out": {
+          "hide_name": 0,
+          "bits": [ 104 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v11 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v11.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v11 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v11.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 105 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v11 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v12.air_in": {
+          "hide_name": 0,
+          "bits": [ 60 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v12 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v12.air_out": {
+          "hide_name": 0,
+          "bits": [ 106 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v12 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v12.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 95 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v12 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v12.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 107 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v12 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v2.air_in": {
+          "hide_name": 0,
+          "bits": [ 64 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v2 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v2.air_out": {
+          "hide_name": 0,
+          "bits": [ 109 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v2 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v2.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 108 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v2 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v2.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 100 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v2 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v3.air_in": {
+          "hide_name": 0,
+          "bits": [ 66 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v3 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v3.air_out": {
+          "hide_name": 0,
+          "bits": [ 111 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v3 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v3.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 110 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v3 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v3.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 100 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v3 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v4.air_in": {
+          "hide_name": 0,
+          "bits": [ 68 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v4 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v4.air_out": {
+          "hide_name": 0,
+          "bits": [ 112 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v4 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v4.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 100 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v4 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v4.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 113 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v4 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v5.air_in": {
+          "hide_name": 0,
+          "bits": [ 70 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v5 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v5.air_out": {
+          "hide_name": 0,
+          "bits": [ 114 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v5 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v5.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 113 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v5 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v5.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 89 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v5 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v5o": {
+          "hide_name": 0,
+          "bits": [ 89 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v5o",
+            "src": "kinase_activity.v:13.25-13.28",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.v6.air_in": {
+          "hide_name": 0,
+          "bits": [ 72 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v6 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v6.air_out": {
+          "hide_name": 0,
+          "bits": [ 115 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v6 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v6.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 113 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v6 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v6.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 116 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v6 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v6o": {
+          "hide_name": 0,
+          "bits": [ 116 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v6o",
+            "src": "kinase_activity.v:13.30-13.33",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.v7.air_in": {
+          "hide_name": 0,
+          "bits": [ 74 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v7 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v7.air_out": {
+          "hide_name": 0,
+          "bits": [ 117 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v7 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v7.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 88 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v7 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v7.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 118 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v7 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v8.air_in": {
+          "hide_name": 0,
+          "bits": [ 76 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v8 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v8.air_out": {
+          "hide_name": 0,
+          "bits": [ 119 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v8 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v8.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 88 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v8 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v8.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 120 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v8 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.v9.air_in": {
+          "hide_name": 0,
+          "bits": [ 78 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v9 air_in",
+            "src": "common.v:18.53-18.59"
+          }
+        },
+        "one.devices[0].thingy.v9.air_out": {
+          "hide_name": 0,
+          "bits": [ 121 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v9 air_out",
+            "src": "common.v:18.68-18.75"
+          }
+        },
+        "one.devices[0].thingy.v9.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 118 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v9 fluid_in",
+            "src": "common.v:18.20-18.28"
+          }
+        },
+        "one.devices[0].thingy.v9.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy v9 fluid_out",
+            "src": "common.v:18.36-18.45"
+          }
+        },
+        "one.devices[0].thingy.vp0.air_in": {
+          "hide_name": 0,
+          "bits": [ 122 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp0 air_in",
+            "src": "common.v:22.58-22.64"
+          }
+        },
+        "one.devices[0].thingy.vp0.air_out": {
+          "hide_name": 0,
+          "bits": [ 123 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp0 air_out",
+            "src": "common.v:22.73-22.80"
+          }
+        },
+        "one.devices[0].thingy.vp0.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 90 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp0 fluid_in",
+            "src": "common.v:22.25-22.33"
+          }
+        },
+        "one.devices[0].thingy.vp0.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 124 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp0 fluid_out",
+            "src": "common.v:22.41-22.50"
+          }
+        },
+        "one.devices[0].thingy.vp1.air_in": {
+          "hide_name": 0,
+          "bits": [ 125 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp1 air_in",
+            "src": "common.v:22.58-22.64"
+          }
+        },
+        "one.devices[0].thingy.vp1.air_out": {
+          "hide_name": 0,
+          "bits": [ 126 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp1 air_out",
+            "src": "common.v:22.73-22.80"
+          }
+        },
+        "one.devices[0].thingy.vp1.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 124 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp1 fluid_in",
+            "src": "common.v:22.25-22.33"
+          }
+        },
+        "one.devices[0].thingy.vp1.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 127 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp1 fluid_out",
+            "src": "common.v:22.41-22.50"
+          }
+        },
+        "one.devices[0].thingy.vp1o": {
+          "hide_name": 0,
+          "bits": [ 124 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp1o",
+            "src": "kinase_activity.v:15.25-15.29",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.vp2.air_in": {
+          "hide_name": 0,
+          "bits": [ 128 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp2 air_in",
+            "src": "common.v:22.58-22.64"
+          }
+        },
+        "one.devices[0].thingy.vp2.air_out": {
+          "hide_name": 0,
+          "bits": [ 129 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp2 air_out",
+            "src": "common.v:22.73-22.80"
+          }
+        },
+        "one.devices[0].thingy.vp2.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 127 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp2 fluid_in",
+            "src": "common.v:22.25-22.33"
+          }
+        },
+        "one.devices[0].thingy.vp2.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 87 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp2 fluid_out",
+            "src": "common.v:22.41-22.50"
+          }
+        },
+        "one.devices[0].thingy.vp2o": {
+          "hide_name": 0,
+          "bits": [ 127 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp2o",
+            "src": "kinase_activity.v:15.31-15.35",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.vp3.air_in": {
+          "hide_name": 0,
+          "bits": [ 130 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp3 air_in",
+            "src": "common.v:22.58-22.64"
+          }
+        },
+        "one.devices[0].thingy.vp3.air_out": {
+          "hide_name": 0,
+          "bits": [ 132 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp3 air_out",
+            "src": "common.v:22.73-22.80"
+          }
+        },
+        "one.devices[0].thingy.vp3.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 131 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp3 fluid_in",
+            "src": "common.v:22.25-22.33"
+          }
+        },
+        "one.devices[0].thingy.vp3.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 93 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp3 fluid_out",
+            "src": "common.v:22.41-22.50"
+          }
+        },
+        "one.devices[0].thingy.vp3o": {
+          "hide_name": 0,
+          "bits": [ 87 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp3o",
+            "src": "kinase_activity.v:15.37-15.41",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.vp4.air_in": {
+          "hide_name": 0,
+          "bits": [ 133 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp4 air_in",
+            "src": "common.v:22.58-22.64"
+          }
+        },
+        "one.devices[0].thingy.vp4.air_out": {
+          "hide_name": 0,
+          "bits": [ 134 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp4 air_out",
+            "src": "common.v:22.73-22.80"
+          }
+        },
+        "one.devices[0].thingy.vp4.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 94 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp4 fluid_in",
+            "src": "common.v:22.25-22.33"
+          }
+        },
+        "one.devices[0].thingy.vp4.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 135 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp4 fluid_out",
+            "src": "common.v:22.41-22.50"
+          }
+        },
+        "one.devices[0].thingy.vp4o": {
+          "hide_name": 0,
+          "bits": [ 93 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp4o",
+            "src": "kinase_activity.v:15.43-15.47",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.vp5o": {
+          "hide_name": 0,
+          "bits": [ 135 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vp5o",
+            "src": "kinase_activity.v:15.49-15.53",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.vs0.air_in": {
+          "hide_name": 0,
+          "bits": [ 80 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs0 air_in",
+            "src": "common.v:26.59-26.65"
+          }
+        },
+        "one.devices[0].thingy.vs0.air_out": {
+          "hide_name": 0,
+          "bits": [ 136 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs0 air_out",
+            "src": "common.v:26.74-26.81"
+          }
+        },
+        "one.devices[0].thingy.vs0.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 92 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs0 fluid_in",
+            "src": "common.v:26.26-26.34"
+          }
+        },
+        "one.devices[0].thingy.vs0.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 95 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs0 fluid_out",
+            "src": "common.v:26.42-26.51"
+          }
+        },
+        "one.devices[0].thingy.vs1.air_in": {
+          "hide_name": 0,
+          "bits": [ 82 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs1 air_in",
+            "src": "common.v:26.59-26.65"
+          }
+        },
+        "one.devices[0].thingy.vs1.air_out": {
+          "hide_name": 0,
+          "bits": [ 137 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs1 air_out",
+            "src": "common.v:26.74-26.81"
+          }
+        },
+        "one.devices[0].thingy.vs1.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 116 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs1 fluid_in",
+            "src": "common.v:26.26-26.34"
+          }
+        },
+        "one.devices[0].thingy.vs1.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 131 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs1 fluid_out",
+            "src": "common.v:26.42-26.51"
+          }
+        },
+        "one.devices[0].thingy.vs1o": {
+          "hide_name": 0,
+          "bits": [ 131 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs1o",
+            "src": "kinase_activity.v:14.25-14.29",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.vs2.air_in": {
+          "hide_name": 0,
+          "bits": [ 84 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs2 air_in",
+            "src": "common.v:26.59-26.65"
+          }
+        },
+        "one.devices[0].thingy.vs2.air_out": {
+          "hide_name": 0,
+          "bits": [ 138 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs2 air_out",
+            "src": "common.v:26.74-26.81"
+          }
+        },
+        "one.devices[0].thingy.vs2.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 135 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs2 fluid_in",
+            "src": "common.v:26.26-26.34"
+          }
+        },
+        "one.devices[0].thingy.vs2.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 118 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs2 fluid_out",
+            "src": "common.v:26.42-26.51"
+          }
+        },
+        "one.devices[0].thingy.vs3.air_in": {
+          "hide_name": 0,
+          "bits": [ 86 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs3 air_in",
+            "src": "common.v:26.59-26.65"
+          }
+        },
+        "one.devices[0].thingy.vs3.air_out": {
+          "hide_name": 0,
+          "bits": [ 139 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs3 air_out",
+            "src": "common.v:26.74-26.81"
+          }
+        },
+        "one.devices[0].thingy.vs3.fluid_in": {
+          "hide_name": 0,
+          "bits": [ 103 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs3 fluid_in",
+            "src": "common.v:26.26-26.34"
+          }
+        },
+        "one.devices[0].thingy.vs3.fluid_out": {
+          "hide_name": 0,
+          "bits": [ 91 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs3 fluid_out",
+            "src": "common.v:26.42-26.51"
+          }
+        },
+        "one.devices[0].thingy.vs3o": {
+          "hide_name": 0,
+          "bits": [ 91 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs3o",
+            "src": "kinase_activity.v:14.31-14.35",
+            "type": "flow"
+          }
+        },
+        "one.devices[0].thingy.vs4o": {
+          "hide_name": 0,
+          "bits": [ 95 ],
+          "attributes": {
+            "hdlname": "one devices[0].thingy vs4o",
+            "src": "kinase_activity.v:14.37-14.41",
+            "type": "flow"
+          }
+        },
+        "one.flow_in[0]": {
+          "hide_name": 0,
+          "bits": [ 98, 108, 110 ],
+          "attributes": {
+            "hdlname": "one flow_in[0]",
+            "src": "kinase_pads.v:16.39-16.46",
+            "type": "flow"
+          }
+        },
+        "one.flow_out[0]": {
+          "hide_name": 0,
+          "bits": [ 107, 120, 105, 97 ],
+          "attributes": {
+            "hdlname": "one flow_out[0]",
+            "src": "kinase_pads.v:17.40-17.48",
+            "type": "flow"
+          }
+        },
+        "one.flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 53, 61, 63, 65, 67, 69, 71, 73, 75, 77, 55, 57, 59 ],
+          "attributes": {
+            "hdlname": "one flush_ctrl_a",
+            "src": "kinase_pads.v:22.33-22.45",
+            "type": "flush"
+          }
+        },
+        "one.flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 79, 81, 83, 85 ],
+          "attributes": {
+            "hdlname": "one flush_ctrl_s",
+            "src": "kinase_pads.v:23.32-23.44",
+            "type": "flush"
+          }
+        },
+        "one.flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 140, 141, 142 ],
+          "attributes": {
+            "hdlname": "one flush_pump_a",
+            "src": "kinase_pads.v:24.32-24.44",
+            "type": "flush"
+          }
+        },
+        "one.flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 143, 144 ],
+          "attributes": {
+            "hdlname": "one flush_pump_b",
+            "src": "kinase_pads.v:25.32-25.44",
+            "type": "flush"
+          }
+        },
+        "one.pad_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ],
+          "attributes": {
+            "hdlname": "one pad_ctrl_a",
+            "src": "kinase_pads.v:4.34-4.44",
+            "type": "ctrl"
+          }
+        },
+        "one.pad_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 22, 23, 24, 25 ],
+          "attributes": {
+            "hdlname": "one pad_ctrl_s",
+            "src": "kinase_pads.v:5.33-5.43",
+            "type": "ctrl"
+          }
+        },
+        "one.pad_flow_in": {
+          "hide_name": 0,
+          "bits": [ 2, 3, 4 ],
+          "attributes": {
+            "hdlname": "one pad_flow_in",
+            "src": "kinase_pads.v:2.33-2.44",
+            "type": "flow"
+          }
+        },
+        "one.pad_flow_out": {
+          "hide_name": 0,
+          "bits": [ 5, 6, 7, 8 ],
+          "attributes": {
+            "hdlname": "one pad_flow_out",
+            "src": "kinase_pads.v:3.34-3.46",
+            "type": "flow"
+          }
+        },
+        "one.pad_flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 ],
+          "attributes": {
+            "hdlname": "one pad_flush_ctrl_a",
+            "src": "kinase_pads.v:8.36-8.52",
+            "type": "flush"
+          }
+        },
+        "one.pad_flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 44, 45, 46, 47 ],
+          "attributes": {
+            "hdlname": "one pad_flush_ctrl_s",
+            "src": "kinase_pads.v:9.35-9.51",
+            "type": "flush"
+          }
+        },
+        "one.pad_flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 48, 49, 50 ],
+          "attributes": {
+            "hdlname": "one pad_flush_pump_a",
+            "src": "kinase_pads.v:10.35-10.51",
+            "type": "flush"
+          }
+        },
+        "one.pad_flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 51, 52 ],
+          "attributes": {
+            "hdlname": "one pad_flush_pump_b",
+            "src": "kinase_pads.v:11.35-11.51",
+            "type": "flush"
+          }
+        },
+        "one.pad_pump_a": {
+          "hide_name": 0,
+          "bits": [ 26, 27, 28 ],
+          "attributes": {
+            "hdlname": "one pad_pump_a",
+            "src": "kinase_pads.v:6.33-6.43",
+            "type": "ctrl"
+          }
+        },
+        "one.pad_pump_b": {
+          "hide_name": 0,
+          "bits": [ 29, 30 ],
+          "attributes": {
+            "hdlname": "one pad_pump_b",
+            "src": "kinase_pads.v:7.33-7.43",
+            "type": "ctrl"
+          }
+        },
+        "one.pump_a": {
+          "hide_name": 0,
+          "bits": [ 122, 125, 128 ],
+          "attributes": {
+            "hdlname": "one pump_a",
+            "src": "kinase_pads.v:20.31-20.37",
+            "type": "ctrl"
+          }
+        },
+        "one.pump_b": {
+          "hide_name": 0,
+          "bits": [ 130, 133 ],
+          "attributes": {
+            "hdlname": "one pump_b",
+            "src": "kinase_pads.v:21.31-21.37",
+            "type": "ctrl"
+          }
+        },
+        "one.serial_ctrl_a[0]": {
+          "hide_name": 0,
+          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
+          "attributes": {
+            "hdlname": "one serial_ctrl_a[0]",
+            "src": "kinase_pads.v:26.32-26.45",
+            "type": "ctrl"
+          }
+        },
+        "one.serial_ctrl_a[1]": {
+          "hide_name": 0,
+          "bits": [ 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157 ],
+          "attributes": {
+            "hdlname": "one serial_ctrl_a[1]",
+            "src": "kinase_pads.v:26.32-26.45",
+            "type": "ctrl"
+          }
+        },
+        "one.serial_ctrl_s[0]": {
+          "hide_name": 0,
+          "bits": [ 80, 82, 84, 86 ],
+          "attributes": {
+            "hdlname": "one serial_ctrl_s[0]",
+            "src": "kinase_pads.v:27.31-27.44",
+            "type": "ctrl"
+          }
+        },
+        "one.serial_ctrl_s[1]": {
+          "hide_name": 0,
+          "bits": [ 96, 99, 109, 111 ],
+          "attributes": {
+            "hdlname": "one serial_ctrl_s[1]",
+            "src": "kinase_pads.v:27.31-27.44",
+            "type": "ctrl"
+          }
+        },
+        "one.serial_pump_a[0]": {
+          "hide_name": 0,
+          "bits": [ 122, 125, 128 ],
+          "attributes": {
+            "hdlname": "one serial_pump_a[0]",
+            "src": "kinase_pads.v:28.31-28.44",
+            "type": "ctrl"
+          }
+        },
+        "one.serial_pump_a[1]": {
+          "hide_name": 0,
+          "bits": [ 123, 126, 129 ],
+          "attributes": {
+            "hdlname": "one serial_pump_a[1]",
+            "src": "kinase_pads.v:28.31-28.44",
+            "type": "ctrl"
+          }
+        },
+        "one.serial_pump_b[0]": {
+          "hide_name": 0,
+          "bits": [ 130, 133 ],
+          "attributes": {
+            "hdlname": "one serial_pump_b[0]",
+            "src": "kinase_pads.v:29.31-29.44",
+            "type": "ctrl"
+          }
+        },
+        "one.serial_pump_b[1]": {
+          "hide_name": 0,
+          "bits": [ 132, 134 ],
+          "attributes": {
+            "hdlname": "one serial_pump_b[1]",
+            "src": "kinase_pads.v:29.31-29.44",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ],
+          "attributes": {
+            "src": "kinase_1.v:4.45-4.55",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 22, 23, 24, 25 ],
+          "attributes": {
+            "src": "kinase_1.v:5.44-5.54",
+            "type": "ctrl"
+          }
+        },
+        "pad_flow_in": {
+          "hide_name": 0,
+          "bits": [ 2, 3, 4 ],
+          "attributes": {
+            "src": "kinase_1.v:2.44-2.55",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out": {
+          "hide_name": 0,
+          "bits": [ 5, 6, 7, 8 ],
+          "attributes": {
+            "src": "kinase_1.v:3.45-3.57",
+            "type": "flow"
+          }
+        },
+        "pad_flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 ],
+          "attributes": {
+            "src": "kinase_1.v:8.47-8.63",
+            "type": "flush"
+          }
+        },
+        "pad_flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 44, 45, 46, 47 ],
+          "attributes": {
+            "src": "kinase_1.v:9.46-9.62",
+            "type": "flush"
+          }
+        },
+        "pad_flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 48, 49, 50 ],
+          "attributes": {
+            "src": "kinase_1.v:10.46-10.62",
+            "type": "flush"
+          }
+        },
+        "pad_flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 51, 52 ],
+          "attributes": {
+            "src": "kinase_1.v:11.46-11.62",
+            "type": "flush"
+          }
+        },
+        "pad_pump_a": {
+          "hide_name": 0,
+          "bits": [ 26, 27, 28 ],
+          "attributes": {
+            "src": "kinase_1.v:6.44-6.54",
+            "type": "ctrl"
+          }
+        },
+        "pad_pump_b": {
+          "hide_name": 0,
+          "bits": [ 29, 30 ],
+          "attributes": {
+            "src": "kinase_1.v:7.44-7.54",
+            "type": "ctrl"
+          }
+        }
+      }
+    }
+  }
+}

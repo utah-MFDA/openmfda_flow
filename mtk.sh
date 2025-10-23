@@ -1,0 +1,1 @@
+MtKaHyPar -v 1     --hypergraph ~/nas/lsoracle/benchmarks/4elt.graph     --target-graph-file ~/nas/lsoracle/benchmarks/loop_s.graph     --blocks 7     --epsilon 0.01     --preset-type=default     --objective steiner_tree     --s-num-threads 64

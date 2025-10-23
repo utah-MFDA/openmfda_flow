@@ -1,0 +1,769 @@
+{
+  "creator": "Yosys 0.55+194 (git sha1 8576d2d14, g++ 8.5.0 -fPIC -O3)",
+  "modules": {
+    "kinase_activity": {
+      "attributes": {
+        "cells_not_processed": "00000000000000000000000000000001",
+        "src": "kinase_activity.v:1.1-45.10"
+      },
+      "ports": {
+        "flow_in": {
+          "direction": "input",
+          "bits": [ 2, 3, 4 ]
+        },
+        "flow_out": {
+          "direction": "output",
+          "bits": [ 5, 6, 7, 8 ]
+        },
+        "ctrl_a": {
+          "direction": "input",
+          "bits": [ 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ]
+        },
+        "ctrl_s": {
+          "direction": "input",
+          "bits": [ 22, 23, 24, 25 ]
+        },
+        "pump_a": {
+          "direction": "input",
+          "bits": [ 26, 27, 28 ]
+        },
+        "pump_b": {
+          "direction": "input",
+          "bits": [ 29, 30 ]
+        },
+        "flush_ctrl_a": {
+          "direction": "output",
+          "bits": [ 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 ]
+        },
+        "flush_ctrl_s": {
+          "direction": "output",
+          "bits": [ 44, 45, 46, 47 ]
+        },
+        "flush_pump_a": {
+          "direction": "output",
+          "bits": [ 48, 49, 50 ]
+        },
+        "flush_pump_b": {
+          "direction": "output",
+          "bits": [ 51, 52 ]
+        }
+      },
+      "cells": {
+        "circulate1": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:32.11-32.42"
+          },
+          "connections": {
+            "in": [ 53 ],
+            "out": [ 54 ]
+          }
+        },
+        "circulate2": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:33.11-33.45"
+          },
+          "connections": {
+            "in": [ 55 ],
+            "out": [ 56 ]
+          }
+        },
+        "column_lower": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:35.11-35.45"
+          },
+          "connections": {
+            "in": [ 57 ],
+            "out": [ 58 ]
+          }
+        },
+        "column_upper": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:34.11-34.45"
+          },
+          "connections": {
+            "in": [ 59 ],
+            "out": [ 60 ]
+          }
+        },
+        "v0": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:18.9-18.100"
+          },
+          "connections": {
+            "air_in": [ 9 ],
+            "air_out": [ 31 ],
+            "fluid_in": [ 61 ],
+            "fluid_out": [ 8 ]
+          }
+        },
+        "v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:19.9-19.97"
+          },
+          "connections": {
+            "air_in": [ 10 ],
+            "air_out": [ 32 ],
+            "fluid_in": [ 2 ],
+            "fluid_out": [ 62 ]
+          }
+        },
+        "v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:28.9-28.94"
+          },
+          "connections": {
+            "air_in": [ 19 ],
+            "air_out": [ 41 ],
+            "fluid_in": [ 63 ],
+            "fluid_out": [ 64 ]
+          }
+        },
+        "v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:29.9-29.101"
+          },
+          "connections": {
+            "air_in": [ 20 ],
+            "air_out": [ 42 ],
+            "fluid_in": [ 63 ],
+            "fluid_out": [ 7 ]
+          }
+        },
+        "v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:30.9-30.103"
+          },
+          "connections": {
+            "air_in": [ 21 ],
+            "air_out": [ 43 ],
+            "fluid_in": [ 61 ],
+            "fluid_out": [ 5 ]
+          }
+        },
+        "v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:20.9-20.97"
+          },
+          "connections": {
+            "air_in": [ 11 ],
+            "air_out": [ 33 ],
+            "fluid_in": [ 3 ],
+            "fluid_out": [ 62 ]
+          }
+        },
+        "v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:21.9-21.97"
+          },
+          "connections": {
+            "air_in": [ 12 ],
+            "air_out": [ 34 ],
+            "fluid_in": [ 4 ],
+            "fluid_out": [ 62 ]
+          }
+        },
+        "v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:22.9-22.89"
+          },
+          "connections": {
+            "air_in": [ 13 ],
+            "air_out": [ 35 ],
+            "fluid_in": [ 62 ],
+            "fluid_out": [ 65 ]
+          }
+        },
+        "v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:23.9-23.90"
+          },
+          "connections": {
+            "air_in": [ 14 ],
+            "air_out": [ 36 ],
+            "fluid_in": [ 65 ],
+            "fluid_out": [ 55 ]
+          }
+        },
+        "v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:24.9-24.90"
+          },
+          "connections": {
+            "air_in": [ 15 ],
+            "air_out": [ 37 ],
+            "fluid_in": [ 65 ],
+            "fluid_out": [ 66 ]
+          }
+        },
+        "v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:25.9-25.89"
+          },
+          "connections": {
+            "air_in": [ 16 ],
+            "air_out": [ 38 ],
+            "fluid_in": [ 54 ],
+            "fluid_out": [ 67 ]
+          }
+        },
+        "v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:26.9-26.98"
+          },
+          "connections": {
+            "air_in": [ 17 ],
+            "air_out": [ 39 ],
+            "fluid_in": [ 54 ],
+            "fluid_out": [ 6 ]
+          }
+        },
+        "v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:27.9-27.89"
+          },
+          "connections": {
+            "air_in": [ 18 ],
+            "air_out": [ 40 ],
+            "fluid_in": [ 67 ],
+            "fluid_out": [ 63 ]
+          }
+        },
+        "vp0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:40.14-40.101"
+          },
+          "connections": {
+            "air_in": [ 26 ],
+            "air_out": [ 48 ],
+            "fluid_in": [ 56 ],
+            "fluid_out": [ 68 ]
+          }
+        },
+        "vp1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:41.14-41.99"
+          },
+          "connections": {
+            "air_in": [ 27 ],
+            "air_out": [ 49 ],
+            "fluid_in": [ 68 ],
+            "fluid_out": [ 69 ]
+          }
+        },
+        "vp2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:42.14-42.99"
+          },
+          "connections": {
+            "air_in": [ 28 ],
+            "air_out": [ 50 ],
+            "fluid_in": [ 69 ],
+            "fluid_out": [ 53 ]
+          }
+        },
+        "vp3": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:43.14-43.99"
+          },
+          "connections": {
+            "air_in": [ 29 ],
+            "air_out": [ 51 ],
+            "fluid_in": [ 70 ],
+            "fluid_out": [ 59 ]
+          }
+        },
+        "vp4": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:44.14-44.98"
+          },
+          "connections": {
+            "air_in": [ 30 ],
+            "air_out": [ 52 ],
+            "fluid_in": [ 60 ],
+            "fluid_out": [ 71 ]
+          }
+        },
+        "vs0": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:36.15-36.99"
+          },
+          "connections": {
+            "air_in": [ 22 ],
+            "air_out": [ 44 ],
+            "fluid_in": [ 58 ],
+            "fluid_out": [ 61 ]
+          }
+        },
+        "vs1": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:37.15-37.99"
+          },
+          "connections": {
+            "air_in": [ 23 ],
+            "air_out": [ 45 ],
+            "fluid_in": [ 66 ],
+            "fluid_out": [ 70 ]
+          }
+        },
+        "vs2": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:38.15-38.98"
+          },
+          "connections": {
+            "air_in": [ 24 ],
+            "air_out": [ 46 ],
+            "fluid_in": [ 71 ],
+            "fluid_out": [ 67 ]
+          }
+        },
+        "vs3": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "kinase_activity.v:39.15-39.100"
+          },
+          "connections": {
+            "air_in": [ 25 ],
+            "air_out": [ 47 ],
+            "fluid_in": [ 64 ],
+            "fluid_out": [ 57 ]
+          }
+        }
+      },
+      "netnames": {
+        "circ1o": {
+          "hide_name": 0,
+          "bits": [ 72 ],
+          "attributes": {
+            "src": "kinase_activity.v:16.25-16.31",
+            "type": "flow"
+          }
+        },
+        "circ2o": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "src": "kinase_activity.v:16.33-16.39",
+            "type": "flow"
+          }
+        },
+        "clo": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "src": "kinase_activity.v:17.30-17.33",
+            "type": "flow"
+          }
+        },
+        "ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ],
+          "attributes": {
+            "src": "kinase_activity.v:3.55-3.61",
+            "type": "ctrl"
+          }
+        },
+        "ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 22, 23, 24, 25 ],
+          "attributes": {
+            "src": "kinase_activity.v:4.54-4.60",
+            "type": "ctrl"
+          }
+        },
+        "cuo": {
+          "hide_name": 0,
+          "bits": [ 60 ],
+          "attributes": {
+            "src": "kinase_activity.v:17.25-17.28",
+            "type": "flow"
+          }
+        },
+        "flow_in": {
+          "hide_name": 0,
+          "bits": [ 2, 3, 4 ],
+          "attributes": {
+            "src": "kinase_activity.v:1.54-1.61",
+            "type": "flow"
+          }
+        },
+        "flow_out": {
+          "hide_name": 0,
+          "bits": [ 5, 6, 7, 8 ],
+          "attributes": {
+            "src": "kinase_activity.v:2.55-2.63",
+            "type": "flow"
+          }
+        },
+        "flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 ],
+          "attributes": {
+            "src": "kinase_activity.v:7.57-7.69",
+            "type": "flush"
+          }
+        },
+        "flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 44, 45, 46, 47 ],
+          "attributes": {
+            "src": "kinase_activity.v:8.56-8.68",
+            "type": "flush"
+          }
+        },
+        "flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 48, 49, 50 ],
+          "attributes": {
+            "src": "kinase_activity.v:9.56-9.68",
+            "type": "flush"
+          }
+        },
+        "flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 51, 52 ],
+          "attributes": {
+            "src": "kinase_activity.v:10.56-10.68",
+            "type": "flush"
+          }
+        },
+        "j1": {
+          "hide_name": 0,
+          "bits": [ 65 ],
+          "attributes": {
+            "src": "kinase_activity.v:12.25-12.27",
+            "type": "flow"
+          }
+        },
+        "j2": {
+          "hide_name": 0,
+          "bits": [ 67 ],
+          "attributes": {
+            "src": "kinase_activity.v:12.29-12.31",
+            "type": "flow"
+          }
+        },
+        "j3": {
+          "hide_name": 0,
+          "bits": [ 63 ],
+          "attributes": {
+            "src": "kinase_activity.v:12.33-12.35",
+            "type": "flow"
+          }
+        },
+        "j4": {
+          "hide_name": 0,
+          "bits": [ 62 ],
+          "attributes": {
+            "src": "kinase_activity.v:12.37-12.39",
+            "type": "flow"
+          }
+        },
+        "j5": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "src": "kinase_activity.v:12.41-12.43",
+            "type": "flow"
+          }
+        },
+        "pump_a": {
+          "hide_name": 0,
+          "bits": [ 26, 27, 28 ],
+          "attributes": {
+            "src": "kinase_activity.v:5.54-5.60",
+            "type": "ctrl"
+          }
+        },
+        "pump_b": {
+          "hide_name": 0,
+          "bits": [ 29, 30 ],
+          "attributes": {
+            "src": "kinase_activity.v:6.54-6.60",
+            "type": "ctrl"
+          }
+        },
+        "v10o": {
+          "hide_name": 0,
+          "bits": [ 64 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.65-13.69",
+            "type": "flow"
+          }
+        },
+        "v11o": {
+          "hide_name": 0,
+          "bits": [ 73 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.71-13.75",
+            "type": "flow"
+          }
+        },
+        "v1o": {
+          "hide_name": 0,
+          "bits": [ 74 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.25-13.28",
+            "type": "flow"
+          }
+        },
+        "v2o": {
+          "hide_name": 0,
+          "bits": [ 75 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.30-13.33",
+            "type": "flow"
+          }
+        },
+        "v3o": {
+          "hide_name": 0,
+          "bits": [ 76 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.35-13.38",
+            "type": "flow"
+          }
+        },
+        "v4o": {
+          "hide_name": 0,
+          "bits": [ 77 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.40-13.43",
+            "type": "flow"
+          }
+        },
+        "v5o": {
+          "hide_name": 0,
+          "bits": [ 55 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.45-13.48",
+            "type": "flow"
+          }
+        },
+        "v6o": {
+          "hide_name": 0,
+          "bits": [ 66 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.50-13.53",
+            "type": "flow"
+          }
+        },
+        "v7o": {
+          "hide_name": 0,
+          "bits": [ 78 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.55-13.58",
+            "type": "flow"
+          }
+        },
+        "v9o": {
+          "hide_name": 0,
+          "bits": [ 79 ],
+          "attributes": {
+            "src": "kinase_activity.v:13.60-13.63",
+            "type": "flow"
+          }
+        },
+        "vp1o": {
+          "hide_name": 0,
+          "bits": [ 68 ],
+          "attributes": {
+            "src": "kinase_activity.v:15.25-15.29",
+            "type": "flow"
+          }
+        },
+        "vp2o": {
+          "hide_name": 0,
+          "bits": [ 69 ],
+          "attributes": {
+            "src": "kinase_activity.v:15.31-15.35",
+            "type": "flow"
+          }
+        },
+        "vp3o": {
+          "hide_name": 0,
+          "bits": [ 53 ],
+          "attributes": {
+            "src": "kinase_activity.v:15.37-15.41",
+            "type": "flow"
+          }
+        },
+        "vp4o": {
+          "hide_name": 0,
+          "bits": [ 59 ],
+          "attributes": {
+            "src": "kinase_activity.v:15.43-15.47",
+            "type": "flow"
+          }
+        },
+        "vp5o": {
+          "hide_name": 0,
+          "bits": [ 71 ],
+          "attributes": {
+            "src": "kinase_activity.v:15.49-15.53",
+            "type": "flow"
+          }
+        },
+        "vs1o": {
+          "hide_name": 0,
+          "bits": [ 70 ],
+          "attributes": {
+            "src": "kinase_activity.v:14.25-14.29",
+            "type": "flow"
+          }
+        },
+        "vs2o": {
+          "hide_name": 0,
+          "bits": [ 80 ],
+          "attributes": {
+            "src": "kinase_activity.v:14.31-14.35",
+            "type": "flow"
+          }
+        },
+        "vs3o": {
+          "hide_name": 0,
+          "bits": [ 57 ],
+          "attributes": {
+            "src": "kinase_activity.v:14.37-14.41",
+            "type": "flow"
+          }
+        },
+        "vs4o": {
+          "hide_name": 0,
+          "bits": [ 61 ],
+          "attributes": {
+            "src": "kinase_activity.v:14.43-14.47",
+            "type": "flow"
+          }
+        }
+      }
+    }
+  }
+}
