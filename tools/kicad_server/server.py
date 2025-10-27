@@ -1,28 +1,26 @@
 import subprocess
-from pathlib import Path
-import opendbpy as odb
-from pcbnew_to_verilog import PcbnewToVerilog
+# import opendbpy as odb
+# from pcbnew_to_verilog import PcbnewToVerilog
 from flask import Flask, request, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import tempfile
-import uuid
 import os.path
 
 app = Flask(__name__)
 
 @app.route("/route", methods=["POST"])
 def router():
-    pcb_file = request.files['pcb_file']
+    pcb_file = request.files['input_file']
     root = workspace_root()
     results_dir = tempfile.mkdtemp(dir=root)
     _, id = os.path.split(results_dir)
     url = url_for("fetch_data", dir=id)
-    pcb_filename = "{results_dir}/original.kicad_pcb"
+    pcb_filename = f"{results_dir}/original.kicad_pcb"
     pcb_file.save(pcb_filename)
-    design = "kicad_remote_design"
-    config = PcbnewToVerilog(board, design, directory)
-    cmd = gen_cmd(design, config, results_dir, ["pnr"])
-
+    # design = "kicad_remote_design"
+    # config = PcbnewToVerilog(board, design, directory)
+    # cmd = gen_cmd(design, config, results_dir, ["pnr"])
+    cmd = ["cat", pcb_filename]
     def generate():
         proc = subprocess.Popen(cmd,
                                 stdout=subprocess.PIPE,
@@ -39,19 +37,21 @@ def router():
 def fetch_data(dir):
     id = secure_filename(dir)
     root = workspace_root()
-    def_file = f"{root}/{id}/results/4_final.def"
-    pcb_file = f"{root}/{id}/results/original.kicad_pcb"
-    tlef_files, lef_files = lef_from_env()
-    db = load_db(def_file, tlef_files, lef_files)
+    root = f"{root}/{id}"
+    # def_file = f"{root}/{id}/results/4_final.def"
+    # pcb_file = f"{root}/{id}/original.kicad_pcb"
+    pcb_file = "original.kicad_pcb"
+    # tlef_files, lef_files = lef_from_env()
+    # db = load_db(def_file, tlef_files, lef_files)
 
-    board = pcbnew.LoadBoard(pcb_file)
-    for tr in board.GetTracks():
-        board.Remove(tr)
-    d = DefToPcbnew(db, board)
-    d.extract_layers()
-    d.place()
-    d.route()
-    board.Save(pcb_file)
+    # board = pcbnew.LoadBoard(pcb_file)
+    # for tr in board.GetTracks():
+        # board.Remove(tr)
+    # d = DefToPcbnew(db, board)
+    # d.extract_layers()
+    # d.place()
+    # d.route()
+    # board.Save(pcb_file)
     return send_from_directory(root, pcb_file), {"Content-Type": "text/kicad_pcb"}
 
 def workspace_root():
