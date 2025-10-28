@@ -15,7 +15,7 @@ def scad_render_nodes(G,nodes):
         if "coordinates" not in G.nodes[node]:
             continue
 
-        dimensions = G.nodes[node].get("dimensions", [1, 1, 1])
+        dimensions = G.nodes[node].get("dimensions", [0.1, 0.1, 0.1])
         position = G.nodes[node]["coordinates"]
         if len(position) == 2:
             position = [G.nodes[node]["shell"]] + position
@@ -38,7 +38,7 @@ def scad_render_nodes(G,nodes):
 
 def scad_render_nodes_flat(G,nodes):
     for node in nodes:
-        dimensions = G.nodes[node].get("dimensions", [1, 1, 1])
+        dimensions = G.nodes[node].get("dimensions", [100, 100, 100])
         position = G.nodes[node]["coordinates"]
         s = solid2.translate(position)(solid2.cube(dimensions))
         yield scad_comment(f"Node {node}")(s)
@@ -48,7 +48,7 @@ def scad_render_edges_flat(G, edges):
         start, end = edge
         end_orig = G.nodes[end]["coordinates"]
         start_orig = G.nodes[start]["coordinates"]
-        channel_dim = G.edges[edge].get("dimensions", (0.125,0.125, 0.125))
+        channel_dim = G.edges[edge].get("dimensions", (10,10,10))
         start_pin = G.edges[edge].get("start_pin", (0.5, 0.5, 0.5))
         end_pin = G.edges[edge].get("end_pin", (0.5, 0.5, 0.5))
         front = [i + j for i, j in zip(start_orig, start_pin)]
