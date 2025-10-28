@@ -17,9 +17,9 @@ class RequestDialog(wx.Dialog):
         panel = wx.Panel(self)
         self.log = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY)
         self.hostname= wx.TextCtrl(panel)
-        self.hostname.SetValue("http://localhost:5000")
+        self.hostname.SetValue("http://localhost:54654")
         self.filename = filename
-        self.route = route
+        self.path = route
         self.suffix = suffix
         start_btn = wx.Button(panel, label='Start')
         start_btn.Bind(wx.EVT_BUTTON, self.start)
@@ -40,7 +40,7 @@ class RequestDialog(wx.Dialog):
     def start(self, event):
         files = {'input_file': open(self.filename, 'rb')}
         server = self.hostname.GetValue()
-        self.response = requests.post(f"{server}/{self.route}", stream=True, files=files)
+        self.response = requests.post(f"{server}/{self.path}", stream=True, files=files)
         while True:
             wx.Yield()
             line = self.response.raw.readline()
@@ -81,14 +81,11 @@ class PnRPlugin(pcbnew.ActionPlugin):
         try:
             sub = RequestDialog(filename, "/route", ".kicad_pcb", None, title="OpenMFDA")
             sub.ShowModal()
-            import_board()
-            result = "/Users/snelgrov/Desktop/remote.kicad_pcb"
-            # result = sub.results
+            result = sub.results
             self.import_board(result)
             pcbnew.Refresh()
         except:
             wx.MessageBox("Rendering file failed.")
-            raise
 
     def import_board(self, path):
         target = pcbnew.GetBoard()
@@ -98,34 +95,34 @@ class PnRPlugin(pcbnew.ActionPlugin):
         pcbnew.Refresh()
 
     def place(self, source, target):
-            for component in source.GetFootprints():
-                angle = component.GetOrientationDegrees()
-                x = component.GetX()
-                y = component.GetY()
-                flip = component.IsFlipped()
-                name = component.GetReference()
-                for foot in target.GetFootprints():
-                    # O(n**2), fix later
-                    if foot.GetReference() == name:
-                        # reset everything, flipping is stateful.
-                        if foot.IsFlipped():
-                            foot.Flip(foot.GetPosition(), False)
-                        foot.SetOrientationDegrees(0)
+        for component in source.GetFootprints():
+            angle = component.GetOrientationDegrees()
+            x = component.GetX()
+            y = component.GetY()
+            flip = component.IsFlipped()
+            name = component.GetReference()
+            for foot in target.GetFootprints():
+                # O(n**2), fix later
+                if foot.GetReference() == name:
+                    # reset everything, flipping is stateful.
+                    if foot.IsFlipped():
+                        foot.Flip(foot.GetPosition(), False)
+                    foot.SetOrientationDegrees(0)
 
-                        if flip:
-                            foot.Flip(foot.GetPosition(), False)
-                        foot.SetOrientationDegrees(angle)
-                        foot.SetX(x)
-                        foot.SetY(y)
-                        foot.SetIsPlaced(True)
-                        foot.SetNeedsPlaced(False)
-                pcbnew.Refresh()
+                    if flip:
+                        foot.Flip(foot.GetPosition(), False)
+                    foot.SetOrientationDegrees(angle)
+                    foot.SetX(x)
+                    foot.SetY(y)
+                    foot.SetIsPlaced(True)
+                    foot.SetNeedsPlaced(False)
+            pcbnew.Refresh()
 
 
     def route(self, source, target):
         for track in target.GetTracks():
             target.Remove(track)
-
+        pcbnew.Refresh()
         for track in source.GetTracks():
             target.Add(track.Duplicate())
 
