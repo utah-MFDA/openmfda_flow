@@ -1,6 +1,9 @@
+from opendb_helpers import load_db
 import subprocess
-# import opendbpy as odb
-# from pcbnew_to_verilog import PcbnewToVerilog
+import pcbnew
+import opendbpy as odb
+from pcbnew_to_verilog import PcbnewToVerilog
+from def_to_pcbnew import DefToPcbnew
 from flask import Flask, request, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import tempfile
@@ -17,10 +20,10 @@ def router():
     url = url_for("fetch_data", dir=id)
     pcb_filename = f"{results_dir}/original.kicad_pcb"
     pcb_file.save(pcb_filename)
-    # design = "kicad_remote_design"
-    # config = PcbnewToVerilog(board, design, directory)
-    # cmd = gen_cmd(design, config, results_dir, ["pnr"])
-    cmd = ["cat", pcb_filename]
+    board = pcbnew.LoadBoard(pcb_filename)
+    design = "kicad_remote_design"
+    config = PcbnewToVerilog(board, design, results_dir)
+    cmd = gen_cmd(design, config, results_dir, ["pnr"])
     def generate():
         proc = subprocess.Popen(cmd,
                                 stdout=subprocess.PIPE,
@@ -38,30 +41,30 @@ def fetch_data(dir):
     id = secure_filename(dir)
     root = workspace_root()
     root = f"{root}/{id}"
-    # def_file = f"{root}/{id}/results/4_final.def"
-    # pcb_file = f"{root}/{id}/original.kicad_pcb"
-    pcb_file = "original.kicad_pcb"
-    # tlef_files, lef_files = lef_from_env()
-    # db = load_db(def_file, tlef_files, lef_files)
+    def_file = f"{root}/{id}/results/4_final.def"
+    pcb_file = f"{root}/{id}/original.kicad_pcb"
+    tlef_files, lef_files = lef_from_env()
+    db = load_db(def_file, tlef_files, lef_files)
 
-    # board = pcbnew.LoadBoard(pcb_file)
-    # for tr in board.GetTracks():
-        # board.Remove(tr)
-    # d = DefToPcbnew(db, board)
-    # d.extract_layers()
-    # d.place()
-    # d.route()
-    # board.Save(pcb_file)
-    return send_from_directory(root, pcb_file), {"Content-Type": "text/kicad_pcb"}
+    board = pcbnew.LoadBoard(pcb_file)
+    for tr in board.GetTracks():
+        board.Remove(tr)
+    d = DefToPcbnew(db, board)
+    d.extract_layers()
+    d.place()
+    d.route()
+    target_file = f"{root}/{id}/results/final.kicad_pcb"
+    board.Save(target_file)
+    return send_from_directory(root, target_file), {"Content-Type": "text/kicad_pcb"}
 
 def workspace_root():
-    return "./workspace"
+    return "/var/tmp/openmfda"
 
 def flow_root():
     if "OPENMFDA_FLOW_ROOT" in os.environ:
         return os.environ["OPENMFDA_FLOW_ROOT"]
     else:
-        return "/app/opt/openmfda/flow"
+        return "/opt/openmfda/flow"
 
 def lef_from_env():
     root = flow_root()
@@ -71,7 +74,7 @@ def lef_from_env():
     return tlef_files, lef_files
 
 def gen_cmd(design, config, results, args):
-    base_cmd = ["echo", "make", "-C", flow_root(),
+    base_cmd = ["make", "-C", flow_root(),
                 "TIME_CMD=",
                 f"DESIGN={design}", f"DESIGN_CONFIG={config}",
                 f"LOG_DIR={results}",  f"OBJECTS_DIR={results}",
