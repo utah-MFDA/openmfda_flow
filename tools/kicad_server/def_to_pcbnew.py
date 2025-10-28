@@ -1,0 +1,1 @@
+../kicad/def_to_pcbnew.py

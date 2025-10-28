@@ -39,7 +39,7 @@ if {[info exist env(FASTROUTE_TCL)]} {
   set_routing_layers -signal $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER)
   set_macro_extension 2
 }
-
+set_nets_to_route {}
 global_route -guide_file $env(RESULTS_DIR)/route.guide \
                -congestion_iterations 200 \
                -verbose

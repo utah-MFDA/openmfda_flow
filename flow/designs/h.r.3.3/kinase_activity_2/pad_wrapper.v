@@ -1,62 +1,91 @@
-module kinase_activity_2(input in1_a, in2_a, in3_a,
-                                 input in1_b, in2_b, in3_b,
-                                 c1, c2, c3, c4, c5, c6,
-                                 c7, c8, c9, c10, c11, c12, c13,
-                                 s1, s2, s3, s4,
-                                 p1, p2, p3, p4, p5,
-                                 output out1_a, out2_a, out3_a, out4_a,
-                                 out1_b, out2_b, out3_b, out4_b);
-  pinhole_325px_0 pinhole1(.pad(in1_a), .connection(in1_a_X));
-  pinhole_325px_0 pinhole2(.pad(in2_a), .connection(in2_a_X));
-  pinhole_325px_0 pinhole3(.pad(in3_a), .connection(in3_a_X));
-  pinhole_325px_0 pinhole4(.pad(in1_b), .connection(in1_b_X));
-  pinhole_325px_0 pinhole5(.pad(in2_b), .connection(in2_b_X));
-  pinhole_325px_0 pinhole6(.pad(in3_b), .connection(in3_b_X));
-  pinhole_325px_0 pinhole7(.connection(out1_a_X), .pad(out1_a));
-  pinhole_325px_0 pinhole8(.connection(out2_a_X), .pad(out2_a));
-  pinhole_325px_0 pinhole9(.connection(out3_a_X), .pad(out3_a));
-  pinhole_325px_0 pinhole10(.connection(out4_a_X), .pad(out4_a));
-  pinhole_325px_0 pinhole11(.connection(out1_b_X), .pad(out1_b));
-  pinhole_325px_0 pinhole12(.connection(out2_b_X), .pad(out2_b));
-  pinhole_325px_0 pinhole13(.connection(out3_b_X), .pad(out3_b));
-  pinhole_325px_0 pinhole14(.connection(out4_b_X), .pad(out4_b));
+module kinase_activity_2(
+// input `FLATTENED(IN_SIZE, flow_in_flat, SIZE),
+//                          input `FLATTENED(OUT_SIZE, flow_out_flat, SIZE),
+//                          input [12:0] ctrl_a,
+//                          input [3:0] ctrl_s,
+//                          input [2:0] pump_a,
+//                          input [1:0] pump_b,
+//                          output [FLUSH_SIZE-1:0] flush
+);
+  parameter FLUSH_SIZE = 22;
+  parameter IN_SIZE = 3;
+  parameter OUT_SIZE = 4;
+  parameter SIZE = 2;
+  wire [IN_SIZE-1:0] flow_in [SIZE];
+  wire [OUT_SIZE-1:0] flow_out [SIZE];
+  wire [FLUSH_SIZE-1:0] flush;
+//   `UNFLATTEN(IN_SIZE, flow_in, SIZE) `FROM_FLATTENED(flow_in_flat)
+//   `UNFLATTEN(OUT_SIZE, flow_out, SIZE) `FROM_FLATTENED(flow_out_flat)
+  wire [12:0] ctrl_a;
+  wire [3:0] ctrl_s;
+  wire [2:0] pump_a;
+  wire [1:0] pump_b;
 
-  interconnect_8x4 ic(.pin_0_0(c1_X), .pin_0_0_pad(c1),
-                      .pin_0_1(c9_X), .pin_0_1_pad(c9),
-                      .pin_0_2(s1_X), .pin_0_2_pad(s1),
-                      .pin_0_3(), .pin_0_3_pad(),
-                      .pin_1_0(c2_X), .pin_1_0_pad(c2),
-                      .pin_1_1(c10_X), .pin_1_1_pad(c10),
-                      .pin_1_2(s2_X), .pin_1_2_pad(s2),
-                      .pin_1_3(), .pin_1_3_pad(),
-                      .pin_2_0(c3_X), .pin_2_0_pad(c3),
-                      .pin_2_1(c11_X), .pin_2_1_pad(c11),
-                      .pin_2_2(s3_X), .pin_2_2_pad(s3),
-                      .pin_2_3(), .pin_2_3_pad(),
-                      .pin_3_0(c4_X), .pin_3_0_pad(c4),
-                      .pin_3_1(c12_X), .pin_3_1_pad(c12),
-                      .pin_3_2(s4_X), .pin_3_2_pad(s4),
-                      .pin_3_3(), .pin_3_3_pad(),
-                      .pin_4_0(c5_X), .pin_4_0_pad(c5),
-                      .pin_4_1(c13_X), .pin_4_1_pad(c13),
-                      .pin_4_2(p4_X), .pin_4_2_pad(p4),
-                      .pin_4_3(), .pin_4_3_pad(),
-                      .pin_5_0(c6_X), .pin_5_0_pad(c6),
-                      .pin_5_1(p1_X), .pin_5_1_pad(p1),
-                      .pin_5_2(p5_X), .pin_5_2_pad(p5),
-                      .pin_5_3(), .pin_5_3_pad(),
-                      .pin_6_0(c7_X), .pin_6_0_pad(c7),
-                      .pin_6_1(p2_X), .pin_6_1_pad(p2),
-                      .pin_6_2(), .pin_6_2_pad(),
-                      .pin_6_3(), .pin_6_3_pad(),
-                      .pin_7_0(c8_X), .pin_7_0_pad(c8),
-                      .pin_7_1(p3_X), .pin_7_1_pad(p3));
-  kinase_activity_2_device device(in1_a_X, in2_a_X, in3_a_X,
-                           in1_b_X, in2_b_X, in3_b_X,
-                           c1_X, c2_X, c3_X, c4_X, c5_X, c6_X,
-                           c7_X, c8_X, c9_X, c10_X, c11_X, c12_X, c13_X,
-                           s1_X, s2_X, s3_X, s4_X,
-                           p1_X, p2_X, p3_X, p4_X, p5_X,
-                           out1_a_X, out2_a_X, out3_a_X, out4_a_X,
-                           out1_b_X, out2_b_X, out3_b_X, out4_b_X);
+
+  wire [IN_SIZE-1:0] flow_in_X [SIZE-1:0];
+  wire [OUT_SIZE-1:0] flow_out_X [SIZE-1:0];
+  wire [FLUSH_SIZE-1:0] flush_X;
+  wire [12:0] ctrl_a_X;
+  wire [3:0] ctrl_s_X;
+  wire [2:0] pump_a_X;
+  wire [1:0] pump_b_X;
+
+  generate
+    genvar i, j;
+    for (i = 0; i < SIZE; i = i + 1) begin: pinholes
+      for (j = 0; j < 3; j = j + 1) begin: in
+        pinhole_320px_0 hole (.pad(flow_in[i][j]), .connection(flow_in_X[i][j]));
+      end
+      for (j = 0; j < 4; j = j + 1) begin: out
+        pinhole_320px_0 hole (.pad(flow_out[i][j]), .connection(flow_out_X[i][j]));
+      end
+    end
+    for (j = 0; j < FLUSH_SIZE; j = j + 1) begin: flush
+      flush_hole_0 hole(.pad(flush[j]), .connection(flush_X[j]));
+    end
+  endgenerate
+
+  interconnect_8x4 interconnect(.connection_0_0(ctrl_a_X[1]), .pad_0_0(ctrl_a[1]),
+                      .connection_0_1(ctrl_a_X[9]), .pad_0_1(ctrl_a[9]),
+                      .connection_0_2(ctrl_s_X[1]), .pad_0_2(ctrl_s[1]),
+                      .connection_0_3(), .pad_0_3(),
+                      .connection_1_0(ctrl_a_X[2]), .pad_1_0(ctrl_a[2]),
+                      .connection_1_1(ctrl_a_X[10]), .pad_1_1(ctrl_a[10]),
+                      .connection_1_2(ctrl_s_X[2]), .pad_1_2(ctrl_s[2]),
+                      .connection_1_3(), .pad_1_3(),
+                      .connection_2_0(ctrl_a_X[3]), .pad_2_0(ctrl_a[3]),
+                      .connection_2_1(ctrl_a_X[11]), .pad_2_1(ctrl_a[11]),
+                      .connection_2_2(ctrl_s_X[3]), .pad_2_2(ctrl_s[3]),
+                      .connection_2_3(), .pad_2_3(),
+                      .connection_3_0(ctrl_a_X[4]), .pad_3_0(ctrl_a[4]),
+                      .connection_3_1(), .pad_3_1(),
+                      .connection_3_2(), .pad_3_2(),
+                      .connection_3_3(), .pad_3_3(),
+                      .connection_4_0(ctrl_a_X[5]), .pad_4_0(ctrl_a[5]),
+                      .connection_4_1(), .pad_4_1(),
+                      .connection_4_2(pump_b_X[0]), .pad_4_2(pump_b[0]),
+                      .connection_4_3(), .pad_4_3(),
+                      .connection_5_0(ctrl_a_X[6]), .pad_5_0(ctrl_a[6]),
+                      .connection_5_1(pump_a_X[1]), .pad_5_1(pump_a[1]),
+                      .connection_5_2(pump_b_X[1]), .pad_5_2(pump_b[1]),
+                      .connection_5_3(), .pad_5_3(),
+                      .connection_6_0(ctrl_a_X[7]), .pad_6_0(ctrl_a[7]),
+                      .connection_6_1(pump_a_X[2]), .pad_6_1(pump_a[2]),
+                      .connection_6_2(), .pad_6_2(),
+                      .connection_6_3(), .pad_6_3(),
+                      .connection_7_0(ctrl_a_X[8]), .pad_7_0(ctrl_a[8]),
+                      .connection_7_1(pump_a_X[0]), .pad_7_1(pump_a[0]));
+  // generate
+  //   genvar i;
+  //   for (i = 0; i < SIZE; i = i + 1) begin: devices
+// I think there is a bug with place_inst with -name not allowing the braces generated here.
+      kinase_activity device1(flow_in_X[1], flow_out_X[1],
+                             ctrl_a_X, ctrl_s_X, pump_a_X, pump_b_X,
+                             flush_X);
+
+      kinase_activity device0(flow_in_X[0], flow_out_X[0],
+                             ctrl_a_X, ctrl_s_X, pump_a_X, pump_b_X,
+                             flush_X);
+  //   end
+  // endgenerate
 endmodule

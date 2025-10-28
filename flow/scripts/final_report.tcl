@@ -33,9 +33,12 @@ if {![info exists standalone] || $standalone} {
 # Delete routing obstructions for final DEF
 source $::env(SCRIPTS_DIR)/deleteRoutingObstructions.tcl
 deleteRoutingObstructions
+puts "Deleted routing obstructions"
 
 write_def $::env(RESULTS_DIR)/4_final.def
+puts "Wrote final DEF"
 write_verilog $::env(RESULTS_DIR)/4_final.v
+puts "Wrote final verilog"
 
 # Run extraction and STA
 if {[info exist ::env(RCX_RULES)]} {
@@ -82,8 +85,10 @@ if {[info exist ::env(RCX_RULES)]} {
   puts "OpenRCX is not enabled for this platform."
 }
 
+puts "Finished RCX extracton"
 source $::env(SCRIPTS_DIR)/report_metrics.tcl
 report_metrics "finish"
+puts "Finished metrics"
 
 if {![info exists standalone] || $standalone} {
   exit

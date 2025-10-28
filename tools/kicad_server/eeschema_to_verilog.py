@@ -1,0 +1,1 @@
+../kicad/eeschema_to_verilog.py
