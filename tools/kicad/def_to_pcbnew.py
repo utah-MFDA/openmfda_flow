@@ -1,6 +1,6 @@
 import opendbpy as odb
 import pcbnew
-from .opendb_helpers import wire_iter, segment_iter
+from opendb_helpers import wire_iter, segment_iter
 
 class DefToPcbnew:
     def __init__(self, db, board):
