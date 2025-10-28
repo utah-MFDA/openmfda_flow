@@ -22,7 +22,9 @@ def router():
     pcb_file.save(pcb_filename)
     board = pcbnew.LoadBoard(pcb_filename)
     design = "kicad_remote_design"
-    config = PcbnewToVerilog(board, design, results_dir)
+    converter = PcbnewToVerilog(board, design, results_dir)
+    converter.export()
+    config = f"{results_dir}/config.mk"
     cmd = gen_cmd(design, config, results_dir, ["pnr"])
     def generate():
         proc = subprocess.Popen(cmd,
