@@ -90,9 +90,9 @@ class PnRPlugin(pcbnew.ActionPlugin):
             wx.MessageBox("Rendering file failed.")
             raise
 
-    def import_board(path):
+    def import_board(self, path):
         target = pcbnew.GetBoard()
-        source = pcbnew.LoadBoard(result)
+        source = pcbnew.LoadBoard(path)
         self.place(source, target)
         self.route(source, target)
         pcbnew.Refresh()
@@ -102,7 +102,7 @@ class PnRPlugin(pcbnew.ActionPlugin):
                 angle = component.GetOrientationDegrees()
                 x = component.GetX()
                 y = component.GetY()
-                flip = component.isFlipped()
+                flip = component.IsFlipped()
                 name = component.GetReference()
                 for foot in target.GetFootprints():
                     # O(n**2), fix later
