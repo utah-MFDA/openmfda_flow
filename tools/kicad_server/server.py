@@ -8,21 +8,23 @@ from flask import Flask, request, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import tempfile
 import os.path
-
+from pathlib import Path
 app = Flask(__name__)
 
 @app.route("/route", methods=["POST"])
 def router():
     pcb_file = request.files['input_file']
     root = workspace_root()
-    results_dir = tempfile.mkdtemp(dir=root)
-    _, id = os.path.split(results_dir)
+    results_dir = Path(tempfile.mkdtemp(dir=root))
+    id = results_dir.stem
     url = url_for("fetch_data", dir=id)
-    pcb_filename = f"{results_dir}/original.kicad_pcb"
+    pcb_filename = results_dir / "original.kicad_pcb"
     pcb_file.save(pcb_filename)
     board = pcbnew.LoadBoard(pcb_filename)
     design = "kicad_remote_design"
-    config = PcbnewToVerilog(board, design, results_dir)
+    converter = PcbnewToVerilog(board, design, results_dir)
+    converter.export()
+    config = results_dir / "config.mk"
     cmd = gen_cmd(design, config, results_dir, ["pnr"])
     def generate():
         proc = subprocess.Popen(cmd,
