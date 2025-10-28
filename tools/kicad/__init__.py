@@ -1,10 +1,9 @@
 import wx
 
 try:
-    from .plugins import PnRPlugin, PreviewPlugin, ExportPlugin
+    from .server_plugins import PnRPlugin, PreviewPlugin
     PnRPlugin().register()
     PreviewPlugin().register()
-    ExportPlugin().register()
 except Exception as e:
     wx.LogMessage("Failed to load plugin")
     wx.LogMessage(str(e))

@@ -1,3 +1,4 @@
+import pcbnew
 import shutil
 import os
 import wx
@@ -16,6 +17,7 @@ class RequestDialog(wx.Dialog):
         panel = wx.Panel(self)
         self.log = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY)
         self.hostname= wx.TextCtrl(panel)
+        self.hostname.SetValue("http://localhost:5000")
         self.filename = filename
         self.route = route
         self.suffix = suffix
@@ -27,6 +29,7 @@ class RequestDialog(wx.Dialog):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.log, 1, wx.ALL|wx.EXPAND, 5)
+        sizer.Add(self.hostname, 0, wx.ALL, 5)
         sizer.Add(start_btn, 0, wx.ALL, 5)
         sizer.Add(halt_btn, 0, wx.ALL, 5)
         panel.SetSizer(sizer)
@@ -36,25 +39,32 @@ class RequestDialog(wx.Dialog):
 
     def start(self, event):
         files = {'input_file': open(self.filename, 'rb')}
-        self.response = requests.post(f"{self.server}/{route}", stream=True, files=files)
+        server = self.hostname.GetValue()
+        self.response = requests.post(f"{server}/{self.route}", stream=True, files=files)
         while True:
             wx.Yield()
-            line = self.response.readline()
+            line = self.response.raw.readline()
             if line:
                 self.log.write(line)
             else:
                 break
         try:
-            redirect = self.request.headers["Location"]
-            filename = tempfile.mktemp(suffix=suffix)
-            results = requests.get(redirect, stream=True)
-            with open(filename, 'wb') as fd:
-                for chunk in results.iter_content(chunk_size=128):
-                    wx.Yield()
-                    fd.write(chunk)
-            self.results = filename
+            redirect = self.response.headers["Location"]
+            filename = tempfile.mktemp(suffix=self.suffix)
+            response = requests.get(f"{server}{redirect}", stream=True)
+            wx.MessageBox(f"Requested {response.url}")
+            if response.status_code == requests.codes.ok:
+                with open(filename, 'wb') as fd:
+                    for chunk in response.iter_content(chunk_size=128):
+                        wx.Yield()
+                        fd.write(chunk)
+                wx.MessageBox(f"Transfer finished {filename}")
+                self.results = filename
+            else:
+                response.raise_for_status()
         except:
             wx.MessageBox("Routing file fetch failed.")
+            raise
 
 class PnRPlugin(pcbnew.ActionPlugin):
     def defaults(self):
@@ -69,16 +79,58 @@ class PnRPlugin(pcbnew.ActionPlugin):
         filename = board.GetFileName()
         board.Save(filename)
         try:
-            sub = RequestDialog(filename, "/route", "kicad_pcb", None, title="OpenMFDA")
+            sub = RequestDialog(filename, "/route", ".kicad_pcb", None, title="OpenMFDA")
             sub.ShowModal()
-            pcbnew.Load(sub.results)
+            import_board()
+            result = "/Users/snelgrov/Desktop/remote.kicad_pcb"
+            # result = sub.results
+            self.import_board(result)
             pcbnew.Refresh()
         except:
-            wx.MessageBox("Routing file fetch failed.")
+            wx.MessageBox("Rendering file failed.")
+            raise
+
+    def import_board(path):
+        target = pcbnew.GetBoard()
+        source = pcbnew.LoadBoard(result)
+        self.place(source, target)
+        self.route(source, target)
+        pcbnew.Refresh()
+
+    def place(self, source, target):
+            for component in source.GetFootprints():
+                angle = component.GetOrientationDegrees()
+                x = component.GetX()
+                y = component.GetY()
+                flip = component.isFlipped()
+                name = component.GetReference()
+                for foot in target.GetFootprints():
+                    # O(n**2), fix later
+                    if foot.GetReference() == name:
+                        # reset everything, flipping is stateful.
+                        if foot.IsFlipped():
+                            foot.Flip(foot.GetPosition(), False)
+                        foot.SetOrientationDegrees(0)
+
+                        if flip:
+                            foot.Flip(foot.GetPosition(), False)
+                        foot.SetOrientationDegrees(angle)
+                        foot.SetX(x)
+                        foot.SetY(y)
+                        foot.SetIsPlaced(True)
+                        foot.SetNeedsPlaced(False)
+                pcbnew.Refresh()
 
 
+    def route(self, source, target):
+        for track in target.GetTracks():
+            target.Remove(track)
+
+        for track in source.GetTracks():
+            target.Add(track.Duplicate())
 
 class PreviewPlugin(pcbnew.ActionPlugin):
+
     def defaults(self):
         self.name = "OpenMFDA Render"
         self.category = "A descriptive category name"

@@ -14,7 +14,7 @@ class PcbnewToVerilog:
             print(f"module {self.design} (", file=outfile)
             ios = []
             for foot in self.board.GetFootprints():
-                if foot.GetFieldText("Footprint") == "h.r.3.3:interconnect_4x8":
+                if foot.HasField("Footprint") and foot.GetFieldText("Footprint") == "h.r.3.3:interconnect_4x8":
                     for pad in foot.Pads():
                         direction = pad.GetPinType()
                         if "no_connect" in direction:
@@ -34,6 +34,8 @@ class PcbnewToVerilog:
                 if len(net) and "unconnected" not in net:
                     print(f"\twire \\{net} ;", file=outfile) # Space after the name is important here!
             for foot in self.board.GetFootprints():
+                if not foot.HasField("Footprint"):
+                    continue
                 module = foot.GetFieldText("Footprint").replace("h.r.3.3:", "")
                 if module == "interconnect_4x8":
                     continue
@@ -95,6 +97,8 @@ export CORE_AREA   	 	= 0 0 2550 1590
     def write_macros(self):
         with open(self.directory / "macros.tcl", "w") as f:
             for footprint in self.board.GetFootprints():
+                if not footprint.HasField("Footprint"):
+                    continue
                 name = footprint.GetFieldByName("Footprint").GetText()
                 if footprint.IsLocked() and name not in pads:
                     name = footprint.GetReference()
@@ -104,10 +108,12 @@ export CORE_AREA   	 	= 0 0 2550 1590
     def write_pads(self):
         pinholes = [footprint.GetReference()
                     for footprint in self.board.GetFootprints()
-                    if footprint.GetFieldByName("Footprint").GetText() == "h.r.3.3:pinhole_325px_0"]
+                    if footprint.HasField("Footprint") and footprint.GetFieldByName("Footprint").GetText() == "h.r.3.3:pinhole_325px_0"]
 
         bumps = [[None for i in  range(0,4)] for x in range(0,8)]
         for footprint in self.board.GetFootprints():
+            if not footprint.HasField("Footprint"):
+                continue
             if footprint.GetFieldByName("Footprint").GetText() != "h.r.3.3:interconnect_4x8":
                 continue
             for pad in footprint.Pads():
