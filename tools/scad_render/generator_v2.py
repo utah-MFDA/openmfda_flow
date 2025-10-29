@@ -184,7 +184,7 @@ def write_pins(
         debug=False):
 
     f = open(o_file, mode)
-    f.write("\n// PINS")
+    f.write("\n// PINS\n")
 
     nl = '\n'
 

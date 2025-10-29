@@ -34,10 +34,14 @@ def slice_geometry(
 
     if num_layer == 0:
         raise Exception(f"No geometry to slice, file:{stl_file}")
-    # layer_count = 0
+    layer_c = 0
     for layer_count in range(0, num_layer):
-        slice_2D, to_3D = mesh.section(
-            plane_origin=[0, 0, layer_count*layer_h], plane_normal=[0, 0, 1]).to_2D()
+        slice = mesh.section(
+            plane_origin=[0, 0, layer_count*layer_h], plane_normal=[0, 0, 1])
+        if slice is None:
+            continue
+        layer_c += 1
+        slice_2D, to_3D = slice.to_2D()
         """
             This handles regions that are smaller than the max size geometry
                 however this assumes the geometry is centered.
@@ -58,9 +62,9 @@ def slice_geometry(
             )
         else:
             sl_img = slice_2D.rasterize(resolution=printer_resolution)
-        sl_img.save(f"{export_dir}/{layer_count}.png")
+        # sl_img.save(f"{export_dir}/{layer_count}.png")
     sl_img.save(f"{export_dir}/{layer_count+1}.png")
-    print(f"Complete {layer_count+1} sliced images")
+    print(f"Complete {layer_c} sliced images")
 
 
 if __name__ == "__main__":

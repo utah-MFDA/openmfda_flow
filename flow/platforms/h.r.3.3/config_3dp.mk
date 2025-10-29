@@ -27,7 +27,7 @@ export YBULK_VAL		= 1600
 
 # bulk z value in layers
 # 	This includes the BOT_LAYERS_VAL
-export ZBULK_VAL		= 230
+export ZBULK_VAL		= 270
 
 # render smoothness in scad render
 # 	high value means rounded edges are smoother (more lines per rotation)

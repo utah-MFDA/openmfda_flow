@@ -79,7 +79,7 @@ class RenderSubprocDialog(wx.Dialog):
         # wx.MessageBox("Done.")
 
     def run_openscad(self, event):
-        openscad_cmd = ['openscad', self.render_file]
+        openscad_cmd = ['openscad', str(self.render_file)]
         self.log.write(' '.join(openscad_cmd)+'\n')
         subprocess.Popen(
             openscad_cmd,

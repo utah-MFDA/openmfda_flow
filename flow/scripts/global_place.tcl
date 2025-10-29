@@ -70,6 +70,18 @@ global_placement -routability_driven -density $place_density \
   source $::env(GLOBAL_PLACEMENT_ARGS_FILE)
   # renamed?
   # global_placement -routability_driven -density $pl_density \
+  # global_placement -routability_driven -density $place_density \
+  #   -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
+  #   -pad_right $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
+  #   -bin_grid_count $bin_grid_count \
+  #   -init_density_penalty $init_density_penalty \
+  #   -init_wirelength_coef $init_wirelength_coef \
+  #   -min_phi_coef $min_phi_coef \
+  #   -max_phi_coef $max_phi_coef \
+  #   -overflow $overflow \
+  #   -initial_place_max_iter $initial_place_max_iter \
+  #   -initial_place_max_fanout $initial_place_max_fanout
+
   global_placement -routability_driven -density $place_density \
     -pad_left $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
     -pad_right $::env(CELL_PAD_IN_SITES_GLOBAL_PLACEMENT) \
@@ -79,7 +91,6 @@ global_placement -routability_driven -density $place_density \
     -min_phi_coef $min_phi_coef \
     -max_phi_coef $max_phi_coef \
     -overflow $overflow \
-    -initial_place_max_iter $initial_place_max_iter \
     -initial_place_max_fanout $initial_place_max_fanout
 } else {
 global_placement -routability_driven -density $place_density \

@@ -43,7 +43,7 @@ class SubprocDialog(wx.Dialog):
 
     def __init__(self, cmd, *args, **kw):
         super(SubprocDialog, self).__init__(
-            style=wx.DEFAULT_DIALOG_STYLE|wx.RESIZE_BORDER|wx.MAXIMIZE_BOX,
+            style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX,
             *args, **kw)
         self.cmd = cmd
         panel = wx.Panel(self)
@@ -69,12 +69,12 @@ class SubprocDialog(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(start_btn, 0, wx.ALL, 7)
         sizer.Add(halt_btn, 0, wx.ALL, 7)
-        sizer.Add(self.mfda_home_text, 0, wx.ALL|wx.EXPAND, 7)
+        sizer.Add(self.mfda_home_text, 0, wx.ALL | wx.EXPAND, 7)
         sizer.Add(mfda_home_btn, 0, wx.ALL, 7)
 
         sizer_h.Add(sizer)
-        sizer_h.Add(self.log, 1, wx.ALL|wx.EXPAND, 7)
-        sizer.Add(self.log, 1, wx.ALL|wx.EXPAND, 5)
+        sizer_h.Add(self.log, 1, wx.ALL | wx.EXPAND, 7)
+        sizer.Add(self.log, 1, wx.ALL | wx.EXPAND, 5)
         sizer.Add(start_btn, 0, wx.ALL, 5)
         sizer.Add(halt_btn, 0, wx.ALL, 5)
 
@@ -179,7 +179,7 @@ class PnRPlugin(pcbnew.ActionPlugin):
             print("Init Def to PCBNEW")
             d = DefToPcbnew(db, board)
             print("Extract layers")
-            d.extract_layers()
+            # d.extract_layers()
             print("Place")
             d.place()
             print("Route")
@@ -212,9 +212,10 @@ class PreviewPlugin(pcbnew.ActionPlugin):
         # sub = SubprocDialog(cmd, None, title="OpenMFDA")
         sub.ShowModal()
         if self.proc is None or (self.proc is not None and self.proc.poll() is not None):
-            cmd = ["openscad", str(scad_file)]
-            print(cmd)
-            self.proc = subprocess.Popen(cmd)
+            # cmd = ["openscad", str(scad_file)]
+            # print(cmd)
+            # self.proc = subprocess.Popen(cmd)
+            pass
 
 
 class ExportPlugin(pcbnew.ActionPlugin):
