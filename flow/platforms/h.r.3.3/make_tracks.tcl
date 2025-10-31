@@ -8,13 +8,3 @@ make_tracks met7 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
 make_tracks met8 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
 make_tracks met9 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
 make_tracks met10 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met11 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met12 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met13 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met14 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met15 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met16 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met17 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met18 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met19 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30
-make_tracks met20 -x_offset 0 -x_pitch 30 -y_offset 0 -y_pitch 30

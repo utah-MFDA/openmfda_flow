@@ -1262,4 +1262,49 @@ MACRO pump_40px_0
   END
   PROPERTY CatenaDesignType "deviceLevel" ;
 END pump_40px_0
+
+
+MACRO pinhole_325px_0
+  CLASS PAD ;
+  ORIGIN 0 0 ;
+  FOREIGN pinhole_325px_0 ;
+  SIZE 140 BY 325 ;
+  SYMMETRY X Y R90 ;
+  PIN connection
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met8 ;
+        RECT 60 295 80 325 ;
+    END
+  END connection
+  PIN pad
+    DIRECTION INOUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met10 ;
+        RECT 69 0 71 2 ;
+    END
+  END pad
+  OBS
+    LAYER met1 ;
+      RECT 0 0 140 320 ;
+    LAYER met2 ;
+      RECT 0 0 140 320 ;
+    LAYER met3 ;
+      RECT 0 0 140 320 ;
+    LAYER met4 ;
+      RECT 0 0 140 320 ;
+    LAYER met5 ;
+      RECT 0 0 140 310 ;
+    LAYER met5 ;
+      RECT 0 0 140 320 ;
+    LAYER met6 ;
+      RECT 0 0 140 320 ;
+    LAYER met7 ;
+      RECT 0 0 140 320 ;
+  END
+END pinhole_325px_0
+
 END LIBRARY
+

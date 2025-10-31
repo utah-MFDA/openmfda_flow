@@ -14,7 +14,7 @@ export TECH_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3.tlef
 export SC_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
 
 # lib file is not required
-#export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
+export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      #$(ADDITIONAL_LIBS)
 export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3_merged.scad
 export SCAD_ROUTING_LIBRARY = $(PLATFORM_DIR)/scad/routing.scad
@@ -82,7 +82,7 @@ export PLACE_DENSITY ?= 1
 # FastRoute options
 #   moved to config_3dp.mk
 export MIN_ROUTING_LAYER ?= met1
-export MAX_ROUTING_LAYER ?= met8
+export MAX_ROUTING_LAYER ?= met9
 
 # Define fastRoute tcl
 export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl

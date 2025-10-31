@@ -44,11 +44,10 @@ def fetch_data(dir):
     id = secure_filename(dir)
     root = workspace_root()
     root = f"{root}/{id}"
-    def_file = f"{root}/{id}/results/4_final.def"
-    pcb_file = f"{root}/{id}/original.kicad_pcb"
+    def_file = f"{root}/4_final.def"
+    pcb_file = f"{root}/original.kicad_pcb"
     tlef_files, lef_files = lef_from_env()
     db = load_db(def_file, tlef_files, lef_files)
-
     board = pcbnew.LoadBoard(pcb_file)
     for tr in board.GetTracks():
         board.Remove(tr)
@@ -56,9 +55,9 @@ def fetch_data(dir):
     d.extract_layers()
     d.place()
     d.route()
-    target_file = f"{root}/{id}/results/final.kicad_pcb"
+    target_file = f"{root}/final.kicad_pcb"
     board.Save(target_file)
-    return send_from_directory(root, target_file), {"Content-Type": "text/kicad_pcb"}
+    return send_from_directory(root, "final.kicad_pcb"), {"Content-Type": "text/kicad_pcb"}
 
 def workspace_root():
     return "/var/tmp/openmfda"
