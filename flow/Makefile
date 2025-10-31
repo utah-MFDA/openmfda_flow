@@ -8,9 +8,19 @@ OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
 OPENSCAD ?= openscad
-export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
 export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
 export BUILD_PDK_LIBRARY ?=
+
+# The docker image does not have the OpenROAD OpenBD
+# 	references a compatible version
+#### vvvvv removed merge with kicad
+#ifeq (HAS_OPENDB,T)
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+#else
+#export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
+#endif
+
 
 # Add design configure paths here
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
@@ -18,10 +28,19 @@ DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
 # Global setting for Floorplan
 export PLACE_PINS_ARGS ?=
 
+# Set for new versions of openroad, sites is no longer a valid argument in tcl file.
+# 	This just changes the reference to a script compatible to newer versions of 
+# 	OpenROAD
+export NEW_VER_FL_SITE ?=
+
 # If we are running headless use offscreen rendering for save_image
 ifndef DISPLAY
 export QT_QPA_PLATFORM ?= offscreen
 endif
+
+PYTHON3 ?= python3
+
+SLICER_SCRIPT = ../tools/simple_slicer/slice_geom.py
 
 # Global override Floorplan
 # export CORE_UTILIZATION := 30
@@ -39,7 +58,7 @@ endif
 
 #-------------------------------------------------------------------------------
 # Default target when invoking without specific target.
-.DEFAULT_GOAL := render
+.DEFAULT_GOAL := finish
 
 #-------------------------------------------------------------------------------
 # Proper way to initiate SHELL for make
@@ -51,7 +70,7 @@ SHELL          = /bin/bash
 # - Setup in environment but can be changed here if running Makefile standalone
 #   from root Makefile (pnr/Makefile)
 export FLOW_HOME ?= .
-export GLOBAL_PLACEMENT_ARGS = -skip_nesterov_place
+#export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
 #-------------------------------------------------------------------------------
 # Setup variables to point to other location for the following sub directory
 # - designs - default is under current directory
@@ -82,8 +101,29 @@ endif
 $(info [INFO][FLOW] Using platform directory $(PLATFORM_DIR))
 include $(PLATFORM_DIR)/config.mk
 
+# additional modules 
+# 	the are includes below with evironment var defs
+
+# export FIX_DEF
+# 	call 'fix_route' or/and 'fix_render'
+export DEF_FIX_UTIL = ../tools/route_scripts/util.mk
+
 # Include design and platform configuration
 include $(DESIGN_CONFIG)
+
+ifneq (,$(strip $(DISTRIB_V)))
+export TECH_LEF = ./platforms/$(PLATFORM)/lef/$(PLATFORM)_$(DISTRIB_V).tlef
+export SC_LEF   = ./platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_$(DISTRIB_V).lef
+endif
+
+ifneq (,$(strip $(DESIGN_DIR)))
+export SDC_FILE ?= $(DESIGN_DIR)/constraint.sdc
+export IO_CONSTRAINTS ?= $(DESIGN_DIR)/io_constraints.tcl
+endif
+
+ifeq ($(strip $(GLOBAL_PLACEMENT_ARGS_FILE)),'')
+export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
+endif
 
 export FLOW_VARIANT ?= base
 
@@ -221,6 +261,12 @@ $(WRAPPED_LIBS):
 
 #.PHONY: gen_pcells
 #gen_pcells: $(PCELL_MERGE_LEF)
+
+
+ifdef FIX_DEF
+include $(DEF_FIX_UTIL)
+endif
+
 # ==============================================================================
 #  _     ___ ____  ____      _    ______   __
 # | |   |_ _| __ )|  _ \    / \  |  _ \ \ / /
@@ -292,8 +338,13 @@ floorplan: $(RESULTS_DIR)/1_floorplan.def
 
 # STEP 1: Translate verilog to def
 #-------------------------------------------------------------------------------
+ifeq (NEW_VER_FL_SITE,)
 $(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/floorplan.tcl -metrics $(LOG_DIR)/1_1_floorplan.json) 2>&1 | tee $(LOG_DIR)/1_1_floorplan.log
+else
+$(RESULTS_DIR)/1_1_floorplan.def: $(RESULTS_DIR)/$(DESIGN_NAME).v $(RESULTS_DIR)/$(DESIGN_NAME).sdc $(TECH_LEF) $(SC_LEF) $(ADDITIONAL_LEFS) $(FOOTPRINT) $(SIG_MAP_FILE) $(FOOTPRINT_TCL)
+	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/floorplan_up.tcl -metrics $(LOG_DIR)/1_1_floorplan.json) 2>&1 | tee $(LOG_DIR)/1_1_floorplan.log
+endif
 
 # STEP 2: IO Placement (random)
 #-------------------------------------------------------------------------------
@@ -314,6 +365,7 @@ $(RESULTS_DIR)/1_floorplan.def: $(RESULTS_DIR)/1_3_floorplan_macro.def
 
 $(RESULTS_DIR)/1_floorplan.sdc: $(RESULTS_DIR)/1_synth.sdc
 	cp $< $@
+
 clean_floorplan:
 	rm -f $(RESULTS_DIR)/1_*floorplan*.def $(RESULTS_DIR)/1_floorplan.sdc $(RESULTS_DIR)/1_floorplan.v
 	rm -f $(REPORTS_DIR)/1_*
@@ -380,8 +432,6 @@ clean_place:
 route: $(RESULTS_DIR)/3_route.def \
        $(RESULTS_DIR)/3_route.sdc
 # ==============================================================================
-# rereplace_test:
-# 	($(TIME_CMD) $(OPENROAD_CMD) $(CUSTOM_SCRIPTS_DIR)/read_def.tcl)
 
 reroute:
 	$(TIME_CMD) $(OPENROAD_CMD) $(CUSTOM_SCRIPTS_DIR)/reroute.tcl
@@ -437,6 +487,7 @@ finish: $(LOG_DIR)/4_report.log \
 pnr: finish
 # ==============================================================================
 4_FINAL_FILE = $(RESULTS_DIR)/4_final.$(STREAM_SYSTEM_EXT)
+
 ifneq ($(USE_FILL),)
 $(RESULTS_DIR)/4_1_fill.def: $(RESULTS_DIR)/3_route.def $(FILL_CONFIG)
 	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/density_fill.tcl -metrics $(LOG_DIR)/4_density_fill.json) 2>&1 | tee $(LOG_DIR)/4_density_fill.log
@@ -546,12 +597,22 @@ clean_simulate:
 	rm -rf $(RESULTS_DIR)/xyce_run.config
 
 ifneq ($(SIMULATION_CONFIG),)
-$(XYCE_RUN_CONFIG): $(XYCE_LIB)
+XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
+
+#ifneq ($(SIMULATION_CONFIG),)
+.PHONY: xyce_run_config
+xyce_run_config: $(RESULTS_DIR)/xyce_run.config
+
+$(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
-$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+#<<<<<<< HEAD
+#$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+	# we want to work towards VVVVVVVVVVVVVVVV
+#$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
-	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
+	$(TIME_CMD) $(PYTHON3) $(SIMULATION_SCRIPT) \
 		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
 		--netlist $(RESULTS_DIR)/4_final.v \
 		--sim_config $(SIMULATION_CONFIG) \
@@ -568,6 +629,12 @@ $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final
 # --output_dir $(RESULTS_DIR) \
 # --length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv
 endif
+# =======
+# 		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
+# 		--length_file $(RESULTS_DIR)/$(DESIGN)_length.csv \
+# 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
+#endif
+#>>>>>>> main
 
 # ==============================================================================
 #  ____   ____    _    ____
@@ -575,30 +642,66 @@ endif
 # \___ \| |     / _ \ | | | |
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
+# =======
+
+# render: $(RESULTS_DIR)/4_final.scad # old scad call
+# render: $(RESULTS_DIR)/$(DESIGN)_base.scad # the stl is the new output
 .PHONY: scad render slice zip
-scad: $(RESULTS_DIR)/4_final.scad
-render: $(RESULTS_DIR)/4_final.stl
-slice: $(RESULTS_DIR)/$(DESIGN).slices
+scad: $(RESULTS_DIR)/$(DESIGN)_base.scad
+render: $(RESULTS_DIR)/$(DESIGN)_base.stl
+slice: $(RESULTS_DIR)/slices/1.png # we reference first png slice
+#slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
-#$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
-$(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+# <<<<<<< HEAD
+# #$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+# $(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+# =======
+# additional pcell files to include
+
+ifeq ($(SCAD_LIB),)
+SCAD_LIB = $(PLATFORM_DIR)/pdk/scad_lib
+endif
+
+ifneq ($(SCAD_INCLUDE_FILES),)
+SCAD_INCLUDE_FILES += $(SCAD_LIB)/polychannel_v2.scad $(SCAD_LIB)/lef_helper.scad $(SCAD_LIB)/lef_scad_config.scad
+else
+SCAD_INCLUDE_FILES = $(SCAD_LIB)/polychannel_v2.scad $(SCAD_LIB)/lef_helper.scad $(SCAD_LIB)/lef_scad_config.scad
+endif
+
+ifneq ($(PCELL_MERGE_LEF),)
+SCAD_ARGS += --pcell $(SCAD_PCELL)
+endif
+
+#$(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+$(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
-	cp ${PLATFORM_DIR}/pdk/scad_lib/*.scad $(RESULTS_DIR)
-	cp ${PLATFORM_DIR}/pdk/scad_include/*.scad $(RESULTS_DIR)
-	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
+	$(TIME_CMD) $(PYTHON3) $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
-		--scad_out_file $@ \
+				--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
+				--scad_include $(SCAD_INCLUDE_FILES) \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
+
+$(RESULTS_DIR)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
+	openscad $< -o $@
 
 %.stl: %.scad
 	$(TIME_CMD) $(OPENSCAD) -m make -o $@ -d $@.deps $< 2>&1 | tee $(LOG_DIR)/5_2_stl_render.log
 
 %.slices: %.stl
 	$(TIME_CMD) $(XBUF) python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_VAL} $@ 2>&1 | tee $(LOG_DIR)/5_3_slicer.log
+
+$(RESULTS_DIR)/slices/1.png: $(RESULTS_DIR)/$(DESIGN)_base.stl
+	$(PYTHON3) $(SLICER_SCRIPT) \
+		--stl $< \
+		--out_dir $(RESULTS_DIR)/slices \
+		--resolution $(PRINTER_PX_RES) \
+		--layer_height $(LAYER_VAL)
+
 
 ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip: ${RESULTS_DIR}/${DESIGN}.slices
 	7z a -tzip $@ ${RESULTS_DIR}
@@ -632,8 +735,6 @@ clean:
 	@echo "Use make clean_all or clean individual steps:"
 	@echo "  clean_synth clean_floorplan clean_place clean_cts clean_route clean_render clean_zip clean_finish"
 	@echo
-
-clean_metadata:
 
 clean_all: clean_synth clean_floorplan clean_place clean_route clean_finish clean_metadata clean_render clean_zip
 	rm -rf $(OBJECTS_DIR)

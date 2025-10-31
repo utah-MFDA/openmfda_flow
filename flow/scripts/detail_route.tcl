@@ -40,12 +40,14 @@ if { [info exists ::env(OR_K)]} {
   append additional_args " -or_k $::env(OR_K)"
 }
 
-if { [info exists ::env(MIN_ROUTING_LAYER)]} {
-  append additional_args " -bottom_routing_layer $::env(MIN_ROUTING_LAYER)"
-}
-if { [info exists ::env(MAX_ROUTING_LAYER)]} {
-  append additional_args " -top_routing_layer $::env(MAX_ROUTING_LAYER)"
-}
+# Deprecated vv
+# if { [info exists ::env(MIN_ROUTING_LAYER)]} {
+#   append additional_args " -bottom_routing_layer $::env(MIN_ROUTING_LAYER)"
+# }
+# if { [info exists ::env(MAX_ROUTING_LAYER)]} {
+#   append additional_args " -top_routing_layer $::env(MAX_ROUTING_LAYER)"
+# }
+# ^^^^^^
 if { [info exists ::env(VIA_IN_PIN_MIN_LAYER)]} {
   append additional_args " -droute_via_in_pin_bottom_layer_num $::env(VIA_IN_PIN_MIN_LAYER)"
 }
@@ -58,6 +60,7 @@ detailed_route -output_drc $::env(REPORTS_DIR)/3_route_drc.rpt \
                -output_maze $::env(RESULTS_DIR)/maze.log \
                -droute_end_iter 2 \
                -verbose 1 \
+               -clean_patches \
                {*}$additional_args
 
 report_wire_length -net {*} \

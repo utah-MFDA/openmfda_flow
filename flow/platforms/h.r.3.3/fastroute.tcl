@@ -1,22 +1,4 @@
-set_global_routing_layer_adjustment met20 0
-set_global_routing_layer_adjustment met19 0
-set_global_routing_layer_adjustment met18 0
-set_global_routing_layer_adjustment met17 0
-set_global_routing_layer_adjustment met16 0
-set_global_routing_layer_adjustment met15 0
-set_global_routing_layer_adjustment met14 0
-set_global_routing_layer_adjustment met13 0
-set_global_routing_layer_adjustment met12 0
-set_global_routing_layer_adjustment met11 0
-set_global_routing_layer_adjustment met10 0
-set_global_routing_layer_adjustment met9 0
-set_global_routing_layer_adjustment met8 0
-set_global_routing_layer_adjustment met7 0
-set_global_routing_layer_adjustment met6 0
-set_global_routing_layer_adjustment met5 0
-set_global_routing_layer_adjustment met4 0
-set_global_routing_layer_adjustment met3 0
-set_global_routing_layer_adjustment met2 0
-set_global_routing_layer_adjustment met1 0
+set_global_routing_layer_adjustment * 0
 
 set_routing_layers -signal $::env(MIN_ROUTING_LAYER)-$::env(MAX_ROUTING_LAYER)
+

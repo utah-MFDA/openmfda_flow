@@ -1,0 +1,51 @@
+
+cff-version: 1.2.0
+title: >-
+  An open source platform to automate the design, verification, and
+  manufacture of 3D printed microfluidic devices
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Brady Goenner
+    email: brady.goenner@utah.edu
+    affiliation: University of Utah
+  - given-names: Scott Temple
+    affiliation: University of Utah
+  - given-names: Sebastian Zapata
+    affiliation: Brigham Young University
+  - given-names: Daniel Wakeham
+    affiliation: University of Utah
+  - given-names: Ashton Snelgrove
+    affiliation: University of Utah
+  - given-names: Pierre-Emmanuel Gaillardon
+    affiliation: University of Utah
+  - given-names: Gregory P. Nordin
+    affiliation: Brigham Young University
+  - given-names: Bruce K. Gale
+    affiliation: University of Utah
+repository-code: 'https://github.com/utah-MFDA'
+abstract: >-  
+  Microfluidic devices, including lab-on-a-chip devices, have many advantages over 
+  conventional laboratory techniques. Although common in some applications, there 
+  are several barriers to wider adoption, including the high initial cost to fabricate 
+  a design and the labor-intensive process of development.  This work seeks to address 
+  those barriers by combining 3D printing and computer aided design tools. Building on 
+  existing open-source software from electronic design automation (EDA), we present a 
+  design, verification, and manufacturing toolchain for 3D design for microfluidic 
+  devices.  The process starts with a list of components and connections then, 
+  automatically lays out a microfluidic device using a library of components, simulates 
+  the device, and produces a 3D CAD file that is used for DLP 3D printing process. The 
+  automated design and fabrication process was demonstrated by automatically designing 
+  and fabricating a calcium quantification assay. This toolchain automatically generated 
+  a microfluidic chip that meters each reagent with an error of less than 2.24% as 
+  verified by XYCE simulation of the chip. Physical chips were printed and found to 
+  perform with errors less than 9.2% on average compared to the assay performed by hand. 
+  The demonstration showed the ability of the toolchain to automatically generate a 
+  functional microfluidic chip for use with real assays using previously developed EDA 
+  tools.
+keywords:
+identifiers:
+
+license: MIT
