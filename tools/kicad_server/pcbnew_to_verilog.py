@@ -1,1 +1,1 @@
-../kicad/pcbnew_to_verilog.py
+../kicad/plugins/pcbnew_to_verilog.py

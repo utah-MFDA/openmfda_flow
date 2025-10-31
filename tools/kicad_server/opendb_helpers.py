@@ -1,1 +1,1 @@
-../kicad/opendb_helpers.py
+../kicad/plugins/opendb_helpers.py

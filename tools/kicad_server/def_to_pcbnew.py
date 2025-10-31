@@ -1,1 +1,1 @@
-../kicad/def_to_pcbnew.py
+../kicad/plugins/def_to_pcbnew.py

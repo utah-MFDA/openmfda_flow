@@ -1,1 +1,1 @@
-../kicad/def_to_board.py
+../kicad/plugins/def_to_board.py

@@ -164,5 +164,6 @@ if __name__ == "__main__":
     import sys
     brd = pcbnew.LoadBoard(sys.argv[1])
     design = sys.argv[2]
-    ext = PcbnewToVerilog(brd, design)
-    ext.print_verilog(sys.stdout)
+    directory = sys.argv[3]
+    ext = PcbnewToVerilog(brd, design, directory)
+    ext.export()
