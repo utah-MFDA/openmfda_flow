@@ -82,3 +82,41 @@ def gen_cmd(design, config, results, args):
                 f"LOG_DIR={results}",  f"OBJECTS_DIR={results}",
                 f"REPORTS_DIR={results}", f"RESULTS_DIR={results}"]
     return base_cmd + args
+
+
+
+@app.route("/render", methods=["POST"])
+def render():
+    pcb_file = request.files['input_file']
+    root = workspace_root()
+    results_dir = Path(tempfile.mkdtemp(dir=root))
+    id = results_dir.stem
+    url = url_for("fetch_data", dir=id)
+
+    pcb_filename = str(results_dir / "original.kicad_pcb")
+    pcb_file.save(pcb_filename)
+    board = pcbnew.LoadBoard(pcb_filename)
+    design = "kicad_remote_design"
+    converter = PcbnewToVerilog(board, design, results_dir)
+    converter.export()
+    config = f"{results_dir}/config.mk"
+    cmd = gen_cmd(design, config, results_dir, ["render"])
+    def generate():
+        proc = subprocess.Popen(cmd,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT)
+        try:
+            while line := proc.stdout.readline():
+                yield line
+            proc.wait()
+        except:
+            proc.kill()
+    return generate(), {"Status": 303, "Location": url, "Content-Type": "text/plain"}
+
+@app.route("/render/<dir>", methods=["GET"])
+def fetch_scad(dir):
+    id = secure_filename(dir)
+    root = workspace_root()
+    root = f"{root}/{id}"
+    filename = "kicad_remote_design_base.stl"
+    return send_from_directory(root, filename), {"Content-Type": "application/sla"}

@@ -17,7 +17,7 @@ class RequestDialog(wx.Dialog):
         panel = wx.Panel(self)
         self.log = wx.TextCtrl(panel, style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY)
         self.hostname= wx.TextCtrl(panel)
-        self.hostname.SetValue("http://localhost:54654")
+        self.hostname.SetValue("http://lnissrv4.eng.utah.edu:8080")
         self.filename = filename
         self.path = route
         self.suffix = suffix
