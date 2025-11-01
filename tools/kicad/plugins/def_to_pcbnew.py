@@ -49,7 +49,6 @@ class DefToPcbnew:
         # Rotation is counterclockwise positive (regular cartesian)
         # Flip happens before rotation happens
 
-
         # KiCad behavior:
         # Grid is pos y is down
         # the origin of the component is always the same corner.
@@ -93,8 +92,15 @@ class DefToPcbnew:
             x, y, angle, flip = self.convert_location(comp, master)
             name = comp.getConstName()
             module = master.getConstName()
-            print("placing", name, module, x/1000000, y/1000000, comp.getOrient(), angle, flip)
+            print("placing", name, module, x/1000000, y /
+                  1000000, comp.getOrient(), angle, flip)
             for foot in self.board.GetFootprints():
+                if foot.GetFPIDAsString() == "h.r.3.3:interconnect_4x8":
+                    foot.SetOrientationDegrees(0)
+                    foot.SetX(127000000)
+                    foot.SetY(127000000)
+                    foot.SetIsPlaced(True)
+                    foot.SetNeedsPlaced(False)
                 # O(n**2), fix later
                 if foot.GetReference() == name:
                     # reset everything, flipping is stateful.
@@ -119,10 +125,13 @@ class DefToPcbnew:
                 continue
             for (layer, start, end) in segment_iter(net.getWire()):
                 width = self.scale(layer.getWidth())
+                if isinstance(start, odb.dbTechVia):
+                    continue
                 sx, sy, sext = map(self.scale, start)
                 knet = self.board.FindNet(net.getName())
                 if type(end) == odb.dbTechVia or type(end) == odb.dbVia:
-                    bottom_id = self.board.GetLayerID(end.getBottomLayer().getName())
+                    bottom_id = self.board.GetLayerID(
+                        end.getBottomLayer().getName())
                     top_id = self.board.GetLayerID(end.getTopLayer().getName())
                     print("routing net", net.getName(),
                           "via at ", sx/1000000, sy/1000000,
@@ -133,7 +142,8 @@ class DefToPcbnew:
                     via.SetX(int(self.convert_x(sx)))
                     via.SetY(int(self.convert_y(sy)))
                     via.SetWidth(width)
-                    via.SetViaType(pcbnew.VIATYPE_BLIND_BURIED)
+                    # causes error in new versions
+                    # via.SetViaType(pcbnew.VIATYPE_BLIND_BURIED)
                     via.SetNetCode(knet.GetNetCode())
                     via.SetTopLayer(top_id)
                     via.SetBottomLayer(bottom_id)
