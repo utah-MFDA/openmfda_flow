@@ -426,7 +426,7 @@ def within_distance(G, M, a, b, d, relax, minimize):
     else:
         X = relax
     M.addCons(abs(a-b) <= d + X)
-    return [32*i for i in minim]
+    return minim
 
 def proximate_layer(G, M, s, e, shell, offset, relax, minimize):
     a = G.nodes[s]["coordinates"]
@@ -482,8 +482,8 @@ def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
                  offset=0, limit=10, timeout=60, minimize=False):
     render_dot_undir(G, "raw.dot")
     shells = find_center(G, start_condition, buffer_condition)
-    relax = 0
     for shell in range(0, shells):
+        relax = 0
         current = {node for node, d in G.nodes.items() if d["shell"] == shell}
         bounds = bounding(width, height, depth, shell, offset)
         flat = [i for j in bounds for i in j]
@@ -554,7 +554,7 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
         log.warning("Relaxing distance constraints by %d", relax)
     log.warn("Solving shell %d, %d nodes", shell, len(frontier))
     minim = []
-    frontier = {node for node in frontier if not skip(G, node)}
+    # frontier = {node for node in frontier if not skip(G, node)}
 
     for node in frontier:
         assert(shell == G.nodes[node]["shell"])
@@ -699,8 +699,8 @@ if __name__ == "__main__":
         # bound = bounded_horizontal
         shell_bound = horizontal_bound
         start = lambda G, n: is_input_port(G, n) and is_flow(G, n)
-        # if args.add_buffers:
-        buffer = lambda G, n: is_output_port(G, n) and is_flow(G, n)
+        if args.add_buffers:
+            buffer = lambda G, n: is_output_port(G, n) and is_flow(G, n)
     elif args.orientation == "hemicube":
         orientation = in_hemicube
         shell_bound = hemicube_bound
@@ -710,7 +710,9 @@ if __name__ == "__main__":
     else:
         raise
     if args.flow_only:
-        skip = lambda G, node: is_control(G, node) or is_flush(G, node)
+        skip = lambda G, n: is_control_cell(G,n) or is_flush_cell(G,n) or is_control(G, n) or is_flush(G, n)
+        # skip = lambda G, n: (is_input_port(G, n) or is_output_port(G, n)) and not is_flow(G, n)
+        # skip = lambda G, node: is_control(G, node) or is_flush(G, node)
     else:
         skip = lambda G, node: False
     if args.backtrack:
