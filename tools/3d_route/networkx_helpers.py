@@ -23,13 +23,17 @@ def read_yosys_json(input_file, top):
                 if name not in G.nodes:
                     # If this is an input/output/inout, it will get marked from netnames section
                     G.add_node(name, weight=0, hyperedge=True, cell="$_wire", netnames=set(), bit=bit)
-                assert((cell, name) not in G.edges) # this would for a multigraph
-                G.add_edge(cell, name, hyperedge=True, bit=bit, port=port, direction=direction)
+                if (cell, name) not in G.edges: # this would for a multigraph
+                    G.add_edge(cell, name, hyperedge=True, bit=bit, port=port, direction=direction)
+                else:
+                    print(f"Duplicate edge {cell} {name}")
     for net, details in m["netnames"].items():
         # Multiple named nets will be attached to the same bit, last one wins.
         for index, bit in enumerate(details["bits"]):
             bit = f"$_{bit}"
-            assert(bit in G.nodes)
+            if bit not in G.nodes:
+                print(f"Missing node for bit {bit}")
+                continue
             if not details.get("hide_name", 0):
                 G.nodes[bit]["netnames"].add((net, details.get("index", 0)))
                 # there is a possible offset, ignoring
