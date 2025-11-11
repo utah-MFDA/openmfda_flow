@@ -476,6 +476,7 @@ def run_backwards(G, skip, outfile, start_condition, buffer_condition,
     working = 0
     reversed = False
     relax = 0
+    highwater = 0
     borked = 0
     while working < shells:
         if reversed:
@@ -498,6 +499,7 @@ def run_backwards(G, skip, outfile, start_condition, buffer_condition,
                     working = shell + 1
                 if reversed and shell == 0:
                     reversed = False
+                    relax = 0
             else:
                 borked += 1
                 if borked > limit:
@@ -507,7 +509,10 @@ def run_backwards(G, skip, outfile, start_condition, buffer_condition,
                     relax += 1
                 else:
                     working = shell
-                reversed = True
+                    relax += 1
+                    if relax > highwater:
+                        reversed = True
+                highwater = max(highwater, relax)
                 break
         render_scad(G, outfile, shells, colorful)
     return shells
