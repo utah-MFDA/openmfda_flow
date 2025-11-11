@@ -496,7 +496,7 @@ def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
             if relax > limit:
                 raise
             relax += 1
-        render_scad(G, outfile, shells)
+        render_scad(G, outfile, shells, colorful)
     return shells
 
 def run_backwards(G, skip, outfile, start_condition, buffer_condition,
@@ -541,7 +541,7 @@ def run_backwards(G, skip, outfile, start_condition, buffer_condition,
                     working = shell
                 reversed = True
                 break
-        render_scad(G, outfile, shells)
+        render_scad(G, outfile, shells, colorful)
     return shells
 
 def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
@@ -609,6 +609,47 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
     del M
     return True
 
+def to_directed(G):
+    H = nx.DiGraph()
+    for node in G.nodes:
+        H.add_node(node)
+        if "shell" not in G.nodes[node]:
+            log.warning("Missing shell %s", node)
+            continue
+        for edge in G.adj[node]:
+            if "shell" not in G.nodes[edge]:
+                log.warning("Missing shell %s", edge)
+                continue
+            if is_descendent(G, edge, node):
+                H.add_edge(node, edge)
+    return H
+
+def render_dot(G, outfile):
+    nx.nx_pydot.write_dot(to_directed(G), outfile)
+
+def render_dot_undir(G, outfile):
+    nx.nx_pydot.write_dot(G, outfile)
+def colorful(G, node):
+    if is_dummy(G, node):
+        return "lightblue"
+    elif is_net(G, node):
+        if is_flow(G, node):
+            return "pink"
+        elif is_control(G, node):
+            return "orange"
+        elif is_flush(G, node):
+            return "yellow"
+        else:
+            return "lightgreen"
+    else:
+        if is_flush_cell(G, node):
+            return "lightgreen"
+        elif is_control_cell(G, node):
+            return "green"
+        elif is_port(G, node):
+            return "red"
+        else:
+            return "black"
 ################# Main #########################
 
 if __name__ == "__main__":
@@ -692,5 +733,5 @@ if __name__ == "__main__":
 
     for x in g.nodes:
         log.debug("Final solution %s %s", x, g.nodes[x].get("coordinates", "none"))
-    render_scad(g, args.output, shells)
+    render_scad(g, args.output, shells, colorful)
     log.info("Done")

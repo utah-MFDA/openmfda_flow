@@ -1,5 +1,7 @@
+import networkx as nx
 from math import ceil, sqrt, acos, atan2, pi
 import solid2
+from networkx_helpers import *
 
 def draw_channel(a, b, d):
     v = [i - j for i, j in zip(a, b)]
@@ -10,30 +12,18 @@ def draw_channel(a, b, d):
     angle = [0,180*acos(v[2]/length)/pi, 180*atan2(v[1], v[0])/pi]
     return solid2.translate(b)(solid2.rotate(angle)(solid2.cube(bounds)))
 
-def scad_render_nodes(G,nodes):
+def scad_render_nodes(G,nodes, colorful):
     for node in nodes:
         if "coordinates" not in G.nodes[node]:
             continue
 
-        dimensions = G.nodes[node].get("dimensions", [0.1, 0.1, 0.1])
+        dimensions = G.nodes[node].get("dimensions", [1,1,1])
         position = G.nodes[node]["coordinates"]
         if len(position) == 2:
             position = [G.nodes[node]["shell"]] + position
         s = solid2.translate(position)(solid2.cube(dimensions))
         cell = G.nodes[node]["cell"]
-        if is_dummy(G, node):
-            color = "lightblue"
-        elif is_net(G, node):
-            if is_flow(G, node):
-                color = "pink"
-            elif is_control(G, node):
-                color = "orange"
-            elif is_flush(G, node):
-                color = "yellow"
-            else:
-                color = "lightgreen"
-        else:
-            color = "black"
+        color = colorful(G, node)
         yield scad_comment(f"Node {node}") (solid2.color(color, alpha=0.1)(s))
 
 def scad_render_nodes_flat(G,nodes):
@@ -78,34 +68,13 @@ def scad_render_edges(G, edges):
         back = [i + j for i, j in zip(end_orig, end_pin)]
         bit = G.edges[edge]["bit"]
         yield scad_comment(f"Edge {bit} from {start} to {end}")(draw_channel(front, back, channel_dim))
-def to_directed(G):
-    H = nx.DiGraph()
-    for node in G.nodes:
-        H.add_node(node)
-        if "shell" not in G.nodes[node]:
-            log.warning("Missing shell %s", node)
-            continue
-        for edge in G.adj[node]:
-            if "shell" not in G.nodes[edge]:
-                log.warning("Missing shell %s", edge)
-                continue
-            if is_descendent(G, edge, node):
-                H.add_edge(node, edge)
-    return H
 
-def render_dot(G, outfile):
-    nx.nx_pydot.write_dot(to_directed(G), outfile)
-
-def render_dot_undir(G, outfile):
-    nx.nx_pydot.write_dot(G, outfile)
-
-
-def render_shell(G, shell):
+def render_shell(G, shell, colorful):
     nodes = [n for n, d in G.nodes.items() if d["shell"] == shell]
     edges = [(s, e) for s, e in G.edges
             if max(G.nodes[s]["shell"], G.nodes[e]["shell"]) == shell+1 and
                min(G.nodes[s]["shell"], G.nodes[e]["shell"]) == shell]
-    scad_nodes = scad_comment(f"Nodes shell {shell}")(solid2.union()(*scad_render_nodes(G, nodes)))
+    scad_nodes = scad_comment(f"Nodes shell {shell}")(solid2.union()(*scad_render_nodes(G, nodes, colorful)))
     scad_edges = scad_comment(f"Edges shell {shell}")(solid2.union()(*scad_render_edges(G, edges)))
     return scad_comment(f"Shell {shell}")(solid2.union()(solid2.background()(scad_nodes),scad_edges))
 
@@ -124,7 +93,7 @@ class scad_comment(solid2.object_base.ObjectBase, solid2.object_base.AccessSynta
     def _render(self):
         return f"/*{self.comment}*/\n" + super()._render()
 
-def render_scad(G,outfile,shells):
-    final = (render_shell(G, shell) for shell in range(0, shells))
+def render_scad(G,outfile,shells, colorful):
+    final = (render_shell(G, shell, colorful) for shell in range(0, shells))
     scad = solid2.translate([-0.5, -0.5, 0])(*final)
     scad.save_as_scad(outfile)
