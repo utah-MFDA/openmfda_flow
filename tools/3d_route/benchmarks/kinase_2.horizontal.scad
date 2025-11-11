@@ -3,103 +3,151 @@ translate(v = [-0.5, -0.5, 0]) {
 	union() {
 		%/*Nodes shell 0*/
 		union() {
-			/*$_38*/
+			/*Node $_38*/
 			color(alpha = 0.1, c = "yellow") {
-				translate(v = [0, -23.0, 25.0]) {
+				translate(v = [0, -25.0, 1.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*$_16*/
+			/*Node $_16*/
 			color(alpha = 0.1, c = "orange") {
-				translate(v = [0, 24.0, 25.0]) {
+				translate(v = [0, -23.0, -17.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*$_50*/
+			/*Node $_50*/
 			color(alpha = 0.1, c = "yellow") {
-				translate(v = [0, -25.0, 25.0]) {
+				translate(v = [0, -25.0, -1.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*$_28*/
+			/*Node $_28*/
 			color(alpha = 0.1, c = "orange") {
-				translate(v = [0, 23.0, 25.0]) {
+				translate(v = [0, -22.0, -17.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*$_8*/
+			/*Node $_8*/
 			color(alpha = 0.1, c = "pink") {
-				translate(v = [0, 25.0, 25.0]) {
+				translate(v = [0, -25.0, -17.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*$_11*/
+			/*Node $_11*/
 			color(alpha = 0.1, c = "pink") {
-				translate(v = [0, 22.0, 25.0]) {
+				translate(v = [0, -24.0, -17.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*$_12*/
+			/*Node $_12*/
 			color(alpha = 0.1, c = "pink") {
-				translate(v = [0, -22.0, 25.0]) {
+				translate(v = [0, -25.0, 0.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*$_15*/
+			/*Node $_15*/
 			color(alpha = 0.1, c = "pink") {
-				translate(v = [0, -21.0, 25.0]) {
+				translate(v = [0, -24.0, 7.0]) {
+					cube(size = [1, 1, 1]);
+				}
+			}
+			/*Node $_13__0*/
+			color(alpha = 0.1, c = "lightblue") {
+				translate(v = [0, -25.0, 8.0]) {
+					cube(size = [1, 1, 1]);
+				}
+			}
+			/*Node $_10__0*/
+			color(alpha = 0.1, c = "lightblue") {
+				translate(v = [0, -25.0, 7.0]) {
+					cube(size = [1, 1, 1]);
+				}
+			}
+			/*Node $_9__0*/
+			color(alpha = 0.1, c = "lightblue") {
+				translate(v = [0, -23.0, 7.0]) {
+					cube(size = [1, 1, 1]);
+				}
+			}
+			/*Node $_14__0*/
+			color(alpha = 0.1, c = "lightblue") {
+				translate(v = [0, -25.0, 10.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
 		}
 		/*Edges shell 0*/
 		union() {
-			/*one.ctrl_a[0].flush - $_38*/
-			translate(v = [0.5, -22.5, 25.5]) {
-				rotate(a = [0, 125.26438968275465, -45.0]) {
-					cube(size = [0.125, 0.125, 1.7320508075688772]);
-				}
-			}
-			/*one.ctrl_a[0].hole - $_16*/
-			translate(v = [0.5, 24.5, 25.5]) {
-				rotate(a = [0, 90.0, 0.0]) {
-					cube(size = [0.125, 0.125, 1.0]);
-				}
-			}
-			/*one.ctrl_a[12].flush - $_50*/
-			translate(v = [0.5, -24.5, 25.5]) {
-				rotate(a = [0, 135.0, 0.0]) {
+			/*Edge 38 from one.ctrl_a[0].flush to $_38*/
+			translate(v = [0.5, -24.5, 1.5]) {
+				rotate(a = [0, 45.00000000000001, 0.0]) {
 					cube(size = [0.125, 0.125, 1.4142135623730951]);
 				}
 			}
-			/*one.ctrl_a[12].hole - $_28*/
-			translate(v = [0.5, 23.5, 25.5]) {
-				rotate(a = [0, 90.0, 0.0]) {
-					cube(size = [0.125, 0.125, 1.0]);
-				}
-			}
-			/*one.pinholes[0].out[0].hole - $_8*/
-			translate(v = [0.5, 25.5, 25.5]) {
-				rotate(a = [0, 90.0, 0.0]) {
-					cube(size = [0.125, 0.125, 1.0]);
-				}
-			}
-			/*one.pinholes[0].out[3].hole - $_11*/
-			translate(v = [0.5, 22.5, 25.5]) {
-				rotate(a = [0, 90.0, 0.0]) {
-					cube(size = [0.125, 0.125, 1.0]);
-				}
-			}
-			/*one.pinholes[1].out[0].hole - $_12*/
-			translate(v = [0.5, -21.5, 25.5]) {
-				rotate(a = [0, 125.26438968275465, -45.0]) {
+			/*Edge 16 from one.ctrl_a[0].hole to $_16*/
+			translate(v = [0.5, -22.5, -16.5]) {
+				rotate(a = [0, 54.735610317245346, 45.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*one.pinholes[1].out[3].hole - $_15*/
-			translate(v = [0.5, -20.5, 25.5]) {
-				rotate(a = [0, 125.26438968275465, -45.0]) {
+			/*Edge 50 from one.ctrl_a[12].flush to $_50*/
+			translate(v = [0.5, -24.5, -0.5]) {
+				rotate(a = [0, 45.00000000000001, 0.0]) {
+					cube(size = [0.125, 0.125, 1.4142135623730951]);
+				}
+			}
+			/*Edge 28 from one.ctrl_a[12].hole to $_28*/
+			translate(v = [0.5, -21.5, -16.5]) {
+				rotate(a = [0, 54.735610317245346, 45.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
+				}
+			}
+			/*Edge 8 from one.pinholes[0].out[0].hole to $_8*/
+			translate(v = [0.5, -24.5, -16.5]) {
+				rotate(a = [0, 54.735610317245346, 45.0]) {
+					cube(size = [0.125, 0.125, 1.7320508075688772]);
+				}
+			}
+			/*Edge 11 from one.pinholes[0].out[3].hole to $_11*/
+			translate(v = [0.5, -23.5, -16.5]) {
+				rotate(a = [0, 54.735610317245346, 45.0]) {
+					cube(size = [0.125, 0.125, 1.7320508075688772]);
+				}
+			}
+			/*Edge 12 from one.pinholes[1].out[0].hole to $_12*/
+			translate(v = [0.5, -24.5, 0.5]) {
+				rotate(a = [0, 45.00000000000001, 0.0]) {
+					cube(size = [0.125, 0.125, 1.4142135623730951]);
+				}
+			}
+			/*Edge 15 from one.pinholes[1].out[3].hole to $_15*/
+			translate(v = [0.5, -23.5, 7.5]) {
+				rotate(a = [0, 125.26438968275465, 45.0]) {
+					cube(size = [0.125, 0.125, 1.7320508075688772]);
+				}
+			}
+			/*Edge -1 from $_13__0 to $_13__1*/
+			translate(v = [1.5, -24.5, 7.5]) {
+				rotate(a = [0, 45.00000000000001, 180.0]) {
+					cube(size = [0.125, 0.125, 1.4142135623730951]);
+				}
+			}
+			/*Edge -1 from $_10__0 to $_10__1*/
+			translate(v = [1.5, -24.5, 6.5]) {
+				rotate(a = [0, 45.00000000000001, 180.0]) {
+					cube(size = [0.125, 0.125, 1.4142135623730951]);
+				}
+			}
+			/*Edge -1 from $_9__0 to $_9__1*/
+			translate(v = [1.5, -21.5, 6.5]) {
+				rotate(a = [0, 54.735610317245346, -135.0]) {
+					cube(size = [0.125, 0.125, 1.7320508075688772]);
+				}
+			}
+			/*Edge -1 from $_14__0 to $_14__1*/
+			translate(v = [1.5, -24.5, 11.5]) {
+				rotate(a = [0, 135.0, 180.0]) {
+					cube(size = [0.125, 0.125, 1.4142135623730951]);
 				}
 			}
 		}
@@ -108,51 +156,75 @@ translate(v = [-0.5, -0.5, 0]) {
 	union() {
 		%/*Nodes shell 1*/
 		union() {
-			/*one.ctrl_a[0].flush*/
-			color(alpha = 0.1, c = "black") {
-				translate(v = [1, -24.0, 24.0]) {
+			/*Node one.ctrl_a[0].flush*/
+			color(alpha = 0.1, c = "lightgreen") {
+				translate(v = [1, -25.0, 2.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*one.ctrl_a[0].hole*/
-			color(alpha = 0.1, c = "black") {
-				translate(v = [1, 24.0, 25.0]) {
+			/*Node one.ctrl_a[0].hole*/
+			color(alpha = 0.1, c = "green") {
+				translate(v = [1, -22.0, -16.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*one.ctrl_a[12].flush*/
-			color(alpha = 0.1, c = "black") {
-				translate(v = [1, -25.0, 24.0]) {
+			/*Node one.ctrl_a[12].flush*/
+			color(alpha = 0.1, c = "lightgreen") {
+				translate(v = [1, -25.0, -0.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*one.ctrl_a[12].hole*/
-			color(alpha = 0.1, c = "black") {
-				translate(v = [1, 23.0, 25.0]) {
+			/*Node one.ctrl_a[12].hole*/
+			color(alpha = 0.1, c = "green") {
+				translate(v = [1, -21.0, -16.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*one.pinholes[0].out[0].hole*/
+			/*Node one.pinholes[0].out[0].hole*/
 			color(alpha = 0.1, c = "black") {
-				translate(v = [1, 25.0, 25.0]) {
+				translate(v = [1, -24.0, -16.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*one.pinholes[0].out[3].hole*/
+			/*Node one.pinholes[0].out[3].hole*/
 			color(alpha = 0.1, c = "black") {
-				translate(v = [1, 22.0, 25.0]) {
+				translate(v = [1, -23.0, -16.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*one.pinholes[1].out[0].hole*/
+			/*Node one.pinholes[1].out[0].hole*/
 			color(alpha = 0.1, c = "black") {
-				translate(v = [1, -23.0, 24.0]) {
+				translate(v = [1, -25.0, 1.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*one.pinholes[1].out[3].hole*/
+			/*Node one.pinholes[1].out[3].hole*/
 			color(alpha = 0.1, c = "black") {
-				translate(v = [1, -22.0, 24.0]) {
+				translate(v = [1, -23.0, 6.0]) {
+					cube(size = [1, 1, 1]);
+				}
+			}
+			/*Node $_13__1*/
+			color(alpha = 0.1, c = "lightblue") {
+				translate(v = [1, -25.0, 7.0]) {
+					cube(size = [1, 1, 1]);
+				}
+			}
+			/*Node $_10__1*/
+			color(alpha = 0.1, c = "lightblue") {
+				translate(v = [1, -25.0, 6.0]) {
+					cube(size = [1, 1, 1]);
+				}
+			}
+			/*Node $_9__1*/
+			color(alpha = 0.1, c = "lightblue") {
+				translate(v = [1, -22.0, 6.0]) {
+					cube(size = [1, 1, 1]);
+				}
+			}
+			/*Node $_14__1*/
+			color(alpha = 0.1, c = "lightblue") {
+				translate(v = [1, -25.0, 11.0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
