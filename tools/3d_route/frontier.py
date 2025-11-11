@@ -518,6 +518,36 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
     M = scip.Model()
     M.setParam("limits/time", timeout)
 #     M.setParam("limits/solutions", 1)
+    minim = add_constraints(G, M, skip, overlap, inside, distance, proximate, ahead, attach,
+                frontier, shell, width, height, depth, bounding, offset, max_shell,
+                relax = relax, limit=limit, timeout=timeout, minimize=minimize)
+
+    # solve and extract position values
+    if minim:
+        M.setObjective(scip.quicksum(minim), sense="minimize")
+    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.presolve()
+    log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.optimize()
+
+    if M.getNSols() == 0:
+        log.warn("Finished optimizing, no solutions found")
+        for node in frontier:
+            props = G.nodes[node]
+            del props["coordinates"]
+        del M
+        return False
+
+    log.info("Finished optimizing, %d solutions found", M.getNSols())
+    for node in frontier:
+        props = G.nodes[node]
+        props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
+        # log.debug("Final coordinates: %s %s", node, props["coordinates"])
+    del M
+    return True
+def add_constraints(G, M, skip, overlap, inside, distance, proximate, ahead, attach,
+                frontier, shell, width, height, depth, bounding, offset, max_shell,
+                relax = 0, limit=4, timeout=30, minimize=False):
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
     log.warn("Solving shell %d, %d nodes", shell, len(frontier))
@@ -553,29 +583,7 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
                 minim += attach(G, M, neighbor, node, shell, offset, relax, minimize)
             else:
                 raise
-    # solve and extract position values
-    if minim:
-        M.setObjective(scip.quicksum(minim), sense="minimize")
-    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.presolve()
-    log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.optimize()
-
-    if M.getNSols() == 0:
-        log.warn("Finished optimizing, no solutions found")
-        for node in frontier:
-            props = G.nodes[node]
-            del props["coordinates"]
-        del M
-        return False
-
-    log.info("Finished optimizing, %d solutions found", M.getNSols())
-    for node in frontier:
-        props = G.nodes[node]
-        props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
-        # log.debug("Final coordinates: %s %s", node, props["coordinates"])
-    del M
-    return True
+    return minim
 
 def to_directed(G):
     H = nx.DiGraph()
