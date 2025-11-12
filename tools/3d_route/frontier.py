@@ -7,6 +7,8 @@ import pyscipopt as scip
 from networkx_helpers import *
 from render import *
 import logging
+import pandas as pd
+
 log = logging.getLogger(__name__)
 
 logging.basicConfig(filename='3d_route.log', level=logging.INFO)
@@ -444,13 +446,21 @@ def noop(G, M, neighbor, node, shell, offset, relax, minimize):
     return []
 
 ################### Runnning ###################
-def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
+def run_by_dimension(G, skip, outfile, cache, start_condition, buffer_condition,
                  overlap, inside, distance, proximate, ahead, attach,
                  bounding, width = 40, height = 25, depth = 25,
                  offset=0, limit=10, timeout=60, minimize=False):
     render_dot_undir(G, "raw.dot")
     shells = find_center(G, start_condition, buffer_condition)
-    for shell in range(0, shells):
+    if cache:
+        try:
+            start_shell = read_cache(G, cache)
+            log.info("Loaded cache, starting at %d", start_shell)
+        except FileNotFoundError:
+            start_shell = 0
+    else:
+        start_shell = 0
+    for shell in range(start_shell, shells):
         relax = 0
         current = {node for node, d in G.nodes.items() if d["shell"] == shell}
         bounds = bounding(width, height, depth, shell, offset)
@@ -465,15 +475,25 @@ def run_by_dimension(G, skip, outfile, start_condition, buffer_condition,
                 raise
             relax += 1
         render_scad(G, outfile, shells, colorful)
+        if cache:
+            write_cache(G, cache)
     return shells
 
-def run_backwards(G, skip, outfile, start_condition, buffer_condition,
+def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
                  overlap, inside, distance, proximate, ahead, attach,
                  bounding, width = 40, height = 25, depth = 25,
                  offset=0, limit=10, timeout=60, minimize=False):
     render_dot_undir(G, "raw.dot")
     shells = find_center(G, start_condition, buffer_condition)
-    working = 0
+    if cache:
+        try:
+            start_shell = read_cache(G, cache)
+            log.info("Loaded cache, starting at %d", start_shell)
+        except FileNotFoundError:
+            start_shell = 0
+    else:
+        start_shell = 0
+    working = start_shell
     reversed = False
     relax = 0
     highwater = 0
@@ -515,6 +535,8 @@ def run_backwards(G, skip, outfile, start_condition, buffer_condition,
                 highwater = max(highwater, relax)
                 break
         render_scad(G, outfile, shells, colorful)
+        if cache:
+            write_cache(G, cache)
     return shells
 
 def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
@@ -546,7 +568,7 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
     log.info("Finished optimizing, %d solutions found", M.getNSols())
     for node in frontier:
         props = G.nodes[node]
-        props["coordinates"] = [M.getVal(i) for i in props["coordinates"]]
+        props["coordinates"] = [int(M.getVal(i)) for i in props["coordinates"]]
         # log.debug("Final coordinates: %s %s", node, props["coordinates"])
     del M
     return True
@@ -631,6 +653,30 @@ def colorful(G, node):
             return "red"
         else:
             return "black"
+########## Cache #################
+def read_cache(g, filename):
+    data = pd.read_csv(filename, index_col="node")
+    for node, props in data.iterrows():
+        g.nodes[node]["coordinates"] = (int(props["x"]), int(props["y"]), int(props["z"]))
+        g.nodes[node]["shell"] = int(props["shell"])
+    return int(data["shell"].max() + 1)
+
+def extract_coord(coordinates, shell):
+    if len(coordinates) == 2:
+        y, z = coordinates
+        return [shell, y, z]
+    else:
+        return coordinates
+
+def write_cache(g, filename):
+    # I love how pandas is the defacto csv reader
+    data = ((node, *extract_coord(props["coordinates"], props["shell"]), props["shell"])
+            for node, props in g.nodes.items() if "coordinates" in props)
+    node, x, y, z, shell = zip(*data)
+
+    df = pd.DataFrame({"node": node, "x": x, "y": y, "z": z, "shell": shell})
+    df.to_csv(filename)
+
 ################# Main #########################
 
 if __name__ == "__main__":
@@ -657,6 +703,7 @@ if __name__ == "__main__":
     parser.add_argument("--collapse_hyperedge", default=False, action="store_true")
     parser.add_argument("--minimize", default=False, action="store_true")
     parser.add_argument("--backtrack", default=False, action="store_true")
+    parser.add_argument("--cache")
     args = parser.parse_args()
 
     log.setLevel(args.log)
@@ -700,7 +747,7 @@ if __name__ == "__main__":
         runner = run_backwards
     else:
         runner = run_by_dimension
-    shells = runner(g, skip, args.output, start, buffer,
+    shells = runner(g, skip, args.output, args.cache, start, buffer,
                                  not_overlap, orientation, bound, attach_to_side, noop, attach_to_side,
                                  shell_bound,
                                  args.width, args.height, args.depth,
@@ -717,4 +764,6 @@ if __name__ == "__main__":
     for x in g.nodes:
         log.debug("Final solution %s %s", x, g.nodes[x].get("coordinates", "none"))
     render_scad(g, args.output, shells, colorful)
+    if args.cache:
+        write_cache(g, args.cache)
     log.info("Done")
