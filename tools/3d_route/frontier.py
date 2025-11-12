@@ -382,9 +382,9 @@ def bounded_ancestor(G, M, descendent, frontier, bounding, shell, offset, relax,
 
 def bounded(G, M, relative, frontier, bounding, shell, offset, relax, minimize):
     return bounded_descendent(G, M, relative, frontier, bounding, shell, offset, relax, minimize) + \
-        bounded_ancestor(G, M, relative, frontier, bounding, shell, offset, relax, minimize) + \
-        bounded_peer(G, M, "descendents", relative, frontier, bounding, shell, offset, relax, minimize) + \
-        bounded_peer(G, M, "ancestors", relative, frontier, bounding, shell, offset, relax, minimize)
+        bounded_ancestor(G, M, relative, frontier, bounding, shell, offset, relax, minimize)\
+        # bounded_peer(G, M, "descendents", relative, frontier, bounding, shell, offset, relax, minimize) + \
+        # bounded_peer(G, M, "ancestors", relative, frontier, bounding, shell, offset, relax, minimize)
 
 def within_distance(G, M, a, b, d, relax, minimize):
     minim = []
