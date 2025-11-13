@@ -1,3 +1,4 @@
+import math
 import json
 from math import ceil, sqrt, acos, atan2, pi
 from collections import deque
@@ -251,9 +252,9 @@ def in_cylinder(G, M, node, width, height, depth, shell, offset, relax, minimize
                            (-depth, depth))
     i = M.addVar(f"shell_i_{node}", vtype="B")
     j = M.addVar(f"shell_j_{node}", vtype="B")
-    M.addCons(i*(abs(x) - layer) == 0, name=f"shell_nx_{node}")
-    M.addCons(j*(abs(y) - layer) == 0, name=f"shell_ny_{node}")
-    M.addCons(i + j >= 1, name=f"shell_{node}")
+    M.addCons(i*(abs(x) - layer) == 0)#, name=f"shell_nx_{node}")
+    M.addCons(j*(abs(y) - layer) == 0)#, name=f"shell_ny_{node}")
+    M.addCons(i + j >= 1)#, name=f"shell_{node}")
     return []
 
 def in_hex(G, M, coord):
@@ -272,7 +273,7 @@ def hex_neighbor_z(G, M, node, neighbor, shell, offset, relax, minimize):
     M.addCons(i*dx == 0)
     M.addCons(j*(dx-1) + j*(dz) + j*(dy - 1)*(dy + 1) == 0)
     M.addCons(k*(dx+1) + k*(dy) + j*(dz - 1)*(dz + 1) == 0)
-    M.addCons(i + j  + k >= 1, name=f"shell_{node}")
+    M.addCons(i + j  + k >= 1)#, name=f"shell_{node}")
     return []
 
 
@@ -326,10 +327,10 @@ def in_shell(G, M, node, width, height, depth, shell, offset, relax, minimize):
     i = M.addVar(f"shell_i_{node}", vtype="B")
     j = M.addVar(f"shell_j_{node}", vtype="B")
     k = M.addVar(f"shell_k_{node}", vtype="B")
-    M.addCons(i*(abs(x) - layer) == 0, name=f"shell_nx_{node}")
-    M.addCons(j*(abs(y) - layer) == 0, name=f"shell_ny_{node}")
-    M.addCons(k*(abs(z) - layer) == 0, name=f"shell_nz_{node}")
-    M.addCons(i + j + k >= 1, name=f"shell_{node}")
+    M.addCons(i*(abs(x) - layer) == 0)#, name=f"shell_nx_{node}")
+    M.addCons(j*(abs(y) - layer) == 0)#, name=f"shell_ny_{node}")
+    M.addCons(k*(abs(z) - layer) == 0)#, name=f"shell_nz_{node}")
+    M.addCons(i + j + k >= 1)#, name=f"shell_{node}")
     return []
 
 def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding, shell, offset, relax, minimize):
@@ -385,14 +386,15 @@ def bounded(G, M, relative, frontier, bounding, shell, offset, relax, minimize):
         # bounded_peer(G, M, "descendents", relative, frontier, bounding, shell, offset, relax, minimize) + \
         # bounded_peer(G, M, "ancestors", relative, frontier, bounding, shell, offset, relax, minimize)
 
-def within_distance(G, M, a, b, d, relax, minimize):
+def within_distance(G, M, a, b, d, relax, minimize, prefix=""):
     minim = []
     if relax and minimize:
-        X = M.addVar(f"{a}_{b}_relax", vtype="I", lb=0, ub=relax)
+        # X = M.addVar(f"{a}_{b}_relax_{prefix}", vtype="I", lb=0, ub=relax)
+        X = M.addVar(vtype="I", lb=0, ub=relax)
         minim.append(X)
     else:
         X = relax
-    M.addCons(abs(a-b) <= d + X)
+    M.addCons(abs(a-b) <= d + X)#, name=f"{a}_{b}_within_{d}_{prefix}")
     return minim
 
 def proximate_layer(G, M, s, e, shell, offset, relax, minimize):
@@ -417,14 +419,14 @@ def distance_shell(G, M, s, e, shell, offset, relax, minimize):
 def max_distance(G, M, first, second, shell, offset, relax):
     a = G.nodes[first]["coordinates"]
     b = G.nodes[second]["coordinates"]
-    X = M.addVar(vtype="I", lb=1)
-    M.addCons(scip.quicksum(abs(x - y) for x, y in zip(a, b)) >= X)
+    X = M.addVar(f"max_{first}_{second}", vtype="I", lb=1)
+    M.addCons(scip.quicksum(abs(x - y) for x, y in zip(a, b)) >= X)#, name=f"{first}_{second}_maxdist")
     return [X]
 
 def not_overlap(G, M, first, second, shell, offset, relax, minimize):
     a = G.nodes[first]["coordinates"]
     b = G.nodes[second]["coordinates"]
-    M.addCons(scip.quicksum(abs(x - y) for x, y in zip(a, b)) >= 1)
+    M.addCons(scip.quicksum(abs(x - y) for x, y in zip(a, b)) >= 1)#, name=f"{first}_{second}_overlap")
     return []
 
 def attach_to_side(G, M, side, node, shell, offset, relax, minimize):
