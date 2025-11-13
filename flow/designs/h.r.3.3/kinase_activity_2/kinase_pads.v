@@ -24,13 +24,13 @@ module kinase_activity_pads #(  parameter SIZE = 7)(
   generate
     genvar i, j;
     for (i = 0; i < SIZE; i = i + 1) begin: pinholes
-      pinhole_320px_0 hole_in_a (.connection(flow_in_a), .pad(pad_flow_in_a[i]));
-      pinhole_320px_0 hole_in_b (.connection(flow_in_b), .pad(pad_flow_in_b[i]));
-      pinhole_320px_0 hole_in_c (.connection(flow_in_c), .pad(pad_flow_in_c[i]));
-      pinhole_320px_0 hole_out_a (.connection(flow_out_a), .pad(pad_flow_out_a[i]));
-      pinhole_320px_0 hole_out_b (.connection(flow_out_b), .pad(pad_flow_out_b[i]));
-      pinhole_320px_0 hole_out_c (.connection(flow_out_c), .pad(pad_flow_out_c[i]));
-      pinhole_320px_0 hole_out_d (.connection(flow_out_d), .pad(pad_flow_out_d[i]));
+      pinhole_320px_0 hole_in_a (.connection(flow_in_a[i]), .pad(pad_flow_in_a[i]));
+      pinhole_320px_0 hole_in_b (.connection(flow_in_b[i]), .pad(pad_flow_in_b[i]));
+      pinhole_320px_0 hole_in_c (.connection(flow_in_c[i]), .pad(pad_flow_in_c[i]));
+      pinhole_320px_0 hole_out_a (.connection(flow_out_a[i]), .pad(pad_flow_out_a[i]));
+      pinhole_320px_0 hole_out_b (.connection(flow_out_b[i]), .pad(pad_flow_out_b[i]));
+      pinhole_320px_0 hole_out_c (.connection(flow_out_c[i]), .pad(pad_flow_out_c[i]));
+      pinhole_320px_0 hole_out_d (.connection(flow_out_d[i]), .pad(pad_flow_out_d[i]));
     end
     for (j=0; j<13; j = j+1) begin: ctrl_a
       ctrl_hole_0 hole(.connection(ctrl_a[j]), .pad(pad_ctrl_a[j]));
@@ -49,8 +49,16 @@ module kinase_activity_pads #(  parameter SIZE = 7)(
       flush_hole_0 flush(.connection(flush_ctrl_s[j]), .pad(pad_flush_ctrl_s[j]));
     end
   endgenerate
-      kinase_activity_bank thingy(.flow_in(flow_in), .flow_out(flow_out),
-                              .ctrl_a(ctrl_a), .ctrl_s(ctrl_s),
+      kinase_activity_bank  #(SIZE) thingy(
+                              .flow_in_a(flow_in_a),
+                              .flow_in_b(flow_in_b),
+                              .flow_in_c(flow_in_c),
+                              .flow_out_a(flow_out_a),
+                              .flow_out_b(flow_out_b),
+                              .flow_out_c(flow_out_c),
+                              .flow_out_d(flow_out_d),
+                              .ctrl_a(ctrl_a),
+                              .ctrl_s(ctrl_s),
                               .pump_a(pump_a), .pump_b(pump_b),
                               .flush_ctrl_a(flush_ctrl_a), .flush_ctrl_s(flush_ctrl_s),
                               .flush_pump_a(flush_pump_a), .flush_pump_b(flush_pump_b));
