@@ -380,6 +380,10 @@ def bounded_descendent(G, M, ancestor, frontier, bounding, shell, offset, relax,
 def bounded_ancestor(G, M, descendent, frontier, bounding, shell, offset, relax, minimize):
     return bounded_dimension(G, M, lambda x,y: x < y, "ancestors", descendent, frontier, bounding, shell, offset, relax, minimize)
 
+
+def bounded_noop(G, M, relative, frontier, bounding, shell, offset, relax, minimize):
+    return []
+
 def bounded(G, M, relative, frontier, bounding, shell, offset, relax, minimize):
     return bounded_descendent(G, M, relative, frontier, bounding, shell, offset, relax, minimize) + \
         bounded_ancestor(G, M, relative, frontier, bounding, shell, offset, relax, minimize)\
@@ -466,16 +470,46 @@ def run_by_dimension(G, skip, outfile, cache, start_condition, buffer_condition,
         flat = [i for j in bounds for i in j]
         log.info("Bounded " + "(%d, %d) "*len(bounds), *flat)
         while True:
-            success = solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
+            success = solve_shell(G, outfile[:-5], skip, overlap, inside, distance, proximate, ahead, attach,
                                  current, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout, minimize)
             if success:
                 break
             if relax > limit:
                 raise
             relax += 1
-        render_scad(G, outfile, shells, colorful)
+        render_scad(G, f"{outfile[:-5]}.tmp.scad", shells, colorful)
         if cache:
             write_cache(G, cache)
+    return shells
+
+def run_everything(G, skip, outfile, cache, start_condition, buffer_condition,
+                 overlap, inside, distance, proximate, ahead, attach,
+                 bounding, width = 40, height = 25, depth = 25,
+                 offset=0, limit=10, timeout=60, minimize=False):
+    shells = find_center(G, start_condition, buffer_condition)
+    M = scip.Model()
+    M.setParam("limits/time", timeout)
+    minim = []
+    for shell in range(0, shells):
+        frontier = {node for node, d in G.nodes.items() if d["shell"] == shell}
+        minim += add_constraints(G, M, skip, overlap, inside, distance, proximate, ahead, attach,
+                    frontier, shell, width, height, depth, bounding, offset, shells,
+                    relax = 0, minimize=False)
+
+    # solve and extract position values
+    if minim:
+        M.setObjective(scip.quicksum(minim), sense="minimize")
+    M.writeProblem(f"{cache}.cip")
+    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.presolve()
+    log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    M.optimize()
+    log.info("Finished optimizing, %d solutions found", M.getNSols())
+    if M.getNSols() == 0:
+        raise
+
+    for node, props in G.nodes.items():
+        props["coordinates"] = [int(M.getVal(i)) for i in props["coordinates"]]
     return shells
 
 def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
@@ -511,9 +545,12 @@ def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
                 a, b = ahead, attach
             else:
                 b, a= ahead, attach
-            success = solve_shell(G, skip, overlap, inside, distance, proximate, a, b,
+            success = solve_shell(G, outfile, skip, overlap, inside, distance, proximate, a, b,
                                      latest, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout, minimize)
             if success:
+                if cache:
+                    write_cache(G, cache)
+                render_scad(G, f"{outfile[:-5]}.tmp.scad", shells, colorful)
                 if not reversed or (working == shell and reversed):
                     working = shell + 1
                 if reversed and shell == 0:
@@ -533,12 +570,9 @@ def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
                         reversed = True
                 highwater = max(highwater, relax)
                 break
-        render_scad(G, outfile, shells, colorful)
-        if cache:
-            write_cache(G, cache)
     return shells
 
-def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
+def solve_shell(G, cache, skip, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
                 relax = 0, limit=4, timeout=30, minimize=False):
     M = scip.Model()
@@ -551,19 +585,17 @@ def solve_shell(G, skip, overlap, inside, distance, proximate, ahead, attach,
     # solve and extract position values
     if minim:
         M.setObjective(scip.quicksum(minim), sense="minimize")
+    M.writeProblem(f"{cache}.{shell}_{relax}.cip")
     log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
     M.presolve()
     log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
     M.optimize()
-
     if M.getNSols() == 0:
-        log.warn("Finished optimizing, no solutions found")
         for node in frontier:
             props = G.nodes[node]
             del props["coordinates"]
         del M
         return False
-
     log.info("Finished optimizing, %d solutions found", M.getNSols())
     for node in frontier:
         props = G.nodes[node]
@@ -746,6 +778,9 @@ if __name__ == "__main__":
         skip = lambda G, node: False
     if args.backtrack:
         runner = run_backwards
+    elif args.everything:
+        runner = run_everything
+        bound = bounded_noop
     else:
         runner = run_by_dimension
     shells = runner(g, skip, args.output, args.cache, start, buffer,
