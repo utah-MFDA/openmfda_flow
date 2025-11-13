@@ -10,7 +10,7 @@ module thing((* type="ctrl" *) input lysis_ctrl, wash_ctrl, elute_ctrl, dead_end
                  (* type="flow" *) output waste, bead_out, buffer_out, cell_out);
 
   parameter SIZE = 4;
-mnacidpro#(SIZE) thing(
+mnacidpro #(SIZE) thing(
                   lysis_ctrl, wash_ctrl, elute_ctrl, dead_end_ctrl, vertical_ctrl, horiz_ctrl, waste_ctrl, bead_ctrl, loop_exit_ctrl, bead_trap_ctrl, collect_ctrl,
                   pump,
                   lysis_flush, wash_flush, elute_flush, dead_end_flush, vertical_flush, horiz_flush, waste_flush, bead_flush, loop_exit_flush, bead_trap_flush, collect_flush,
