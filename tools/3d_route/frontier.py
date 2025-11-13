@@ -11,9 +11,6 @@ import pandas as pd
 
 log = logging.getLogger(__name__)
 
-logging.basicConfig(filename='3d_route.log', level=logging.INFO)
-
-
 ################ Node type helpers ################
 def get_shell(G, node):
     return G.nodes[node]["shell"]
@@ -577,7 +574,7 @@ def add_constraints(G, M, skip, overlap, inside, distance, proximate, ahead, att
                 relax = 0, limit=4, timeout=30, minimize=False):
     if relax:
         log.warning("Relaxing distance constraints by %d", relax)
-    log.warn("Solving shell %d, %d nodes", shell, len(frontier))
+    log.warning("Solving shell %d, %d nodes", shell, len(frontier))
     minim = []
     # frontier = {node for node in frontier if not skip(G, node)}
 
@@ -704,9 +701,11 @@ if __name__ == "__main__":
     parser.add_argument("--minimize", default=False, action="store_true")
     parser.add_argument("--backtrack", default=False, action="store_true")
     parser.add_argument("--cache")
-    args = parser.parse_args()
+    parser.add_argument("--everything", default=False, action="store_true")
+    parser.add_argument("--logfile", default="3d_route.log")
 
-    log.setLevel(args.log)
+    args = parser.parse_args()
+    logging.basicConfig(filename=args.logfile, level=args.log)
 
     g = read_yosys_json(args.input_file,args.top)
     if args.collapse_hyperedge:
