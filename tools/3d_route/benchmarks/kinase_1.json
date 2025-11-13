@@ -5,16 +5,36 @@
       "attributes": {
         "dynports": "00000000000000000000000000000001",
         "top": "00000000000000000000000000000001",
-        "src": "benchmarks/kinase_1.v:1.1-24.10"
+        "src": "benchmarks/kinase_1.v:1.1-29.10"
       },
       "ports": {
-        "pad_flow_in": {
+        "pad_flow_in_a": {
           "direction": "input",
-          "bits": [ 2, 3, 4 ]
+          "bits": [ 2 ]
         },
-        "pad_flow_out": {
+        "pad_flow_in_b": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "pad_flow_in_c": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "pad_flow_out_a": {
           "direction": "output",
-          "bits": [ 5, 6, 7, 8 ]
+          "bits": [ 5 ]
+        },
+        "pad_flow_out_b": {
+          "direction": "output",
+          "bits": [ 6 ]
+        },
+        "pad_flow_out_c": {
+          "direction": "output",
+          "bits": [ 7 ]
+        },
+        "pad_flow_out_d": {
+          "direction": "output",
+          "bits": [ 8 ]
         },
         "pad_ctrl_a": {
           "direction": "input",
@@ -57,11 +77,11 @@
             "TYPE": "module"
           },
           "attributes": {
-            "cell_src": "benchmarks/kinase_1.v:13.32-23.51",
+            "cell_src": "benchmarks/kinase_1.v:13.32-28.51",
             "module": "$paramod\\kinase_activity_pads\\SIZE=s32'00000000000000000000000000000001",
             "module_dynports": "00000000000000000000000000000001",
             "module_hdlname": "kinase_activity_pads",
-            "module_src": "benchmarks/library.v:108.1-182.10"
+            "module_src": "benchmarks/library.v:93.1-157.10"
           },
           "port_directions": {
           },
@@ -76,7 +96,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[0].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 53 ],
@@ -91,7 +111,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[0].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 54 ],
@@ -106,7 +126,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[10].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 55 ],
@@ -121,7 +141,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[10].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 56 ],
@@ -136,7 +156,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[11].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 57 ],
@@ -151,7 +171,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[11].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 58 ],
@@ -166,7 +186,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[12].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 59 ],
@@ -181,7 +201,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[12].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 60 ],
@@ -196,7 +216,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[1].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 61 ],
@@ -211,7 +231,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[1].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 62 ],
@@ -226,7 +246,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[2].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 63 ],
@@ -241,7 +261,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[2].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 64 ],
@@ -256,7 +276,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[3].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 65 ],
@@ -271,7 +291,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[3].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 66 ],
@@ -286,7 +306,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[4].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 67 ],
@@ -301,7 +321,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[4].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 68 ],
@@ -316,7 +336,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[5].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 69 ],
@@ -331,7 +351,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[5].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 70 ],
@@ -346,7 +366,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[6].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 71 ],
@@ -361,7 +381,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[6].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 72 ],
@@ -376,7 +396,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[7].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 73 ],
@@ -391,7 +411,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[7].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 74 ],
@@ -406,7 +426,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[8].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 75 ],
@@ -421,7 +441,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[8].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 76 ],
@@ -436,7 +456,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[9].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:158.20-158.82"
+            "src": "benchmarks/library.v:129.20-129.82"
           },
           "connections": {
             "connection": [ 77 ],
@@ -451,7 +471,7 @@
           "attributes": {
             "hdlname": "one ctrl_a[9].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:157.19-157.68"
+            "src": "benchmarks/library.v:128.19-128.68"
           },
           "connections": {
             "connection": [ 78 ],
@@ -466,7 +486,7 @@
           "attributes": {
             "hdlname": "one ctrl_s[0].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:170.20-170.82"
+            "src": "benchmarks/library.v:141.20-141.82"
           },
           "connections": {
             "connection": [ 79 ],
@@ -481,7 +501,7 @@
           "attributes": {
             "hdlname": "one ctrl_s[0].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:169.19-169.68"
+            "src": "benchmarks/library.v:140.19-140.68"
           },
           "connections": {
             "connection": [ 80 ],
@@ -496,7 +516,7 @@
           "attributes": {
             "hdlname": "one ctrl_s[1].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:170.20-170.82"
+            "src": "benchmarks/library.v:141.20-141.82"
           },
           "connections": {
             "connection": [ 81 ],
@@ -511,7 +531,7 @@
           "attributes": {
             "hdlname": "one ctrl_s[1].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:169.19-169.68"
+            "src": "benchmarks/library.v:140.19-140.68"
           },
           "connections": {
             "connection": [ 82 ],
@@ -526,7 +546,7 @@
           "attributes": {
             "hdlname": "one ctrl_s[2].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:170.20-170.82"
+            "src": "benchmarks/library.v:141.20-141.82"
           },
           "connections": {
             "connection": [ 83 ],
@@ -541,7 +561,7 @@
           "attributes": {
             "hdlname": "one ctrl_s[2].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:169.19-169.68"
+            "src": "benchmarks/library.v:140.19-140.68"
           },
           "connections": {
             "connection": [ 84 ],
@@ -556,7 +576,7 @@
           "attributes": {
             "hdlname": "one ctrl_s[3].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:170.20-170.82"
+            "src": "benchmarks/library.v:141.20-141.82"
           },
           "connections": {
             "connection": [ 85 ],
@@ -571,1042 +591,115 @@
           "attributes": {
             "hdlname": "one ctrl_s[3].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:169.19-169.68"
+            "src": "benchmarks/library.v:140.19-140.68"
           },
           "connections": {
             "connection": [ 86 ],
             "pad": [ 25 ]
           }
         },
-        "one.devices[0].thingy": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:174.23-178.100",
-            "hdlname": "one devices[0].thingy",
-            "module": "kinase_activity",
-            "module_src": "benchmarks/library.v:63.1-107.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.circulate1": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:94.11-94.42",
-            "hdlname": "one devices[0].thingy circulate1",
-            "module": "chamber",
-            "module_src": "benchmarks/library.v:34.1-36.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.circulate1.thing": {
-          "hide_name": 0,
-          "type": "serpentine_150px_0",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy circulate1 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:35.22-35.59"
-          },
-          "connections": {
-            "in_fluid": [ 87 ],
-            "out_fluid": [ 88 ]
-          }
-        },
-        "one.devices[0].thingy.circulate2": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:95.11-95.45",
-            "hdlname": "one devices[0].thingy circulate2",
-            "module": "chamber",
-            "module_src": "benchmarks/library.v:34.1-36.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.circulate2.thing": {
-          "hide_name": 0,
-          "type": "serpentine_150px_0",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy circulate2 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:35.22-35.59"
-          },
-          "connections": {
-            "in_fluid": [ 89 ],
-            "out_fluid": [ 90 ]
-          }
-        },
-        "one.devices[0].thingy.column_lower": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:97.11-97.45",
-            "hdlname": "one devices[0].thingy column_lower",
-            "module": "chamber",
-            "module_src": "benchmarks/library.v:34.1-36.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.column_lower.thing": {
-          "hide_name": 0,
-          "type": "serpentine_150px_0",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy column_lower thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:35.22-35.59"
-          },
-          "connections": {
-            "in_fluid": [ 91 ],
-            "out_fluid": [ 92 ]
-          }
-        },
-        "one.devices[0].thingy.column_upper": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:96.11-96.45",
-            "hdlname": "one devices[0].thingy column_upper",
-            "module": "chamber",
-            "module_src": "benchmarks/library.v:34.1-36.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.column_upper.thing": {
-          "hide_name": 0,
-          "type": "serpentine_150px_0",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy column_upper thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:35.22-35.59"
-          },
-          "connections": {
-            "in_fluid": [ 93 ],
-            "out_fluid": [ 94 ]
-          }
-        },
-        "one.devices[0].thingy.v0": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:80.9-80.100",
-            "hdlname": "one devices[0].thingy v0",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v0.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v0 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 54 ],
-            "in_fluid": [ 95 ],
-            "out_air": [ 53 ],
-            "out_fluid": [ 96 ]
-          }
-        },
-        "one.devices[0].thingy.v1": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:81.9-81.97",
-            "hdlname": "one devices[0].thingy v1",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v1.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v1 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 62 ],
-            "in_fluid": [ 97 ],
-            "out_air": [ 61 ],
-            "out_fluid": [ 98 ]
-          }
-        },
-        "one.devices[0].thingy.v10": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:90.9-90.94",
-            "hdlname": "one devices[0].thingy v10",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v10.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v10 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 56 ],
-            "in_fluid": [ 99 ],
-            "out_air": [ 55 ],
-            "out_fluid": [ 100 ]
-          }
-        },
-        "one.devices[0].thingy.v11": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:91.9-91.101",
-            "hdlname": "one devices[0].thingy v11",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v11.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v11 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 58 ],
-            "in_fluid": [ 99 ],
-            "out_air": [ 57 ],
-            "out_fluid": [ 101 ]
-          }
-        },
-        "one.devices[0].thingy.v12": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:92.9-92.103",
-            "hdlname": "one devices[0].thingy v12",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v12.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v12 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 60 ],
-            "in_fluid": [ 95 ],
-            "out_air": [ 59 ],
-            "out_fluid": [ 102 ]
-          }
-        },
-        "one.devices[0].thingy.v2": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:82.9-82.97",
-            "hdlname": "one devices[0].thingy v2",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v2.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v2 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 64 ],
-            "in_fluid": [ 103 ],
-            "out_air": [ 63 ],
-            "out_fluid": [ 98 ]
-          }
-        },
-        "one.devices[0].thingy.v3": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:83.9-83.97",
-            "hdlname": "one devices[0].thingy v3",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v3.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v3 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 66 ],
-            "in_fluid": [ 104 ],
-            "out_air": [ 65 ],
-            "out_fluid": [ 98 ]
-          }
-        },
-        "one.devices[0].thingy.v4": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:84.9-84.89",
-            "hdlname": "one devices[0].thingy v4",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v4.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v4 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 68 ],
-            "in_fluid": [ 98 ],
-            "out_air": [ 67 ],
-            "out_fluid": [ 105 ]
-          }
-        },
-        "one.devices[0].thingy.v5": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:85.9-85.90",
-            "hdlname": "one devices[0].thingy v5",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v5.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v5 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 70 ],
-            "in_fluid": [ 105 ],
-            "out_air": [ 69 ],
-            "out_fluid": [ 89 ]
-          }
-        },
-        "one.devices[0].thingy.v6": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:86.9-86.90",
-            "hdlname": "one devices[0].thingy v6",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v6.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v6 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 72 ],
-            "in_fluid": [ 105 ],
-            "out_air": [ 71 ],
-            "out_fluid": [ 106 ]
-          }
-        },
-        "one.devices[0].thingy.v7": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:87.9-87.89",
-            "hdlname": "one devices[0].thingy v7",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v7.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v7 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 74 ],
-            "in_fluid": [ 88 ],
-            "out_air": [ 73 ],
-            "out_fluid": [ 107 ]
-          }
-        },
-        "one.devices[0].thingy.v8": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:88.9-88.98",
-            "hdlname": "one devices[0].thingy v8",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v8.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v8 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 76 ],
-            "in_fluid": [ 88 ],
-            "out_air": [ 75 ],
-            "out_fluid": [ 108 ]
-          }
-        },
-        "one.devices[0].thingy.v9": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:89.9-89.89",
-            "hdlname": "one devices[0].thingy v9",
-            "module": "valve",
-            "module_src": "benchmarks/library.v:18.1-20.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.v9.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy v9 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:19.16-19.101"
-          },
-          "connections": {
-            "in_air": [ 78 ],
-            "in_fluid": [ 107 ],
-            "out_air": [ 77 ],
-            "out_fluid": [ 99 ]
-          }
-        },
-        "one.devices[0].thingy.vp0": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:102.14-102.101",
-            "hdlname": "one devices[0].thingy vp0",
-            "module": "pump_valve",
-            "module_src": "benchmarks/library.v:22.1-24.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vp0.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp0 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:23.16-23.101"
-          },
-          "connections": {
-            "in_air": [ 109 ],
-            "in_fluid": [ 90 ],
-            "out_air": [ 110 ],
-            "out_fluid": [ 111 ]
-          }
-        },
-        "one.devices[0].thingy.vp1": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:103.14-103.99",
-            "hdlname": "one devices[0].thingy vp1",
-            "module": "pump_valve",
-            "module_src": "benchmarks/library.v:22.1-24.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vp1.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp1 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:23.16-23.101"
-          },
-          "connections": {
-            "in_air": [ 112 ],
-            "in_fluid": [ 111 ],
-            "out_air": [ 113 ],
-            "out_fluid": [ 114 ]
-          }
-        },
-        "one.devices[0].thingy.vp2": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:104.14-104.99",
-            "hdlname": "one devices[0].thingy vp2",
-            "module": "pump_valve",
-            "module_src": "benchmarks/library.v:22.1-24.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vp2.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp2 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:23.16-23.101"
-          },
-          "connections": {
-            "in_air": [ 115 ],
-            "in_fluid": [ 114 ],
-            "out_air": [ 116 ],
-            "out_fluid": [ 87 ]
-          }
-        },
-        "one.devices[0].thingy.vp3": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:105.14-105.99",
-            "hdlname": "one devices[0].thingy vp3",
-            "module": "pump_valve",
-            "module_src": "benchmarks/library.v:22.1-24.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vp3.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp3 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:23.16-23.101"
-          },
-          "connections": {
-            "in_air": [ 117 ],
-            "in_fluid": [ 118 ],
-            "out_air": [ 119 ],
-            "out_fluid": [ 93 ]
-          }
-        },
-        "one.devices[0].thingy.vp4": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:106.14-106.98",
-            "hdlname": "one devices[0].thingy vp4",
-            "module": "pump_valve",
-            "module_src": "benchmarks/library.v:22.1-24.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vp4.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp4 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:23.16-23.101"
-          },
-          "connections": {
-            "in_air": [ 120 ],
-            "in_fluid": [ 94 ],
-            "out_air": [ 121 ],
-            "out_fluid": [ 122 ]
-          }
-        },
-        "one.devices[0].thingy.vs0": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:98.15-98.99",
-            "hdlname": "one devices[0].thingy vs0",
-            "module": "sieve_valve",
-            "module_src": "benchmarks/library.v:26.1-28.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vs0.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs0 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:27.16-27.101"
-          },
-          "connections": {
-            "in_air": [ 80 ],
-            "in_fluid": [ 92 ],
-            "out_air": [ 79 ],
-            "out_fluid": [ 95 ]
-          }
-        },
-        "one.devices[0].thingy.vs1": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:99.15-99.99",
-            "hdlname": "one devices[0].thingy vs1",
-            "module": "sieve_valve",
-            "module_src": "benchmarks/library.v:26.1-28.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vs1.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs1 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:27.16-27.101"
-          },
-          "connections": {
-            "in_air": [ 82 ],
-            "in_fluid": [ 106 ],
-            "out_air": [ 81 ],
-            "out_fluid": [ 118 ]
-          }
-        },
-        "one.devices[0].thingy.vs2": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:100.15-100.98",
-            "hdlname": "one devices[0].thingy vs2",
-            "module": "sieve_valve",
-            "module_src": "benchmarks/library.v:26.1-28.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vs2.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs2 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:27.16-27.101"
-          },
-          "connections": {
-            "in_air": [ 84 ],
-            "in_fluid": [ 122 ],
-            "out_air": [ 83 ],
-            "out_fluid": [ 107 ]
-          }
-        },
-        "one.devices[0].thingy.vs3": {
-          "hide_name": 0,
-          "type": "$scopeinfo",
-          "parameters": {
-            "TYPE": "module"
-          },
-          "attributes": {
-            "cell_module_not_derived": "00000000000000000000000000000001",
-            "cell_src": "benchmarks/library.v:101.15-101.100",
-            "hdlname": "one devices[0].thingy vs3",
-            "module": "sieve_valve",
-            "module_src": "benchmarks/library.v:26.1-28.10"
-          },
-          "port_directions": {
-          },
-          "connections": {
-          }
-        },
-        "one.devices[0].thingy.vs3.thing": {
-          "hide_name": 0,
-          "type": "valve_40px_1",
-          "parameters": {
-          },
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs3 thing",
-            "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:27.16-27.101"
-          },
-          "connections": {
-            "in_air": [ 86 ],
-            "in_fluid": [ 100 ],
-            "out_air": [ 85 ],
-            "out_fluid": [ 91 ]
-          }
-        },
-        "one.pinholes[0].in[0].hole": {
+        "one.pinholes[0].hole_in_a": {
           "hide_name": 0,
           "type": "pinhole_320px_0",
           "parameters": {
           },
           "attributes": {
-            "hdlname": "one pinholes[0].in[0].hole",
+            "hdlname": "one pinholes[0].hole_in_a",
             "module_not_derived": "00000000000000000000000000000001",
-            "reprocess_after": "\\pinhole_320px_0",
-            "src": "benchmarks/library.v:150.25-150.92"
+            "src": "benchmarks/library.v:119.23-119.84"
           },
           "connections": {
-            "connection": [ 97 ],
+            "connection": [ 87 ],
             "pad": [ 2 ]
           }
         },
-        "one.pinholes[0].in[1].hole": {
+        "one.pinholes[0].hole_in_b": {
           "hide_name": 0,
           "type": "pinhole_320px_0",
           "parameters": {
           },
           "attributes": {
-            "hdlname": "one pinholes[0].in[1].hole",
+            "hdlname": "one pinholes[0].hole_in_b",
             "module_not_derived": "00000000000000000000000000000001",
-            "reprocess_after": "\\pinhole_320px_0",
-            "src": "benchmarks/library.v:150.25-150.92"
+            "src": "benchmarks/library.v:120.23-120.84"
           },
           "connections": {
-            "connection": [ 103 ],
+            "connection": [ 88 ],
             "pad": [ 3 ]
           }
         },
-        "one.pinholes[0].in[2].hole": {
+        "one.pinholes[0].hole_in_c": {
           "hide_name": 0,
           "type": "pinhole_320px_0",
           "parameters": {
           },
           "attributes": {
-            "hdlname": "one pinholes[0].in[2].hole",
+            "hdlname": "one pinholes[0].hole_in_c",
             "module_not_derived": "00000000000000000000000000000001",
-            "reprocess_after": "\\pinhole_320px_0",
-            "src": "benchmarks/library.v:150.25-150.92"
+            "src": "benchmarks/library.v:121.23-121.84"
           },
           "connections": {
-            "connection": [ 104 ],
+            "connection": [ 89 ],
             "pad": [ 4 ]
           }
         },
-        "one.pinholes[0].out[0].hole": {
+        "one.pinholes[0].hole_out_a": {
           "hide_name": 0,
           "type": "pinhole_320px_0",
           "parameters": {
           },
           "attributes": {
-            "hdlname": "one pinholes[0].out[0].hole",
+            "hdlname": "one pinholes[0].hole_out_a",
             "module_not_derived": "00000000000000000000000000000001",
-            "reprocess_after": "\\pinhole_320px_0",
-            "src": "benchmarks/library.v:153.25-153.95"
+            "src": "benchmarks/library.v:122.23-122.87"
           },
           "connections": {
-            "connection": [ 102 ],
+            "connection": [ 90 ],
             "pad": [ 5 ]
           }
         },
-        "one.pinholes[0].out[1].hole": {
+        "one.pinholes[0].hole_out_b": {
           "hide_name": 0,
           "type": "pinhole_320px_0",
           "parameters": {
           },
           "attributes": {
-            "hdlname": "one pinholes[0].out[1].hole",
+            "hdlname": "one pinholes[0].hole_out_b",
             "module_not_derived": "00000000000000000000000000000001",
-            "reprocess_after": "\\pinhole_320px_0",
-            "src": "benchmarks/library.v:153.25-153.95"
+            "src": "benchmarks/library.v:123.23-123.87"
           },
           "connections": {
-            "connection": [ 108 ],
+            "connection": [ 91 ],
             "pad": [ 6 ]
           }
         },
-        "one.pinholes[0].out[2].hole": {
+        "one.pinholes[0].hole_out_c": {
           "hide_name": 0,
           "type": "pinhole_320px_0",
           "parameters": {
           },
           "attributes": {
-            "hdlname": "one pinholes[0].out[2].hole",
+            "hdlname": "one pinholes[0].hole_out_c",
             "module_not_derived": "00000000000000000000000000000001",
-            "reprocess_after": "\\pinhole_320px_0",
-            "src": "benchmarks/library.v:153.25-153.95"
+            "src": "benchmarks/library.v:124.23-124.87"
           },
           "connections": {
-            "connection": [ 101 ],
+            "connection": [ 92 ],
             "pad": [ 7 ]
           }
         },
-        "one.pinholes[0].out[3].hole": {
+        "one.pinholes[0].hole_out_d": {
           "hide_name": 0,
           "type": "pinhole_320px_0",
           "parameters": {
           },
           "attributes": {
-            "hdlname": "one pinholes[0].out[3].hole",
+            "hdlname": "one pinholes[0].hole_out_d",
             "module_not_derived": "00000000000000000000000000000001",
-            "reprocess_after": "\\pinhole_320px_0",
-            "src": "benchmarks/library.v:153.25-153.95"
+            "src": "benchmarks/library.v:125.23-125.87"
           },
           "connections": {
-            "connection": [ 96 ],
+            "connection": [ 93 ],
             "pad": [ 8 ]
           }
         },
@@ -1618,10 +711,10 @@
           "attributes": {
             "hdlname": "one pump_a[0].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:166.20-166.82"
+            "src": "benchmarks/library.v:137.20-137.82"
           },
           "connections": {
-            "connection": [ 110 ],
+            "connection": [ 94 ],
             "pad": [ 48 ]
           }
         },
@@ -1633,10 +726,10 @@
           "attributes": {
             "hdlname": "one pump_a[0].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:165.19-165.68"
+            "src": "benchmarks/library.v:136.19-136.68"
           },
           "connections": {
-            "connection": [ 109 ],
+            "connection": [ 95 ],
             "pad": [ 26 ]
           }
         },
@@ -1648,10 +741,10 @@
           "attributes": {
             "hdlname": "one pump_a[1].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:166.20-166.82"
+            "src": "benchmarks/library.v:137.20-137.82"
           },
           "connections": {
-            "connection": [ 113 ],
+            "connection": [ 96 ],
             "pad": [ 49 ]
           }
         },
@@ -1663,10 +756,10 @@
           "attributes": {
             "hdlname": "one pump_a[1].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:165.19-165.68"
+            "src": "benchmarks/library.v:136.19-136.68"
           },
           "connections": {
-            "connection": [ 112 ],
+            "connection": [ 97 ],
             "pad": [ 27 ]
           }
         },
@@ -1678,10 +771,10 @@
           "attributes": {
             "hdlname": "one pump_a[2].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:166.20-166.82"
+            "src": "benchmarks/library.v:137.20-137.82"
           },
           "connections": {
-            "connection": [ 116 ],
+            "connection": [ 98 ],
             "pad": [ 50 ]
           }
         },
@@ -1693,10 +786,10 @@
           "attributes": {
             "hdlname": "one pump_a[2].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:165.19-165.68"
+            "src": "benchmarks/library.v:136.19-136.68"
           },
           "connections": {
-            "connection": [ 115 ],
+            "connection": [ 99 ],
             "pad": [ 28 ]
           }
         },
@@ -1708,10 +801,10 @@
           "attributes": {
             "hdlname": "one pump_b[0].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:162.20-162.82"
+            "src": "benchmarks/library.v:133.20-133.82"
           },
           "connections": {
-            "connection": [ 119 ],
+            "connection": [ 100 ],
             "pad": [ 51 ]
           }
         },
@@ -1723,10 +816,10 @@
           "attributes": {
             "hdlname": "one pump_b[0].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:161.19-161.68"
+            "src": "benchmarks/library.v:132.19-132.68"
           },
           "connections": {
-            "connection": [ 117 ],
+            "connection": [ 101 ],
             "pad": [ 29 ]
           }
         },
@@ -1738,10 +831,10 @@
           "attributes": {
             "hdlname": "one pump_b[1].flush",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:162.20-162.82"
+            "src": "benchmarks/library.v:133.20-133.82"
           },
           "connections": {
-            "connection": [ 121 ],
+            "connection": [ 102 ],
             "pad": [ 52 ]
           }
         },
@@ -1753,154 +846,492 @@
           "attributes": {
             "hdlname": "one pump_b[1].hole",
             "module_not_derived": "00000000000000000000000000000001",
-            "src": "benchmarks/library.v:161.19-161.68"
+            "src": "benchmarks/library.v:132.19-132.68"
           },
           "connections": {
-            "connection": [ 120 ],
+            "connection": [ 103 ],
             "pad": [ 30 ]
+          }
+        },
+        "one.thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:144.37-156.88",
+            "hdlname": "one thingy",
+            "module": "$paramod\\kinase_activity_bank\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "kinase_activity_bank",
+            "module_src": "benchmarks/library.v:48.1-92.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.thingy.devices[0].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:81.23-88.82",
+            "hdlname": "one thingy devices[0].thingy",
+            "module": "kinase_activity",
+            "module_src": "benchmarks/library.v:1.1-45.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.thingy.devices[0].thingy.circulate1": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy circulate1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:32.11-32.42"
+          },
+          "connections": {
+            "in": [ 104 ],
+            "out": [ 105 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.circulate2": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy circulate2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:33.11-33.45"
+          },
+          "connections": {
+            "in": [ 106 ],
+            "out": [ 107 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.column_lower": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy column_lower",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:35.11-35.45"
+          },
+          "connections": {
+            "in": [ 108 ],
+            "out": [ 109 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.column_upper": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy column_upper",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:34.11-34.45"
+          },
+          "connections": {
+            "in": [ 110 ],
+            "out": [ 111 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v0": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:18.9-18.99"
+          },
+          "connections": {
+            "air_in": [ 54 ],
+            "air_out": [ 53 ],
+            "fluid_in": [ 112 ],
+            "fluid_out": [ 93 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:19.9-19.96"
+          },
+          "connections": {
+            "air_in": [ 62 ],
+            "air_out": [ 61 ],
+            "fluid_in": [ 87 ],
+            "fluid_out": [ 113 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:28.9-28.94"
+          },
+          "connections": {
+            "air_in": [ 56 ],
+            "air_out": [ 55 ],
+            "fluid_in": [ 114 ],
+            "fluid_out": [ 115 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:29.9-29.100"
+          },
+          "connections": {
+            "air_in": [ 58 ],
+            "air_out": [ 57 ],
+            "fluid_in": [ 114 ],
+            "fluid_out": [ 92 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:30.9-30.102"
+          },
+          "connections": {
+            "air_in": [ 60 ],
+            "air_out": [ 59 ],
+            "fluid_in": [ 112 ],
+            "fluid_out": [ 90 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:20.9-20.96"
+          },
+          "connections": {
+            "air_in": [ 64 ],
+            "air_out": [ 63 ],
+            "fluid_in": [ 88 ],
+            "fluid_out": [ 113 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:21.9-21.96"
+          },
+          "connections": {
+            "air_in": [ 66 ],
+            "air_out": [ 65 ],
+            "fluid_in": [ 89 ],
+            "fluid_out": [ 113 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:22.9-22.89"
+          },
+          "connections": {
+            "air_in": [ 68 ],
+            "air_out": [ 67 ],
+            "fluid_in": [ 113 ],
+            "fluid_out": [ 116 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:23.9-23.90"
+          },
+          "connections": {
+            "air_in": [ 70 ],
+            "air_out": [ 69 ],
+            "fluid_in": [ 116 ],
+            "fluid_out": [ 106 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:24.9-24.90"
+          },
+          "connections": {
+            "air_in": [ 72 ],
+            "air_out": [ 71 ],
+            "fluid_in": [ 116 ],
+            "fluid_out": [ 117 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:25.9-25.89"
+          },
+          "connections": {
+            "air_in": [ 74 ],
+            "air_out": [ 73 ],
+            "fluid_in": [ 105 ],
+            "fluid_out": [ 118 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:26.9-26.97"
+          },
+          "connections": {
+            "air_in": [ 76 ],
+            "air_out": [ 75 ],
+            "fluid_in": [ 105 ],
+            "fluid_out": [ 91 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:27.9-27.89"
+          },
+          "connections": {
+            "air_in": [ 78 ],
+            "air_out": [ 77 ],
+            "fluid_in": [ 118 ],
+            "fluid_out": [ 114 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:40.14-40.101"
+          },
+          "connections": {
+            "air_in": [ 95 ],
+            "air_out": [ 94 ],
+            "fluid_in": [ 107 ],
+            "fluid_out": [ 119 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:41.14-41.99"
+          },
+          "connections": {
+            "air_in": [ 97 ],
+            "air_out": [ 96 ],
+            "fluid_in": [ 119 ],
+            "fluid_out": [ 120 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:42.14-42.99"
+          },
+          "connections": {
+            "air_in": [ 99 ],
+            "air_out": [ 98 ],
+            "fluid_in": [ 120 ],
+            "fluid_out": [ 104 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp3": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:43.14-43.99"
+          },
+          "connections": {
+            "air_in": [ 101 ],
+            "air_out": [ 100 ],
+            "fluid_in": [ 121 ],
+            "fluid_out": [ 110 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp4": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:44.14-44.98"
+          },
+          "connections": {
+            "air_in": [ 103 ],
+            "air_out": [ 102 ],
+            "fluid_in": [ 111 ],
+            "fluid_out": [ 122 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vs0": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:36.15-36.99"
+          },
+          "connections": {
+            "air_in": [ 80 ],
+            "air_out": [ 79 ],
+            "fluid_in": [ 109 ],
+            "fluid_out": [ 112 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vs1": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:37.15-37.99"
+          },
+          "connections": {
+            "air_in": [ 82 ],
+            "air_out": [ 81 ],
+            "fluid_in": [ 117 ],
+            "fluid_out": [ 121 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vs2": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:38.15-38.98"
+          },
+          "connections": {
+            "air_in": [ 84 ],
+            "air_out": [ 83 ],
+            "fluid_in": [ 122 ],
+            "fluid_out": [ 118 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vs3": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:39.15-39.100"
+          },
+          "connections": {
+            "air_in": [ 86 ],
+            "air_out": [ 85 ],
+            "fluid_in": [ 115 ],
+            "fluid_out": [ 108 ]
           }
         }
       },
       "netnames": {
-        "$flatten\\one.$0\\flow_out[0][3:0]": {
-          "hide_name": 1,
-          "bits": [ 102, 108, 101, 96 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$0\\serial_ctrl_a[0][12:0]": {
-          "hide_name": 1,
-          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$0\\serial_ctrl_a[1][12:0]": {
-          "hide_name": 1,
-          "bits": [ 53, 61, 63, 65, 67, 69, 71, 73, 75, 77, 55, 57, 59 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$0\\serial_ctrl_s[0][3:0]": {
-          "hide_name": 1,
-          "bits": [ 80, 82, 84, 86 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$0\\serial_ctrl_s[1][3:0]": {
-          "hide_name": 1,
-          "bits": [ 79, 81, 83, 85 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$0\\serial_pump_a[0][2:0]": {
-          "hide_name": 1,
-          "bits": [ 109, 112, 115 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$0\\serial_pump_a[1][2:0]": {
-          "hide_name": 1,
-          "bits": [ 110, 113, 116 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$0\\serial_pump_b[0][1:0]": {
-          "hide_name": 1,
-          "bits": [ 117, 120 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$0\\serial_pump_b[1][1:0]": {
-          "hide_name": 1,
-          "bits": [ 119, 121 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\ctrl_a$benchmarks/library.v:174$74": {
-          "hide_name": 1,
-          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\ctrl_s$benchmarks/library.v:174$75": {
-          "hide_name": 1,
-          "bits": [ 80, 82, 84, 86 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\flow_in$benchmarks/library.v:174$72": {
-          "hide_name": 1,
-          "bits": [ 97, 103, 104 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\flow_out$benchmarks/library.v:174$73": {
-          "hide_name": 1,
-          "bits": [ 102, 108, 101, 96 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\flush_ctrl_a$benchmarks/library.v:174$78": {
-          "hide_name": 1,
-          "bits": [ 53, 61, 63, 65, 67, 69, 71, 73, 75, 77, 55, 57, 59 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\flush_ctrl_s$benchmarks/library.v:174$79": {
-          "hide_name": 1,
-          "bits": [ 79, 81, 83, 85 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\flush_pump_a$benchmarks/library.v:174$80": {
-          "hide_name": 1,
-          "bits": [ 110, 113, 116 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\flush_pump_b$benchmarks/library.v:174$81": {
-          "hide_name": 1,
-          "bits": [ 119, 121 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\pump_a$benchmarks/library.v:174$76": {
-          "hide_name": 1,
-          "bits": [ 109, 112, 115 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
-        "$flatten\\one.$indirect$\\pump_b$benchmarks/library.v:174$77": {
-          "hide_name": 1,
-          "bits": [ 117, 120 ],
-          "attributes": {
-            "src": "benchmarks/library.v:0.0-0.0"
-          }
-        },
         "one.ctrl_a": {
           "hide_name": 0,
           "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
           "attributes": {
             "hdlname": "one ctrl_a",
-            "src": "benchmarks/library.v:125.32-125.38",
+            "src": "benchmarks/library.v:107.32-107.38",
             "type": "ctrl"
           }
         },
@@ -1909,1150 +1340,77 @@
           "bits": [ 80, 82, 84, 86 ],
           "attributes": {
             "hdlname": "one ctrl_s",
-            "src": "benchmarks/library.v:126.31-126.37",
+            "src": "benchmarks/library.v:108.31-108.37",
             "type": "ctrl"
           }
         },
-        "one.devices[0].thingy.circ2o": {
-          "hide_name": 0,
-          "bits": [ 90 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy circ2o",
-            "src": "benchmarks/library.v:78.25-78.31",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.circulate1.in": {
+        "one.flow_in_a": {
           "hide_name": 0,
           "bits": [ 87 ],
           "attributes": {
-            "hdlname": "one devices[0].thingy circulate1 in",
-            "src": "benchmarks/library.v:34.39-34.41",
+            "hdlname": "one flow_in_a",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:105.37-105.46",
             "type": "flow"
           }
         },
-        "one.devices[0].thingy.circulate1.out": {
+        "one.flow_in_b": {
           "hide_name": 0,
           "bits": [ 88 ],
           "attributes": {
-            "hdlname": "one devices[0].thingy circulate1 out",
-            "src": "benchmarks/library.v:34.66-34.69",
+            "hdlname": "one flow_in_b",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:105.48-105.57",
             "type": "flow"
           }
         },
-        "one.devices[0].thingy.circulate2.in": {
+        "one.flow_in_c": {
           "hide_name": 0,
           "bits": [ 89 ],
           "attributes": {
-            "hdlname": "one devices[0].thingy circulate2 in",
-            "src": "benchmarks/library.v:34.39-34.41",
+            "hdlname": "one flow_in_c",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:105.58-105.67",
             "type": "flow"
           }
         },
-        "one.devices[0].thingy.circulate2.out": {
+        "one.flow_out_a": {
           "hide_name": 0,
           "bits": [ 90 ],
           "attributes": {
-            "hdlname": "one devices[0].thingy circulate2 out",
-            "src": "benchmarks/library.v:34.66-34.69",
+            "hdlname": "one flow_out_a",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:106.37-106.47",
             "type": "flow"
           }
         },
-        "one.devices[0].thingy.clo": {
-          "hide_name": 0,
-          "bits": [ 92 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy clo",
-            "src": "benchmarks/library.v:79.30-79.33",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.column_lower.in": {
+        "one.flow_out_b": {
           "hide_name": 0,
           "bits": [ 91 ],
           "attributes": {
-            "hdlname": "one devices[0].thingy column_lower in",
-            "src": "benchmarks/library.v:34.39-34.41",
+            "hdlname": "one flow_out_b",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:106.48-106.58",
             "type": "flow"
           }
         },
-        "one.devices[0].thingy.column_lower.out": {
+        "one.flow_out_c": {
           "hide_name": 0,
           "bits": [ 92 ],
           "attributes": {
-            "hdlname": "one devices[0].thingy column_lower out",
-            "src": "benchmarks/library.v:34.66-34.69",
+            "hdlname": "one flow_out_c",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:106.60-106.70",
             "type": "flow"
           }
         },
-        "one.devices[0].thingy.column_upper.in": {
+        "one.flow_out_d": {
           "hide_name": 0,
           "bits": [ 93 ],
           "attributes": {
-            "hdlname": "one devices[0].thingy column_upper in",
-            "src": "benchmarks/library.v:34.39-34.41",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.column_upper.out": {
-          "hide_name": 0,
-          "bits": [ 94 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy column_upper out",
-            "src": "benchmarks/library.v:34.66-34.69",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.ctrl_a": {
-          "hide_name": 0,
-          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy ctrl_a",
-            "src": "benchmarks/library.v:65.55-65.61",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.ctrl_s": {
-          "hide_name": 0,
-          "bits": [ 80, 82, 84, 86 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy ctrl_s",
-            "src": "benchmarks/library.v:66.54-66.60",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.cuo": {
-          "hide_name": 0,
-          "bits": [ 94 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy cuo",
-            "src": "benchmarks/library.v:79.25-79.28",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.flow_in": {
-          "hide_name": 0,
-          "bits": [ 97, 103, 104 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy flow_in",
-            "src": "benchmarks/library.v:63.54-63.61",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.flow_out": {
-          "hide_name": 0,
-          "bits": [ 102, 108, 101, 96 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy flow_out",
-            "src": "benchmarks/library.v:64.55-64.63",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.flush_ctrl_a": {
-          "hide_name": 0,
-          "bits": [ 53, 61, 63, 65, 67, 69, 71, 73, 75, 77, 55, 57, 59 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy flush_ctrl_a",
-            "src": "benchmarks/library.v:69.57-69.69",
-            "type": "flush"
-          }
-        },
-        "one.devices[0].thingy.flush_ctrl_s": {
-          "hide_name": 0,
-          "bits": [ 79, 81, 83, 85 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy flush_ctrl_s",
-            "src": "benchmarks/library.v:70.56-70.68",
-            "type": "flush"
-          }
-        },
-        "one.devices[0].thingy.flush_pump_a": {
-          "hide_name": 0,
-          "bits": [ 110, 113, 116 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy flush_pump_a",
-            "src": "benchmarks/library.v:71.56-71.68",
-            "type": "flush"
-          }
-        },
-        "one.devices[0].thingy.flush_pump_b": {
-          "hide_name": 0,
-          "bits": [ 119, 121 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy flush_pump_b",
-            "src": "benchmarks/library.v:72.56-72.68",
-            "type": "flush"
-          }
-        },
-        "one.devices[0].thingy.j1": {
-          "hide_name": 0,
-          "bits": [ 105 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy j1",
-            "src": "benchmarks/library.v:74.25-74.27",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.j2": {
-          "hide_name": 0,
-          "bits": [ 107 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy j2",
-            "src": "benchmarks/library.v:74.29-74.31",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.j3": {
-          "hide_name": 0,
-          "bits": [ 99 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy j3",
-            "src": "benchmarks/library.v:74.33-74.35",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.j4": {
-          "hide_name": 0,
-          "bits": [ 98 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy j4",
-            "src": "benchmarks/library.v:74.37-74.39",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.j5": {
-          "hide_name": 0,
-          "bits": [ 88 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy j5",
-            "src": "benchmarks/library.v:74.41-74.43",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.pump_a": {
-          "hide_name": 0,
-          "bits": [ 109, 112, 115 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy pump_a",
-            "src": "benchmarks/library.v:67.54-67.60",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.pump_b": {
-          "hide_name": 0,
-          "bits": [ 117, 120 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy pump_b",
-            "src": "benchmarks/library.v:68.54-68.60",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v0.air_in": {
-          "hide_name": 0,
-          "bits": [ 54 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v0 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v0.air_out": {
-          "hide_name": 0,
-          "bits": [ 53 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v0 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v0.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 95 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v0 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v0.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 96 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v0 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v1.air_in": {
-          "hide_name": 0,
-          "bits": [ 62 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v1 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v1.air_out": {
-          "hide_name": 0,
-          "bits": [ 61 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v1 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v1.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 97 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v1 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v1.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 98 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v1 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v10.air_in": {
-          "hide_name": 0,
-          "bits": [ 56 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v10 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v10.air_out": {
-          "hide_name": 0,
-          "bits": [ 55 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v10 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v10.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 99 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v10 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v10.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 100 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v10 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v10o": {
-          "hide_name": 0,
-          "bits": [ 100 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v10o",
-            "src": "benchmarks/library.v:75.35-75.39",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v11.air_in": {
-          "hide_name": 0,
-          "bits": [ 58 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v11 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v11.air_out": {
-          "hide_name": 0,
-          "bits": [ 57 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v11 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v11.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 99 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v11 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v11.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 101 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v11 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v12.air_in": {
-          "hide_name": 0,
-          "bits": [ 60 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v12 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v12.air_out": {
-          "hide_name": 0,
-          "bits": [ 59 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v12 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v12.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 95 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v12 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v12.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 102 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v12 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v2.air_in": {
-          "hide_name": 0,
-          "bits": [ 64 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v2 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v2.air_out": {
-          "hide_name": 0,
-          "bits": [ 63 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v2 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v2.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 103 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v2 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v2.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 98 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v2 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v3.air_in": {
-          "hide_name": 0,
-          "bits": [ 66 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v3 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v3.air_out": {
-          "hide_name": 0,
-          "bits": [ 65 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v3 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v3.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 104 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v3 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v3.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 98 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v3 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v4.air_in": {
-          "hide_name": 0,
-          "bits": [ 68 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v4 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v4.air_out": {
-          "hide_name": 0,
-          "bits": [ 67 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v4 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v4.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 98 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v4 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v4.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 105 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v4 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v5.air_in": {
-          "hide_name": 0,
-          "bits": [ 70 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v5 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v5.air_out": {
-          "hide_name": 0,
-          "bits": [ 69 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v5 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v5.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 105 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v5 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v5.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 89 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v5 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v5o": {
-          "hide_name": 0,
-          "bits": [ 89 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v5o",
-            "src": "benchmarks/library.v:75.25-75.28",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v6.air_in": {
-          "hide_name": 0,
-          "bits": [ 72 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v6 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v6.air_out": {
-          "hide_name": 0,
-          "bits": [ 71 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v6 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v6.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 105 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v6 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v6.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 106 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v6 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v6o": {
-          "hide_name": 0,
-          "bits": [ 106 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v6o",
-            "src": "benchmarks/library.v:75.30-75.33",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v7.air_in": {
-          "hide_name": 0,
-          "bits": [ 74 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v7 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v7.air_out": {
-          "hide_name": 0,
-          "bits": [ 73 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v7 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v7.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 88 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v7 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v7.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 107 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v7 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v8.air_in": {
-          "hide_name": 0,
-          "bits": [ 76 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v8 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v8.air_out": {
-          "hide_name": 0,
-          "bits": [ 75 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v8 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v8.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 88 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v8 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v8.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 108 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v8 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v9.air_in": {
-          "hide_name": 0,
-          "bits": [ 78 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v9 air_in",
-            "src": "benchmarks/library.v:18.105-18.111",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v9.air_out": {
-          "hide_name": 0,
-          "bits": [ 77 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v9 air_out",
-            "src": "benchmarks/library.v:18.137-18.144",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.v9.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 107 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v9 fluid_in",
-            "src": "benchmarks/library.v:18.38-18.46",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.v9.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 99 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy v9 fluid_out",
-            "src": "benchmarks/library.v:18.71-18.80",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp0.air_in": {
-          "hide_name": 0,
-          "bits": [ 109 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp0 air_in",
-            "src": "benchmarks/library.v:22.110-22.116",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp0.air_out": {
-          "hide_name": 0,
-          "bits": [ 110 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp0 air_out",
-            "src": "benchmarks/library.v:22.142-22.149",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp0.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 90 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp0 fluid_in",
-            "src": "benchmarks/library.v:22.43-22.51",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp0.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 111 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp0 fluid_out",
-            "src": "benchmarks/library.v:22.76-22.85",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp1.air_in": {
-          "hide_name": 0,
-          "bits": [ 112 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp1 air_in",
-            "src": "benchmarks/library.v:22.110-22.116",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp1.air_out": {
-          "hide_name": 0,
-          "bits": [ 113 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp1 air_out",
-            "src": "benchmarks/library.v:22.142-22.149",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp1.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 111 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp1 fluid_in",
-            "src": "benchmarks/library.v:22.43-22.51",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp1.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 114 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp1 fluid_out",
-            "src": "benchmarks/library.v:22.76-22.85",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp1o": {
-          "hide_name": 0,
-          "bits": [ 111 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp1o",
-            "src": "benchmarks/library.v:77.25-77.29",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp2.air_in": {
-          "hide_name": 0,
-          "bits": [ 115 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp2 air_in",
-            "src": "benchmarks/library.v:22.110-22.116",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp2.air_out": {
-          "hide_name": 0,
-          "bits": [ 116 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp2 air_out",
-            "src": "benchmarks/library.v:22.142-22.149",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp2.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 114 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp2 fluid_in",
-            "src": "benchmarks/library.v:22.43-22.51",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp2.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 87 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp2 fluid_out",
-            "src": "benchmarks/library.v:22.76-22.85",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp2o": {
-          "hide_name": 0,
-          "bits": [ 114 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp2o",
-            "src": "benchmarks/library.v:77.31-77.35",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp3.air_in": {
-          "hide_name": 0,
-          "bits": [ 117 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp3 air_in",
-            "src": "benchmarks/library.v:22.110-22.116",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp3.air_out": {
-          "hide_name": 0,
-          "bits": [ 119 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp3 air_out",
-            "src": "benchmarks/library.v:22.142-22.149",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp3.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 118 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp3 fluid_in",
-            "src": "benchmarks/library.v:22.43-22.51",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp3.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 93 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp3 fluid_out",
-            "src": "benchmarks/library.v:22.76-22.85",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp3o": {
-          "hide_name": 0,
-          "bits": [ 87 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp3o",
-            "src": "benchmarks/library.v:77.37-77.41",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp4.air_in": {
-          "hide_name": 0,
-          "bits": [ 120 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp4 air_in",
-            "src": "benchmarks/library.v:22.110-22.116",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp4.air_out": {
-          "hide_name": 0,
-          "bits": [ 121 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp4 air_out",
-            "src": "benchmarks/library.v:22.142-22.149",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vp4.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 94 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp4 fluid_in",
-            "src": "benchmarks/library.v:22.43-22.51",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp4.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 122 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp4 fluid_out",
-            "src": "benchmarks/library.v:22.76-22.85",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp4o": {
-          "hide_name": 0,
-          "bits": [ 93 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp4o",
-            "src": "benchmarks/library.v:77.43-77.47",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vp5o": {
-          "hide_name": 0,
-          "bits": [ 122 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vp5o",
-            "src": "benchmarks/library.v:77.49-77.53",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs0.air_in": {
-          "hide_name": 0,
-          "bits": [ 80 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs0 air_in",
-            "src": "benchmarks/library.v:26.111-26.117",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vs0.air_out": {
-          "hide_name": 0,
-          "bits": [ 79 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs0 air_out",
-            "src": "benchmarks/library.v:26.143-26.150",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vs0.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 92 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs0 fluid_in",
-            "src": "benchmarks/library.v:26.44-26.52",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs0.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 95 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs0 fluid_out",
-            "src": "benchmarks/library.v:26.77-26.86",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs1.air_in": {
-          "hide_name": 0,
-          "bits": [ 82 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs1 air_in",
-            "src": "benchmarks/library.v:26.111-26.117",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vs1.air_out": {
-          "hide_name": 0,
-          "bits": [ 81 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs1 air_out",
-            "src": "benchmarks/library.v:26.143-26.150",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vs1.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 106 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs1 fluid_in",
-            "src": "benchmarks/library.v:26.44-26.52",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs1.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 118 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs1 fluid_out",
-            "src": "benchmarks/library.v:26.77-26.86",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs1o": {
-          "hide_name": 0,
-          "bits": [ 118 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs1o",
-            "src": "benchmarks/library.v:76.25-76.29",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs2.air_in": {
-          "hide_name": 0,
-          "bits": [ 84 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs2 air_in",
-            "src": "benchmarks/library.v:26.111-26.117",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vs2.air_out": {
-          "hide_name": 0,
-          "bits": [ 83 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs2 air_out",
-            "src": "benchmarks/library.v:26.143-26.150",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vs2.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 122 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs2 fluid_in",
-            "src": "benchmarks/library.v:26.44-26.52",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs2.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 107 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs2 fluid_out",
-            "src": "benchmarks/library.v:26.77-26.86",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs3.air_in": {
-          "hide_name": 0,
-          "bits": [ 86 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs3 air_in",
-            "src": "benchmarks/library.v:26.111-26.117",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vs3.air_out": {
-          "hide_name": 0,
-          "bits": [ 85 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs3 air_out",
-            "src": "benchmarks/library.v:26.143-26.150",
-            "type": "ctrl"
-          }
-        },
-        "one.devices[0].thingy.vs3.fluid_in": {
-          "hide_name": 0,
-          "bits": [ 100 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs3 fluid_in",
-            "src": "benchmarks/library.v:26.44-26.52",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs3.fluid_out": {
-          "hide_name": 0,
-          "bits": [ 91 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs3 fluid_out",
-            "src": "benchmarks/library.v:26.77-26.86",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs3o": {
-          "hide_name": 0,
-          "bits": [ 91 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs3o",
-            "src": "benchmarks/library.v:76.31-76.35",
-            "type": "flow"
-          }
-        },
-        "one.devices[0].thingy.vs4o": {
-          "hide_name": 0,
-          "bits": [ 95 ],
-          "attributes": {
-            "hdlname": "one devices[0].thingy vs4o",
-            "src": "benchmarks/library.v:76.37-76.41",
-            "type": "flow"
-          }
-        },
-        "one.flow_in[0]": {
-          "hide_name": 0,
-          "bits": [ 97, 103, 104 ],
-          "attributes": {
-            "hdlname": "one flow_in[0]",
-            "src": "benchmarks/library.v:123.39-123.46",
-            "type": "flow"
-          }
-        },
-        "one.flow_out[0]": {
-          "hide_name": 0,
-          "bits": [ 102, 108, 101, 96 ],
-          "attributes": {
-            "hdlname": "one flow_out[0]",
-            "src": "benchmarks/library.v:124.40-124.48",
+            "hdlname": "one flow_out_d",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:106.72-106.82",
             "type": "flow"
           }
         },
@@ -3061,7 +1419,7 @@
           "bits": [ 53, 61, 63, 65, 67, 69, 71, 73, 75, 77, 55, 57, 59 ],
           "attributes": {
             "hdlname": "one flush_ctrl_a",
-            "src": "benchmarks/library.v:129.33-129.45",
+            "src": "benchmarks/library.v:111.33-111.45",
             "type": "flush"
           }
         },
@@ -3070,206 +1428,215 @@
           "bits": [ 79, 81, 83, 85 ],
           "attributes": {
             "hdlname": "one flush_ctrl_s",
-            "src": "benchmarks/library.v:130.32-130.44",
+            "src": "benchmarks/library.v:112.32-112.44",
             "type": "flush"
           }
         },
         "one.flush_pump_a": {
           "hide_name": 0,
-          "bits": [ 110, 113, 116 ],
+          "bits": [ 94, 96, 98 ],
           "attributes": {
             "hdlname": "one flush_pump_a",
-            "src": "benchmarks/library.v:131.32-131.44",
+            "src": "benchmarks/library.v:113.32-113.44",
             "type": "flush"
           }
         },
         "one.flush_pump_b": {
           "hide_name": 0,
-          "bits": [ 119, 121 ],
+          "bits": [ 100, 102 ],
           "attributes": {
             "hdlname": "one flush_pump_b",
-            "src": "benchmarks/library.v:132.32-132.44",
+            "src": "benchmarks/library.v:114.32-114.44",
             "type": "flush"
-          }
-        },
-        "one.pad_ctrl_a": {
-          "hide_name": 0,
-          "bits": [ 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 ],
-          "attributes": {
-            "hdlname": "one pad_ctrl_a",
-            "src": "benchmarks/library.v:111.34-111.44",
-            "type": "ctrl"
-          }
-        },
-        "one.pad_ctrl_s": {
-          "hide_name": 0,
-          "bits": [ 22, 23, 24, 25 ],
-          "attributes": {
-            "hdlname": "one pad_ctrl_s",
-            "src": "benchmarks/library.v:112.33-112.43",
-            "type": "ctrl"
-          }
-        },
-        "one.pad_flow_in": {
-          "hide_name": 0,
-          "bits": [ 2, 3, 4 ],
-          "attributes": {
-            "hdlname": "one pad_flow_in",
-            "src": "benchmarks/library.v:109.46-109.57",
-            "type": "flow"
-          }
-        },
-        "one.pad_flow_out": {
-          "hide_name": 0,
-          "bits": [ 5, 6, 7, 8 ],
-          "attributes": {
-            "hdlname": "one pad_flow_out",
-            "src": "benchmarks/library.v:110.48-110.60",
-            "type": "flow"
-          }
-        },
-        "one.pad_flush_ctrl_a": {
-          "hide_name": 0,
-          "bits": [ 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 ],
-          "attributes": {
-            "hdlname": "one pad_flush_ctrl_a",
-            "src": "benchmarks/library.v:115.36-115.52",
-            "type": "flush"
-          }
-        },
-        "one.pad_flush_ctrl_s": {
-          "hide_name": 0,
-          "bits": [ 44, 45, 46, 47 ],
-          "attributes": {
-            "hdlname": "one pad_flush_ctrl_s",
-            "src": "benchmarks/library.v:116.35-116.51",
-            "type": "flush"
-          }
-        },
-        "one.pad_flush_pump_a": {
-          "hide_name": 0,
-          "bits": [ 48, 49, 50 ],
-          "attributes": {
-            "hdlname": "one pad_flush_pump_a",
-            "src": "benchmarks/library.v:117.35-117.51",
-            "type": "flush"
-          }
-        },
-        "one.pad_flush_pump_b": {
-          "hide_name": 0,
-          "bits": [ 51, 52 ],
-          "attributes": {
-            "hdlname": "one pad_flush_pump_b",
-            "src": "benchmarks/library.v:118.35-118.51",
-            "type": "flush"
-          }
-        },
-        "one.pad_pump_a": {
-          "hide_name": 0,
-          "bits": [ 26, 27, 28 ],
-          "attributes": {
-            "hdlname": "one pad_pump_a",
-            "src": "benchmarks/library.v:113.33-113.43",
-            "type": "ctrl"
-          }
-        },
-        "one.pad_pump_b": {
-          "hide_name": 0,
-          "bits": [ 29, 30 ],
-          "attributes": {
-            "hdlname": "one pad_pump_b",
-            "src": "benchmarks/library.v:114.33-114.43",
-            "type": "ctrl"
           }
         },
         "one.pump_a": {
           "hide_name": 0,
-          "bits": [ 109, 112, 115 ],
+          "bits": [ 95, 97, 99 ],
           "attributes": {
             "hdlname": "one pump_a",
-            "src": "benchmarks/library.v:127.31-127.37",
+            "src": "benchmarks/library.v:109.31-109.37",
             "type": "ctrl"
           }
         },
         "one.pump_b": {
           "hide_name": 0,
-          "bits": [ 117, 120 ],
+          "bits": [ 101, 103 ],
           "attributes": {
             "hdlname": "one pump_b",
-            "src": "benchmarks/library.v:128.31-128.37",
+            "src": "benchmarks/library.v:110.31-110.37",
             "type": "ctrl"
           }
         },
-        "one.serial_ctrl_a[0]": {
+        "one.thingy.devices[0].thingy.circ2o": {
           "hide_name": 0,
-          "bits": [ 54, 62, 64, 66, 68, 70, 72, 74, 76, 78, 56, 58, 60 ],
+          "bits": [ 107 ],
           "attributes": {
-            "hdlname": "one serial_ctrl_a[0]",
-            "src": "benchmarks/library.v:133.32-133.45",
-            "type": "ctrl"
+            "hdlname": "one thingy devices[0].thingy circ2o",
+            "src": "benchmarks/library.v:16.26-16.32",
+            "type": "flow"
           }
         },
-        "one.serial_ctrl_a[1]": {
+        "one.thingy.devices[0].thingy.clo": {
           "hide_name": 0,
-          "bits": [ 53, 61, 63, 65, 67, 69, 71, 73, 75, 77, 55, 57, 59 ],
+          "bits": [ 109 ],
           "attributes": {
-            "hdlname": "one serial_ctrl_a[1]",
-            "src": "benchmarks/library.v:133.32-133.45",
-            "type": "ctrl"
+            "hdlname": "one thingy devices[0].thingy clo",
+            "src": "benchmarks/library.v:17.31-17.34",
+            "type": "flow"
           }
         },
-        "one.serial_ctrl_s[0]": {
+        "one.thingy.devices[0].thingy.cuo": {
           "hide_name": 0,
-          "bits": [ 80, 82, 84, 86 ],
+          "bits": [ 111 ],
           "attributes": {
-            "hdlname": "one serial_ctrl_s[0]",
-            "src": "benchmarks/library.v:134.31-134.44",
-            "type": "ctrl"
+            "hdlname": "one thingy devices[0].thingy cuo",
+            "src": "benchmarks/library.v:17.26-17.29",
+            "type": "flow"
           }
         },
-        "one.serial_ctrl_s[1]": {
+        "one.thingy.devices[0].thingy.j1": {
           "hide_name": 0,
-          "bits": [ 79, 81, 83, 85 ],
+          "bits": [ 116 ],
           "attributes": {
-            "hdlname": "one serial_ctrl_s[1]",
-            "src": "benchmarks/library.v:134.31-134.44",
-            "type": "ctrl"
+            "hdlname": "one thingy devices[0].thingy j1",
+            "src": "benchmarks/library.v:12.26-12.28",
+            "type": "flow"
           }
         },
-        "one.serial_pump_a[0]": {
+        "one.thingy.devices[0].thingy.j2": {
           "hide_name": 0,
-          "bits": [ 109, 112, 115 ],
+          "bits": [ 118 ],
           "attributes": {
-            "hdlname": "one serial_pump_a[0]",
-            "src": "benchmarks/library.v:135.31-135.44",
-            "type": "ctrl"
+            "hdlname": "one thingy devices[0].thingy j2",
+            "src": "benchmarks/library.v:12.30-12.32",
+            "type": "flow"
           }
         },
-        "one.serial_pump_a[1]": {
+        "one.thingy.devices[0].thingy.j3": {
           "hide_name": 0,
-          "bits": [ 110, 113, 116 ],
+          "bits": [ 114 ],
           "attributes": {
-            "hdlname": "one serial_pump_a[1]",
-            "src": "benchmarks/library.v:135.31-135.44",
-            "type": "ctrl"
+            "hdlname": "one thingy devices[0].thingy j3",
+            "src": "benchmarks/library.v:12.34-12.36",
+            "type": "flow"
           }
         },
-        "one.serial_pump_b[0]": {
+        "one.thingy.devices[0].thingy.j4": {
           "hide_name": 0,
-          "bits": [ 117, 120 ],
+          "bits": [ 113 ],
           "attributes": {
-            "hdlname": "one serial_pump_b[0]",
-            "src": "benchmarks/library.v:136.31-136.44",
-            "type": "ctrl"
+            "hdlname": "one thingy devices[0].thingy j4",
+            "src": "benchmarks/library.v:12.38-12.40",
+            "type": "flow"
           }
         },
-        "one.serial_pump_b[1]": {
+        "one.thingy.devices[0].thingy.j5": {
           "hide_name": 0,
-          "bits": [ 119, 121 ],
+          "bits": [ 105 ],
           "attributes": {
-            "hdlname": "one serial_pump_b[1]",
-            "src": "benchmarks/library.v:136.31-136.44",
-            "type": "ctrl"
+            "hdlname": "one thingy devices[0].thingy j5",
+            "src": "benchmarks/library.v:12.42-12.44",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.v10o": {
+          "hide_name": 0,
+          "bits": [ 115 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v10o",
+            "src": "benchmarks/library.v:13.36-13.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.v5o": {
+          "hide_name": 0,
+          "bits": [ 106 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v5o",
+            "src": "benchmarks/library.v:13.26-13.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.v6o": {
+          "hide_name": 0,
+          "bits": [ 117 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v6o",
+            "src": "benchmarks/library.v:13.31-13.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp1o": {
+          "hide_name": 0,
+          "bits": [ 119 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp1o",
+            "src": "benchmarks/library.v:15.26-15.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp2o": {
+          "hide_name": 0,
+          "bits": [ 120 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp2o",
+            "src": "benchmarks/library.v:15.32-15.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp3o": {
+          "hide_name": 0,
+          "bits": [ 104 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp3o",
+            "src": "benchmarks/library.v:15.38-15.42",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp4o": {
+          "hide_name": 0,
+          "bits": [ 110 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp4o",
+            "src": "benchmarks/library.v:15.44-15.48",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp5o": {
+          "hide_name": 0,
+          "bits": [ 122 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp5o",
+            "src": "benchmarks/library.v:15.50-15.54",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vs1o": {
+          "hide_name": 0,
+          "bits": [ 121 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs1o",
+            "src": "benchmarks/library.v:14.26-14.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vs3o": {
+          "hide_name": 0,
+          "bits": [ 108 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs3o",
+            "src": "benchmarks/library.v:14.32-14.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vs4o": {
+          "hide_name": 0,
+          "bits": [ 112 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs4o",
+            "src": "benchmarks/library.v:14.38-14.42",
+            "type": "flow"
           }
         },
         "pad_ctrl_a": {
@@ -3288,19 +1655,66 @@
             "type": "ctrl"
           }
         },
-        "pad_flow_in": {
+        "pad_flow_in_a": {
           "hide_name": 0,
-          "bits": [ 2, 3, 4 ],
+          "bits": [ 2 ],
           "attributes": {
-            "src": "benchmarks/kinase_1.v:2.51-2.62",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/kinase_1.v:2.38-2.51",
             "type": "flow"
           }
         },
-        "pad_flow_out": {
+        "pad_flow_in_b": {
           "hide_name": 0,
-          "bits": [ 5, 6, 7, 8 ],
+          "bits": [ 3 ],
           "attributes": {
-            "src": "benchmarks/kinase_1.v:3.52-3.64",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/kinase_1.v:2.53-2.66",
+            "type": "flow"
+          }
+        },
+        "pad_flow_in_c": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/kinase_1.v:2.67-2.80",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out_a": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/kinase_1.v:3.39-3.53",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out_b": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/kinase_1.v:3.54-3.68",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out_c": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/kinase_1.v:3.70-3.84",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out_d": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/kinase_1.v:3.86-3.100",
             "type": "flow"
           }
         },

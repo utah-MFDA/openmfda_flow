@@ -1,0 +1,2423 @@
+{
+  "creator": "Yosys 0.55+194 (git sha1 8576d2d14, g++ 8.5.0 -fPIC -O3)",
+  "modules": {
+    "thing": {
+      "attributes": {
+        "dynports": "00000000000000000000000000000001",
+        "top": "00000000000000000000000000000001",
+        "src": "benchmarks/mnacidpro_4.v:1.1-23.10"
+      },
+      "parameter_default_values": {
+        "SIZE": "00000000000000000000000000000100"
+      },
+      "ports": {
+        "lysis_ctrl": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "wash_ctrl": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "elute_ctrl": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "dead_end_ctrl": {
+          "direction": "input",
+          "bits": [ 5 ]
+        },
+        "vertical_ctrl": {
+          "direction": "input",
+          "bits": [ 6 ]
+        },
+        "horiz_ctrl": {
+          "direction": "input",
+          "bits": [ 7 ]
+        },
+        "waste_ctrl": {
+          "direction": "input",
+          "bits": [ 8 ]
+        },
+        "bead_ctrl": {
+          "direction": "input",
+          "bits": [ 9 ]
+        },
+        "loop_exit_ctrl": {
+          "direction": "input",
+          "bits": [ 10 ]
+        },
+        "bead_trap_ctrl": {
+          "direction": "input",
+          "bits": [ 11 ]
+        },
+        "collect_ctrl": {
+          "direction": "input",
+          "bits": [ 12 ]
+        },
+        "pump": {
+          "direction": "input",
+          "bits": [ 13, 14, 15 ]
+        },
+        "lysis_flush": {
+          "direction": "input",
+          "bits": [ 16 ]
+        },
+        "wash_flush": {
+          "direction": "input",
+          "bits": [ 17 ]
+        },
+        "elute_flush": {
+          "direction": "input",
+          "bits": [ 18 ]
+        },
+        "dead_end_flush": {
+          "direction": "input",
+          "bits": [ 19 ]
+        },
+        "vertical_flush": {
+          "direction": "input",
+          "bits": [ 20 ]
+        },
+        "horiz_flush": {
+          "direction": "input",
+          "bits": [ 21 ]
+        },
+        "waste_flush": {
+          "direction": "input",
+          "bits": [ 22 ]
+        },
+        "bead_flush": {
+          "direction": "input",
+          "bits": [ 23 ]
+        },
+        "loop_exit_flush": {
+          "direction": "input",
+          "bits": [ 24 ]
+        },
+        "bead_trap_flush": {
+          "direction": "input",
+          "bits": [ 25 ]
+        },
+        "collect_flush": {
+          "direction": "input",
+          "bits": [ 26 ]
+        },
+        "pump_flush": {
+          "direction": "input",
+          "bits": [ 27, 28, 29 ]
+        },
+        "bead_in": {
+          "direction": "input",
+          "bits": [ 30 ]
+        },
+        "buffer_in": {
+          "direction": "input",
+          "bits": [ 31 ]
+        },
+        "cell_in": {
+          "direction": "input",
+          "bits": [ 32 ]
+        },
+        "lysis_in": {
+          "direction": "input",
+          "bits": [ 33 ]
+        },
+        "wash_in": {
+          "direction": "input",
+          "bits": [ 34 ]
+        },
+        "elute_in": {
+          "direction": "input",
+          "bits": [ 35 ]
+        },
+        "collect": {
+          "direction": "output",
+          "bits": [ 36, 37, 38, 39 ]
+        },
+        "waste": {
+          "direction": "output",
+          "bits": [ 40 ]
+        },
+        "bead_out": {
+          "direction": "output",
+          "bits": [ 41 ]
+        },
+        "buffer_out": {
+          "direction": "output",
+          "bits": [ 42 ]
+        },
+        "cell_out": {
+          "direction": "output",
+          "bits": [ 43 ]
+        }
+      },
+      "cells": {
+        "thing": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/mnacidpro_4.v:13.18-21.56",
+            "module": "$paramod\\mnacidpro\\SIZE=s32'00000000000000000000000000000100",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "mnacidpro",
+            "module_src": "benchmarks/library.v:193.1-283.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.chamber[0].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:249.25-274.39",
+            "hdlname": "thing chamber[0].thingy",
+            "module": "mnacidpro_reactor",
+            "module_src": "benchmarks/library.v:158.1-191.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.chamber[0].thingy.p0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy p0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:182.14-182.90"
+          },
+          "connections": {
+            "air_in": [ 13 ],
+            "air_out": [ 44 ],
+            "fluid_in": [ 45 ],
+            "fluid_out": [ 46 ]
+          }
+        },
+        "thing.chamber[0].thingy.p1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy p1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:183.14-183.90"
+          },
+          "connections": {
+            "air_in": [ 14 ],
+            "air_out": [ 47 ],
+            "fluid_in": [ 45 ],
+            "fluid_out": [ 48 ]
+          }
+        },
+        "thing.chamber[0].thingy.p2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy p2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:184.14-184.90"
+          },
+          "connections": {
+            "air_in": [ 15 ],
+            "air_out": [ 49 ],
+            "fluid_in": [ 48 ],
+            "fluid_out": [ 45 ]
+          }
+        },
+        "thing.chamber[0].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:171.9-171.83"
+          },
+          "connections": {
+            "air_in": [ 6 ],
+            "air_out": [ 50 ],
+            "fluid_in": [ 51 ],
+            "fluid_out": [ 52 ]
+          }
+        },
+        "thing.chamber[0].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:186.9-186.95"
+          },
+          "connections": {
+            "air_in": [ 10 ],
+            "air_out": [ 53 ],
+            "fluid_in": [ 45 ],
+            "fluid_out": [ 54 ]
+          }
+        },
+        "thing.chamber[0].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:187.9-187.95"
+          },
+          "connections": {
+            "air_in": [ 11 ],
+            "air_out": [ 55 ],
+            "fluid_in": [ 54 ],
+            "fluid_out": [ 56 ]
+          }
+        },
+        "thing.chamber[0].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:188.9-188.90"
+          },
+          "connections": {
+            "air_in": [ 8 ],
+            "air_out": [ 57 ],
+            "fluid_in": [ 56 ],
+            "fluid_out": [ 40 ]
+          }
+        },
+        "thing.chamber[0].thingy.v13": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v13",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:189.9-189.96"
+          },
+          "connections": {
+            "air_in": [ 12 ],
+            "air_out": [ 58 ],
+            "fluid_in": [ 56 ],
+            "fluid_out": [ 36 ]
+          }
+        },
+        "thing.chamber[0].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:172.9-172.69"
+          },
+          "connections": {
+            "air_in": [ 50 ],
+            "air_out": [ 59 ],
+            "fluid_in": [ 52 ],
+            "fluid_out": [ 60 ]
+          }
+        },
+        "thing.chamber[0].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:173.9-173.81"
+          },
+          "connections": {
+            "air_in": [ 59 ],
+            "air_out": [ 61 ],
+            "fluid_in": [ 60 ],
+            "fluid_out": [ 45 ]
+          }
+        },
+        "thing.chamber[0].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:176.9-176.84"
+          },
+          "connections": {
+            "air_in": [ 7 ],
+            "air_out": [ 62 ],
+            "fluid_in": [ 31 ],
+            "fluid_out": [ 52 ]
+          }
+        },
+        "thing.chamber[0].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:177.9-177.77"
+          },
+          "connections": {
+            "air_in": [ 62 ],
+            "air_out": [ 63 ],
+            "fluid_in": [ 52 ],
+            "fluid_out": [ 64 ]
+          }
+        },
+        "thing.chamber[0].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:178.9-178.74"
+          },
+          "connections": {
+            "air_in": [ 63 ],
+            "air_out": [ 65 ],
+            "fluid_in": [ 32 ],
+            "fluid_out": [ 60 ]
+          }
+        },
+        "thing.chamber[0].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:179.9-179.84"
+          },
+          "connections": {
+            "air_in": [ 65 ],
+            "air_out": [ 66 ],
+            "fluid_in": [ 60 ],
+            "fluid_out": [ 67 ]
+          }
+        },
+        "thing.chamber[0].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:180.9-180.81"
+          },
+          "connections": {
+            "air_in": [ 9 ],
+            "air_out": [ 68 ],
+            "fluid_in": [ 30 ],
+            "fluid_out": [ 54 ]
+          }
+        },
+        "thing.chamber[0].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:181.9-181.83"
+          },
+          "connections": {
+            "air_in": [ 68 ],
+            "air_out": [ 69 ],
+            "fluid_in": [ 54 ],
+            "fluid_out": [ 70 ]
+          }
+        },
+        "thing.chamber[1].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:249.25-274.39",
+            "hdlname": "thing chamber[1].thingy",
+            "module": "mnacidpro_reactor",
+            "module_src": "benchmarks/library.v:158.1-191.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.chamber[1].thingy.p0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy p0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:182.14-182.90"
+          },
+          "connections": {
+            "air_in": [ 44 ],
+            "air_out": [ 71 ],
+            "fluid_in": [ 72 ],
+            "fluid_out": [ 73 ]
+          }
+        },
+        "thing.chamber[1].thingy.p1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy p1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:183.14-183.90"
+          },
+          "connections": {
+            "air_in": [ 47 ],
+            "air_out": [ 74 ],
+            "fluid_in": [ 72 ],
+            "fluid_out": [ 75 ]
+          }
+        },
+        "thing.chamber[1].thingy.p2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy p2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:184.14-184.90"
+          },
+          "connections": {
+            "air_in": [ 49 ],
+            "air_out": [ 76 ],
+            "fluid_in": [ 75 ],
+            "fluid_out": [ 72 ]
+          }
+        },
+        "thing.chamber[1].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:171.9-171.83"
+          },
+          "connections": {
+            "air_in": [ 61 ],
+            "air_out": [ 77 ],
+            "fluid_in": [ 51 ],
+            "fluid_out": [ 78 ]
+          }
+        },
+        "thing.chamber[1].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:186.9-186.95"
+          },
+          "connections": {
+            "air_in": [ 53 ],
+            "air_out": [ 79 ],
+            "fluid_in": [ 72 ],
+            "fluid_out": [ 80 ]
+          }
+        },
+        "thing.chamber[1].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:187.9-187.95"
+          },
+          "connections": {
+            "air_in": [ 55 ],
+            "air_out": [ 81 ],
+            "fluid_in": [ 80 ],
+            "fluid_out": [ 82 ]
+          }
+        },
+        "thing.chamber[1].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:188.9-188.90"
+          },
+          "connections": {
+            "air_in": [ 57 ],
+            "air_out": [ 83 ],
+            "fluid_in": [ 82 ],
+            "fluid_out": [ 40 ]
+          }
+        },
+        "thing.chamber[1].thingy.v13": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v13",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:189.9-189.96"
+          },
+          "connections": {
+            "air_in": [ 58 ],
+            "air_out": [ 84 ],
+            "fluid_in": [ 82 ],
+            "fluid_out": [ 37 ]
+          }
+        },
+        "thing.chamber[1].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:172.9-172.69"
+          },
+          "connections": {
+            "air_in": [ 77 ],
+            "air_out": [ 85 ],
+            "fluid_in": [ 78 ],
+            "fluid_out": [ 86 ]
+          }
+        },
+        "thing.chamber[1].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:173.9-173.81"
+          },
+          "connections": {
+            "air_in": [ 85 ],
+            "air_out": [ 87 ],
+            "fluid_in": [ 86 ],
+            "fluid_out": [ 72 ]
+          }
+        },
+        "thing.chamber[1].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:176.9-176.84"
+          },
+          "connections": {
+            "air_in": [ 66 ],
+            "air_out": [ 88 ],
+            "fluid_in": [ 64 ],
+            "fluid_out": [ 78 ]
+          }
+        },
+        "thing.chamber[1].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:177.9-177.77"
+          },
+          "connections": {
+            "air_in": [ 88 ],
+            "air_out": [ 89 ],
+            "fluid_in": [ 78 ],
+            "fluid_out": [ 90 ]
+          }
+        },
+        "thing.chamber[1].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:178.9-178.74"
+          },
+          "connections": {
+            "air_in": [ 89 ],
+            "air_out": [ 91 ],
+            "fluid_in": [ 67 ],
+            "fluid_out": [ 86 ]
+          }
+        },
+        "thing.chamber[1].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:179.9-179.84"
+          },
+          "connections": {
+            "air_in": [ 91 ],
+            "air_out": [ 92 ],
+            "fluid_in": [ 86 ],
+            "fluid_out": [ 93 ]
+          }
+        },
+        "thing.chamber[1].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:180.9-180.81"
+          },
+          "connections": {
+            "air_in": [ 69 ],
+            "air_out": [ 94 ],
+            "fluid_in": [ 70 ],
+            "fluid_out": [ 80 ]
+          }
+        },
+        "thing.chamber[1].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:181.9-181.83"
+          },
+          "connections": {
+            "air_in": [ 94 ],
+            "air_out": [ 95 ],
+            "fluid_in": [ 80 ],
+            "fluid_out": [ 96 ]
+          }
+        },
+        "thing.chamber[2].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:249.25-274.39",
+            "hdlname": "thing chamber[2].thingy",
+            "module": "mnacidpro_reactor",
+            "module_src": "benchmarks/library.v:158.1-191.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.chamber[2].thingy.p0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy p0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:182.14-182.90"
+          },
+          "connections": {
+            "air_in": [ 71 ],
+            "air_out": [ 97 ],
+            "fluid_in": [ 98 ],
+            "fluid_out": [ 99 ]
+          }
+        },
+        "thing.chamber[2].thingy.p1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy p1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:183.14-183.90"
+          },
+          "connections": {
+            "air_in": [ 74 ],
+            "air_out": [ 100 ],
+            "fluid_in": [ 98 ],
+            "fluid_out": [ 101 ]
+          }
+        },
+        "thing.chamber[2].thingy.p2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy p2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:184.14-184.90"
+          },
+          "connections": {
+            "air_in": [ 76 ],
+            "air_out": [ 102 ],
+            "fluid_in": [ 101 ],
+            "fluid_out": [ 98 ]
+          }
+        },
+        "thing.chamber[2].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:171.9-171.83"
+          },
+          "connections": {
+            "air_in": [ 87 ],
+            "air_out": [ 103 ],
+            "fluid_in": [ 51 ],
+            "fluid_out": [ 104 ]
+          }
+        },
+        "thing.chamber[2].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:186.9-186.95"
+          },
+          "connections": {
+            "air_in": [ 79 ],
+            "air_out": [ 105 ],
+            "fluid_in": [ 98 ],
+            "fluid_out": [ 106 ]
+          }
+        },
+        "thing.chamber[2].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:187.9-187.95"
+          },
+          "connections": {
+            "air_in": [ 81 ],
+            "air_out": [ 107 ],
+            "fluid_in": [ 106 ],
+            "fluid_out": [ 108 ]
+          }
+        },
+        "thing.chamber[2].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:188.9-188.90"
+          },
+          "connections": {
+            "air_in": [ 83 ],
+            "air_out": [ 109 ],
+            "fluid_in": [ 108 ],
+            "fluid_out": [ 40 ]
+          }
+        },
+        "thing.chamber[2].thingy.v13": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v13",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:189.9-189.96"
+          },
+          "connections": {
+            "air_in": [ 84 ],
+            "air_out": [ 110 ],
+            "fluid_in": [ 108 ],
+            "fluid_out": [ 38 ]
+          }
+        },
+        "thing.chamber[2].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:172.9-172.69"
+          },
+          "connections": {
+            "air_in": [ 103 ],
+            "air_out": [ 111 ],
+            "fluid_in": [ 104 ],
+            "fluid_out": [ 112 ]
+          }
+        },
+        "thing.chamber[2].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:173.9-173.81"
+          },
+          "connections": {
+            "air_in": [ 111 ],
+            "air_out": [ 113 ],
+            "fluid_in": [ 112 ],
+            "fluid_out": [ 98 ]
+          }
+        },
+        "thing.chamber[2].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:176.9-176.84"
+          },
+          "connections": {
+            "air_in": [ 92 ],
+            "air_out": [ 114 ],
+            "fluid_in": [ 90 ],
+            "fluid_out": [ 104 ]
+          }
+        },
+        "thing.chamber[2].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:177.9-177.77"
+          },
+          "connections": {
+            "air_in": [ 114 ],
+            "air_out": [ 115 ],
+            "fluid_in": [ 104 ],
+            "fluid_out": [ 116 ]
+          }
+        },
+        "thing.chamber[2].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:178.9-178.74"
+          },
+          "connections": {
+            "air_in": [ 115 ],
+            "air_out": [ 117 ],
+            "fluid_in": [ 93 ],
+            "fluid_out": [ 112 ]
+          }
+        },
+        "thing.chamber[2].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:179.9-179.84"
+          },
+          "connections": {
+            "air_in": [ 117 ],
+            "air_out": [ 118 ],
+            "fluid_in": [ 112 ],
+            "fluid_out": [ 119 ]
+          }
+        },
+        "thing.chamber[2].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:180.9-180.81"
+          },
+          "connections": {
+            "air_in": [ 95 ],
+            "air_out": [ 120 ],
+            "fluid_in": [ 96 ],
+            "fluid_out": [ 106 ]
+          }
+        },
+        "thing.chamber[2].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:181.9-181.83"
+          },
+          "connections": {
+            "air_in": [ 120 ],
+            "air_out": [ 121 ],
+            "fluid_in": [ 106 ],
+            "fluid_out": [ 122 ]
+          }
+        },
+        "thing.chamber[3].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:249.25-274.39",
+            "hdlname": "thing chamber[3].thingy",
+            "module": "mnacidpro_reactor",
+            "module_src": "benchmarks/library.v:158.1-191.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.chamber[3].thingy.p0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy p0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:182.14-182.90"
+          },
+          "connections": {
+            "air_in": [ 97 ],
+            "air_out": [ 27 ],
+            "fluid_in": [ 123 ],
+            "fluid_out": [ 124 ]
+          }
+        },
+        "thing.chamber[3].thingy.p1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy p1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:183.14-183.90"
+          },
+          "connections": {
+            "air_in": [ 100 ],
+            "air_out": [ 28 ],
+            "fluid_in": [ 123 ],
+            "fluid_out": [ 125 ]
+          }
+        },
+        "thing.chamber[3].thingy.p2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy p2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:184.14-184.90"
+          },
+          "connections": {
+            "air_in": [ 102 ],
+            "air_out": [ 29 ],
+            "fluid_in": [ 125 ],
+            "fluid_out": [ 123 ]
+          }
+        },
+        "thing.chamber[3].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:171.9-171.83"
+          },
+          "connections": {
+            "air_in": [ 113 ],
+            "air_out": [ 126 ],
+            "fluid_in": [ 51 ],
+            "fluid_out": [ 127 ]
+          }
+        },
+        "thing.chamber[3].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:186.9-186.95"
+          },
+          "connections": {
+            "air_in": [ 105 ],
+            "air_out": [ 24 ],
+            "fluid_in": [ 123 ],
+            "fluid_out": [ 128 ]
+          }
+        },
+        "thing.chamber[3].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:187.9-187.95"
+          },
+          "connections": {
+            "air_in": [ 107 ],
+            "air_out": [ 25 ],
+            "fluid_in": [ 128 ],
+            "fluid_out": [ 129 ]
+          }
+        },
+        "thing.chamber[3].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:188.9-188.90"
+          },
+          "connections": {
+            "air_in": [ 109 ],
+            "air_out": [ 22 ],
+            "fluid_in": [ 129 ],
+            "fluid_out": [ 40 ]
+          }
+        },
+        "thing.chamber[3].thingy.v13": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v13",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:189.9-189.96"
+          },
+          "connections": {
+            "air_in": [ 110 ],
+            "air_out": [ 26 ],
+            "fluid_in": [ 129 ],
+            "fluid_out": [ 39 ]
+          }
+        },
+        "thing.chamber[3].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:172.9-172.69"
+          },
+          "connections": {
+            "air_in": [ 126 ],
+            "air_out": [ 130 ],
+            "fluid_in": [ 127 ],
+            "fluid_out": [ 131 ]
+          }
+        },
+        "thing.chamber[3].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:173.9-173.81"
+          },
+          "connections": {
+            "air_in": [ 130 ],
+            "air_out": [ 20 ],
+            "fluid_in": [ 131 ],
+            "fluid_out": [ 123 ]
+          }
+        },
+        "thing.chamber[3].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:176.9-176.84"
+          },
+          "connections": {
+            "air_in": [ 118 ],
+            "air_out": [ 132 ],
+            "fluid_in": [ 116 ],
+            "fluid_out": [ 127 ]
+          }
+        },
+        "thing.chamber[3].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:177.9-177.77"
+          },
+          "connections": {
+            "air_in": [ 132 ],
+            "air_out": [ 133 ],
+            "fluid_in": [ 127 ],
+            "fluid_out": [ 134 ]
+          }
+        },
+        "thing.chamber[3].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:178.9-178.74"
+          },
+          "connections": {
+            "air_in": [ 133 ],
+            "air_out": [ 135 ],
+            "fluid_in": [ 119 ],
+            "fluid_out": [ 131 ]
+          }
+        },
+        "thing.chamber[3].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:179.9-179.84"
+          },
+          "connections": {
+            "air_in": [ 135 ],
+            "air_out": [ 21 ],
+            "fluid_in": [ 131 ],
+            "fluid_out": [ 136 ]
+          }
+        },
+        "thing.chamber[3].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:180.9-180.81"
+          },
+          "connections": {
+            "air_in": [ 121 ],
+            "air_out": [ 137 ],
+            "fluid_in": [ 122 ],
+            "fluid_out": [ 128 ]
+          }
+        },
+        "thing.chamber[3].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:181.9-181.83"
+          },
+          "connections": {
+            "air_in": [ 137 ],
+            "air_out": [ 23 ],
+            "fluid_in": [ 128 ],
+            "fluid_out": [ 138 ]
+          }
+        },
+        "thing.dead_bead": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing dead_bead",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:282.9-282.110"
+          },
+          "connections": {
+            "air_in": [ 139 ],
+            "air_out": [ 19 ],
+            "fluid_in": [ 138 ],
+            "fluid_out": [ 41 ]
+          }
+        },
+        "thing.dead_buffer": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing dead_buffer",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:280.9-280.115"
+          },
+          "connections": {
+            "air_in": [ 5 ],
+            "air_out": [ 140 ],
+            "fluid_in": [ 134 ],
+            "fluid_out": [ 42 ]
+          }
+        },
+        "thing.dead_cell": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing dead_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:281.9-281.98"
+          },
+          "connections": {
+            "air_in": [ 140 ],
+            "air_out": [ 139 ],
+            "fluid_in": [ 136 ],
+            "fluid_out": [ 43 ]
+          }
+        },
+        "thing.elute": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing elute",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:244.9-244.98"
+          },
+          "connections": {
+            "air_in": [ 4 ],
+            "air_out": [ 18 ],
+            "fluid_in": [ 35 ],
+            "fluid_out": [ 51 ]
+          }
+        },
+        "thing.lysis": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing lysis",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:242.9-242.98"
+          },
+          "connections": {
+            "air_in": [ 2 ],
+            "air_out": [ 16 ],
+            "fluid_in": [ 33 ],
+            "fluid_out": [ 51 ]
+          }
+        },
+        "thing.wash": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing wash",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:243.9-243.94"
+          },
+          "connections": {
+            "air_in": [ 3 ],
+            "air_out": [ 17 ],
+            "fluid_in": [ 34 ],
+            "fluid_out": [ 51 ]
+          }
+        }
+      },
+      "netnames": {
+        "bead_ctrl": {
+          "hide_name": 0,
+          "bits": [ 9 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:2.57-2.66",
+            "type": "ctrl"
+          }
+        },
+        "bead_flush": {
+          "hide_name": 0,
+          "bits": [ 23 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:5.60-5.70",
+            "type": "flush"
+          }
+        },
+        "bead_in": {
+          "hide_name": 0,
+          "bits": [ 30 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:7.42-7.49",
+            "type": "flow"
+          }
+        },
+        "bead_out": {
+          "hide_name": 0,
+          "bits": [ 41 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:10.50-10.58",
+            "type": "flow"
+          }
+        },
+        "bead_trap_ctrl": {
+          "hide_name": 0,
+          "bits": [ 11 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:2.84-2.98",
+            "type": "ctrl"
+          }
+        },
+        "bead_trap_flush": {
+          "hide_name": 0,
+          "bits": [ 25 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:5.89-5.104",
+            "type": "flush"
+          }
+        },
+        "buffer_in": {
+          "hide_name": 0,
+          "bits": [ 31 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:7.51-7.60",
+            "type": "flow"
+          }
+        },
+        "buffer_out": {
+          "hide_name": 0,
+          "bits": [ 42 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:10.60-10.70",
+            "type": "flow"
+          }
+        },
+        "cell_in": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:7.62-7.69",
+            "type": "flow"
+          }
+        },
+        "cell_out": {
+          "hide_name": 0,
+          "bits": [ 43 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:10.72-10.80",
+            "type": "flow"
+          }
+        },
+        "collect": {
+          "hide_name": 0,
+          "bits": [ 36, 37, 38, 39 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:9.54-9.61",
+            "type": "flow"
+          }
+        },
+        "collect_ctrl": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:2.100-2.112",
+            "type": "ctrl"
+          }
+        },
+        "collect_flush": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:5.106-5.119",
+            "type": "flush"
+          }
+        },
+        "dead_end_ctrl": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:1.73-1.86",
+            "type": "ctrl"
+          }
+        },
+        "dead_end_flush": {
+          "hide_name": 0,
+          "bits": [ 19 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:4.82-4.96",
+            "type": "flush"
+          }
+        },
+        "elute_ctrl": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:1.61-1.71",
+            "type": "ctrl"
+          }
+        },
+        "elute_flush": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:4.69-4.80",
+            "type": "flush"
+          }
+        },
+        "elute_in": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:8.61-8.69",
+            "type": "flow"
+          }
+        },
+        "horiz_ctrl": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:2.33-2.43",
+            "type": "ctrl"
+          }
+        },
+        "horiz_flush": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:5.34-5.45",
+            "type": "flush"
+          }
+        },
+        "loop_exit_ctrl": {
+          "hide_name": 0,
+          "bits": [ 10 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:2.68-2.82",
+            "type": "ctrl"
+          }
+        },
+        "loop_exit_flush": {
+          "hide_name": 0,
+          "bits": [ 24 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:5.72-5.87",
+            "type": "flush"
+          }
+        },
+        "lysis_ctrl": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:1.38-1.48",
+            "type": "ctrl"
+          }
+        },
+        "lysis_flush": {
+          "hide_name": 0,
+          "bits": [ 16 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:4.44-4.55",
+            "type": "flush"
+          }
+        },
+        "lysis_in": {
+          "hide_name": 0,
+          "bits": [ 33 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:8.42-8.50",
+            "type": "flow"
+          }
+        },
+        "pump": {
+          "hide_name": 0,
+          "bits": [ 13, 14, 15 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:3.48-3.52",
+            "type": "ctrl"
+          }
+        },
+        "pump_flush": {
+          "hide_name": 0,
+          "bits": [ 27, 28, 29 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:6.49-6.59",
+            "type": "flush"
+          }
+        },
+        "thing.bead_between": {
+          "hide_name": 0,
+          "bits": [ 30, 70, 96, 122, 138 ],
+          "attributes": {
+            "hdlname": "thing bead_between",
+            "src": "benchmarks/library.v:207.35-207.47",
+            "type": "flow"
+          }
+        },
+        "thing.bead_inter": {
+          "hide_name": 0,
+          "bits": [ 9, 69, 95, 121, 23 ],
+          "attributes": {
+            "hdlname": "thing bead_inter",
+            "src": "benchmarks/library.v:212.18-212.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.bead_trap_inter": {
+          "hide_name": 0,
+          "bits": [ 11, 55, 81, 107, 25 ],
+          "attributes": {
+            "hdlname": "thing bead_trap_inter",
+            "src": "benchmarks/library.v:214.18-214.33",
+            "type": "ctrl"
+          }
+        },
+        "thing.buffer_between": {
+          "hide_name": 0,
+          "bits": [ 31, 64, 90, 116, 134 ],
+          "attributes": {
+            "hdlname": "thing buffer_between",
+            "src": "benchmarks/library.v:207.63-207.77",
+            "type": "flow"
+          }
+        },
+        "thing.cell_between": {
+          "hide_name": 0,
+          "bits": [ 32, 67, 93, 119, 136 ],
+          "attributes": {
+            "hdlname": "thing cell_between",
+            "src": "benchmarks/library.v:207.49-207.61",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.c1": {
+          "hide_name": 0,
+          "bits": [ 50 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy c1",
+            "src": "benchmarks/library.v:170.26-170.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[0].thingy.c2": {
+          "hide_name": 0,
+          "bits": [ 59 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy c2",
+            "src": "benchmarks/library.v:170.30-170.32",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[0].thingy.collect_flush": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy collect_flush",
+            "src": "benchmarks/library.v:163.37-163.50",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[0].thingy.d1": {
+          "hide_name": 0,
+          "bits": [ 62 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy d1",
+            "src": "benchmarks/library.v:175.26-175.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[0].thingy.d2": {
+          "hide_name": 0,
+          "bits": [ 63 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy d2",
+            "src": "benchmarks/library.v:175.29-175.31",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[0].thingy.d3": {
+          "hide_name": 0,
+          "bits": [ 65 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy d3",
+            "src": "benchmarks/library.v:175.32-175.34",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[0].thingy.d5": {
+          "hide_name": 0,
+          "bits": [ 68 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy d5",
+            "src": "benchmarks/library.v:175.35-175.37",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[0].thingy.drive": {
+          "hide_name": 0,
+          "bits": [ 51 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy drive",
+            "src": "benchmarks/library.v:165.27-165.32",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.horiz_flush": {
+          "hide_name": 0,
+          "bits": [ 66 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy horiz_flush",
+            "src": "benchmarks/library.v:162.45-162.56",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[0].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 46 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy j1",
+            "src": "benchmarks/library.v:168.42-168.44",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 48 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy j2",
+            "src": "benchmarks/library.v:168.46-168.48",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.loop_exit_flush": {
+          "hide_name": 0,
+          "bits": [ 53 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy loop_exit_flush",
+            "src": "benchmarks/library.v:163.3-163.18",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[0].thingy.pump_flush": {
+          "hide_name": 0,
+          "bits": [ 44, 47, 49 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy pump_flush",
+            "src": "benchmarks/library.v:164.35-164.45",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[0].thingy.r1": {
+          "hide_name": 0,
+          "bits": [ 45 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy r1",
+            "src": "benchmarks/library.v:168.26-168.28",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.r2": {
+          "hide_name": 0,
+          "bits": [ 60 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy r2",
+            "src": "benchmarks/library.v:168.29-168.31",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.r3": {
+          "hide_name": 0,
+          "bits": [ 52 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy r3",
+            "src": "benchmarks/library.v:168.32-168.34",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.r4": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy r4",
+            "src": "benchmarks/library.v:168.35-168.37",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.r5": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy r5",
+            "src": "benchmarks/library.v:168.38-168.40",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[0].thingy.vertical_flush": {
+          "hide_name": 0,
+          "bits": [ 61 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy vertical_flush",
+            "src": "benchmarks/library.v:162.29-162.43",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[0].thingy.waste_flush": {
+          "hide_name": 0,
+          "bits": [ 57 ],
+          "attributes": {
+            "hdlname": "thing chamber[0].thingy waste_flush",
+            "src": "benchmarks/library.v:162.58-162.69",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[1].thingy.c1": {
+          "hide_name": 0,
+          "bits": [ 77 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy c1",
+            "src": "benchmarks/library.v:170.26-170.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[1].thingy.c2": {
+          "hide_name": 0,
+          "bits": [ 85 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy c2",
+            "src": "benchmarks/library.v:170.30-170.32",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[1].thingy.collect_flush": {
+          "hide_name": 0,
+          "bits": [ 84 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy collect_flush",
+            "src": "benchmarks/library.v:163.37-163.50",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[1].thingy.d1": {
+          "hide_name": 0,
+          "bits": [ 88 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy d1",
+            "src": "benchmarks/library.v:175.26-175.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[1].thingy.d2": {
+          "hide_name": 0,
+          "bits": [ 89 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy d2",
+            "src": "benchmarks/library.v:175.29-175.31",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[1].thingy.d3": {
+          "hide_name": 0,
+          "bits": [ 91 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy d3",
+            "src": "benchmarks/library.v:175.32-175.34",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[1].thingy.d5": {
+          "hide_name": 0,
+          "bits": [ 94 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy d5",
+            "src": "benchmarks/library.v:175.35-175.37",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[1].thingy.horiz_flush": {
+          "hide_name": 0,
+          "bits": [ 92 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy horiz_flush",
+            "src": "benchmarks/library.v:162.45-162.56",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[1].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 73 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy j1",
+            "src": "benchmarks/library.v:168.42-168.44",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[1].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 75 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy j2",
+            "src": "benchmarks/library.v:168.46-168.48",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[1].thingy.loop_exit_flush": {
+          "hide_name": 0,
+          "bits": [ 79 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy loop_exit_flush",
+            "src": "benchmarks/library.v:163.3-163.18",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[1].thingy.pump_flush": {
+          "hide_name": 0,
+          "bits": [ 71, 74, 76 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy pump_flush",
+            "src": "benchmarks/library.v:164.35-164.45",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[1].thingy.r1": {
+          "hide_name": 0,
+          "bits": [ 72 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy r1",
+            "src": "benchmarks/library.v:168.26-168.28",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[1].thingy.r2": {
+          "hide_name": 0,
+          "bits": [ 86 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy r2",
+            "src": "benchmarks/library.v:168.29-168.31",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[1].thingy.r3": {
+          "hide_name": 0,
+          "bits": [ 78 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy r3",
+            "src": "benchmarks/library.v:168.32-168.34",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[1].thingy.r4": {
+          "hide_name": 0,
+          "bits": [ 80 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy r4",
+            "src": "benchmarks/library.v:168.35-168.37",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[1].thingy.r5": {
+          "hide_name": 0,
+          "bits": [ 82 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy r5",
+            "src": "benchmarks/library.v:168.38-168.40",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[1].thingy.vertical_flush": {
+          "hide_name": 0,
+          "bits": [ 87 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy vertical_flush",
+            "src": "benchmarks/library.v:162.29-162.43",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[1].thingy.waste_flush": {
+          "hide_name": 0,
+          "bits": [ 83 ],
+          "attributes": {
+            "hdlname": "thing chamber[1].thingy waste_flush",
+            "src": "benchmarks/library.v:162.58-162.69",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[2].thingy.c1": {
+          "hide_name": 0,
+          "bits": [ 103 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy c1",
+            "src": "benchmarks/library.v:170.26-170.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[2].thingy.c2": {
+          "hide_name": 0,
+          "bits": [ 111 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy c2",
+            "src": "benchmarks/library.v:170.30-170.32",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[2].thingy.collect_flush": {
+          "hide_name": 0,
+          "bits": [ 110 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy collect_flush",
+            "src": "benchmarks/library.v:163.37-163.50",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[2].thingy.d1": {
+          "hide_name": 0,
+          "bits": [ 114 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy d1",
+            "src": "benchmarks/library.v:175.26-175.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[2].thingy.d2": {
+          "hide_name": 0,
+          "bits": [ 115 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy d2",
+            "src": "benchmarks/library.v:175.29-175.31",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[2].thingy.d3": {
+          "hide_name": 0,
+          "bits": [ 117 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy d3",
+            "src": "benchmarks/library.v:175.32-175.34",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[2].thingy.d5": {
+          "hide_name": 0,
+          "bits": [ 120 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy d5",
+            "src": "benchmarks/library.v:175.35-175.37",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[2].thingy.horiz_flush": {
+          "hide_name": 0,
+          "bits": [ 118 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy horiz_flush",
+            "src": "benchmarks/library.v:162.45-162.56",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[2].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 99 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy j1",
+            "src": "benchmarks/library.v:168.42-168.44",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[2].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy j2",
+            "src": "benchmarks/library.v:168.46-168.48",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[2].thingy.loop_exit_flush": {
+          "hide_name": 0,
+          "bits": [ 105 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy loop_exit_flush",
+            "src": "benchmarks/library.v:163.3-163.18",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[2].thingy.pump_flush": {
+          "hide_name": 0,
+          "bits": [ 97, 100, 102 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy pump_flush",
+            "src": "benchmarks/library.v:164.35-164.45",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[2].thingy.r1": {
+          "hide_name": 0,
+          "bits": [ 98 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy r1",
+            "src": "benchmarks/library.v:168.26-168.28",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[2].thingy.r2": {
+          "hide_name": 0,
+          "bits": [ 112 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy r2",
+            "src": "benchmarks/library.v:168.29-168.31",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[2].thingy.r3": {
+          "hide_name": 0,
+          "bits": [ 104 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy r3",
+            "src": "benchmarks/library.v:168.32-168.34",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[2].thingy.r4": {
+          "hide_name": 0,
+          "bits": [ 106 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy r4",
+            "src": "benchmarks/library.v:168.35-168.37",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[2].thingy.r5": {
+          "hide_name": 0,
+          "bits": [ 108 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy r5",
+            "src": "benchmarks/library.v:168.38-168.40",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[2].thingy.vertical_flush": {
+          "hide_name": 0,
+          "bits": [ 113 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy vertical_flush",
+            "src": "benchmarks/library.v:162.29-162.43",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[2].thingy.waste_flush": {
+          "hide_name": 0,
+          "bits": [ 109 ],
+          "attributes": {
+            "hdlname": "thing chamber[2].thingy waste_flush",
+            "src": "benchmarks/library.v:162.58-162.69",
+            "type": "flush"
+          }
+        },
+        "thing.chamber[3].thingy.c1": {
+          "hide_name": 0,
+          "bits": [ 126 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy c1",
+            "src": "benchmarks/library.v:170.26-170.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[3].thingy.c2": {
+          "hide_name": 0,
+          "bits": [ 130 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy c2",
+            "src": "benchmarks/library.v:170.30-170.32",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[3].thingy.d1": {
+          "hide_name": 0,
+          "bits": [ 132 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy d1",
+            "src": "benchmarks/library.v:175.26-175.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[3].thingy.d2": {
+          "hide_name": 0,
+          "bits": [ 133 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy d2",
+            "src": "benchmarks/library.v:175.29-175.31",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[3].thingy.d3": {
+          "hide_name": 0,
+          "bits": [ 135 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy d3",
+            "src": "benchmarks/library.v:175.32-175.34",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[3].thingy.d5": {
+          "hide_name": 0,
+          "bits": [ 137 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy d5",
+            "src": "benchmarks/library.v:175.35-175.37",
+            "type": "ctrl"
+          }
+        },
+        "thing.chamber[3].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 124 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy j1",
+            "src": "benchmarks/library.v:168.42-168.44",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[3].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 125 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy j2",
+            "src": "benchmarks/library.v:168.46-168.48",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[3].thingy.r1": {
+          "hide_name": 0,
+          "bits": [ 123 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy r1",
+            "src": "benchmarks/library.v:168.26-168.28",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[3].thingy.r2": {
+          "hide_name": 0,
+          "bits": [ 131 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy r2",
+            "src": "benchmarks/library.v:168.29-168.31",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[3].thingy.r3": {
+          "hide_name": 0,
+          "bits": [ 127 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy r3",
+            "src": "benchmarks/library.v:168.32-168.34",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[3].thingy.r4": {
+          "hide_name": 0,
+          "bits": [ 128 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy r4",
+            "src": "benchmarks/library.v:168.35-168.37",
+            "type": "flow"
+          }
+        },
+        "thing.chamber[3].thingy.r5": {
+          "hide_name": 0,
+          "bits": [ 129 ],
+          "attributes": {
+            "hdlname": "thing chamber[3].thingy r5",
+            "src": "benchmarks/library.v:168.38-168.40",
+            "type": "flow"
+          }
+        },
+        "thing.e1": {
+          "hide_name": 0,
+          "bits": [ 140 ],
+          "attributes": {
+            "hdlname": "thing e1",
+            "src": "benchmarks/library.v:279.26-279.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.e2": {
+          "hide_name": 0,
+          "bits": [ 139 ],
+          "attributes": {
+            "hdlname": "thing e2",
+            "src": "benchmarks/library.v:279.30-279.32",
+            "type": "ctrl"
+          }
+        },
+        "vertical_ctrl": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:2.18-2.31",
+            "type": "ctrl"
+          }
+        },
+        "vertical_flush": {
+          "hide_name": 0,
+          "bits": [ 20 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:5.18-5.32",
+            "type": "flush"
+          }
+        },
+        "wash_ctrl": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:1.50-1.59",
+            "type": "ctrl"
+          }
+        },
+        "wash_flush": {
+          "hide_name": 0,
+          "bits": [ 17 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:4.57-4.67",
+            "type": "flush"
+          }
+        },
+        "wash_in": {
+          "hide_name": 0,
+          "bits": [ 34 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:8.52-8.59",
+            "type": "flow"
+          }
+        },
+        "waste": {
+          "hide_name": 0,
+          "bits": [ 40 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:10.43-10.48",
+            "type": "flow"
+          }
+        },
+        "waste_ctrl": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:2.45-2.55",
+            "type": "ctrl"
+          }
+        },
+        "waste_flush": {
+          "hide_name": 0,
+          "bits": [ 22 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_4.v:5.47-5.58",
+            "type": "flush"
+          }
+        }
+      }
+    }
+  }
+}

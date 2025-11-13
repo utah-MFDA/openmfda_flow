@@ -1,0 +1,1177 @@
+{
+  "creator": "Yosys 0.55+194 (git sha1 8576d2d14, g++ 8.5.0 -fPIC -O3)",
+  "modules": {
+    "thing": {
+      "attributes": {
+        "dynports": "00000000000000000000000000000001",
+        "top": "00000000000000000000000000000001",
+        "src": "benchmarks/mRNAiso_2.v:1.1-52.10"
+      },
+      "parameter_default_values": {
+        "SIZE": "00000000000000000000000000000010"
+      },
+      "ports": {
+        "beads_in": {
+          "direction": "input",
+          "bits": [ 2, 3 ]
+        },
+        "beads_out": {
+          "direction": "output",
+          "bits": [ 4, 5 ]
+        },
+        "cells_in": {
+          "direction": "input",
+          "bits": [ 6, 7 ]
+        },
+        "cells_out": {
+          "direction": "output",
+          "bits": [ 8, 9 ]
+        },
+        "collect": {
+          "direction": "output",
+          "bits": [ 10, 11 ]
+        },
+        "lysis_buffer_in": {
+          "direction": "input",
+          "bits": [ 12, 13 ]
+        },
+        "lysis_buffer_out": {
+          "direction": "output",
+          "bits": [ 14, 15 ]
+        },
+        "push_line": {
+          "direction": "input",
+          "bits": [ 16, 17 ]
+        },
+        "waste_out": {
+          "direction": "output",
+          "bits": [ 18, 19 ]
+        },
+        "collect_ctrl": {
+          "direction": "input",
+          "bits": [ 20 ]
+        },
+        "lysis_in_ctrl": {
+          "direction": "input",
+          "bits": [ 21 ]
+        },
+        "lysis_out_ctrl": {
+          "direction": "input",
+          "bits": [ 22 ]
+        },
+        "push_ctrl": {
+          "direction": "input",
+          "bits": [ 23 ]
+        },
+        "pump1": {
+          "direction": "input",
+          "bits": [ 24 ]
+        },
+        "pump2": {
+          "direction": "input",
+          "bits": [ 25 ]
+        },
+        "pump3": {
+          "direction": "input",
+          "bits": [ 26 ]
+        },
+        "sep_ctrl": {
+          "direction": "input",
+          "bits": [ 27 ]
+        },
+        "sieve_ctrl": {
+          "direction": "input",
+          "bits": [ 28 ]
+        },
+        "waste_ctrl": {
+          "direction": "input",
+          "bits": [ 29 ]
+        },
+        "beads_ctrl": {
+          "direction": "input",
+          "bits": [ 30 ]
+        },
+        "cells_in_ctrl": {
+          "direction": "input",
+          "bits": [ 31 ]
+        },
+        "cells_out_ctrl": {
+          "direction": "input",
+          "bits": [ 32 ]
+        },
+        "collect_flush": {
+          "direction": "output",
+          "bits": [ 33 ]
+        },
+        "lysis_in_flush": {
+          "direction": "output",
+          "bits": [ 34 ]
+        },
+        "lysis_out_flush": {
+          "direction": "output",
+          "bits": [ 35 ]
+        },
+        "push_flush": {
+          "direction": "output",
+          "bits": [ 36 ]
+        },
+        "pump1_flush": {
+          "direction": "output",
+          "bits": [ 37 ]
+        },
+        "pump2_flush": {
+          "direction": "output",
+          "bits": [ 38 ]
+        },
+        "pump3_flush": {
+          "direction": "output",
+          "bits": [ 39 ]
+        },
+        "sep_flush": {
+          "direction": "output",
+          "bits": [ 40 ]
+        },
+        "sieve_flush": {
+          "direction": "output",
+          "bits": [ 41 ]
+        },
+        "waste_flush": {
+          "direction": "output",
+          "bits": [ 42 ]
+        },
+        "beads_flush": {
+          "direction": "output",
+          "bits": [ 43 ]
+        },
+        "cells_in_flush": {
+          "direction": "output",
+          "bits": [ 44 ]
+        },
+        "cells_out_flush": {
+          "direction": "output",
+          "bits": [ 45 ]
+        }
+      },
+      "cells": {
+        "bank": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/mRNAiso_2.v:28.22-51.61",
+            "module": "$paramod\\mRNAiso_bank\\SIZE=s32'00000000000000000000000000000010",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "mRNAiso_bank",
+            "module_src": "benchmarks/library.v:329.1-437.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "bank.devices[0].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:399.17-434.51",
+            "hdlname": "bank devices[0].thingy",
+            "module": "mRNAiso",
+            "module_src": "benchmarks/library.v:285.1-326.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "bank.devices[0].thingy.vbead_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vbead_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:323.9-323.98"
+          },
+          "connections": {
+            "air_in": [ 31 ],
+            "air_out": [ 46 ],
+            "fluid_in": [ 2 ],
+            "fluid_out": [ 47 ]
+          }
+        },
+        "bank.devices[0].thingy.vbead_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vbead_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:324.9-324.100"
+          },
+          "connections": {
+            "air_in": [ 31 ],
+            "air_out": [ 46 ],
+            "fluid_in": [ 47 ],
+            "fluid_out": [ 4 ]
+          }
+        },
+        "bank.devices[0].thingy.vcell_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vcell_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:314.9-314.104"
+          },
+          "connections": {
+            "air_in": [ 32 ],
+            "air_out": [ 48 ],
+            "fluid_in": [ 6 ],
+            "fluid_out": [ 49 ]
+          }
+        },
+        "bank.devices[0].thingy.vcell_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vcell_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:319.9-319.108"
+          },
+          "connections": {
+            "air_in": [ 33 ],
+            "air_out": [ 50 ],
+            "fluid_in": [ 49 ],
+            "fluid_out": [ 8 ]
+          }
+        },
+        "bank.devices[0].thingy.vcollect": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vcollect",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:312.9-312.101"
+          },
+          "connections": {
+            "air_in": [ 21 ],
+            "air_out": [ 51 ],
+            "fluid_in": [ 52 ],
+            "fluid_out": [ 10 ]
+          }
+        },
+        "bank.devices[0].thingy.vlysis_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vlysis_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:320.9-320.112"
+          },
+          "connections": {
+            "air_in": [ 22 ],
+            "air_out": [ 53 ],
+            "fluid_in": [ 12 ],
+            "fluid_out": [ 54 ]
+          }
+        },
+        "bank.devices[0].thingy.vlysis_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vlysis_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:321.9-321.116"
+          },
+          "connections": {
+            "air_in": [ 23 ],
+            "air_out": [ 55 ],
+            "fluid_in": [ 56 ],
+            "fluid_out": [ 14 ]
+          }
+        },
+        "bank.devices[0].thingy.vpump1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vpump1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:316.9-316.85"
+          },
+          "connections": {
+            "air_in": [ 25 ],
+            "air_out": [ 57 ],
+            "fluid_in": [ 54 ],
+            "fluid_out": [ 49 ]
+          }
+        },
+        "bank.devices[0].thingy.vpump2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vpump2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:317.9-317.85"
+          },
+          "connections": {
+            "air_in": [ 26 ],
+            "air_out": [ 58 ],
+            "fluid_in": [ 49 ],
+            "fluid_out": [ 56 ]
+          }
+        },
+        "bank.devices[0].thingy.vpump3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vpump3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:318.9-318.85"
+          },
+          "connections": {
+            "air_in": [ 27 ],
+            "air_out": [ 59 ],
+            "fluid_in": [ 56 ],
+            "fluid_out": [ 54 ]
+          }
+        },
+        "bank.devices[0].thingy.vpush": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vpush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:315.9-315.94"
+          },
+          "connections": {
+            "air_in": [ 24 ],
+            "air_out": [ 60 ],
+            "fluid_in": [ 16 ],
+            "fluid_out": [ 49 ]
+          }
+        },
+        "bank.devices[0].thingy.vsep": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vsep",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:322.9-322.84"
+          },
+          "connections": {
+            "air_in": [ 28 ],
+            "air_out": [ 61 ],
+            "fluid_in": [ 54 ],
+            "fluid_out": [ 47 ]
+          }
+        },
+        "bank.devices[0].thingy.vsieve": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vsieve",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:325.9-325.90"
+          },
+          "connections": {
+            "air_in": [ 29 ],
+            "air_out": [ 62 ],
+            "fluid_in": [ 47 ],
+            "fluid_out": [ 52 ]
+          }
+        },
+        "bank.devices[0].thingy.vwaste": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[0].thingy vwaste",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:313.9-313.97"
+          },
+          "connections": {
+            "air_in": [ 30 ],
+            "air_out": [ 63 ],
+            "fluid_in": [ 52 ],
+            "fluid_out": [ 18 ]
+          }
+        },
+        "bank.devices[1].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:399.17-434.51",
+            "hdlname": "bank devices[1].thingy",
+            "module": "mRNAiso",
+            "module_src": "benchmarks/library.v:285.1-326.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "bank.devices[1].thingy.vbead_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vbead_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:323.9-323.98"
+          },
+          "connections": {
+            "air_in": [ 46 ],
+            "air_out": [ 44 ],
+            "fluid_in": [ 3 ],
+            "fluid_out": [ 64 ]
+          }
+        },
+        "bank.devices[1].thingy.vbead_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vbead_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:324.9-324.100"
+          },
+          "connections": {
+            "air_in": [ 46 ],
+            "air_out": [ 44 ],
+            "fluid_in": [ 64 ],
+            "fluid_out": [ 5 ]
+          }
+        },
+        "bank.devices[1].thingy.vcell_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vcell_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:314.9-314.104"
+          },
+          "connections": {
+            "air_in": [ 48 ],
+            "air_out": [ 45 ],
+            "fluid_in": [ 7 ],
+            "fluid_out": [ 65 ]
+          }
+        },
+        "bank.devices[1].thingy.vcell_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vcell_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:319.9-319.108"
+          },
+          "connections": {
+            "air_in": [ 50 ],
+            "air_out": [ 66 ],
+            "fluid_in": [ 65 ],
+            "fluid_out": [ 9 ]
+          }
+        },
+        "bank.devices[1].thingy.vcollect": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vcollect",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:312.9-312.101"
+          },
+          "connections": {
+            "air_in": [ 51 ],
+            "air_out": [ 34 ],
+            "fluid_in": [ 67 ],
+            "fluid_out": [ 11 ]
+          }
+        },
+        "bank.devices[1].thingy.vlysis_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vlysis_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:320.9-320.112"
+          },
+          "connections": {
+            "air_in": [ 53 ],
+            "air_out": [ 35 ],
+            "fluid_in": [ 13 ],
+            "fluid_out": [ 68 ]
+          }
+        },
+        "bank.devices[1].thingy.vlysis_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vlysis_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:321.9-321.116"
+          },
+          "connections": {
+            "air_in": [ 55 ],
+            "air_out": [ 36 ],
+            "fluid_in": [ 69 ],
+            "fluid_out": [ 15 ]
+          }
+        },
+        "bank.devices[1].thingy.vpump1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vpump1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:316.9-316.85"
+          },
+          "connections": {
+            "air_in": [ 57 ],
+            "air_out": [ 38 ],
+            "fluid_in": [ 68 ],
+            "fluid_out": [ 65 ]
+          }
+        },
+        "bank.devices[1].thingy.vpump2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vpump2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:317.9-317.85"
+          },
+          "connections": {
+            "air_in": [ 58 ],
+            "air_out": [ 39 ],
+            "fluid_in": [ 65 ],
+            "fluid_out": [ 69 ]
+          }
+        },
+        "bank.devices[1].thingy.vpump3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vpump3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:318.9-318.85"
+          },
+          "connections": {
+            "air_in": [ 59 ],
+            "air_out": [ 40 ],
+            "fluid_in": [ 69 ],
+            "fluid_out": [ 68 ]
+          }
+        },
+        "bank.devices[1].thingy.vpush": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vpush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:315.9-315.94"
+          },
+          "connections": {
+            "air_in": [ 60 ],
+            "air_out": [ 37 ],
+            "fluid_in": [ 17 ],
+            "fluid_out": [ 65 ]
+          }
+        },
+        "bank.devices[1].thingy.vsep": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vsep",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:322.9-322.84"
+          },
+          "connections": {
+            "air_in": [ 61 ],
+            "air_out": [ 41 ],
+            "fluid_in": [ 68 ],
+            "fluid_out": [ 64 ]
+          }
+        },
+        "bank.devices[1].thingy.vsieve": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vsieve",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:325.9-325.90"
+          },
+          "connections": {
+            "air_in": [ 62 ],
+            "air_out": [ 42 ],
+            "fluid_in": [ 64 ],
+            "fluid_out": [ 67 ]
+          }
+        },
+        "bank.devices[1].thingy.vwaste": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank devices[1].thingy vwaste",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:313.9-313.97"
+          },
+          "connections": {
+            "air_in": [ 63 ],
+            "air_out": [ 43 ],
+            "fluid_in": [ 67 ],
+            "fluid_out": [ 19 ]
+          }
+        }
+      },
+      "netnames": {
+        "bank.cells_out_flush": {
+          "hide_name": 0,
+          "bits": [ 66 ],
+          "attributes": {
+            "hdlname": "bank cells_out_flush",
+            "src": "benchmarks/library.v:353.45-353.60",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.beads_flush": {
+          "hide_name": 0,
+          "bits": [ 46 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy beads_flush",
+            "src": "benchmarks/library.v:309.16-309.27",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.cells_in_flush": {
+          "hide_name": 0,
+          "bits": [ 48 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy cells_in_flush",
+            "src": "benchmarks/library.v:309.29-309.43",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.cells_out_flush": {
+          "hide_name": 0,
+          "bits": [ 50 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy cells_out_flush",
+            "src": "benchmarks/library.v:309.45-309.60",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.collect_flush": {
+          "hide_name": 0,
+          "bits": [ 51 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy collect_flush",
+            "src": "benchmarks/library.v:302.42-302.55",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 49 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy j1",
+            "src": "benchmarks/library.v:310.8-310.10"
+          }
+        },
+        "bank.devices[0].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy j2",
+            "src": "benchmarks/library.v:310.11-310.13"
+          }
+        },
+        "bank.devices[0].thingy.j3": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy j3",
+            "src": "benchmarks/library.v:310.14-310.16"
+          }
+        },
+        "bank.devices[0].thingy.j4": {
+          "hide_name": 0,
+          "bits": [ 47 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy j4",
+            "src": "benchmarks/library.v:310.17-310.19"
+          }
+        },
+        "bank.devices[0].thingy.j5": {
+          "hide_name": 0,
+          "bits": [ 52 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy j5",
+            "src": "benchmarks/library.v:310.20-310.22"
+          }
+        },
+        "bank.devices[0].thingy.lysis_in_flush": {
+          "hide_name": 0,
+          "bits": [ 53 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy lysis_in_flush",
+            "src": "benchmarks/library.v:303.16-303.30",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.lysis_out_flush": {
+          "hide_name": 0,
+          "bits": [ 55 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy lysis_out_flush",
+            "src": "benchmarks/library.v:303.32-303.47",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.pump1_flush": {
+          "hide_name": 0,
+          "bits": [ 57 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy pump1_flush",
+            "src": "benchmarks/library.v:305.16-305.27",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.pump2_flush": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy pump2_flush",
+            "src": "benchmarks/library.v:305.29-305.40",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.pump3_flush": {
+          "hide_name": 0,
+          "bits": [ 59 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy pump3_flush",
+            "src": "benchmarks/library.v:305.42-305.53",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.push_flush": {
+          "hide_name": 0,
+          "bits": [ 60 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy push_flush",
+            "src": "benchmarks/library.v:304.16-304.26",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.sep_flush": {
+          "hide_name": 0,
+          "bits": [ 61 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy sep_flush",
+            "src": "benchmarks/library.v:306.16-306.25",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.sieve_flush": {
+          "hide_name": 0,
+          "bits": [ 62 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy sieve_flush",
+            "src": "benchmarks/library.v:307.16-307.27",
+            "type": "flush"
+          }
+        },
+        "bank.devices[0].thingy.waste_flush": {
+          "hide_name": 0,
+          "bits": [ 63 ],
+          "attributes": {
+            "hdlname": "bank devices[0].thingy waste_flush",
+            "src": "benchmarks/library.v:308.16-308.27",
+            "type": "flush"
+          }
+        },
+        "bank.devices[1].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 65 ],
+          "attributes": {
+            "hdlname": "bank devices[1].thingy j1",
+            "src": "benchmarks/library.v:310.8-310.10"
+          }
+        },
+        "bank.devices[1].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 69 ],
+          "attributes": {
+            "hdlname": "bank devices[1].thingy j2",
+            "src": "benchmarks/library.v:310.11-310.13"
+          }
+        },
+        "bank.devices[1].thingy.j3": {
+          "hide_name": 0,
+          "bits": [ 68 ],
+          "attributes": {
+            "hdlname": "bank devices[1].thingy j3",
+            "src": "benchmarks/library.v:310.14-310.16"
+          }
+        },
+        "bank.devices[1].thingy.j4": {
+          "hide_name": 0,
+          "bits": [ 64 ],
+          "attributes": {
+            "hdlname": "bank devices[1].thingy j4",
+            "src": "benchmarks/library.v:310.17-310.19"
+          }
+        },
+        "bank.devices[1].thingy.j5": {
+          "hide_name": 0,
+          "bits": [ 67 ],
+          "attributes": {
+            "hdlname": "bank devices[1].thingy j5",
+            "src": "benchmarks/library.v:310.20-310.22"
+          }
+        },
+        "beads_ctrl": {
+          "hide_name": 0,
+          "bits": [ 30 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:17.16-17.26",
+            "type": "ctrl"
+          }
+        },
+        "beads_flush": {
+          "hide_name": 0,
+          "bits": [ 43 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:25.16-25.27",
+            "type": "flush"
+          }
+        },
+        "beads_in": {
+          "hide_name": 0,
+          "bits": [ 2, 3 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:1.48-1.56",
+            "type": "flow"
+          }
+        },
+        "beads_out": {
+          "hide_name": 0,
+          "bits": [ 4, 5 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:2.51-2.60",
+            "type": "flow"
+          }
+        },
+        "cells_in": {
+          "hide_name": 0,
+          "bits": [ 6, 7 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:3.49-3.57",
+            "type": "flow"
+          }
+        },
+        "cells_in_ctrl": {
+          "hide_name": 0,
+          "bits": [ 31 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:17.28-17.41",
+            "type": "ctrl"
+          }
+        },
+        "cells_in_flush": {
+          "hide_name": 0,
+          "bits": [ 44 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:25.29-25.43",
+            "type": "flush"
+          }
+        },
+        "cells_out": {
+          "hide_name": 0,
+          "bits": [ 8, 9 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:4.51-4.60",
+            "type": "flow"
+          }
+        },
+        "cells_out_ctrl": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:17.43-17.57",
+            "type": "ctrl"
+          }
+        },
+        "cells_out_flush": {
+          "hide_name": 0,
+          "bits": [ 45 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:25.45-25.60",
+            "type": "flush"
+          }
+        },
+        "collect": {
+          "hide_name": 0,
+          "bits": [ 10, 11 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:5.51-5.58",
+            "type": "flow"
+          }
+        },
+        "collect_ctrl": {
+          "hide_name": 0,
+          "bits": [ 20 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:10.40-10.52",
+            "type": "ctrl"
+          }
+        },
+        "collect_flush": {
+          "hide_name": 0,
+          "bits": [ 33 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:18.42-18.55",
+            "type": "flush"
+          }
+        },
+        "lysis_buffer_in": {
+          "hide_name": 0,
+          "bits": [ 12, 13 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:6.50-6.65",
+            "type": "flow"
+          }
+        },
+        "lysis_buffer_out": {
+          "hide_name": 0,
+          "bits": [ 14, 15 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:7.51-7.67",
+            "type": "flow"
+          }
+        },
+        "lysis_in_ctrl": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:11.16-11.29",
+            "type": "ctrl"
+          }
+        },
+        "lysis_in_flush": {
+          "hide_name": 0,
+          "bits": [ 34 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:19.16-19.30",
+            "type": "flush"
+          }
+        },
+        "lysis_out_ctrl": {
+          "hide_name": 0,
+          "bits": [ 22 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:11.31-11.45",
+            "type": "ctrl"
+          }
+        },
+        "lysis_out_flush": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:19.32-19.47",
+            "type": "flush"
+          }
+        },
+        "pump1": {
+          "hide_name": 0,
+          "bits": [ 24 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:13.16-13.21",
+            "type": "ctrl"
+          }
+        },
+        "pump1_flush": {
+          "hide_name": 0,
+          "bits": [ 37 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:21.16-21.27",
+            "type": "flush"
+          }
+        },
+        "pump2": {
+          "hide_name": 0,
+          "bits": [ 25 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:13.23-13.28",
+            "type": "ctrl"
+          }
+        },
+        "pump2_flush": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:21.29-21.40",
+            "type": "flush"
+          }
+        },
+        "pump3": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:13.30-13.35",
+            "type": "ctrl"
+          }
+        },
+        "pump3_flush": {
+          "hide_name": 0,
+          "bits": [ 39 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:21.42-21.53",
+            "type": "flush"
+          }
+        },
+        "push_ctrl": {
+          "hide_name": 0,
+          "bits": [ 23 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:12.16-12.25",
+            "type": "ctrl"
+          }
+        },
+        "push_flush": {
+          "hide_name": 0,
+          "bits": [ 36 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:20.16-20.26",
+            "type": "flush"
+          }
+        },
+        "push_line": {
+          "hide_name": 0,
+          "bits": [ 16, 17 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:8.50-8.59",
+            "type": "flow"
+          }
+        },
+        "sep_ctrl": {
+          "hide_name": 0,
+          "bits": [ 27 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:14.16-14.24",
+            "type": "ctrl"
+          }
+        },
+        "sep_flush": {
+          "hide_name": 0,
+          "bits": [ 40 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:22.16-22.25",
+            "type": "flush"
+          }
+        },
+        "sieve_ctrl": {
+          "hide_name": 0,
+          "bits": [ 28 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:15.16-15.26",
+            "type": "ctrl"
+          }
+        },
+        "sieve_flush": {
+          "hide_name": 0,
+          "bits": [ 41 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:23.16-23.27",
+            "type": "flush"
+          }
+        },
+        "waste_ctrl": {
+          "hide_name": 0,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:16.16-16.26",
+            "type": "ctrl"
+          }
+        },
+        "waste_flush": {
+          "hide_name": 0,
+          "bits": [ 42 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:24.16-24.27",
+            "type": "flush"
+          }
+        },
+        "waste_out": {
+          "hide_name": 0,
+          "bits": [ 18, 19 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_2.v:9.51-9.60",
+            "type": "flow"
+          }
+        }
+      }
+    }
+  }
+}
