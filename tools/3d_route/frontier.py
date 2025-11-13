@@ -337,7 +337,8 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
     ashell =  G.nodes[relative]["shell"]
     if direction(ashell, shell) and abs(ashell - shell) > 1:
         relations = G.nodes[relative][orientation]
-        dist = 2*(abs(ashell - shell))
+        # dist = 2*(abs(ashell - shell))
+        dist = abs(ashell - shell)
         group = relations.intersection(frontier)
         minim = []
         if len(group) > 1:
@@ -747,7 +748,7 @@ if __name__ == "__main__":
     log.info("Loaded %s", g)
 
     bound = bounded
-    start = lambda G, n: (is_input_port(G, n) or is_output_port(G, n)) and is_flow(G, n)
+    start = lambda G, n: (is_input_port(G, n) or is_output_port(G, n) or is_inout_port(G, n)) and is_flow(G, n)
     buffer = lambda G, n: False
     if args.add_buffers:
         buffer = lambda G, node: not any(is_descendent(G, adj, node) for adj in G.adj[node])
