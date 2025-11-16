@@ -51,9 +51,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_10__0*/
+			/*Node $_13__0*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [0, 15, -5]) {
+				translate(v = [0, 13, -7]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -63,9 +63,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_13__0*/
+			/*Node $_10__0*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [0, 13, -7]) {
+				translate(v = [0, 15, -5]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -126,8 +126,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_10__0 to $_10__1*/
-			translate(v = [1.5, 16.5, -5.5]) {
+			/*Edge -1 from $_13__0 to $_13__1*/
+			translate(v = [1.5, 14.5, -7.5]) {
 				rotate(a = [0, 54.735610317245346, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -138,8 +138,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_13__0 to $_13__1*/
-			translate(v = [1.5, 14.5, -7.5]) {
+			/*Edge -1 from $_10__0 to $_10__1*/
+			translate(v = [1.5, 16.5, -5.5]) {
 				rotate(a = [0, 54.735610317245346, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -204,9 +204,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_10__1*/
+			/*Node $_13__1*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [1, 16, -6]) {
+				translate(v = [1, 14, -8]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -216,9 +216,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_13__1*/
+			/*Node $_10__1*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [1, 14, -8]) {
+				translate(v = [1, 16, -6]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -279,10 +279,10 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_10__1 to $_10__2*/
-			translate(v = [2.5, 17.5, -6.5]) {
-				rotate(a = [0, 54.735610317245346, -135.0]) {
-					cube(size = [0.125, 0.125, 1.7320508075688772]);
+			/*Edge -1 from $_13__1 to $_13__2*/
+			translate(v = [2.5, 14.5, -7.5]) {
+				rotate(a = [0, 90.0, 180.0]) {
+					cube(size = [0.125, 0.125, 1.0]);
 				}
 			}
 			/*Edge -1 from $_12__1 to $_12__2*/
@@ -291,10 +291,10 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.0]);
 				}
 			}
-			/*Edge -1 from $_13__1 to $_13__2*/
-			translate(v = [2.5, 14.5, -7.5]) {
-				rotate(a = [0, 90.0, 180.0]) {
-					cube(size = [0.125, 0.125, 1.0]);
+			/*Edge -1 from $_10__1 to $_10__2*/
+			translate(v = [2.5, 17.5, -6.5]) {
+				rotate(a = [0, 54.735610317245346, -135.0]) {
+					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
 			/*Edge -1 from $_11__1 to $_11__2*/
@@ -381,9 +381,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_10__2*/
+			/*Node $_13__2*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [2, 17, -7]) {
+				translate(v = [2, 14, -8]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -393,9 +393,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_13__2*/
+			/*Node $_10__2*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [2, 14, -8]) {
+				translate(v = [2, 17, -7]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -492,8 +492,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_10__2 to $_10__3*/
-			translate(v = [3.5, 18.5, -7.5]) {
+			/*Edge -1 from $_13__2 to $_13__3*/
+			translate(v = [3.5, 15.5, -8.5]) {
 				rotate(a = [0, 54.735610317245346, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -504,8 +504,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_13__2 to $_13__3*/
-			translate(v = [3.5, 15.5, -8.5]) {
+			/*Edge -1 from $_10__2 to $_10__3*/
+			translate(v = [3.5, 18.5, -7.5]) {
 				rotate(a = [0, 54.735610317245346, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -558,9 +558,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_10__3*/
+			/*Node $_13__3*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [3, 18, -8]) {
+				translate(v = [3, 15, -9]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -570,9 +570,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_13__3*/
+			/*Node $_10__3*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [3, 15, -9]) {
+				translate(v = [3, 18, -8]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -621,8 +621,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.0]);
 				}
 			}
-			/*Edge -1 from $_10__3 to $_10__4*/
-			translate(v = [4.5, 18.5, -7.5]) {
+			/*Edge -1 from $_13__3 to $_13__4*/
+			translate(v = [4.5, 15.5, -8.5]) {
 				rotate(a = [0, 90.0, 180.0]) {
 					cube(size = [0.125, 0.125, 1.0]);
 				}
@@ -633,8 +633,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.0]);
 				}
 			}
-			/*Edge -1 from $_13__3 to $_13__4*/
-			translate(v = [4.5, 15.5, -8.5]) {
+			/*Edge -1 from $_10__3 to $_10__4*/
+			translate(v = [4.5, 18.5, -7.5]) {
 				rotate(a = [0, 90.0, 180.0]) {
 					cube(size = [0.125, 0.125, 1.0]);
 				}
@@ -681,9 +681,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_10__4*/
+			/*Node $_13__4*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [4, 18, -8]) {
+				translate(v = [4, 15, -9]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -693,9 +693,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_13__4*/
+			/*Node $_10__4*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [4, 15, -9]) {
+				translate(v = [4, 18, -8]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -744,8 +744,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_10__4 to $_10__5*/
-			translate(v = [5.5, 19.5, -6.5]) {
+			/*Edge -1 from $_13__4 to $_13__5*/
+			translate(v = [5.5, 16.5, -7.5]) {
 				rotate(a = [0, 125.26438968275465, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -756,8 +756,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_13__4 to $_13__5*/
-			translate(v = [5.5, 16.5, -7.5]) {
+			/*Edge -1 from $_10__4 to $_10__5*/
+			translate(v = [5.5, 19.5, -6.5]) {
 				rotate(a = [0, 125.26438968275465, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -786,9 +786,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_10__5*/
+			/*Node $_13__5*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [5, 19, -7]) {
+				translate(v = [5, 16, -8]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -798,9 +798,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_13__5*/
+			/*Node $_10__5*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [5, 16, -8]) {
+				translate(v = [5, 19, -7]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -825,8 +825,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_10__5 to $_10__6*/
-			translate(v = [6.5, 20.5, -5.5]) {
+			/*Edge -1 from $_13__5 to $_13__6*/
+			translate(v = [6.5, 17.5, -6.5]) {
 				rotate(a = [0, 125.26438968275465, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -837,8 +837,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_13__5 to $_13__6*/
-			translate(v = [6.5, 17.5, -6.5]) {
+			/*Edge -1 from $_10__5 to $_10__6*/
+			translate(v = [6.5, 20.5, -5.5]) {
 				rotate(a = [0, 125.26438968275465, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -879,9 +879,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_10__6*/
+			/*Node $_13__6*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [6, 20, -6]) {
+				translate(v = [6, 17, -7]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -891,9 +891,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_13__6*/
+			/*Node $_10__6*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [6, 17, -7]) {
+				translate(v = [6, 20, -6]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -930,8 +930,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_10__6 to $_10__7*/
-			translate(v = [7.5, 21.5, -4.5]) {
+			/*Edge -1 from $_13__6 to $_13__7*/
+			translate(v = [7.5, 18.5, -5.5]) {
 				rotate(a = [0, 125.26438968275465, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -942,8 +942,8 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
 			}
-			/*Edge -1 from $_13__6 to $_13__7*/
-			translate(v = [7.5, 18.5, -5.5]) {
+			/*Edge -1 from $_10__6 to $_10__7*/
+			translate(v = [7.5, 21.5, -4.5]) {
 				rotate(a = [0, 125.26438968275465, -135.0]) {
 					cube(size = [0.125, 0.125, 1.7320508075688772]);
 				}
@@ -984,9 +984,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_10__7*/
+			/*Node $_13__7*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [7, 21, -5]) {
+				translate(v = [7, 18, -6]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
@@ -996,9 +996,9 @@ translate(v = [-0.5, -0.5, 0]) {
 					cube(size = [1, 1, 1]);
 				}
 			}
-			/*Node $_13__7*/
+			/*Node $_10__7*/
 			color(alpha = 0.1, c = "lightblue") {
-				translate(v = [7, 18, -6]) {
+				translate(v = [7, 21, -5]) {
 					cube(size = [1, 1, 1]);
 				}
 			}

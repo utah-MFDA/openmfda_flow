@@ -1,0 +1,29 @@
+module thing(
+  (* type="flow" *) input [SIZE-1:0] pad_flow_in_a, pad_flow_in_b,pad_flow_in_c,
+  (* type="flow" *) output [SIZE-1:0] pad_flow_out_a,pad_flow_out_b, pad_flow_out_c, pad_flow_out_d,
+             (* type="ctrl" *) input [12:0] pad_ctrl_a,
+             (* type="ctrl" *) input [3:0] pad_ctrl_s,
+             (* type="ctrl" *) input [2:0] pad_pump_a,
+             (* type="ctrl" *) input [1:0] pad_pump_b,
+             (* type="flush" *) output [12:0] pad_flush_ctrl_a,
+             (* type="flush" *) output [3:0] pad_flush_ctrl_s,
+             (* type="flush" *) output [2:0] pad_flush_pump_a,
+             (* type="flush" *) output [1:0] pad_flush_pump_b);
+localparam SIZE = 4;
+  kinase_activity_pads #(SIZE) one (
+                                 pad_flow_in_a,
+                                 pad_flow_in_b,
+                                 pad_flow_in_c,
+                                 pad_flow_out_a,
+                                 pad_flow_out_b,
+                                 pad_flow_out_c,
+                                 pad_flow_out_d,
+                                 pad_ctrl_a,
+                                 pad_ctrl_s,
+                                 pad_pump_a,
+                                 pad_pump_b,
+                                 pad_flush_ctrl_a,
+                                 pad_flush_ctrl_s,
+                                 pad_flush_pump_a,
+                                 pad_flush_pump_b);
+endmodule

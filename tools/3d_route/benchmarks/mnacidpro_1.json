@@ -160,7 +160,7 @@
             "TYPE": "module"
           },
           "attributes": {
-            "cell_src": "benchmarks/mnacidpro_1.v:13.18-21.56",
+            "cell_src": "benchmarks/mnacidpro_1.v:13.19-21.56",
             "module": "$paramod\\mnacidpro\\SIZE=s32'00000000000000000000000000000001",
             "module_dynports": "00000000000000000000000000000001",
             "module_hdlname": "mnacidpro",

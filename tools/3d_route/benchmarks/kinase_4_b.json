@@ -1,0 +1,4050 @@
+{
+  "creator": "Yosys 0.55+194 (git sha1 8576d2d14, g++ 8.5.0 -fPIC -O3)",
+  "modules": {
+    "thing": {
+      "attributes": {
+        "dynports": "00000000000000000000000000000001",
+        "top": "00000000000000000000000000000001",
+        "src": "benchmarks/kinase_4_b.v:1.1-29.10"
+      },
+      "ports": {
+        "pad_flow_in_a": {
+          "direction": "input",
+          "bits": [ 2, 3, 4, 5 ]
+        },
+        "pad_flow_in_b": {
+          "direction": "input",
+          "bits": [ 6, 7, 8, 9 ]
+        },
+        "pad_flow_in_c": {
+          "direction": "input",
+          "bits": [ 10, 11, 12, 13 ]
+        },
+        "pad_flow_out_a": {
+          "direction": "output",
+          "bits": [ 14, 15, 16, 17 ]
+        },
+        "pad_flow_out_b": {
+          "direction": "output",
+          "bits": [ 18, 19, 20, 21 ]
+        },
+        "pad_flow_out_c": {
+          "direction": "output",
+          "bits": [ 22, 23, 24, 25 ]
+        },
+        "pad_flow_out_d": {
+          "direction": "output",
+          "bits": [ 26, 27, 28, 29 ]
+        },
+        "pad_ctrl_a": {
+          "direction": "input",
+          "bits": [ 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42 ]
+        },
+        "pad_ctrl_s": {
+          "direction": "input",
+          "bits": [ 43, 44, 45, 46 ]
+        },
+        "pad_pump_a": {
+          "direction": "input",
+          "bits": [ 47, 48, 49 ]
+        },
+        "pad_pump_b": {
+          "direction": "input",
+          "bits": [ 50, 51 ]
+        },
+        "pad_flush_ctrl_a": {
+          "direction": "output",
+          "bits": [ 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64 ]
+        },
+        "pad_flush_ctrl_s": {
+          "direction": "output",
+          "bits": [ 65, 66, 67, 68 ]
+        },
+        "pad_flush_pump_a": {
+          "direction": "output",
+          "bits": [ 69, 70, 71 ]
+        },
+        "pad_flush_pump_b": {
+          "direction": "output",
+          "bits": [ 72, 73 ]
+        }
+      },
+      "cells": {
+        "one": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/kinase_4_b.v:13.32-28.51",
+            "module": "$paramod\\kinase_activity_pads\\SIZE=s32'00000000000000000000000000000100",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "kinase_activity_pads",
+            "module_src": "benchmarks/library.v:93.1-157.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.ctrl_a[0].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[0].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 74 ],
+            "pad": [ 52 ]
+          }
+        },
+        "one.ctrl_a[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 75 ],
+            "pad": [ 30 ]
+          }
+        },
+        "one.ctrl_a[10].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[10].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 76 ],
+            "pad": [ 62 ]
+          }
+        },
+        "one.ctrl_a[10].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[10].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 77 ],
+            "pad": [ 40 ]
+          }
+        },
+        "one.ctrl_a[11].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[11].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 78 ],
+            "pad": [ 63 ]
+          }
+        },
+        "one.ctrl_a[11].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[11].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 79 ],
+            "pad": [ 41 ]
+          }
+        },
+        "one.ctrl_a[12].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[12].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 80 ],
+            "pad": [ 64 ]
+          }
+        },
+        "one.ctrl_a[12].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[12].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 81 ],
+            "pad": [ 42 ]
+          }
+        },
+        "one.ctrl_a[1].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[1].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 82 ],
+            "pad": [ 53 ]
+          }
+        },
+        "one.ctrl_a[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 83 ],
+            "pad": [ 31 ]
+          }
+        },
+        "one.ctrl_a[2].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[2].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 84 ],
+            "pad": [ 54 ]
+          }
+        },
+        "one.ctrl_a[2].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 85 ],
+            "pad": [ 32 ]
+          }
+        },
+        "one.ctrl_a[3].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[3].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 86 ],
+            "pad": [ 55 ]
+          }
+        },
+        "one.ctrl_a[3].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 87 ],
+            "pad": [ 33 ]
+          }
+        },
+        "one.ctrl_a[4].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[4].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 88 ],
+            "pad": [ 56 ]
+          }
+        },
+        "one.ctrl_a[4].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[4].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 89 ],
+            "pad": [ 34 ]
+          }
+        },
+        "one.ctrl_a[5].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[5].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 90 ],
+            "pad": [ 57 ]
+          }
+        },
+        "one.ctrl_a[5].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[5].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 91 ],
+            "pad": [ 35 ]
+          }
+        },
+        "one.ctrl_a[6].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[6].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 92 ],
+            "pad": [ 58 ]
+          }
+        },
+        "one.ctrl_a[6].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[6].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 93 ],
+            "pad": [ 36 ]
+          }
+        },
+        "one.ctrl_a[7].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[7].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 94 ],
+            "pad": [ 59 ]
+          }
+        },
+        "one.ctrl_a[7].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[7].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 95 ],
+            "pad": [ 37 ]
+          }
+        },
+        "one.ctrl_a[8].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[8].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 96 ],
+            "pad": [ 60 ]
+          }
+        },
+        "one.ctrl_a[8].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[8].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 97 ],
+            "pad": [ 38 ]
+          }
+        },
+        "one.ctrl_a[9].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[9].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:129.20-129.82"
+          },
+          "connections": {
+            "connection": [ 98 ],
+            "pad": [ 61 ]
+          }
+        },
+        "one.ctrl_a[9].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_a[9].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:128.19-128.68"
+          },
+          "connections": {
+            "connection": [ 99 ],
+            "pad": [ 39 ]
+          }
+        },
+        "one.ctrl_s[0].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[0].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:141.20-141.82"
+          },
+          "connections": {
+            "connection": [ 100 ],
+            "pad": [ 65 ]
+          }
+        },
+        "one.ctrl_s[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:140.19-140.68"
+          },
+          "connections": {
+            "connection": [ 101 ],
+            "pad": [ 43 ]
+          }
+        },
+        "one.ctrl_s[1].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[1].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:141.20-141.82"
+          },
+          "connections": {
+            "connection": [ 102 ],
+            "pad": [ 66 ]
+          }
+        },
+        "one.ctrl_s[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:140.19-140.68"
+          },
+          "connections": {
+            "connection": [ 103 ],
+            "pad": [ 44 ]
+          }
+        },
+        "one.ctrl_s[2].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[2].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:141.20-141.82"
+          },
+          "connections": {
+            "connection": [ 104 ],
+            "pad": [ 67 ]
+          }
+        },
+        "one.ctrl_s[2].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:140.19-140.68"
+          },
+          "connections": {
+            "connection": [ 105 ],
+            "pad": [ 45 ]
+          }
+        },
+        "one.ctrl_s[3].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[3].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:141.20-141.82"
+          },
+          "connections": {
+            "connection": [ 106 ],
+            "pad": [ 68 ]
+          }
+        },
+        "one.ctrl_s[3].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one ctrl_s[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:140.19-140.68"
+          },
+          "connections": {
+            "connection": [ 107 ],
+            "pad": [ 46 ]
+          }
+        },
+        "one.pinholes[0].hole_in_a": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].hole_in_a",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:119.23-119.84"
+          },
+          "connections": {
+            "connection": [ 108 ],
+            "pad": [ 2 ]
+          }
+        },
+        "one.pinholes[0].hole_in_b": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].hole_in_b",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:120.23-120.84"
+          },
+          "connections": {
+            "connection": [ 109 ],
+            "pad": [ 6 ]
+          }
+        },
+        "one.pinholes[0].hole_in_c": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].hole_in_c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:121.23-121.84"
+          },
+          "connections": {
+            "connection": [ 110 ],
+            "pad": [ 10 ]
+          }
+        },
+        "one.pinholes[0].hole_out_a": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].hole_out_a",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:122.23-122.87"
+          },
+          "connections": {
+            "connection": [ 111 ],
+            "pad": [ 14 ]
+          }
+        },
+        "one.pinholes[0].hole_out_b": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].hole_out_b",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:123.23-123.87"
+          },
+          "connections": {
+            "connection": [ 112 ],
+            "pad": [ 18 ]
+          }
+        },
+        "one.pinholes[0].hole_out_c": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].hole_out_c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:124.23-124.87"
+          },
+          "connections": {
+            "connection": [ 113 ],
+            "pad": [ 22 ]
+          }
+        },
+        "one.pinholes[0].hole_out_d": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[0].hole_out_d",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:125.23-125.87"
+          },
+          "connections": {
+            "connection": [ 114 ],
+            "pad": [ 26 ]
+          }
+        },
+        "one.pinholes[1].hole_in_a": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[1].hole_in_a",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:119.23-119.84"
+          },
+          "connections": {
+            "connection": [ 115 ],
+            "pad": [ 3 ]
+          }
+        },
+        "one.pinholes[1].hole_in_b": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[1].hole_in_b",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:120.23-120.84"
+          },
+          "connections": {
+            "connection": [ 116 ],
+            "pad": [ 7 ]
+          }
+        },
+        "one.pinholes[1].hole_in_c": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[1].hole_in_c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:121.23-121.84"
+          },
+          "connections": {
+            "connection": [ 117 ],
+            "pad": [ 11 ]
+          }
+        },
+        "one.pinholes[1].hole_out_a": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[1].hole_out_a",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:122.23-122.87"
+          },
+          "connections": {
+            "connection": [ 118 ],
+            "pad": [ 15 ]
+          }
+        },
+        "one.pinholes[1].hole_out_b": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[1].hole_out_b",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:123.23-123.87"
+          },
+          "connections": {
+            "connection": [ 119 ],
+            "pad": [ 19 ]
+          }
+        },
+        "one.pinholes[1].hole_out_c": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[1].hole_out_c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:124.23-124.87"
+          },
+          "connections": {
+            "connection": [ 120 ],
+            "pad": [ 23 ]
+          }
+        },
+        "one.pinholes[1].hole_out_d": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[1].hole_out_d",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:125.23-125.87"
+          },
+          "connections": {
+            "connection": [ 121 ],
+            "pad": [ 27 ]
+          }
+        },
+        "one.pinholes[2].hole_in_a": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[2].hole_in_a",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:119.23-119.84"
+          },
+          "connections": {
+            "connection": [ 122 ],
+            "pad": [ 4 ]
+          }
+        },
+        "one.pinholes[2].hole_in_b": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[2].hole_in_b",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:120.23-120.84"
+          },
+          "connections": {
+            "connection": [ 123 ],
+            "pad": [ 8 ]
+          }
+        },
+        "one.pinholes[2].hole_in_c": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[2].hole_in_c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:121.23-121.84"
+          },
+          "connections": {
+            "connection": [ 124 ],
+            "pad": [ 12 ]
+          }
+        },
+        "one.pinholes[2].hole_out_a": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[2].hole_out_a",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:122.23-122.87"
+          },
+          "connections": {
+            "connection": [ 125 ],
+            "pad": [ 16 ]
+          }
+        },
+        "one.pinholes[2].hole_out_b": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[2].hole_out_b",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:123.23-123.87"
+          },
+          "connections": {
+            "connection": [ 126 ],
+            "pad": [ 20 ]
+          }
+        },
+        "one.pinholes[2].hole_out_c": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[2].hole_out_c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:124.23-124.87"
+          },
+          "connections": {
+            "connection": [ 127 ],
+            "pad": [ 24 ]
+          }
+        },
+        "one.pinholes[2].hole_out_d": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[2].hole_out_d",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:125.23-125.87"
+          },
+          "connections": {
+            "connection": [ 128 ],
+            "pad": [ 28 ]
+          }
+        },
+        "one.pinholes[3].hole_in_a": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[3].hole_in_a",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:119.23-119.84"
+          },
+          "connections": {
+            "connection": [ 129 ],
+            "pad": [ 5 ]
+          }
+        },
+        "one.pinholes[3].hole_in_b": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[3].hole_in_b",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:120.23-120.84"
+          },
+          "connections": {
+            "connection": [ 130 ],
+            "pad": [ 9 ]
+          }
+        },
+        "one.pinholes[3].hole_in_c": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[3].hole_in_c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:121.23-121.84"
+          },
+          "connections": {
+            "connection": [ 131 ],
+            "pad": [ 13 ]
+          }
+        },
+        "one.pinholes[3].hole_out_a": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[3].hole_out_a",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:122.23-122.87"
+          },
+          "connections": {
+            "connection": [ 132 ],
+            "pad": [ 17 ]
+          }
+        },
+        "one.pinholes[3].hole_out_b": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[3].hole_out_b",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:123.23-123.87"
+          },
+          "connections": {
+            "connection": [ 133 ],
+            "pad": [ 21 ]
+          }
+        },
+        "one.pinholes[3].hole_out_c": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[3].hole_out_c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:124.23-124.87"
+          },
+          "connections": {
+            "connection": [ 134 ],
+            "pad": [ 25 ]
+          }
+        },
+        "one.pinholes[3].hole_out_d": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pinholes[3].hole_out_d",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:125.23-125.87"
+          },
+          "connections": {
+            "connection": [ 135 ],
+            "pad": [ 29 ]
+          }
+        },
+        "one.pump_a[0].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[0].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:137.20-137.82"
+          },
+          "connections": {
+            "connection": [ 136 ],
+            "pad": [ 69 ]
+          }
+        },
+        "one.pump_a[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:136.19-136.68"
+          },
+          "connections": {
+            "connection": [ 137 ],
+            "pad": [ 47 ]
+          }
+        },
+        "one.pump_a[1].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[1].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:137.20-137.82"
+          },
+          "connections": {
+            "connection": [ 138 ],
+            "pad": [ 70 ]
+          }
+        },
+        "one.pump_a[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:136.19-136.68"
+          },
+          "connections": {
+            "connection": [ 139 ],
+            "pad": [ 48 ]
+          }
+        },
+        "one.pump_a[2].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[2].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:137.20-137.82"
+          },
+          "connections": {
+            "connection": [ 140 ],
+            "pad": [ 71 ]
+          }
+        },
+        "one.pump_a[2].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_a[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:136.19-136.68"
+          },
+          "connections": {
+            "connection": [ 141 ],
+            "pad": [ 49 ]
+          }
+        },
+        "one.pump_b[0].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_b[0].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:133.20-133.82"
+          },
+          "connections": {
+            "connection": [ 142 ],
+            "pad": [ 72 ]
+          }
+        },
+        "one.pump_b[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_b[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:132.19-132.68"
+          },
+          "connections": {
+            "connection": [ 143 ],
+            "pad": [ 50 ]
+          }
+        },
+        "one.pump_b[1].flush": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_b[1].flush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:133.20-133.82"
+          },
+          "connections": {
+            "connection": [ 144 ],
+            "pad": [ 73 ]
+          }
+        },
+        "one.pump_b[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one pump_b[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:132.19-132.68"
+          },
+          "connections": {
+            "connection": [ 145 ],
+            "pad": [ 51 ]
+          }
+        },
+        "one.thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:144.37-156.88",
+            "hdlname": "one thingy",
+            "module": "$paramod\\kinase_activity_bank\\SIZE=s32'00000000000000000000000000000100",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "kinase_activity_bank",
+            "module_src": "benchmarks/library.v:48.1-92.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.thingy.devices[0].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:81.23-88.82",
+            "hdlname": "one thingy devices[0].thingy",
+            "module": "kinase_activity",
+            "module_src": "benchmarks/library.v:1.1-45.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.thingy.devices[0].thingy.circulate1": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy circulate1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:32.11-32.42"
+          },
+          "connections": {
+            "in": [ 146 ],
+            "out": [ 147 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.circulate2": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy circulate2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:33.11-33.45"
+          },
+          "connections": {
+            "in": [ 148 ],
+            "out": [ 149 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.column_lower": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy column_lower",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:35.11-35.45"
+          },
+          "connections": {
+            "in": [ 150 ],
+            "out": [ 151 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.column_upper": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy column_upper",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:34.11-34.45"
+          },
+          "connections": {
+            "in": [ 152 ],
+            "out": [ 153 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v0": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:18.9-18.99"
+          },
+          "connections": {
+            "air_in": [ 75 ],
+            "air_out": [ 154 ],
+            "fluid_in": [ 155 ],
+            "fluid_out": [ 114 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:19.9-19.96"
+          },
+          "connections": {
+            "air_in": [ 83 ],
+            "air_out": [ 156 ],
+            "fluid_in": [ 108 ],
+            "fluid_out": [ 157 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:28.9-28.94"
+          },
+          "connections": {
+            "air_in": [ 77 ],
+            "air_out": [ 158 ],
+            "fluid_in": [ 159 ],
+            "fluid_out": [ 160 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:29.9-29.100"
+          },
+          "connections": {
+            "air_in": [ 79 ],
+            "air_out": [ 161 ],
+            "fluid_in": [ 159 ],
+            "fluid_out": [ 113 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:30.9-30.102"
+          },
+          "connections": {
+            "air_in": [ 81 ],
+            "air_out": [ 162 ],
+            "fluid_in": [ 155 ],
+            "fluid_out": [ 111 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:20.9-20.96"
+          },
+          "connections": {
+            "air_in": [ 85 ],
+            "air_out": [ 163 ],
+            "fluid_in": [ 109 ],
+            "fluid_out": [ 157 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:21.9-21.96"
+          },
+          "connections": {
+            "air_in": [ 87 ],
+            "air_out": [ 164 ],
+            "fluid_in": [ 110 ],
+            "fluid_out": [ 157 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:22.9-22.89"
+          },
+          "connections": {
+            "air_in": [ 89 ],
+            "air_out": [ 165 ],
+            "fluid_in": [ 157 ],
+            "fluid_out": [ 166 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:23.9-23.90"
+          },
+          "connections": {
+            "air_in": [ 91 ],
+            "air_out": [ 167 ],
+            "fluid_in": [ 166 ],
+            "fluid_out": [ 148 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:24.9-24.90"
+          },
+          "connections": {
+            "air_in": [ 93 ],
+            "air_out": [ 168 ],
+            "fluid_in": [ 166 ],
+            "fluid_out": [ 169 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:25.9-25.89"
+          },
+          "connections": {
+            "air_in": [ 95 ],
+            "air_out": [ 170 ],
+            "fluid_in": [ 147 ],
+            "fluid_out": [ 171 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:26.9-26.97"
+          },
+          "connections": {
+            "air_in": [ 97 ],
+            "air_out": [ 172 ],
+            "fluid_in": [ 147 ],
+            "fluid_out": [ 112 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:27.9-27.89"
+          },
+          "connections": {
+            "air_in": [ 99 ],
+            "air_out": [ 173 ],
+            "fluid_in": [ 171 ],
+            "fluid_out": [ 159 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:40.14-40.101"
+          },
+          "connections": {
+            "air_in": [ 137 ],
+            "air_out": [ 174 ],
+            "fluid_in": [ 149 ],
+            "fluid_out": [ 175 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:41.14-41.99"
+          },
+          "connections": {
+            "air_in": [ 139 ],
+            "air_out": [ 176 ],
+            "fluid_in": [ 175 ],
+            "fluid_out": [ 177 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:42.14-42.99"
+          },
+          "connections": {
+            "air_in": [ 141 ],
+            "air_out": [ 178 ],
+            "fluid_in": [ 177 ],
+            "fluid_out": [ 146 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp3": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:43.14-43.99"
+          },
+          "connections": {
+            "air_in": [ 143 ],
+            "air_out": [ 179 ],
+            "fluid_in": [ 180 ],
+            "fluid_out": [ 152 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vp4": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:44.14-44.98"
+          },
+          "connections": {
+            "air_in": [ 145 ],
+            "air_out": [ 181 ],
+            "fluid_in": [ 153 ],
+            "fluid_out": [ 182 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vs0": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:36.15-36.99"
+          },
+          "connections": {
+            "air_in": [ 101 ],
+            "air_out": [ 183 ],
+            "fluid_in": [ 151 ],
+            "fluid_out": [ 155 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vs1": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:37.15-37.99"
+          },
+          "connections": {
+            "air_in": [ 103 ],
+            "air_out": [ 184 ],
+            "fluid_in": [ 169 ],
+            "fluid_out": [ 180 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vs2": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:38.15-38.98"
+          },
+          "connections": {
+            "air_in": [ 105 ],
+            "air_out": [ 185 ],
+            "fluid_in": [ 182 ],
+            "fluid_out": [ 171 ]
+          }
+        },
+        "one.thingy.devices[0].thingy.vs3": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:39.15-39.100"
+          },
+          "connections": {
+            "air_in": [ 107 ],
+            "air_out": [ 186 ],
+            "fluid_in": [ 160 ],
+            "fluid_out": [ 150 ]
+          }
+        },
+        "one.thingy.devices[1].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:81.23-88.82",
+            "hdlname": "one thingy devices[1].thingy",
+            "module": "kinase_activity",
+            "module_src": "benchmarks/library.v:1.1-45.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.thingy.devices[1].thingy.circulate1": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy circulate1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:32.11-32.42"
+          },
+          "connections": {
+            "in": [ 187 ],
+            "out": [ 188 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.circulate2": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy circulate2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:33.11-33.45"
+          },
+          "connections": {
+            "in": [ 189 ],
+            "out": [ 190 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.column_lower": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy column_lower",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:35.11-35.45"
+          },
+          "connections": {
+            "in": [ 191 ],
+            "out": [ 192 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.column_upper": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy column_upper",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:34.11-34.45"
+          },
+          "connections": {
+            "in": [ 193 ],
+            "out": [ 194 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v0": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:18.9-18.99"
+          },
+          "connections": {
+            "air_in": [ 154 ],
+            "air_out": [ 195 ],
+            "fluid_in": [ 196 ],
+            "fluid_out": [ 121 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:19.9-19.96"
+          },
+          "connections": {
+            "air_in": [ 156 ],
+            "air_out": [ 197 ],
+            "fluid_in": [ 115 ],
+            "fluid_out": [ 198 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:28.9-28.94"
+          },
+          "connections": {
+            "air_in": [ 158 ],
+            "air_out": [ 199 ],
+            "fluid_in": [ 200 ],
+            "fluid_out": [ 201 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:29.9-29.100"
+          },
+          "connections": {
+            "air_in": [ 161 ],
+            "air_out": [ 202 ],
+            "fluid_in": [ 200 ],
+            "fluid_out": [ 120 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:30.9-30.102"
+          },
+          "connections": {
+            "air_in": [ 162 ],
+            "air_out": [ 203 ],
+            "fluid_in": [ 196 ],
+            "fluid_out": [ 118 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:20.9-20.96"
+          },
+          "connections": {
+            "air_in": [ 163 ],
+            "air_out": [ 204 ],
+            "fluid_in": [ 116 ],
+            "fluid_out": [ 198 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:21.9-21.96"
+          },
+          "connections": {
+            "air_in": [ 164 ],
+            "air_out": [ 205 ],
+            "fluid_in": [ 117 ],
+            "fluid_out": [ 198 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:22.9-22.89"
+          },
+          "connections": {
+            "air_in": [ 165 ],
+            "air_out": [ 206 ],
+            "fluid_in": [ 198 ],
+            "fluid_out": [ 207 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:23.9-23.90"
+          },
+          "connections": {
+            "air_in": [ 167 ],
+            "air_out": [ 208 ],
+            "fluid_in": [ 207 ],
+            "fluid_out": [ 189 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:24.9-24.90"
+          },
+          "connections": {
+            "air_in": [ 168 ],
+            "air_out": [ 209 ],
+            "fluid_in": [ 207 ],
+            "fluid_out": [ 210 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:25.9-25.89"
+          },
+          "connections": {
+            "air_in": [ 170 ],
+            "air_out": [ 211 ],
+            "fluid_in": [ 188 ],
+            "fluid_out": [ 212 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:26.9-26.97"
+          },
+          "connections": {
+            "air_in": [ 172 ],
+            "air_out": [ 213 ],
+            "fluid_in": [ 188 ],
+            "fluid_out": [ 119 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:27.9-27.89"
+          },
+          "connections": {
+            "air_in": [ 173 ],
+            "air_out": [ 214 ],
+            "fluid_in": [ 212 ],
+            "fluid_out": [ 200 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vp0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:40.14-40.101"
+          },
+          "connections": {
+            "air_in": [ 174 ],
+            "air_out": [ 215 ],
+            "fluid_in": [ 190 ],
+            "fluid_out": [ 216 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vp1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:41.14-41.99"
+          },
+          "connections": {
+            "air_in": [ 176 ],
+            "air_out": [ 217 ],
+            "fluid_in": [ 216 ],
+            "fluid_out": [ 218 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vp2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:42.14-42.99"
+          },
+          "connections": {
+            "air_in": [ 178 ],
+            "air_out": [ 219 ],
+            "fluid_in": [ 218 ],
+            "fluid_out": [ 187 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vp3": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:43.14-43.99"
+          },
+          "connections": {
+            "air_in": [ 179 ],
+            "air_out": [ 220 ],
+            "fluid_in": [ 221 ],
+            "fluid_out": [ 193 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vp4": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:44.14-44.98"
+          },
+          "connections": {
+            "air_in": [ 181 ],
+            "air_out": [ 222 ],
+            "fluid_in": [ 194 ],
+            "fluid_out": [ 223 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vs0": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vs0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:36.15-36.99"
+          },
+          "connections": {
+            "air_in": [ 183 ],
+            "air_out": [ 224 ],
+            "fluid_in": [ 192 ],
+            "fluid_out": [ 196 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vs1": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vs1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:37.15-37.99"
+          },
+          "connections": {
+            "air_in": [ 184 ],
+            "air_out": [ 225 ],
+            "fluid_in": [ 210 ],
+            "fluid_out": [ 221 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vs2": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vs2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:38.15-38.98"
+          },
+          "connections": {
+            "air_in": [ 185 ],
+            "air_out": [ 226 ],
+            "fluid_in": [ 223 ],
+            "fluid_out": [ 212 ]
+          }
+        },
+        "one.thingy.devices[1].thingy.vs3": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vs3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:39.15-39.100"
+          },
+          "connections": {
+            "air_in": [ 186 ],
+            "air_out": [ 227 ],
+            "fluid_in": [ 201 ],
+            "fluid_out": [ 191 ]
+          }
+        },
+        "one.thingy.devices[2].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:81.23-88.82",
+            "hdlname": "one thingy devices[2].thingy",
+            "module": "kinase_activity",
+            "module_src": "benchmarks/library.v:1.1-45.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.thingy.devices[2].thingy.circulate1": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy circulate1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:32.11-32.42"
+          },
+          "connections": {
+            "in": [ 228 ],
+            "out": [ 229 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.circulate2": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy circulate2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:33.11-33.45"
+          },
+          "connections": {
+            "in": [ 230 ],
+            "out": [ 231 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.column_lower": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy column_lower",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:35.11-35.45"
+          },
+          "connections": {
+            "in": [ 232 ],
+            "out": [ 233 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.column_upper": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy column_upper",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:34.11-34.45"
+          },
+          "connections": {
+            "in": [ 234 ],
+            "out": [ 235 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v0": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:18.9-18.99"
+          },
+          "connections": {
+            "air_in": [ 195 ],
+            "air_out": [ 236 ],
+            "fluid_in": [ 237 ],
+            "fluid_out": [ 128 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:19.9-19.96"
+          },
+          "connections": {
+            "air_in": [ 197 ],
+            "air_out": [ 238 ],
+            "fluid_in": [ 122 ],
+            "fluid_out": [ 239 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:28.9-28.94"
+          },
+          "connections": {
+            "air_in": [ 199 ],
+            "air_out": [ 240 ],
+            "fluid_in": [ 241 ],
+            "fluid_out": [ 242 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:29.9-29.100"
+          },
+          "connections": {
+            "air_in": [ 202 ],
+            "air_out": [ 243 ],
+            "fluid_in": [ 241 ],
+            "fluid_out": [ 127 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:30.9-30.102"
+          },
+          "connections": {
+            "air_in": [ 203 ],
+            "air_out": [ 244 ],
+            "fluid_in": [ 237 ],
+            "fluid_out": [ 125 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:20.9-20.96"
+          },
+          "connections": {
+            "air_in": [ 204 ],
+            "air_out": [ 245 ],
+            "fluid_in": [ 123 ],
+            "fluid_out": [ 239 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:21.9-21.96"
+          },
+          "connections": {
+            "air_in": [ 205 ],
+            "air_out": [ 246 ],
+            "fluid_in": [ 124 ],
+            "fluid_out": [ 239 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:22.9-22.89"
+          },
+          "connections": {
+            "air_in": [ 206 ],
+            "air_out": [ 247 ],
+            "fluid_in": [ 239 ],
+            "fluid_out": [ 248 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:23.9-23.90"
+          },
+          "connections": {
+            "air_in": [ 208 ],
+            "air_out": [ 249 ],
+            "fluid_in": [ 248 ],
+            "fluid_out": [ 230 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:24.9-24.90"
+          },
+          "connections": {
+            "air_in": [ 209 ],
+            "air_out": [ 250 ],
+            "fluid_in": [ 248 ],
+            "fluid_out": [ 251 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:25.9-25.89"
+          },
+          "connections": {
+            "air_in": [ 211 ],
+            "air_out": [ 252 ],
+            "fluid_in": [ 229 ],
+            "fluid_out": [ 253 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:26.9-26.97"
+          },
+          "connections": {
+            "air_in": [ 213 ],
+            "air_out": [ 254 ],
+            "fluid_in": [ 229 ],
+            "fluid_out": [ 126 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:27.9-27.89"
+          },
+          "connections": {
+            "air_in": [ 214 ],
+            "air_out": [ 255 ],
+            "fluid_in": [ 253 ],
+            "fluid_out": [ 241 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vp0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:40.14-40.101"
+          },
+          "connections": {
+            "air_in": [ 215 ],
+            "air_out": [ 256 ],
+            "fluid_in": [ 231 ],
+            "fluid_out": [ 257 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vp1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:41.14-41.99"
+          },
+          "connections": {
+            "air_in": [ 217 ],
+            "air_out": [ 258 ],
+            "fluid_in": [ 257 ],
+            "fluid_out": [ 259 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vp2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:42.14-42.99"
+          },
+          "connections": {
+            "air_in": [ 219 ],
+            "air_out": [ 260 ],
+            "fluid_in": [ 259 ],
+            "fluid_out": [ 228 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vp3": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:43.14-43.99"
+          },
+          "connections": {
+            "air_in": [ 220 ],
+            "air_out": [ 261 ],
+            "fluid_in": [ 262 ],
+            "fluid_out": [ 234 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vp4": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:44.14-44.98"
+          },
+          "connections": {
+            "air_in": [ 222 ],
+            "air_out": [ 263 ],
+            "fluid_in": [ 235 ],
+            "fluid_out": [ 264 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vs0": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vs0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:36.15-36.99"
+          },
+          "connections": {
+            "air_in": [ 224 ],
+            "air_out": [ 265 ],
+            "fluid_in": [ 233 ],
+            "fluid_out": [ 237 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vs1": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vs1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:37.15-37.99"
+          },
+          "connections": {
+            "air_in": [ 225 ],
+            "air_out": [ 266 ],
+            "fluid_in": [ 251 ],
+            "fluid_out": [ 262 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vs2": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vs2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:38.15-38.98"
+          },
+          "connections": {
+            "air_in": [ 226 ],
+            "air_out": [ 267 ],
+            "fluid_in": [ 264 ],
+            "fluid_out": [ 253 ]
+          }
+        },
+        "one.thingy.devices[2].thingy.vs3": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vs3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:39.15-39.100"
+          },
+          "connections": {
+            "air_in": [ 227 ],
+            "air_out": [ 268 ],
+            "fluid_in": [ 242 ],
+            "fluid_out": [ 232 ]
+          }
+        },
+        "one.thingy.devices[3].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:81.23-88.82",
+            "hdlname": "one thingy devices[3].thingy",
+            "module": "kinase_activity",
+            "module_src": "benchmarks/library.v:1.1-45.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "one.thingy.devices[3].thingy.circulate1": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy circulate1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:32.11-32.42"
+          },
+          "connections": {
+            "in": [ 269 ],
+            "out": [ 270 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.circulate2": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy circulate2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:33.11-33.45"
+          },
+          "connections": {
+            "in": [ 271 ],
+            "out": [ 272 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.column_lower": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy column_lower",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:35.11-35.45"
+          },
+          "connections": {
+            "in": [ 273 ],
+            "out": [ 274 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.column_upper": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy column_upper",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:34.11-34.45"
+          },
+          "connections": {
+            "in": [ 275 ],
+            "out": [ 276 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v0": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:18.9-18.99"
+          },
+          "connections": {
+            "air_in": [ 236 ],
+            "air_out": [ 74 ],
+            "fluid_in": [ 277 ],
+            "fluid_out": [ 135 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:19.9-19.96"
+          },
+          "connections": {
+            "air_in": [ 238 ],
+            "air_out": [ 82 ],
+            "fluid_in": [ 129 ],
+            "fluid_out": [ 278 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:28.9-28.94"
+          },
+          "connections": {
+            "air_in": [ 240 ],
+            "air_out": [ 76 ],
+            "fluid_in": [ 279 ],
+            "fluid_out": [ 280 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:29.9-29.100"
+          },
+          "connections": {
+            "air_in": [ 243 ],
+            "air_out": [ 78 ],
+            "fluid_in": [ 279 ],
+            "fluid_out": [ 134 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:30.9-30.102"
+          },
+          "connections": {
+            "air_in": [ 244 ],
+            "air_out": [ 80 ],
+            "fluid_in": [ 277 ],
+            "fluid_out": [ 132 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:20.9-20.96"
+          },
+          "connections": {
+            "air_in": [ 245 ],
+            "air_out": [ 84 ],
+            "fluid_in": [ 130 ],
+            "fluid_out": [ 278 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:21.9-21.96"
+          },
+          "connections": {
+            "air_in": [ 246 ],
+            "air_out": [ 86 ],
+            "fluid_in": [ 131 ],
+            "fluid_out": [ 278 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:22.9-22.89"
+          },
+          "connections": {
+            "air_in": [ 247 ],
+            "air_out": [ 88 ],
+            "fluid_in": [ 278 ],
+            "fluid_out": [ 281 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:23.9-23.90"
+          },
+          "connections": {
+            "air_in": [ 249 ],
+            "air_out": [ 90 ],
+            "fluid_in": [ 281 ],
+            "fluid_out": [ 271 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:24.9-24.90"
+          },
+          "connections": {
+            "air_in": [ 250 ],
+            "air_out": [ 92 ],
+            "fluid_in": [ 281 ],
+            "fluid_out": [ 282 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:25.9-25.89"
+          },
+          "connections": {
+            "air_in": [ 252 ],
+            "air_out": [ 94 ],
+            "fluid_in": [ 270 ],
+            "fluid_out": [ 283 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:26.9-26.97"
+          },
+          "connections": {
+            "air_in": [ 254 ],
+            "air_out": [ 96 ],
+            "fluid_in": [ 270 ],
+            "fluid_out": [ 133 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:27.9-27.89"
+          },
+          "connections": {
+            "air_in": [ 255 ],
+            "air_out": [ 98 ],
+            "fluid_in": [ 283 ],
+            "fluid_out": [ 279 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vp0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:40.14-40.101"
+          },
+          "connections": {
+            "air_in": [ 256 ],
+            "air_out": [ 136 ],
+            "fluid_in": [ 272 ],
+            "fluid_out": [ 284 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vp1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:41.14-41.99"
+          },
+          "connections": {
+            "air_in": [ 258 ],
+            "air_out": [ 138 ],
+            "fluid_in": [ 284 ],
+            "fluid_out": [ 285 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vp2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:42.14-42.99"
+          },
+          "connections": {
+            "air_in": [ 260 ],
+            "air_out": [ 140 ],
+            "fluid_in": [ 285 ],
+            "fluid_out": [ 269 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vp3": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:43.14-43.99"
+          },
+          "connections": {
+            "air_in": [ 261 ],
+            "air_out": [ 142 ],
+            "fluid_in": [ 286 ],
+            "fluid_out": [ 275 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vp4": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:44.14-44.98"
+          },
+          "connections": {
+            "air_in": [ 263 ],
+            "air_out": [ 144 ],
+            "fluid_in": [ 276 ],
+            "fluid_out": [ 287 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vs0": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vs0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:36.15-36.99"
+          },
+          "connections": {
+            "air_in": [ 265 ],
+            "air_out": [ 100 ],
+            "fluid_in": [ 274 ],
+            "fluid_out": [ 277 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vs1": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vs1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:37.15-37.99"
+          },
+          "connections": {
+            "air_in": [ 266 ],
+            "air_out": [ 102 ],
+            "fluid_in": [ 282 ],
+            "fluid_out": [ 286 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vs2": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vs2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:38.15-38.98"
+          },
+          "connections": {
+            "air_in": [ 267 ],
+            "air_out": [ 104 ],
+            "fluid_in": [ 287 ],
+            "fluid_out": [ 283 ]
+          }
+        },
+        "one.thingy.devices[3].thingy.vs3": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vs3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:39.15-39.100"
+          },
+          "connections": {
+            "air_in": [ 268 ],
+            "air_out": [ 106 ],
+            "fluid_in": [ 280 ],
+            "fluid_out": [ 273 ]
+          }
+        }
+      },
+      "netnames": {
+        "one.ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 75, 83, 85, 87, 89, 91, 93, 95, 97, 99, 77, 79, 81 ],
+          "attributes": {
+            "hdlname": "one ctrl_a",
+            "src": "benchmarks/library.v:107.32-107.38",
+            "type": "ctrl"
+          }
+        },
+        "one.ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 101, 103, 105, 107 ],
+          "attributes": {
+            "hdlname": "one ctrl_s",
+            "src": "benchmarks/library.v:108.31-108.37",
+            "type": "ctrl"
+          }
+        },
+        "one.flow_in_a": {
+          "hide_name": 0,
+          "bits": [ 108, 115, 122, 129 ],
+          "attributes": {
+            "hdlname": "one flow_in_a",
+            "src": "benchmarks/library.v:105.37-105.46",
+            "type": "flow"
+          }
+        },
+        "one.flow_in_b": {
+          "hide_name": 0,
+          "bits": [ 109, 116, 123, 130 ],
+          "attributes": {
+            "hdlname": "one flow_in_b",
+            "src": "benchmarks/library.v:105.48-105.57",
+            "type": "flow"
+          }
+        },
+        "one.flow_in_c": {
+          "hide_name": 0,
+          "bits": [ 110, 117, 124, 131 ],
+          "attributes": {
+            "hdlname": "one flow_in_c",
+            "src": "benchmarks/library.v:105.58-105.67",
+            "type": "flow"
+          }
+        },
+        "one.flow_out_a": {
+          "hide_name": 0,
+          "bits": [ 111, 118, 125, 132 ],
+          "attributes": {
+            "hdlname": "one flow_out_a",
+            "src": "benchmarks/library.v:106.37-106.47",
+            "type": "flow"
+          }
+        },
+        "one.flow_out_b": {
+          "hide_name": 0,
+          "bits": [ 112, 119, 126, 133 ],
+          "attributes": {
+            "hdlname": "one flow_out_b",
+            "src": "benchmarks/library.v:106.48-106.58",
+            "type": "flow"
+          }
+        },
+        "one.flow_out_c": {
+          "hide_name": 0,
+          "bits": [ 113, 120, 127, 134 ],
+          "attributes": {
+            "hdlname": "one flow_out_c",
+            "src": "benchmarks/library.v:106.60-106.70",
+            "type": "flow"
+          }
+        },
+        "one.flow_out_d": {
+          "hide_name": 0,
+          "bits": [ 114, 121, 128, 135 ],
+          "attributes": {
+            "hdlname": "one flow_out_d",
+            "src": "benchmarks/library.v:106.72-106.82",
+            "type": "flow"
+          }
+        },
+        "one.flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 74, 82, 84, 86, 88, 90, 92, 94, 96, 98, 76, 78, 80 ],
+          "attributes": {
+            "hdlname": "one flush_ctrl_a",
+            "src": "benchmarks/library.v:111.33-111.45",
+            "type": "flush"
+          }
+        },
+        "one.flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 100, 102, 104, 106 ],
+          "attributes": {
+            "hdlname": "one flush_ctrl_s",
+            "src": "benchmarks/library.v:112.32-112.44",
+            "type": "flush"
+          }
+        },
+        "one.flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 136, 138, 140 ],
+          "attributes": {
+            "hdlname": "one flush_pump_a",
+            "src": "benchmarks/library.v:113.32-113.44",
+            "type": "flush"
+          }
+        },
+        "one.flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 142, 144 ],
+          "attributes": {
+            "hdlname": "one flush_pump_b",
+            "src": "benchmarks/library.v:114.32-114.44",
+            "type": "flush"
+          }
+        },
+        "one.pump_a": {
+          "hide_name": 0,
+          "bits": [ 137, 139, 141 ],
+          "attributes": {
+            "hdlname": "one pump_a",
+            "src": "benchmarks/library.v:109.31-109.37",
+            "type": "ctrl"
+          }
+        },
+        "one.pump_b": {
+          "hide_name": 0,
+          "bits": [ 143, 145 ],
+          "attributes": {
+            "hdlname": "one pump_b",
+            "src": "benchmarks/library.v:110.31-110.37",
+            "type": "ctrl"
+          }
+        },
+        "one.thingy.devices[0].thingy.circ2o": {
+          "hide_name": 0,
+          "bits": [ 149 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy circ2o",
+            "src": "benchmarks/library.v:16.26-16.32",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.clo": {
+          "hide_name": 0,
+          "bits": [ 151 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy clo",
+            "src": "benchmarks/library.v:17.31-17.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.cuo": {
+          "hide_name": 0,
+          "bits": [ 153 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy cuo",
+            "src": "benchmarks/library.v:17.26-17.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 154, 156, 163, 164, 165, 167, 168, 170, 172, 173, 158, 161, 162 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy flush_ctrl_a",
+            "src": "benchmarks/library.v:7.57-7.69",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[0].thingy.flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 183, 184, 185, 186 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy flush_ctrl_s",
+            "src": "benchmarks/library.v:8.56-8.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[0].thingy.flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 174, 176, 178 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy flush_pump_a",
+            "src": "benchmarks/library.v:9.56-9.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[0].thingy.flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 179, 181 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy flush_pump_b",
+            "src": "benchmarks/library.v:10.56-10.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[0].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 166 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy j1",
+            "src": "benchmarks/library.v:12.26-12.28",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 171 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy j2",
+            "src": "benchmarks/library.v:12.30-12.32",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.j3": {
+          "hide_name": 0,
+          "bits": [ 159 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy j3",
+            "src": "benchmarks/library.v:12.34-12.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.j4": {
+          "hide_name": 0,
+          "bits": [ 157 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy j4",
+            "src": "benchmarks/library.v:12.38-12.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.j5": {
+          "hide_name": 0,
+          "bits": [ 147 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy j5",
+            "src": "benchmarks/library.v:12.42-12.44",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.v10o": {
+          "hide_name": 0,
+          "bits": [ 160 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v10o",
+            "src": "benchmarks/library.v:13.36-13.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.v5o": {
+          "hide_name": 0,
+          "bits": [ 148 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v5o",
+            "src": "benchmarks/library.v:13.26-13.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.v6o": {
+          "hide_name": 0,
+          "bits": [ 169 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy v6o",
+            "src": "benchmarks/library.v:13.31-13.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp1o": {
+          "hide_name": 0,
+          "bits": [ 175 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp1o",
+            "src": "benchmarks/library.v:15.26-15.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp2o": {
+          "hide_name": 0,
+          "bits": [ 177 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp2o",
+            "src": "benchmarks/library.v:15.32-15.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp3o": {
+          "hide_name": 0,
+          "bits": [ 146 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp3o",
+            "src": "benchmarks/library.v:15.38-15.42",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp4o": {
+          "hide_name": 0,
+          "bits": [ 152 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp4o",
+            "src": "benchmarks/library.v:15.44-15.48",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vp5o": {
+          "hide_name": 0,
+          "bits": [ 182 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vp5o",
+            "src": "benchmarks/library.v:15.50-15.54",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vs1o": {
+          "hide_name": 0,
+          "bits": [ 180 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs1o",
+            "src": "benchmarks/library.v:14.26-14.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vs3o": {
+          "hide_name": 0,
+          "bits": [ 150 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs3o",
+            "src": "benchmarks/library.v:14.32-14.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[0].thingy.vs4o": {
+          "hide_name": 0,
+          "bits": [ 155 ],
+          "attributes": {
+            "hdlname": "one thingy devices[0].thingy vs4o",
+            "src": "benchmarks/library.v:14.38-14.42",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.circ2o": {
+          "hide_name": 0,
+          "bits": [ 190 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy circ2o",
+            "src": "benchmarks/library.v:16.26-16.32",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.clo": {
+          "hide_name": 0,
+          "bits": [ 192 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy clo",
+            "src": "benchmarks/library.v:17.31-17.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.cuo": {
+          "hide_name": 0,
+          "bits": [ 194 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy cuo",
+            "src": "benchmarks/library.v:17.26-17.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 195, 197, 204, 205, 206, 208, 209, 211, 213, 214, 199, 202, 203 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy flush_ctrl_a",
+            "src": "benchmarks/library.v:7.57-7.69",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[1].thingy.flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 224, 225, 226, 227 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy flush_ctrl_s",
+            "src": "benchmarks/library.v:8.56-8.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[1].thingy.flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 215, 217, 219 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy flush_pump_a",
+            "src": "benchmarks/library.v:9.56-9.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[1].thingy.flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 220, 222 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy flush_pump_b",
+            "src": "benchmarks/library.v:10.56-10.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[1].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 207 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy j1",
+            "src": "benchmarks/library.v:12.26-12.28",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 212 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy j2",
+            "src": "benchmarks/library.v:12.30-12.32",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.j3": {
+          "hide_name": 0,
+          "bits": [ 200 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy j3",
+            "src": "benchmarks/library.v:12.34-12.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.j4": {
+          "hide_name": 0,
+          "bits": [ 198 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy j4",
+            "src": "benchmarks/library.v:12.38-12.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.j5": {
+          "hide_name": 0,
+          "bits": [ 188 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy j5",
+            "src": "benchmarks/library.v:12.42-12.44",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.v10o": {
+          "hide_name": 0,
+          "bits": [ 201 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v10o",
+            "src": "benchmarks/library.v:13.36-13.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.v5o": {
+          "hide_name": 0,
+          "bits": [ 189 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v5o",
+            "src": "benchmarks/library.v:13.26-13.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.v6o": {
+          "hide_name": 0,
+          "bits": [ 210 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy v6o",
+            "src": "benchmarks/library.v:13.31-13.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.vp1o": {
+          "hide_name": 0,
+          "bits": [ 216 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp1o",
+            "src": "benchmarks/library.v:15.26-15.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.vp2o": {
+          "hide_name": 0,
+          "bits": [ 218 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp2o",
+            "src": "benchmarks/library.v:15.32-15.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.vp3o": {
+          "hide_name": 0,
+          "bits": [ 187 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp3o",
+            "src": "benchmarks/library.v:15.38-15.42",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.vp4o": {
+          "hide_name": 0,
+          "bits": [ 193 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp4o",
+            "src": "benchmarks/library.v:15.44-15.48",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.vp5o": {
+          "hide_name": 0,
+          "bits": [ 223 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vp5o",
+            "src": "benchmarks/library.v:15.50-15.54",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.vs1o": {
+          "hide_name": 0,
+          "bits": [ 221 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vs1o",
+            "src": "benchmarks/library.v:14.26-14.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.vs3o": {
+          "hide_name": 0,
+          "bits": [ 191 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vs3o",
+            "src": "benchmarks/library.v:14.32-14.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[1].thingy.vs4o": {
+          "hide_name": 0,
+          "bits": [ 196 ],
+          "attributes": {
+            "hdlname": "one thingy devices[1].thingy vs4o",
+            "src": "benchmarks/library.v:14.38-14.42",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.circ2o": {
+          "hide_name": 0,
+          "bits": [ 231 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy circ2o",
+            "src": "benchmarks/library.v:16.26-16.32",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.clo": {
+          "hide_name": 0,
+          "bits": [ 233 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy clo",
+            "src": "benchmarks/library.v:17.31-17.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.cuo": {
+          "hide_name": 0,
+          "bits": [ 235 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy cuo",
+            "src": "benchmarks/library.v:17.26-17.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 236, 238, 245, 246, 247, 249, 250, 252, 254, 255, 240, 243, 244 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy flush_ctrl_a",
+            "src": "benchmarks/library.v:7.57-7.69",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[2].thingy.flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 265, 266, 267, 268 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy flush_ctrl_s",
+            "src": "benchmarks/library.v:8.56-8.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[2].thingy.flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 256, 258, 260 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy flush_pump_a",
+            "src": "benchmarks/library.v:9.56-9.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[2].thingy.flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 261, 263 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy flush_pump_b",
+            "src": "benchmarks/library.v:10.56-10.68",
+            "type": "flush"
+          }
+        },
+        "one.thingy.devices[2].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 248 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy j1",
+            "src": "benchmarks/library.v:12.26-12.28",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 253 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy j2",
+            "src": "benchmarks/library.v:12.30-12.32",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.j3": {
+          "hide_name": 0,
+          "bits": [ 241 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy j3",
+            "src": "benchmarks/library.v:12.34-12.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.j4": {
+          "hide_name": 0,
+          "bits": [ 239 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy j4",
+            "src": "benchmarks/library.v:12.38-12.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.j5": {
+          "hide_name": 0,
+          "bits": [ 229 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy j5",
+            "src": "benchmarks/library.v:12.42-12.44",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.v10o": {
+          "hide_name": 0,
+          "bits": [ 242 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v10o",
+            "src": "benchmarks/library.v:13.36-13.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.v5o": {
+          "hide_name": 0,
+          "bits": [ 230 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v5o",
+            "src": "benchmarks/library.v:13.26-13.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.v6o": {
+          "hide_name": 0,
+          "bits": [ 251 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy v6o",
+            "src": "benchmarks/library.v:13.31-13.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.vp1o": {
+          "hide_name": 0,
+          "bits": [ 257 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp1o",
+            "src": "benchmarks/library.v:15.26-15.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.vp2o": {
+          "hide_name": 0,
+          "bits": [ 259 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp2o",
+            "src": "benchmarks/library.v:15.32-15.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.vp3o": {
+          "hide_name": 0,
+          "bits": [ 228 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp3o",
+            "src": "benchmarks/library.v:15.38-15.42",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.vp4o": {
+          "hide_name": 0,
+          "bits": [ 234 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp4o",
+            "src": "benchmarks/library.v:15.44-15.48",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.vp5o": {
+          "hide_name": 0,
+          "bits": [ 264 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vp5o",
+            "src": "benchmarks/library.v:15.50-15.54",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.vs1o": {
+          "hide_name": 0,
+          "bits": [ 262 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vs1o",
+            "src": "benchmarks/library.v:14.26-14.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.vs3o": {
+          "hide_name": 0,
+          "bits": [ 232 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vs3o",
+            "src": "benchmarks/library.v:14.32-14.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[2].thingy.vs4o": {
+          "hide_name": 0,
+          "bits": [ 237 ],
+          "attributes": {
+            "hdlname": "one thingy devices[2].thingy vs4o",
+            "src": "benchmarks/library.v:14.38-14.42",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.circ2o": {
+          "hide_name": 0,
+          "bits": [ 272 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy circ2o",
+            "src": "benchmarks/library.v:16.26-16.32",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.clo": {
+          "hide_name": 0,
+          "bits": [ 274 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy clo",
+            "src": "benchmarks/library.v:17.31-17.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.cuo": {
+          "hide_name": 0,
+          "bits": [ 276 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy cuo",
+            "src": "benchmarks/library.v:17.26-17.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 281 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy j1",
+            "src": "benchmarks/library.v:12.26-12.28",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 283 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy j2",
+            "src": "benchmarks/library.v:12.30-12.32",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.j3": {
+          "hide_name": 0,
+          "bits": [ 279 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy j3",
+            "src": "benchmarks/library.v:12.34-12.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.j4": {
+          "hide_name": 0,
+          "bits": [ 278 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy j4",
+            "src": "benchmarks/library.v:12.38-12.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.j5": {
+          "hide_name": 0,
+          "bits": [ 270 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy j5",
+            "src": "benchmarks/library.v:12.42-12.44",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.v10o": {
+          "hide_name": 0,
+          "bits": [ 280 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v10o",
+            "src": "benchmarks/library.v:13.36-13.40",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.v5o": {
+          "hide_name": 0,
+          "bits": [ 271 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v5o",
+            "src": "benchmarks/library.v:13.26-13.29",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.v6o": {
+          "hide_name": 0,
+          "bits": [ 282 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy v6o",
+            "src": "benchmarks/library.v:13.31-13.34",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.vp1o": {
+          "hide_name": 0,
+          "bits": [ 284 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp1o",
+            "src": "benchmarks/library.v:15.26-15.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.vp2o": {
+          "hide_name": 0,
+          "bits": [ 285 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp2o",
+            "src": "benchmarks/library.v:15.32-15.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.vp3o": {
+          "hide_name": 0,
+          "bits": [ 269 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp3o",
+            "src": "benchmarks/library.v:15.38-15.42",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.vp4o": {
+          "hide_name": 0,
+          "bits": [ 275 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp4o",
+            "src": "benchmarks/library.v:15.44-15.48",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.vp5o": {
+          "hide_name": 0,
+          "bits": [ 287 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vp5o",
+            "src": "benchmarks/library.v:15.50-15.54",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.vs1o": {
+          "hide_name": 0,
+          "bits": [ 286 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vs1o",
+            "src": "benchmarks/library.v:14.26-14.30",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.vs3o": {
+          "hide_name": 0,
+          "bits": [ 273 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vs3o",
+            "src": "benchmarks/library.v:14.32-14.36",
+            "type": "flow"
+          }
+        },
+        "one.thingy.devices[3].thingy.vs4o": {
+          "hide_name": 0,
+          "bits": [ 277 ],
+          "attributes": {
+            "hdlname": "one thingy devices[3].thingy vs4o",
+            "src": "benchmarks/library.v:14.38-14.42",
+            "type": "flow"
+          }
+        },
+        "pad_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:4.45-4.55",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 43, 44, 45, 46 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:5.44-5.54",
+            "type": "ctrl"
+          }
+        },
+        "pad_flow_in_a": {
+          "hide_name": 0,
+          "bits": [ 2, 3, 4, 5 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:2.38-2.51",
+            "type": "flow"
+          }
+        },
+        "pad_flow_in_b": {
+          "hide_name": 0,
+          "bits": [ 6, 7, 8, 9 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:2.53-2.66",
+            "type": "flow"
+          }
+        },
+        "pad_flow_in_c": {
+          "hide_name": 0,
+          "bits": [ 10, 11, 12, 13 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:2.67-2.80",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out_a": {
+          "hide_name": 0,
+          "bits": [ 14, 15, 16, 17 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:3.39-3.53",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out_b": {
+          "hide_name": 0,
+          "bits": [ 18, 19, 20, 21 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:3.54-3.68",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out_c": {
+          "hide_name": 0,
+          "bits": [ 22, 23, 24, 25 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:3.70-3.84",
+            "type": "flow"
+          }
+        },
+        "pad_flow_out_d": {
+          "hide_name": 0,
+          "bits": [ 26, 27, 28, 29 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:3.86-3.100",
+            "type": "flow"
+          }
+        },
+        "pad_flush_ctrl_a": {
+          "hide_name": 0,
+          "bits": [ 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:8.47-8.63",
+            "type": "flush"
+          }
+        },
+        "pad_flush_ctrl_s": {
+          "hide_name": 0,
+          "bits": [ 65, 66, 67, 68 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:9.46-9.62",
+            "type": "flush"
+          }
+        },
+        "pad_flush_pump_a": {
+          "hide_name": 0,
+          "bits": [ 69, 70, 71 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:10.46-10.62",
+            "type": "flush"
+          }
+        },
+        "pad_flush_pump_b": {
+          "hide_name": 0,
+          "bits": [ 72, 73 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:11.46-11.62",
+            "type": "flush"
+          }
+        },
+        "pad_pump_a": {
+          "hide_name": 0,
+          "bits": [ 47, 48, 49 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:6.44-6.54",
+            "type": "ctrl"
+          }
+        },
+        "pad_pump_b": {
+          "hide_name": 0,
+          "bits": [ 50, 51 ],
+          "attributes": {
+            "src": "benchmarks/kinase_4_b.v:7.44-7.54",
+            "type": "ctrl"
+          }
+        }
+      }
+    }
+  }
+}

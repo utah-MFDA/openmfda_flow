@@ -1,0 +1,3666 @@
+{
+  "creator": "Yosys 0.55+194 (git sha1 8576d2d14, g++ 8.5.0 -fPIC -O3)",
+  "modules": {
+    "thing": {
+      "attributes": {
+        "dynports": "00000000000000000000000000000001",
+        "top": "00000000000000000000000000000001",
+        "src": "benchmarks/ChIP_pads_4_g.v:1.1-66.10"
+      },
+      "parameter_default_values": {
+        "SIZE": "00000000000000000000000000000100"
+      },
+      "ports": {
+        "pad_prep_inlet": {
+          "direction": "input",
+          "bits": [ 2, 3, 4, 5, 6 ]
+        },
+        "pad_ring_inlet": {
+          "direction": "input",
+          "bits": [ 7, 8, 9, 10 ]
+        },
+        "pad_prep_outlet": {
+          "direction": "output",
+          "bits": [ 11, 12 ]
+        },
+        "pad_ring_outlet": {
+          "direction": "output",
+          "bits": [ 13, 14, 15, 16 ]
+        },
+        "pad_collect": {
+          "direction": "output",
+          "bits": [ 17, 18, 19, 20 ]
+        },
+        "pad_bead_in": {
+          "direction": "input",
+          "bits": [ 21 ]
+        },
+        "pad_ctrl_inlet": {
+          "direction": "input",
+          "bits": [ 22, 23, 24, 25, 26 ]
+        },
+        "pad_ctrl_prep_inlet": {
+          "direction": "input",
+          "bits": [ 27 ]
+        },
+        "pad_ctrl_v1": {
+          "direction": "input",
+          "bits": [ 28 ]
+        },
+        "pad_ctrl_v2": {
+          "direction": "input",
+          "bits": [ 29 ]
+        },
+        "pad_ctrl_sv1": {
+          "direction": "input",
+          "bits": [ 30 ]
+        },
+        "pad_ctrl_stage_in": {
+          "direction": "input",
+          "bits": [ 31 ]
+        },
+        "pad_ctrl_stage_out": {
+          "direction": "input",
+          "bits": [ 32 ]
+        },
+        "pad_ctrl_sieve": {
+          "direction": "input",
+          "bits": [ 33 ]
+        },
+        "pad_ctrl_collect": {
+          "direction": "input",
+          "bits": [ 34 ]
+        },
+        "pad_ctrl_stage_inlet": {
+          "direction": "input",
+          "bits": [ 35 ]
+        },
+        "pad_ctrl_stage_outlet": {
+          "direction": "input",
+          "bits": [ 36 ]
+        },
+        "pad_ctrl_bead": {
+          "direction": "input",
+          "bits": [ 37 ]
+        },
+        "pad_ctrl_prep_ringout": {
+          "direction": "input",
+          "bits": [ 38 ]
+        },
+        "pad_ctrl_prep_outlet": {
+          "direction": "input",
+          "bits": [ 39, 40 ]
+        },
+        "pad_pump": {
+          "direction": "input",
+          "bits": [ 41, 42, 43 ]
+        },
+        "pad_flush_inlet": {
+          "direction": "output",
+          "bits": [ 44, 45, 46, 47, 48 ]
+        },
+        "pad_flush_prep_inlet": {
+          "direction": "output",
+          "bits": [ 49 ]
+        },
+        "pad_flush_v1": {
+          "direction": "output",
+          "bits": [ 50 ]
+        },
+        "pad_flush_v2": {
+          "direction": "output",
+          "bits": [ 51 ]
+        },
+        "pad_flush_sv1": {
+          "direction": "output",
+          "bits": [ 52 ]
+        },
+        "pad_flush_stage_in": {
+          "direction": "output",
+          "bits": [ 53 ]
+        },
+        "pad_flush_stage_out": {
+          "direction": "output",
+          "bits": [ 54 ]
+        },
+        "pad_flush_sieve": {
+          "direction": "output",
+          "bits": [ 55 ]
+        },
+        "pad_flush_collect": {
+          "direction": "output",
+          "bits": [ 56 ]
+        },
+        "pad_flush_stage_inlet": {
+          "direction": "output",
+          "bits": [ 57 ]
+        },
+        "pad_flush_stage_outlet": {
+          "direction": "output",
+          "bits": [ 58 ]
+        },
+        "pad_flush_bead": {
+          "direction": "output",
+          "bits": [ 59 ]
+        },
+        "pad_flush_prep_ringout": {
+          "direction": "output",
+          "bits": [ 60 ]
+        },
+        "pad_flush_prep_outlet": {
+          "direction": "output",
+          "bits": [ 61, 62 ]
+        },
+        "pad_flush_pump": {
+          "direction": "output",
+          "bits": [ 63, 64, 65 ]
+        }
+      },
+      "cells": {
+        "thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/ChIP_pads_4_g.v:29.25-65.40",
+            "module": "$paramod\\ChIP_pads\\SIZE=s32'00000000000000000000000000000100",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "ChIP_pads",
+            "module_src": "benchmarks/library.v:862.1-1012.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.collect_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy collect_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:931.22-931.73"
+          },
+          "connections": {
+            "connection": [ 66 ],
+            "pad": [ 17 ]
+          }
+        },
+        "thingy.collect_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy collect_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:931.22-931.73"
+          },
+          "connections": {
+            "connection": [ 67 ],
+            "pad": [ 18 ]
+          }
+        },
+        "thingy.collect_pinholes[2].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy collect_pinholes[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:931.22-931.73"
+          },
+          "connections": {
+            "connection": [ 68 ],
+            "pad": [ 19 ]
+          }
+        },
+        "thingy.collect_pinholes[3].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy collect_pinholes[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:931.22-931.73"
+          },
+          "connections": {
+            "connection": [ 69 ],
+            "pad": [ 20 ]
+          }
+        },
+        "thingy.ctrl_bead_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_bead_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:956.17-956.76"
+          },
+          "connections": {
+            "connection": [ 70 ],
+            "pad": [ 37 ]
+          }
+        },
+        "thingy.ctrl_collect_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_collect_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:953.17-953.85"
+          },
+          "connections": {
+            "connection": [ 71 ],
+            "pad": [ 34 ]
+          }
+        },
+        "thingy.ctrl_inlet_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_inlet_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:941.18-941.75"
+          },
+          "connections": {
+            "connection": [ 72 ],
+            "pad": [ 22 ]
+          }
+        },
+        "thingy.ctrl_inlet_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_inlet_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:941.18-941.75"
+          },
+          "connections": {
+            "connection": [ 73 ],
+            "pad": [ 23 ]
+          }
+        },
+        "thingy.ctrl_inlet_pinholes[2].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_inlet_pinholes[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:941.18-941.75"
+          },
+          "connections": {
+            "connection": [ 74 ],
+            "pad": [ 24 ]
+          }
+        },
+        "thingy.ctrl_inlet_pinholes[3].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_inlet_pinholes[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:941.18-941.75"
+          },
+          "connections": {
+            "connection": [ 75 ],
+            "pad": [ 25 ]
+          }
+        },
+        "thingy.ctrl_inlet_pinholes[4].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_inlet_pinholes[4].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:941.18-941.75"
+          },
+          "connections": {
+            "connection": [ 76 ],
+            "pad": [ 26 ]
+          }
+        },
+        "thingy.ctrl_prep_inlet_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_prep_inlet_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:946.17-946.94"
+          },
+          "connections": {
+            "connection": [ 77 ],
+            "pad": [ 27 ]
+          }
+        },
+        "thingy.ctrl_prep_outlet_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_prep_outlet_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:944.18-944.87"
+          },
+          "connections": {
+            "connection": [ 78 ],
+            "pad": [ 39 ]
+          }
+        },
+        "thingy.ctrl_prep_outlet_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_prep_outlet_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:944.18-944.87"
+          },
+          "connections": {
+            "connection": [ 79 ],
+            "pad": [ 40 ]
+          }
+        },
+        "thingy.ctrl_sieve_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_sieve_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:952.17-952.79"
+          },
+          "connections": {
+            "connection": [ 80 ],
+            "pad": [ 33 ]
+          }
+        },
+        "thingy.ctrl_stage_in_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_stage_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:950.17-950.88"
+          },
+          "connections": {
+            "connection": [ 81 ],
+            "pad": [ 31 ]
+          }
+        },
+        "thingy.ctrl_stage_inlet_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_stage_inlet_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:954.17-954.97"
+          },
+          "connections": {
+            "connection": [ 82 ],
+            "pad": [ 35 ]
+          }
+        },
+        "thingy.ctrl_stage_out_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_stage_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:951.17-951.91"
+          },
+          "connections": {
+            "connection": [ 83 ],
+            "pad": [ 32 ]
+          }
+        },
+        "thingy.ctrl_stage_outlet_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_stage_outlet_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:955.17-955.100"
+          },
+          "connections": {
+            "connection": [ 84 ],
+            "pad": [ 36 ]
+          }
+        },
+        "thingy.ctrl_sv1_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_sv1_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:949.17-949.73"
+          },
+          "connections": {
+            "connection": [ 85 ],
+            "pad": [ 30 ]
+          }
+        },
+        "thingy.ctrl_v1_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_v1_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:947.17-947.70"
+          },
+          "connections": {
+            "connection": [ 86 ],
+            "pad": [ 28 ]
+          }
+        },
+        "thingy.ctrl_v2_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ctrl_v2_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:948.17-948.70"
+          },
+          "connections": {
+            "connection": [ 87 ],
+            "pad": [ 29 ]
+          }
+        },
+        "thingy.flush_bead_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_bead_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:973.18-973.80"
+          },
+          "connections": {
+            "connection": [ 88 ],
+            "pad": [ 59 ]
+          }
+        },
+        "thingy.flush_collect_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_collect_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:970.18-970.89"
+          },
+          "connections": {
+            "connection": [ 89 ],
+            "pad": [ 56 ]
+          }
+        },
+        "thingy.flush_inlet_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_inlet_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:958.19-958.78"
+          },
+          "connections": {
+            "connection": [ 90 ],
+            "pad": [ 44 ]
+          }
+        },
+        "thingy.flush_inlet_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_inlet_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:958.19-958.78"
+          },
+          "connections": {
+            "connection": [ 91 ],
+            "pad": [ 45 ]
+          }
+        },
+        "thingy.flush_inlet_pinholes[2].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_inlet_pinholes[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:958.19-958.78"
+          },
+          "connections": {
+            "connection": [ 92 ],
+            "pad": [ 46 ]
+          }
+        },
+        "thingy.flush_inlet_pinholes[3].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_inlet_pinholes[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:958.19-958.78"
+          },
+          "connections": {
+            "connection": [ 93 ],
+            "pad": [ 47 ]
+          }
+        },
+        "thingy.flush_inlet_pinholes[4].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_inlet_pinholes[4].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:958.19-958.78"
+          },
+          "connections": {
+            "connection": [ 94 ],
+            "pad": [ 48 ]
+          }
+        },
+        "thingy.flush_prep_inlet_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_prep_inlet_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:963.18-963.98"
+          },
+          "connections": {
+            "connection": [ 95 ],
+            "pad": [ 49 ]
+          }
+        },
+        "thingy.flush_prep_outlet_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_prep_outlet_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:961.19-961.90"
+          },
+          "connections": {
+            "connection": [ 96 ],
+            "pad": [ 61 ]
+          }
+        },
+        "thingy.flush_prep_outlet_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_prep_outlet_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:961.19-961.90"
+          },
+          "connections": {
+            "connection": [ 97 ],
+            "pad": [ 62 ]
+          }
+        },
+        "thingy.flush_pump_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_pump_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:938.19-938.76"
+          },
+          "connections": {
+            "connection": [ 98 ],
+            "pad": [ 63 ]
+          }
+        },
+        "thingy.flush_pump_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_pump_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:938.19-938.76"
+          },
+          "connections": {
+            "connection": [ 99 ],
+            "pad": [ 64 ]
+          }
+        },
+        "thingy.flush_pump_pinholes[2].hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_pump_pinholes[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:938.19-938.76"
+          },
+          "connections": {
+            "connection": [ 100 ],
+            "pad": [ 65 ]
+          }
+        },
+        "thingy.flush_sieve_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_sieve_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:969.18-969.83"
+          },
+          "connections": {
+            "connection": [ 101 ],
+            "pad": [ 55 ]
+          }
+        },
+        "thingy.flush_stage_in_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_stage_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:967.18-967.92"
+          },
+          "connections": {
+            "connection": [ 102 ],
+            "pad": [ 53 ]
+          }
+        },
+        "thingy.flush_stage_inlet_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_stage_inlet_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:971.18-971.101"
+          },
+          "connections": {
+            "connection": [ 103 ],
+            "pad": [ 57 ]
+          }
+        },
+        "thingy.flush_stage_out_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_stage_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:968.18-968.95"
+          },
+          "connections": {
+            "connection": [ 104 ],
+            "pad": [ 54 ]
+          }
+        },
+        "thingy.flush_stage_outlet_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_stage_outlet_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:972.18-972.104"
+          },
+          "connections": {
+            "connection": [ 105 ],
+            "pad": [ 58 ]
+          }
+        },
+        "thingy.flush_sv1_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_sv1_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:966.18-966.77"
+          },
+          "connections": {
+            "connection": [ 106 ],
+            "pad": [ 52 ]
+          }
+        },
+        "thingy.flush_v1_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_v1_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:964.18-964.74"
+          },
+          "connections": {
+            "connection": [ 107 ],
+            "pad": [ 50 ]
+          }
+        },
+        "thingy.flush_v2_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy flush_v2_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:965.18-965.74"
+          },
+          "connections": {
+            "connection": [ 108 ],
+            "pad": [ 51 ]
+          }
+        },
+        "thingy.hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:933.21-933.66"
+          },
+          "connections": {
+            "connection": [ 109 ],
+            "pad": [ 21 ]
+          }
+        },
+        "thingy.prep_inlet_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy prep_inlet_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:919.22-919.79"
+          },
+          "connections": {
+            "connection": [ 110 ],
+            "pad": [ 2 ]
+          }
+        },
+        "thingy.prep_inlet_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy prep_inlet_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:919.22-919.79"
+          },
+          "connections": {
+            "connection": [ 111 ],
+            "pad": [ 3 ]
+          }
+        },
+        "thingy.prep_inlet_pinholes[2].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy prep_inlet_pinholes[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:919.22-919.79"
+          },
+          "connections": {
+            "connection": [ 112 ],
+            "pad": [ 4 ]
+          }
+        },
+        "thingy.prep_inlet_pinholes[3].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy prep_inlet_pinholes[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:919.22-919.79"
+          },
+          "connections": {
+            "connection": [ 113 ],
+            "pad": [ 5 ]
+          }
+        },
+        "thingy.prep_inlet_pinholes[4].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy prep_inlet_pinholes[4].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:919.22-919.79"
+          },
+          "connections": {
+            "connection": [ 114 ],
+            "pad": [ 6 ]
+          }
+        },
+        "thingy.prep_outlet_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy prep_outlet_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:925.22-925.81"
+          },
+          "connections": {
+            "connection": [ 115 ],
+            "pad": [ 11 ]
+          }
+        },
+        "thingy.prep_outlet_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy prep_outlet_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:925.22-925.81"
+          },
+          "connections": {
+            "connection": [ 116 ],
+            "pad": [ 12 ]
+          }
+        },
+        "thingy.pump_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy pump_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:935.18-935.63"
+          },
+          "connections": {
+            "connection": [ 117 ],
+            "pad": [ 41 ]
+          }
+        },
+        "thingy.pump_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy pump_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:935.18-935.63"
+          },
+          "connections": {
+            "connection": [ 118 ],
+            "pad": [ 42 ]
+          }
+        },
+        "thingy.pump_pinholes[2].hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy pump_pinholes[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:935.18-935.63"
+          },
+          "connections": {
+            "connection": [ 119 ],
+            "pad": [ 43 ]
+          }
+        },
+        "thingy.ring_inlet_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ring_inlet_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:922.22-922.79"
+          },
+          "connections": {
+            "connection": [ 120 ],
+            "pad": [ 7 ]
+          }
+        },
+        "thingy.ring_inlet_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ring_inlet_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:922.22-922.79"
+          },
+          "connections": {
+            "connection": [ 121 ],
+            "pad": [ 8 ]
+          }
+        },
+        "thingy.ring_inlet_pinholes[2].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ring_inlet_pinholes[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:922.22-922.79"
+          },
+          "connections": {
+            "connection": [ 122 ],
+            "pad": [ 9 ]
+          }
+        },
+        "thingy.ring_inlet_pinholes[3].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ring_inlet_pinholes[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:922.22-922.79"
+          },
+          "connections": {
+            "connection": [ 123 ],
+            "pad": [ 10 ]
+          }
+        },
+        "thingy.ring_outlet_pinholes[0].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ring_outlet_pinholes[0].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:928.22-928.81"
+          },
+          "connections": {
+            "connection": [ 124 ],
+            "pad": [ 13 ]
+          }
+        },
+        "thingy.ring_outlet_pinholes[1].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ring_outlet_pinholes[1].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:928.22-928.81"
+          },
+          "connections": {
+            "connection": [ 125 ],
+            "pad": [ 14 ]
+          }
+        },
+        "thingy.ring_outlet_pinholes[2].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ring_outlet_pinholes[2].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:928.22-928.81"
+          },
+          "connections": {
+            "connection": [ 126 ],
+            "pad": [ 15 ]
+          }
+        },
+        "thingy.ring_outlet_pinholes[3].hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy ring_outlet_pinholes[3].hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:928.22-928.81"
+          },
+          "connections": {
+            "connection": [ 127 ],
+            "pad": [ 16 ]
+          }
+        },
+        "thingy.thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:975.20-1011.32",
+            "hdlname": "thingy thingy",
+            "module": "$paramod\\ChIP\\SIZE=s32'00000000000000000000000000000100",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "ChIP",
+            "module_src": "benchmarks/library.v:756.1-861.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[0].first": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:837.24-858.61",
+            "hdlname": "thingy thingy chamber[0].first",
+            "module": "reaction_chamber",
+            "module_src": "benchmarks/library.v:714.1-738.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[0].first.ring": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first ring",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:727.11-727.47"
+          },
+          "connections": {
+            "fluid_in": [ 128 ],
+            "fluid_out": [ 129 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vbead": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vbead",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:734.9-734.92"
+          },
+          "connections": {
+            "air_in": [ 70 ],
+            "air_out": [ 130 ],
+            "fluid_in": [ 109 ],
+            "fluid_out": [ 131 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vcollect": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vcollect",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:737.9-737.101"
+          },
+          "connections": {
+            "air_in": [ 71 ],
+            "air_out": [ 132 ],
+            "fluid_in": [ 133 ],
+            "fluid_out": [ 66 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:732.9-732.98"
+          },
+          "connections": {
+            "air_in": [ 82 ],
+            "air_out": [ 134 ],
+            "fluid_in": [ 120 ],
+            "fluid_out": [ 131 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.voutlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first voutlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:733.9-733.102"
+          },
+          "connections": {
+            "air_in": [ 84 ],
+            "air_out": [ 135 ],
+            "fluid_in": [ 124 ],
+            "fluid_out": [ 136 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:729.13-729.86",
+            "hdlname": "thingy thingy chamber[0].first vpump1",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump1.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump1 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 117 ],
+            "air_out": [ 137 ],
+            "fluid_in": [ 129 ],
+            "fluid_out": [ 131 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:730.13-730.85",
+            "hdlname": "thingy thingy chamber[0].first vpump2",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump2.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump2 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 118 ],
+            "air_out": [ 138 ],
+            "fluid_in": [ 131 ],
+            "fluid_out": [ 136 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:731.13-731.85",
+            "hdlname": "thingy thingy chamber[0].first vpump3",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump3.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump3 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 119 ],
+            "air_out": [ 139 ],
+            "fluid_in": [ 136 ],
+            "fluid_out": [ 128 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vring_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vring_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:728.9-728.106"
+          },
+          "connections": {
+            "air_in": [ 81 ],
+            "air_out": [ 140 ],
+            "fluid_in": [ 141 ],
+            "fluid_out": [ 128 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vring_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vring_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:735.9-735.100"
+          },
+          "connections": {
+            "air_in": [ 83 ],
+            "air_out": [ 142 ],
+            "fluid_in": [ 129 ],
+            "fluid_out": [ 143 ]
+          }
+        },
+        "thingy.thingy.chamber[0].first.vsieve": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vsieve",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:736.15-736.96"
+          },
+          "connections": {
+            "air_in": [ 80 ],
+            "air_out": [ 144 ],
+            "fluid_in": [ 143 ],
+            "fluid_out": [ 133 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:837.24-858.61",
+            "hdlname": "thingy thingy chamber[1].first",
+            "module": "reaction_chamber",
+            "module_src": "benchmarks/library.v:714.1-738.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[1].first.ring": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first ring",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:727.11-727.47"
+          },
+          "connections": {
+            "fluid_in": [ 145 ],
+            "fluid_out": [ 146 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vbead": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vbead",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:734.9-734.92"
+          },
+          "connections": {
+            "air_in": [ 130 ],
+            "air_out": [ 147 ],
+            "fluid_in": [ 109 ],
+            "fluid_out": [ 148 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vcollect": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vcollect",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:737.9-737.101"
+          },
+          "connections": {
+            "air_in": [ 132 ],
+            "air_out": [ 149 ],
+            "fluid_in": [ 150 ],
+            "fluid_out": [ 67 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:732.9-732.98"
+          },
+          "connections": {
+            "air_in": [ 134 ],
+            "air_out": [ 151 ],
+            "fluid_in": [ 121 ],
+            "fluid_out": [ 148 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.voutlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first voutlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:733.9-733.102"
+          },
+          "connections": {
+            "air_in": [ 135 ],
+            "air_out": [ 152 ],
+            "fluid_in": [ 125 ],
+            "fluid_out": [ 153 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:729.13-729.86",
+            "hdlname": "thingy thingy chamber[1].first vpump1",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump1.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vpump1 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 137 ],
+            "air_out": [ 154 ],
+            "fluid_in": [ 146 ],
+            "fluid_out": [ 148 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:730.13-730.85",
+            "hdlname": "thingy thingy chamber[1].first vpump2",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump2.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vpump2 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 138 ],
+            "air_out": [ 155 ],
+            "fluid_in": [ 148 ],
+            "fluid_out": [ 153 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:731.13-731.85",
+            "hdlname": "thingy thingy chamber[1].first vpump3",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump3.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vpump3 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 139 ],
+            "air_out": [ 156 ],
+            "fluid_in": [ 153 ],
+            "fluid_out": [ 145 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vring_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vring_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:728.9-728.106"
+          },
+          "connections": {
+            "air_in": [ 140 ],
+            "air_out": [ 157 ],
+            "fluid_in": [ 141 ],
+            "fluid_out": [ 145 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vring_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vring_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:735.9-735.100"
+          },
+          "connections": {
+            "air_in": [ 142 ],
+            "air_out": [ 158 ],
+            "fluid_in": [ 146 ],
+            "fluid_out": [ 159 ]
+          }
+        },
+        "thingy.thingy.chamber[1].first.vsieve": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vsieve",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:736.15-736.96"
+          },
+          "connections": {
+            "air_in": [ 144 ],
+            "air_out": [ 160 ],
+            "fluid_in": [ 159 ],
+            "fluid_out": [ 150 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:837.24-858.61",
+            "hdlname": "thingy thingy chamber[2].first",
+            "module": "reaction_chamber",
+            "module_src": "benchmarks/library.v:714.1-738.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[2].first.ring": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first ring",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:727.11-727.47"
+          },
+          "connections": {
+            "fluid_in": [ 161 ],
+            "fluid_out": [ 162 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vbead": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vbead",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:734.9-734.92"
+          },
+          "connections": {
+            "air_in": [ 147 ],
+            "air_out": [ 163 ],
+            "fluid_in": [ 109 ],
+            "fluid_out": [ 164 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vcollect": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vcollect",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:737.9-737.101"
+          },
+          "connections": {
+            "air_in": [ 149 ],
+            "air_out": [ 165 ],
+            "fluid_in": [ 166 ],
+            "fluid_out": [ 68 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:732.9-732.98"
+          },
+          "connections": {
+            "air_in": [ 151 ],
+            "air_out": [ 167 ],
+            "fluid_in": [ 122 ],
+            "fluid_out": [ 164 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.voutlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first voutlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:733.9-733.102"
+          },
+          "connections": {
+            "air_in": [ 152 ],
+            "air_out": [ 168 ],
+            "fluid_in": [ 126 ],
+            "fluid_out": [ 169 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:729.13-729.86",
+            "hdlname": "thingy thingy chamber[2].first vpump1",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump1.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vpump1 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 154 ],
+            "air_out": [ 170 ],
+            "fluid_in": [ 162 ],
+            "fluid_out": [ 164 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:730.13-730.85",
+            "hdlname": "thingy thingy chamber[2].first vpump2",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump2.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vpump2 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 155 ],
+            "air_out": [ 171 ],
+            "fluid_in": [ 164 ],
+            "fluid_out": [ 169 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:731.13-731.85",
+            "hdlname": "thingy thingy chamber[2].first vpump3",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump3.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vpump3 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 156 ],
+            "air_out": [ 172 ],
+            "fluid_in": [ 169 ],
+            "fluid_out": [ 161 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vring_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vring_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:728.9-728.106"
+          },
+          "connections": {
+            "air_in": [ 157 ],
+            "air_out": [ 173 ],
+            "fluid_in": [ 141 ],
+            "fluid_out": [ 161 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vring_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vring_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:735.9-735.100"
+          },
+          "connections": {
+            "air_in": [ 158 ],
+            "air_out": [ 174 ],
+            "fluid_in": [ 162 ],
+            "fluid_out": [ 175 ]
+          }
+        },
+        "thingy.thingy.chamber[2].first.vsieve": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vsieve",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:736.15-736.96"
+          },
+          "connections": {
+            "air_in": [ 160 ],
+            "air_out": [ 176 ],
+            "fluid_in": [ 175 ],
+            "fluid_out": [ 166 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:837.24-858.61",
+            "hdlname": "thingy thingy chamber[3].first",
+            "module": "reaction_chamber",
+            "module_src": "benchmarks/library.v:714.1-738.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[3].first.ring": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first ring",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:727.11-727.47"
+          },
+          "connections": {
+            "fluid_in": [ 177 ],
+            "fluid_out": [ 178 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vbead": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vbead",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:734.9-734.92"
+          },
+          "connections": {
+            "air_in": [ 163 ],
+            "air_out": [ 88 ],
+            "fluid_in": [ 109 ],
+            "fluid_out": [ 179 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vcollect": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vcollect",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:737.9-737.101"
+          },
+          "connections": {
+            "air_in": [ 165 ],
+            "air_out": [ 89 ],
+            "fluid_in": [ 180 ],
+            "fluid_out": [ 69 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:732.9-732.98"
+          },
+          "connections": {
+            "air_in": [ 167 ],
+            "air_out": [ 103 ],
+            "fluid_in": [ 123 ],
+            "fluid_out": [ 179 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.voutlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first voutlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:733.9-733.102"
+          },
+          "connections": {
+            "air_in": [ 168 ],
+            "air_out": [ 105 ],
+            "fluid_in": [ 127 ],
+            "fluid_out": [ 181 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump1": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:729.13-729.86",
+            "hdlname": "thingy thingy chamber[3].first vpump1",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump1.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vpump1 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 170 ],
+            "air_out": [ 98 ],
+            "fluid_in": [ 178 ],
+            "fluid_out": [ 179 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump2": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:730.13-730.85",
+            "hdlname": "thingy thingy chamber[3].first vpump2",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump2.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vpump2 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 171 ],
+            "air_out": [ 99 ],
+            "fluid_in": [ 179 ],
+            "fluid_out": [ 181 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump3": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:731.13-731.85",
+            "hdlname": "thingy thingy chamber[3].first vpump3",
+            "module": "$paramod\\pump\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "pump",
+            "module_src": "benchmarks/library.v:696.1-712.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump3.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vpump3 valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:709.18-709.100"
+          },
+          "connections": {
+            "air_in": [ 172 ],
+            "air_out": [ 100 ],
+            "fluid_in": [ 181 ],
+            "fluid_out": [ 177 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vring_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vring_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:728.9-728.106"
+          },
+          "connections": {
+            "air_in": [ 173 ],
+            "air_out": [ 102 ],
+            "fluid_in": [ 141 ],
+            "fluid_out": [ 177 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vring_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vring_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:735.9-735.100"
+          },
+          "connections": {
+            "air_in": [ 174 ],
+            "air_out": [ 104 ],
+            "fluid_in": [ 178 ],
+            "fluid_out": [ 182 ]
+          }
+        },
+        "thingy.thingy.chamber[3].first.vsieve": {
+          "hide_name": 0,
+          "type": "sieve_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vsieve",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:736.15-736.96"
+          },
+          "connections": {
+            "air_in": [ 176 ],
+            "air_out": [ 101 ],
+            "fluid_in": [ 182 ],
+            "fluid_out": [ 180 ]
+          }
+        },
+        "thingy.thingy.prep": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:814.16-831.55",
+            "hdlname": "thingy thingy prep",
+            "module": "prep_chamber",
+            "module_src": "benchmarks/library.v:740.1-754.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.prep.ring": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy prep ring",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:745.11-745.46"
+          },
+          "connections": {
+            "fluid_in": [ 183 ],
+            "fluid_out": [ 184 ]
+          }
+        },
+        "thingy.thingy.prep.sv1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy prep sv1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:751.9-751.83"
+          },
+          "connections": {
+            "air_in": [ 85 ],
+            "air_out": [ 106 ],
+            "fluid_in": [ 184 ],
+            "fluid_out": [ 185 ]
+          }
+        },
+        "thingy.thingy.prep.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy prep v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:749.9-749.80"
+          },
+          "connections": {
+            "air_in": [ 86 ],
+            "air_out": [ 107 ],
+            "fluid_in": [ 186 ],
+            "fluid_out": [ 183 ]
+          }
+        },
+        "thingy.thingy.prep.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy prep v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:750.9-750.80"
+          },
+          "connections": {
+            "air_in": [ 87 ],
+            "air_out": [ 108 ],
+            "fluid_in": [ 185 ],
+            "fluid_out": [ 186 ]
+          }
+        },
+        "thingy.thingy.prep.vin": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy prep vin",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:746.9-746.95"
+          },
+          "connections": {
+            "air_in": [ 77 ],
+            "air_out": [ 95 ],
+            "fluid_in": [ 187 ],
+            "fluid_out": [ 186 ]
+          }
+        },
+        "thingy.thingy.prep.vout1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy prep vout1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:747.9-747.103"
+          },
+          "connections": {
+            "air_in": [ 78 ],
+            "air_out": [ 96 ],
+            "fluid_in": [ 186 ],
+            "fluid_out": [ 115 ]
+          }
+        },
+        "thingy.thingy.prep.vout2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy prep vout2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:748.9-748.103"
+          },
+          "connections": {
+            "air_in": [ 79 ],
+            "air_out": [ 97 ],
+            "fluid_in": [ 185 ],
+            "fluid_out": [ 116 ]
+          }
+        },
+        "thingy.thingy.prep.vout3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy prep vout3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:752.9-752.103"
+          },
+          "connections": {
+            "air_in": [ 188 ],
+            "air_out": [ 189 ],
+            "fluid_in": [ 184 ],
+            "fluid_out": [ 141 ]
+          }
+        },
+        "thingy.thingy.vinlet": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:812.12-812.97",
+            "hdlname": "thingy thingy vinlet",
+            "module": "$paramod\\mux\\SIZE=s32'00000000000000000000000000000101",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "mux",
+            "module_src": "benchmarks/library.v:683.2-694.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thingy.thingy.vinlet.valves[0].vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy vinlet valves[0].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:691.13-691.98"
+          },
+          "connections": {
+            "air_in": [ 72 ],
+            "air_out": [ 90 ],
+            "fluid_in": [ 110 ],
+            "fluid_out": [ 187 ]
+          }
+        },
+        "thingy.thingy.vinlet.valves[1].vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy vinlet valves[1].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:691.13-691.98"
+          },
+          "connections": {
+            "air_in": [ 73 ],
+            "air_out": [ 91 ],
+            "fluid_in": [ 111 ],
+            "fluid_out": [ 187 ]
+          }
+        },
+        "thingy.thingy.vinlet.valves[2].vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy vinlet valves[2].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:691.13-691.98"
+          },
+          "connections": {
+            "air_in": [ 74 ],
+            "air_out": [ 92 ],
+            "fluid_in": [ 112 ],
+            "fluid_out": [ 187 ]
+          }
+        },
+        "thingy.thingy.vinlet.valves[3].vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy vinlet valves[3].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:691.13-691.98"
+          },
+          "connections": {
+            "air_in": [ 75 ],
+            "air_out": [ 93 ],
+            "fluid_in": [ 113 ],
+            "fluid_out": [ 187 ]
+          }
+        },
+        "thingy.thingy.vinlet.valves[4].vinlet": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thingy thingy vinlet valves[4].vinlet",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:691.13-691.98"
+          },
+          "connections": {
+            "air_in": [ 76 ],
+            "air_out": [ 94 ],
+            "fluid_in": [ 114 ],
+            "fluid_out": [ 187 ]
+          }
+        }
+      },
+      "netnames": {
+        "pad_bead_in": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:6.37-6.48",
+            "type": "flow"
+          }
+        },
+        "pad_collect": {
+          "hide_name": 0,
+          "bits": [ 17, 18, 19, 20 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:5.50-5.61",
+            "type": "flow"
+          }
+        },
+        "pad_ctrl_bead": {
+          "hide_name": 0,
+          "bits": [ 37 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:13.59-13.72",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_collect": {
+          "hide_name": 0,
+          "bits": [ 34 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:12.14-12.30",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_inlet": {
+          "hide_name": 0,
+          "bits": [ 22, 23, 24, 25, 26 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:7.44-7.58",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_prep_inlet": {
+          "hide_name": 0,
+          "bits": [ 27 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:8.38-8.57",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_prep_outlet": {
+          "hide_name": 0,
+          "bits": [ 39, 40 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:15.45-15.65",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_prep_ringout": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:14.13-14.34",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_sieve": {
+          "hide_name": 0,
+          "bits": [ 33 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:11.34-11.48",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_stage_in": {
+          "hide_name": 0,
+          "bits": [ 31 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:10.14-10.31",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_stage_inlet": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:13.14-13.34",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_stage_out": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:11.14-11.32",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_stage_outlet": {
+          "hide_name": 0,
+          "bits": [ 36 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:13.36-13.57",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_sv1": {
+          "hide_name": 0,
+          "bits": [ 30 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:9.40-9.52",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_v1": {
+          "hide_name": 0,
+          "bits": [ 28 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:9.14-9.25",
+            "type": "ctrl"
+          }
+        },
+        "pad_ctrl_v2": {
+          "hide_name": 0,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:9.27-9.38",
+            "type": "ctrl"
+          }
+        },
+        "pad_flush_bead": {
+          "hide_name": 0,
+          "bits": [ 59 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:23.61-23.75",
+            "type": "flush"
+          }
+        },
+        "pad_flush_collect": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:22.14-22.31",
+            "type": "flush"
+          }
+        },
+        "pad_flush_inlet": {
+          "hide_name": 0,
+          "bits": [ 44, 45, 46, 47, 48 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:17.46-17.61",
+            "type": "flush"
+          }
+        },
+        "pad_flush_prep_inlet": {
+          "hide_name": 0,
+          "bits": [ 49 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:18.40-18.60",
+            "type": "flush"
+          }
+        },
+        "pad_flush_prep_outlet": {
+          "hide_name": 0,
+          "bits": [ 61, 62 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:25.46-25.67",
+            "type": "flush"
+          }
+        },
+        "pad_flush_prep_ringout": {
+          "hide_name": 0,
+          "bits": [ 60 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:24.13-24.35",
+            "type": "flush"
+          }
+        },
+        "pad_flush_pump": {
+          "hide_name": 0,
+          "bits": [ 63, 64, 65 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:26.46-26.60",
+            "type": "flush"
+          }
+        },
+        "pad_flush_sieve": {
+          "hide_name": 0,
+          "bits": [ 55 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:21.35-21.50",
+            "type": "flush"
+          }
+        },
+        "pad_flush_stage_in": {
+          "hide_name": 0,
+          "bits": [ 53 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:20.14-20.32",
+            "type": "flush"
+          }
+        },
+        "pad_flush_stage_inlet": {
+          "hide_name": 0,
+          "bits": [ 57 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:23.14-23.35",
+            "type": "flush"
+          }
+        },
+        "pad_flush_stage_out": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:21.14-21.33",
+            "type": "flush"
+          }
+        },
+        "pad_flush_stage_outlet": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:23.37-23.59",
+            "type": "flush"
+          }
+        },
+        "pad_flush_sv1": {
+          "hide_name": 0,
+          "bits": [ 52 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:19.42-19.55",
+            "type": "flush"
+          }
+        },
+        "pad_flush_v1": {
+          "hide_name": 0,
+          "bits": [ 50 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:19.14-19.26",
+            "type": "flush"
+          }
+        },
+        "pad_flush_v2": {
+          "hide_name": 0,
+          "bits": [ 51 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:19.28-19.40",
+            "type": "flush"
+          }
+        },
+        "pad_prep_inlet": {
+          "hide_name": 0,
+          "bits": [ 2, 3, 4, 5, 6 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:1.44-1.58",
+            "type": "flow"
+          }
+        },
+        "pad_prep_outlet": {
+          "hide_name": 0,
+          "bits": [ 11, 12 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:3.45-3.60",
+            "type": "flow"
+          }
+        },
+        "pad_pump": {
+          "hide_name": 0,
+          "bits": [ 41, 42, 43 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:16.44-16.52",
+            "type": "ctrl"
+          }
+        },
+        "pad_ring_inlet": {
+          "hide_name": 0,
+          "bits": [ 7, 8, 9, 10 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:2.49-2.63",
+            "type": "flow"
+          }
+        },
+        "pad_ring_outlet": {
+          "hide_name": 0,
+          "bits": [ 13, 14, 15, 16 ],
+          "attributes": {
+            "src": "benchmarks/ChIP_pads_4_g.v:4.50-4.65",
+            "type": "flow"
+          }
+        },
+        "thingy.bead_in": {
+          "hide_name": 0,
+          "bits": [ 109 ],
+          "attributes": {
+            "hdlname": "thingy bead_in",
+            "src": "benchmarks/library.v:895.36-895.43",
+            "type": "flow"
+          }
+        },
+        "thingy.collect": {
+          "hide_name": 0,
+          "bits": [ 66, 67, 68, 69 ],
+          "attributes": {
+            "hdlname": "thingy collect",
+            "src": "benchmarks/library.v:894.48-894.55",
+            "type": "flow"
+          }
+        },
+        "thingy.ctrl_inlet": {
+          "hide_name": 0,
+          "bits": [ 72, 73, 74, 75, 76 ],
+          "attributes": {
+            "hdlname": "thingy ctrl_inlet",
+            "src": "benchmarks/library.v:896.43-896.53",
+            "type": "ctrl"
+          }
+        },
+        "thingy.ctrl_prep_inlet": {
+          "hide_name": 0,
+          "bits": [ 77 ],
+          "attributes": {
+            "hdlname": "thingy ctrl_prep_inlet",
+            "src": "benchmarks/library.v:897.37-897.52",
+            "type": "ctrl"
+          }
+        },
+        "thingy.ctrl_prep_outlet": {
+          "hide_name": 0,
+          "bits": [ 78, 79 ],
+          "attributes": {
+            "hdlname": "thingy ctrl_prep_outlet",
+            "src": "benchmarks/library.v:904.44-904.60",
+            "type": "ctrl"
+          }
+        },
+        "thingy.ctrl_prep_ringout": {
+          "hide_name": 0,
+          "bits": [ 188 ],
+          "attributes": {
+            "hdlname": "thingy ctrl_prep_ringout",
+            "src": "benchmarks/library.v:903.13-903.30",
+            "type": "ctrl"
+          }
+        },
+        "thingy.ctrl_sv1": {
+          "hide_name": 0,
+          "bits": [ 85 ],
+          "attributes": {
+            "hdlname": "thingy ctrl_sv1",
+            "src": "benchmarks/library.v:898.32-898.40",
+            "type": "ctrl"
+          }
+        },
+        "thingy.ctrl_v1": {
+          "hide_name": 0,
+          "bits": [ 86 ],
+          "attributes": {
+            "hdlname": "thingy ctrl_v1",
+            "src": "benchmarks/library.v:898.14-898.21",
+            "type": "ctrl"
+          }
+        },
+        "thingy.ctrl_v2": {
+          "hide_name": 0,
+          "bits": [ 87 ],
+          "attributes": {
+            "hdlname": "thingy ctrl_v2",
+            "src": "benchmarks/library.v:898.23-898.30",
+            "type": "ctrl"
+          }
+        },
+        "thingy.flush_inlet": {
+          "hide_name": 0,
+          "bits": [ 90, 91, 92, 93, 94 ],
+          "attributes": {
+            "hdlname": "thingy flush_inlet",
+            "src": "benchmarks/library.v:906.44-906.55",
+            "type": "flush"
+          }
+        },
+        "thingy.flush_prep_inlet": {
+          "hide_name": 0,
+          "bits": [ 95 ],
+          "attributes": {
+            "hdlname": "thingy flush_prep_inlet",
+            "src": "benchmarks/library.v:907.38-907.54",
+            "type": "flush"
+          }
+        },
+        "thingy.flush_prep_outlet": {
+          "hide_name": 0,
+          "bits": [ 96, 97 ],
+          "attributes": {
+            "hdlname": "thingy flush_prep_outlet",
+            "src": "benchmarks/library.v:914.44-914.61",
+            "type": "flush"
+          }
+        },
+        "thingy.flush_prep_ringout": {
+          "hide_name": 0,
+          "bits": [ 189 ],
+          "attributes": {
+            "hdlname": "thingy flush_prep_ringout",
+            "src": "benchmarks/library.v:913.13-913.31",
+            "type": "flush"
+          }
+        },
+        "thingy.flush_sv1": {
+          "hide_name": 0,
+          "bits": [ 106 ],
+          "attributes": {
+            "hdlname": "thingy flush_sv1",
+            "src": "benchmarks/library.v:908.34-908.43",
+            "type": "flush"
+          }
+        },
+        "thingy.flush_v1": {
+          "hide_name": 0,
+          "bits": [ 107 ],
+          "attributes": {
+            "hdlname": "thingy flush_v1",
+            "src": "benchmarks/library.v:908.14-908.22",
+            "type": "flush"
+          }
+        },
+        "thingy.flush_v2": {
+          "hide_name": 0,
+          "bits": [ 108 ],
+          "attributes": {
+            "hdlname": "thingy flush_v2",
+            "src": "benchmarks/library.v:908.24-908.32",
+            "type": "flush"
+          }
+        },
+        "thingy.prep_inlet": {
+          "hide_name": 0,
+          "bits": [ 110, 111, 112, 113, 114 ],
+          "attributes": {
+            "hdlname": "thingy prep_inlet",
+            "src": "benchmarks/library.v:890.30-890.40",
+            "type": "flow"
+          }
+        },
+        "thingy.prep_outlet": {
+          "hide_name": 0,
+          "bits": [ 115, 116 ],
+          "attributes": {
+            "hdlname": "thingy prep_outlet",
+            "src": "benchmarks/library.v:892.43-892.54",
+            "type": "flow"
+          }
+        },
+        "thingy.ring_inlet": {
+          "hide_name": 0,
+          "bits": [ 120, 121, 122, 123 ],
+          "attributes": {
+            "hdlname": "thingy ring_inlet",
+            "src": "benchmarks/library.v:891.48-891.58",
+            "type": "flow"
+          }
+        },
+        "thingy.ring_outlet": {
+          "hide_name": 0,
+          "bits": [ 124, 125, 126, 127 ],
+          "attributes": {
+            "hdlname": "thingy ring_outlet",
+            "src": "benchmarks/library.v:893.48-893.59",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[0].first.flow_ring_in": {
+          "hide_name": 0,
+          "bits": [ 141 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first flow_ring_in",
+            "src": "benchmarks/library.v:724.49-724.61",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[0].first.j1": {
+          "hide_name": 0,
+          "bits": [ 128 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first j1",
+            "src": "benchmarks/library.v:726.26-726.28",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[0].first.j1o": {
+          "hide_name": 0,
+          "bits": [ 129 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first j1o",
+            "src": "benchmarks/library.v:726.29-726.32",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[0].first.j2": {
+          "hide_name": 0,
+          "bits": [ 131 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first j2",
+            "src": "benchmarks/library.v:726.34-726.36",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[0].first.j3": {
+          "hide_name": 0,
+          "bits": [ 136 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first j3",
+            "src": "benchmarks/library.v:726.38-726.40",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[0].first.j4": {
+          "hide_name": 0,
+          "bits": [ 143 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first j4",
+            "src": "benchmarks/library.v:726.42-726.44",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[0].first.j5": {
+          "hide_name": 0,
+          "bits": [ 133 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first j5",
+            "src": "benchmarks/library.v:726.46-726.48",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump1.drive": {
+          "hide_name": 0,
+          "bits": [ 117 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump1 drive",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:698.48-698.53",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump1.flush": {
+          "hide_name": 0,
+          "bits": [ 137 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump1 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump2.drive": {
+          "hide_name": 0,
+          "bits": [ 118 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump2 drive",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:698.48-698.53",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump2.flush": {
+          "hide_name": 0,
+          "bits": [ 138 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump2 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump3.drive": {
+          "hide_name": 0,
+          "bits": [ 119 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump3 drive",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:698.48-698.53",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.chamber[0].first.vpump3.flush": {
+          "hide_name": 0,
+          "bits": [ 139 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[0].first vpump3 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[1].first.j1": {
+          "hide_name": 0,
+          "bits": [ 145 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first j1",
+            "src": "benchmarks/library.v:726.26-726.28",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[1].first.j1o": {
+          "hide_name": 0,
+          "bits": [ 146 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first j1o",
+            "src": "benchmarks/library.v:726.29-726.32",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[1].first.j2": {
+          "hide_name": 0,
+          "bits": [ 148 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first j2",
+            "src": "benchmarks/library.v:726.34-726.36",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[1].first.j3": {
+          "hide_name": 0,
+          "bits": [ 153 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first j3",
+            "src": "benchmarks/library.v:726.38-726.40",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[1].first.j4": {
+          "hide_name": 0,
+          "bits": [ 159 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first j4",
+            "src": "benchmarks/library.v:726.42-726.44",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[1].first.j5": {
+          "hide_name": 0,
+          "bits": [ 150 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first j5",
+            "src": "benchmarks/library.v:726.46-726.48",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump1.flush": {
+          "hide_name": 0,
+          "bits": [ 154 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vpump1 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump2.flush": {
+          "hide_name": 0,
+          "bits": [ 155 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vpump2 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[1].first.vpump3.flush": {
+          "hide_name": 0,
+          "bits": [ 156 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[1].first vpump3 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[2].first.j1": {
+          "hide_name": 0,
+          "bits": [ 161 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first j1",
+            "src": "benchmarks/library.v:726.26-726.28",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[2].first.j1o": {
+          "hide_name": 0,
+          "bits": [ 162 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first j1o",
+            "src": "benchmarks/library.v:726.29-726.32",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[2].first.j2": {
+          "hide_name": 0,
+          "bits": [ 164 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first j2",
+            "src": "benchmarks/library.v:726.34-726.36",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[2].first.j3": {
+          "hide_name": 0,
+          "bits": [ 169 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first j3",
+            "src": "benchmarks/library.v:726.38-726.40",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[2].first.j4": {
+          "hide_name": 0,
+          "bits": [ 175 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first j4",
+            "src": "benchmarks/library.v:726.42-726.44",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[2].first.j5": {
+          "hide_name": 0,
+          "bits": [ 166 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first j5",
+            "src": "benchmarks/library.v:726.46-726.48",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump1.flush": {
+          "hide_name": 0,
+          "bits": [ 170 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vpump1 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump2.flush": {
+          "hide_name": 0,
+          "bits": [ 171 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vpump2 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[2].first.vpump3.flush": {
+          "hide_name": 0,
+          "bits": [ 172 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[2].first vpump3 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[3].first.j1": {
+          "hide_name": 0,
+          "bits": [ 177 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first j1",
+            "src": "benchmarks/library.v:726.26-726.28",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[3].first.j1o": {
+          "hide_name": 0,
+          "bits": [ 178 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first j1o",
+            "src": "benchmarks/library.v:726.29-726.32",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[3].first.j2": {
+          "hide_name": 0,
+          "bits": [ 179 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first j2",
+            "src": "benchmarks/library.v:726.34-726.36",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[3].first.j3": {
+          "hide_name": 0,
+          "bits": [ 181 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first j3",
+            "src": "benchmarks/library.v:726.38-726.40",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[3].first.j4": {
+          "hide_name": 0,
+          "bits": [ 182 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first j4",
+            "src": "benchmarks/library.v:726.42-726.44",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[3].first.j5": {
+          "hide_name": 0,
+          "bits": [ 180 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first j5",
+            "src": "benchmarks/library.v:726.46-726.48",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump1.flush": {
+          "hide_name": 0,
+          "bits": [ 98 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vpump1 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump2.flush": {
+          "hide_name": 0,
+          "bits": [ 99 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vpump2 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.chamber[3].first.vpump3.flush": {
+          "hide_name": 0,
+          "bits": [ 100 ],
+          "attributes": {
+            "hdlname": "thingy thingy chamber[3].first vpump3 flush",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:699.50-699.55",
+            "type": "flush"
+          }
+        },
+        "thingy.thingy.inter_bead[0]": {
+          "hide_name": 0,
+          "bits": [ 70 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_bead[0]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:802.26-802.36",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_bead[1]": {
+          "hide_name": 0,
+          "bits": [ 130 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_bead[1]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:802.26-802.36",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_bead[2]": {
+          "hide_name": 0,
+          "bits": [ 147 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_bead[2]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:802.26-802.36",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_bead[3]": {
+          "hide_name": 0,
+          "bits": [ 163 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_bead[3]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:802.26-802.36",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_bead[4]": {
+          "hide_name": 0,
+          "bits": [ 88 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_bead[4]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:802.26-802.36",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_collect[0]": {
+          "hide_name": 0,
+          "bits": [ 71 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_collect[0]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:793.26-793.39",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_collect[1]": {
+          "hide_name": 0,
+          "bits": [ 132 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_collect[1]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:793.26-793.39",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_collect[2]": {
+          "hide_name": 0,
+          "bits": [ 149 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_collect[2]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:793.26-793.39",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_collect[3]": {
+          "hide_name": 0,
+          "bits": [ 165 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_collect[3]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:793.26-793.39",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_collect[4]": {
+          "hide_name": 0,
+          "bits": [ 89 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_collect[4]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:793.26-793.39",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_sieve[0]": {
+          "hide_name": 0,
+          "bits": [ 80 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_sieve[0]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:790.26-790.37",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_sieve[1]": {
+          "hide_name": 0,
+          "bits": [ 144 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_sieve[1]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:790.26-790.37",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_sieve[2]": {
+          "hide_name": 0,
+          "bits": [ 160 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_sieve[2]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:790.26-790.37",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_sieve[3]": {
+          "hide_name": 0,
+          "bits": [ 176 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_sieve[3]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:790.26-790.37",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_sieve[4]": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_sieve[4]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:790.26-790.37",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_in[0]": {
+          "hide_name": 0,
+          "bits": [ 81 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_in[0]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:784.26-784.40",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_in[1]": {
+          "hide_name": 0,
+          "bits": [ 140 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_in[1]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:784.26-784.40",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_in[2]": {
+          "hide_name": 0,
+          "bits": [ 157 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_in[2]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:784.26-784.40",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_in[3]": {
+          "hide_name": 0,
+          "bits": [ 173 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_in[3]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:784.26-784.40",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_in[4]": {
+          "hide_name": 0,
+          "bits": [ 102 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_in[4]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:784.26-784.40",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_inlet[0]": {
+          "hide_name": 0,
+          "bits": [ 82 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_inlet[0]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:796.26-796.43",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_inlet[1]": {
+          "hide_name": 0,
+          "bits": [ 134 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_inlet[1]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:796.26-796.43",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_inlet[2]": {
+          "hide_name": 0,
+          "bits": [ 151 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_inlet[2]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:796.26-796.43",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_inlet[3]": {
+          "hide_name": 0,
+          "bits": [ 167 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_inlet[3]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:796.26-796.43",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_inlet[4]": {
+          "hide_name": 0,
+          "bits": [ 103 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_inlet[4]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:796.26-796.43",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_out[0]": {
+          "hide_name": 0,
+          "bits": [ 83 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_out[0]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:787.26-787.41",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_out[1]": {
+          "hide_name": 0,
+          "bits": [ 142 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_out[1]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:787.26-787.41",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_out[2]": {
+          "hide_name": 0,
+          "bits": [ 158 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_out[2]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:787.26-787.41",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_out[3]": {
+          "hide_name": 0,
+          "bits": [ 174 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_out[3]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:787.26-787.41",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_out[4]": {
+          "hide_name": 0,
+          "bits": [ 104 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_out[4]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:787.26-787.41",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_outlet[0]": {
+          "hide_name": 0,
+          "bits": [ 84 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_outlet[0]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:799.26-799.44",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_outlet[1]": {
+          "hide_name": 0,
+          "bits": [ 135 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_outlet[1]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:799.26-799.44",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_outlet[2]": {
+          "hide_name": 0,
+          "bits": [ 152 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_outlet[2]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:799.26-799.44",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_outlet[3]": {
+          "hide_name": 0,
+          "bits": [ 168 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_outlet[3]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:799.26-799.44",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.inter_stage_outlet[4]": {
+          "hide_name": 0,
+          "bits": [ 105 ],
+          "attributes": {
+            "hdlname": "thingy thingy inter_stage_outlet[4]",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:799.26-799.44",
+            "type": "ctrl"
+          }
+        },
+        "thingy.thingy.mux_out": {
+          "hide_name": 0,
+          "bits": [ 187 ],
+          "attributes": {
+            "hdlname": "thingy thingy mux_out",
+            "src": "benchmarks/library.v:811.26-811.33",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.prep.j1": {
+          "hide_name": 0,
+          "bits": [ 186 ],
+          "attributes": {
+            "hdlname": "thingy thingy prep j1",
+            "src": "benchmarks/library.v:744.26-744.28",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.prep.j2": {
+          "hide_name": 0,
+          "bits": [ 185 ],
+          "attributes": {
+            "hdlname": "thingy thingy prep j2",
+            "src": "benchmarks/library.v:744.30-744.32",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.prep.j3": {
+          "hide_name": 0,
+          "bits": [ 183 ],
+          "attributes": {
+            "hdlname": "thingy thingy prep j3",
+            "src": "benchmarks/library.v:744.34-744.36",
+            "type": "flow"
+          }
+        },
+        "thingy.thingy.prep.j4": {
+          "hide_name": 0,
+          "bits": [ 184 ],
+          "attributes": {
+            "hdlname": "thingy thingy prep j4",
+            "src": "benchmarks/library.v:744.38-744.40",
+            "type": "flow"
+          }
+        }
+      }
+    }
+  }
+}

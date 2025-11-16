@@ -155,6 +155,47 @@ module kinase_activity_pads #(  parameter SIZE = 7)(
                               .flush_ctrl_a(flush_ctrl_a), .flush_ctrl_s(flush_ctrl_s),
                               .flush_pump_a(flush_pump_a), .flush_pump_b(flush_pump_b));
 endmodule
+module mnacidpro_reactor_direct(
+  (* type="ctrl" *) input vertical_ctrl, horiz_ctrl, waste_ctrl, bead_ctrl,
+  loop_exit_ctrl, bead_trap_ctrl, collect_ctrl,
+  (* type="ctrl" *) input [2:0] pump,
+  (* type="flush" *) output vertical_flush, horiz_flush, waste_flush, bead_flush,
+  loop_exit_flush, bead_trap_flush, collect_flush,
+  (* type="flush" *) output [2:0] pump_flush,
+  (* type="flow" *) input drive, bead_in, buffer_in, cell_in,
+  (* type="flow" *) output collect, waste, bead_out, buffer_out, cell_out);
+
+  (* type="flow" *) wire r1,r2,r3,r4,r5, j1, j2;
+
+  (* type="flow" *) wire r1o,r2o,r3o,r4o;
+
+  (* type="ctrl" *) wire c1, c2, c3;
+  valve v1(.fluid_in(drive), .fluid_out(r3), .air_in(vertical_ctrl), .air_out(vertical_flush));
+  valve v2(.fluid_in(r3o), .fluid_out(r2), .air_in(vertical_ctrl), .air_out(vertical_flush));
+  valve v3(.fluid_in(r2), .fluid_out(r1), .air_in(vertical_ctrl), .air_out(vertical_flush));
+
+  chamber r1c(.fluid_in(r1), .fluid_out(r1o));
+  chamber r2c(.fluid_in(r2), .fluid_out(r2o));
+  chamber r3c(.fluid_in(r3), .fluid_out(r3o));
+  chamber r4c(.fluid_in(r4), .fluid_out(r4o));
+  (* type="ctrl" *) wire d1,d2,d3,d5;
+  valve v4(.fluid_in(buffer_in), .fluid_out(r3), .air_in(horiz_ctrl), .air_out(horiz_flush));
+  valve v5(.fluid_in(r30), .fluid_out(buffer_out), .air_in(horiz_ctrl), .air_out(horiz_ctrl));
+  valve v6(.fluid_in(cell_in), .fluid_out(r2), .air_in(horiz_ctrl), .air_out(horiz_flush));
+  valve v7(.fluid_in(r2o), .fluid_out(cell_out), .air_in(horiz_ctrl), .air_out(horiz_flush));
+  valve v8(.fluid_in(bead_in), .fluid_out(r4), .air_in(bead_ctrl), .air_out(bead_flush));
+  valve v9(.fluid_in(r4o), .fluid_out(bead_out), .air_in(bead_ctrl), .air_out(bead_flush));
+  pump_valve p0(.fluid_in(r1), .fluid_out(j1), .air_in(pump[0]), .air_out(pump_flush[0]));
+  pump_valve p1(.fluid_in(j1), .fluid_out(j2), .air_in(pump[1]), .air_out(pump_flush[1]));
+  pump_valve p2(.fluid_in(j2), .fluid_out(r1o), .air_in(pump[2]), .air_out(pump_flush[2]));
+  (* type="ctrl" *) wire e1;
+  valve v10(.fluid_in(r1o), .fluid_out(r4), .air_in(loop_exit_ctrl), .air_out(loop_exit_flush));
+  valve v11(.fluid_in(r4o), .fluid_out(r5), .air_in(bead_trap_ctrl), .air_out(bead_trap_flush));
+  valve v12(.fluid_in(r5), .fluid_out(waste), .air_in(waste_ctrl), .air_out(waste_flush));
+  valve v13(.fluid_in(r5), .fluid_out(collect), .air_in(collect_ctrl), .air_out(collect_flush));
+
+endmodule
+
 module mnacidpro_reactor(
   (* type="ctrl" *) input vertical_ctrl, horiz_ctrl, waste_ctrl, bead_ctrl,
   loop_exit_ctrl, bead_trap_ctrl, collect_ctrl,
@@ -167,24 +208,30 @@ module mnacidpro_reactor(
 
   (* type="flow" *) wire r1,r2,r3,r4,r5, j1, j2;
 
+  (* type="flow" *) wire r1o,r2o,r3o,r4o;
+
   (* type="ctrl" *) wire c1, c2, c3;
   valve v1(.fluid_in(drive), .fluid_out(r3), .air_in(vertical_ctrl), .air_out(c1));
-  valve v2(.fluid_in(r3), .fluid_out(r2), .air_in(c1), .air_out(c2));
+  valve v2(.fluid_in(r3o), .fluid_out(r2), .air_in(c1), .air_out(c2));
   valve v3(.fluid_in(r2), .fluid_out(r1), .air_in(c2), .air_out(vertical_flush));
 
+  chamber r1c(.fluid_in(r1), .fluid_out(r1o));
+  chamber r2c(.fluid_in(r2), .fluid_out(r2o));
+  chamber r3c(.fluid_in(r3), .fluid_out(r3o));
+  chamber r4c(.fluid_in(r4), .fluid_out(r4o));
   (* type="ctrl" *) wire d1,d2,d3,d5;
   valve v4(.fluid_in(buffer_in), .fluid_out(r3), .air_in(horiz_ctrl), .air_out(d1));
-  valve v5(.fluid_in(r3), .fluid_out(buffer_out), .air_in(d1), .air_out(d2));
+  valve v5(.fluid_in(r30), .fluid_out(buffer_out), .air_in(d1), .air_out(d2));
   valve v6(.fluid_in(cell_in), .fluid_out(r2), .air_in(d2), .air_out(d3));
-  valve v7(.fluid_in(r2), .fluid_out(cell_out), .air_in(d3), .air_out(horiz_flush));
+  valve v7(.fluid_in(r2o), .fluid_out(cell_out), .air_in(d3), .air_out(horiz_flush));
   valve v8(.fluid_in(bead_in), .fluid_out(r4), .air_in(bead_ctrl), .air_out(d5));
-  valve v9(.fluid_in(r4), .fluid_out(bead_out), .air_in(d5), .air_out(bead_flush));
+  valve v9(.fluid_in(r4o), .fluid_out(bead_out), .air_in(d5), .air_out(bead_flush));
   pump_valve p0(.fluid_in(r1), .fluid_out(j1), .air_in(pump[0]), .air_out(pump_flush[0]));
-  pump_valve p1(.fluid_in(r1), .fluid_out(j2), .air_in(pump[1]), .air_out(pump_flush[1]));
-  pump_valve p2(.fluid_in(j2), .fluid_out(r1), .air_in(pump[2]), .air_out(pump_flush[2]));
+  pump_valve p1(.fluid_in(j1), .fluid_out(j2), .air_in(pump[1]), .air_out(pump_flush[1]));
+  pump_valve p2(.fluid_in(j2), .fluid_out(r1o), .air_in(pump[2]), .air_out(pump_flush[2]));
   (* type="ctrl" *) wire e1;
-  valve v10(.fluid_in(r1), .fluid_out(r4), .air_in(loop_exit_ctrl), .air_out(loop_exit_flush));
-  valve v11(.fluid_in(r4), .fluid_out(r5), .air_in(bead_trap_ctrl), .air_out(bead_trap_flush));
+  valve v10(.fluid_in(r1o), .fluid_out(r4), .air_in(loop_exit_ctrl), .air_out(loop_exit_flush));
+  valve v11(.fluid_in(r4o), .fluid_out(r5), .air_in(bead_trap_ctrl), .air_out(bead_trap_flush));
   valve v12(.fluid_in(r5), .fluid_out(waste), .air_in(waste_ctrl), .air_out(waste_flush));
   valve v13(.fluid_in(r5), .fluid_out(collect), .air_in(collect_ctrl), .air_out(collect_flush));
 
@@ -246,7 +293,7 @@ module mnacidpro((* type="ctrl" *) input lysis_ctrl, wash_ctrl, elute_ctrl, dead
   generate
     genvar i;
     for (i = 0; i < SIZE; i = i + 1) begin: chamber
-      mnacidpro_reactor thingy(
+      mnacidpro_reactor_direct thingy(
         .vertical_ctrl(vertical_inter[i]),
          .horiz_ctrl(horiz_inter[i]),
          .waste_ctrl(waste_inter[i]),
@@ -632,4 +679,334 @@ flush_hole_0 cells_out_flush_hole(.connection(cells_out_flush), .pad(pad_cells_o
 .beads_flush(beads_flush),
 .cells_in_flush(cells_in_flush),
 .cells_out_flush(cells_out_flush));
+endmodule
+ module mux((* type="flow" *) input [SIZE-1:0] inlet,
+            (* type="flow" *) output outlet,
+            (* type="ctrl" *) input [SIZE-1:0] ctrl,
+            (* type="flush" *) output [SIZE-1:0] flush);
+  parameter SIZE = 2;
+  generate
+    genvar i;
+    for (i = 0; i < SIZE; i = i + 1) begin: valves
+      valve vinlet(.fluid_in(inlet[i]), .fluid_out(outlet), .air_in(ctrl[i]), .air_out(flush[i]));
+    end
+  endgenerate
+endmodule
+
+module pump((* type="flow" *) input inlet,
+            (* type="flow" *) output outlet,
+            (* type="ctrl" *) input [SIZE-1:0] drive,
+            (* type="flush" *) output [SIZE-1:0] flush);
+
+  parameter SIZE = 3;
+  (* type="flow" *) wire [SIZE:0] j;
+
+  assign j[0] = inlet;
+  assign outlet = j[SIZE];
+  generate
+    genvar i;
+    for (i = 0; i < SIZE; i = i + 1) begin: valves
+      pump_valve vinlet(.fluid_in(j[i]), .fluid_out(j[i+1]), .air_in(drive[i]), .air_out(flush[i]));
+    end
+  endgenerate
+endmodule
+
+module reaction_chamber((* type="ctrl" *) input ctrl_ring_in,
+                        ctrl_ring_out, ctrl_sieve,
+                        ctrl_collect,
+                        ctrl_inlet, ctrl_outlet, ctrl_bead,
+                        (* type="ctrl" *) input [2:0] pump,
+                        (* type="flush" *) output flush_ring_in,
+                        flush_ring_out, flush_sieve,
+                        flush_collect,
+                        flush_inlet, flush_outlet, flush_bead,
+                        (* type="flush" *) output [2:0] flush_pump,
+                        (* type="flow" *) input flow_ring_in, flow_inlet, bead_in,
+                        (* type="flow" *) output flow_outlet, collect);
+  (* type="flow" *) wire j1,j1o, j2, j3, j4, j5;
+  chamber ring(.fluid_in(j1), .fluid_out(j1o));
+  valve vring_in(.fluid_in(flow_ring_in), .fluid_out(j1), .air_in(ctrl_ring_in), .air_out(flush_ring_in));
+  pump #(1) vpump1 (.inlet(j1o), .outlet(j2), .drive(pump[0]), .flush(flush_pump[0]));
+  pump #(1) vpump2 (.inlet(j2), .outlet(j3), .drive(pump[1]), .flush(flush_pump[1]));
+  pump #(1) vpump3 (.inlet(j3), .outlet(j1), .drive(pump[2]), .flush(flush_pump[2]));
+  valve vinlet(.fluid_in(flow_inlet), .fluid_out(j2), .air_in(ctrl_inlet), .air_out(flush_inlet));
+  valve voutlet(.fluid_in(flow_outlet), .fluid_out(j3), .air_in(ctrl_outlet), .air_out(flush_outlet));
+  valve vbead(.fluid_in(bead_in), .fluid_out(j2), .air_in(ctrl_bead), .air_out(flush_bead));
+  valve vring_out(.fluid_in(j1o), .fluid_out(j4), .air_in(ctrl_ring_out), .air_out(flush_ring_out));
+  sieve_valve vsieve(.fluid_in(j4), .fluid_out(j5), .air_in(ctrl_sieve), .air_out(flush_sieve));
+  valve vcollect(.fluid_in(j5), .fluid_out(collect), .air_in(ctrl_collect), .air_out(flush_collect));
+endmodule
+
+module prep_chamber((* type="flow" *) input flow_inlet,
+                    (* type="ctrl" *) input ctrl_v1, ctrl_v2, ctrl_sv1, ctrl_inlet, ctrl_outlet1, ctrl_outlet2, ctrl_ringout,
+                    (* type="flush" *) output flush_v1, flush_v2, flush_sv1, flush_inlet, flush_outlet1, flush_outlet2, flush_ringout,
+                    (* type="flow" *) output  flow_outlet1, flow_outlet2, flow_ringout);
+  (* type="flow" *) wire j1, j2, j3, j4;
+  chamber ring(.fluid_in(j3), .fluid_out(j4));
+  valve vin(.fluid_in(flow_inlet), .fluid_out(j1), .air_in(ctrl_inlet), .air_out(flush_inlet));
+  valve vout1(.fluid_in(j1), .fluid_out(flow_outlet1), .air_in(ctrl_outlet1), .air_out(flush_outlet1));
+  valve vout2(.fluid_in(j2), .fluid_out(flow_outlet2), .air_in(ctrl_outlet2), .air_out(flush_outlet2));
+  valve v1(.fluid_in(j1), .fluid_out(j3), .air_in(ctrl_v1), .air_out(flush_v1));
+  valve v2(.fluid_in(j2), .fluid_out(j1), .air_in(ctrl_v2), .air_out(flush_v2));
+  valve sv1(.fluid_in(j4), .fluid_out(j2), .air_in(ctrl_sv1), .air_out(flush_sv1));
+  valve vout3(.fluid_in(j4), .fluid_out(flow_ringout), .air_in(ctrl_ringout), .air_out(flush_ringout));
+
+endmodule
+
+module ChIP((* type="flow" *) input [4:0] prep_inlet,
+             (* type="flow" *) input [SIZE-1:0] ring_inlet,
+             (* type="flow" *) output [1:0] prep_outlet,
+             (* type="flow" *) output [SIZE-1:0] ring_outlet,
+             (* type="flow" *) output [SIZE-1:0] collect,
+            (* type="flow" *) input bead_in,
+             (* type="ctrl" *) input [4:0] ctrl_inlet,
+             (* type="ctrl" *) input ctrl_prep_inlet,
+             ctrl_v1, ctrl_v2, ctrl_sv1,
+             ctrl_stage_in,
+             ctrl_stage_out, ctrl_sieve,
+             ctrl_collect,
+             ctrl_stage_inlet, ctrl_stage_outlet, ctrl_bead,
+            ctrl_prep_ringout,
+             (* type="ctrl" *) input  [1:0] ctrl_prep_outlet,
+             (* type="ctrl" *) input [2:0] pump,
+             (* type="flush" *) output [4:0] flush_inlet,
+             (* type="flush" *) output flush_prep_inlet,
+             flush_v1, flush_v2, flush_sv1,
+             flush_stage_in,
+             flush_stage_out, flush_sieve,
+             flush_collect,
+             flush_stage_inlet, flush_stage_outlet, flush_bead,
+            flush_prep_ringout,
+             (* type="flush" *) output [1:0] flush_prep_outlet,
+             (* type="flush" *) output [2:0] flush_pump);
+  parameter SIZE = 1;
+
+  (* type="ctrl" *) wire inter_stage_in [SIZE:0];
+  assign inter_stage_in[0] = ctrl_stage_in;
+  assign flush_stage_in = inter_stage_in[SIZE];
+  (* type="ctrl" *) wire inter_stage_out [SIZE:0];
+  assign inter_stage_out[0] = ctrl_stage_out;
+  assign flush_stage_out = inter_stage_out[SIZE];
+  (* type="ctrl" *) wire inter_sieve [SIZE:0];
+  assign inter_sieve[0] = ctrl_sieve;
+  assign flush_sieve = inter_sieve[SIZE];
+  (* type="ctrl" *) wire inter_collect [SIZE:0];
+  assign inter_collect[0] = ctrl_collect;
+  assign flush_collect = inter_collect[SIZE];
+  (* type="ctrl" *) wire inter_stage_inlet [SIZE:0];
+  assign inter_stage_inlet[0] = ctrl_stage_inlet;
+  assign flush_stage_inlet = inter_stage_inlet[SIZE];
+  (* type="ctrl" *) wire inter_stage_outlet [SIZE:0];
+  assign inter_stage_outlet[0] = ctrl_stage_outlet;
+  assign flush_stage_outlet = inter_stage_outlet[SIZE];
+  (* type="ctrl" *) wire inter_bead [SIZE:0];
+  assign inter_bead[0] = ctrl_bead;
+  assign flush_bead = inter_bead[SIZE];
+  (* type="ctrl" *) wire [2:0] inter_pump [SIZE:0];
+  assign inter_pump[0] = pump;
+  assign flush_pump = inter_pump[SIZE];
+
+
+
+  (* type="flow" *) wire mux_out, prep_to_ring;
+  mux #(5) vinlet (.inlet(prep_inlet), .outlet(mux_out), .ctrl(ctrl_inlet), .flush(flush_inlet));
+
+  prep_chamber prep(.flow_inlet(mux_out),
+                          .ctrl_v1(ctrl_v1),
+                          .ctrl_v2(ctrl_v2),
+                          .ctrl_sv1(ctrl_sv1),
+                          .ctrl_inlet(ctrl_prep_inlet),
+                          .ctrl_outlet1(ctrl_prep_outlet[0]),
+                          .ctrl_outlet2(ctrl_prep_outlet[1]),
+                          .ctrl_ringout(ctrl_prep_ringout),
+                          .flush_v1(flush_v1),
+                          .flush_v2(flush_v2),
+                          .flush_sv1(flush_sv1),
+                          .flush_inlet(flush_prep_inlet),
+                          .flush_outlet1(flush_prep_outlet[0]),
+                          .flush_outlet2(flush_prep_outlet[1]),
+                          .flush_ringout(flush_prep_ringout),
+                          .flow_outlet1(prep_outlet[0]),
+                          .flow_outlet2(prep_outlet[1]),
+                          .flow_ringout(prep_to_ring));
+
+
+  generate
+    genvar i;
+    for (i = 0; i < SIZE; i = i + 1) begin: chamber
+      reaction_chamber first(.ctrl_ring_in(inter_stage_in[i]),
+                                       .ctrl_ring_out(inter_stage_out[i]),
+
+                                       .ctrl_sieve(inter_sieve[i]),
+                                       .ctrl_collect(inter_collect[i]),
+                                       .ctrl_inlet(inter_stage_inlet[i]),
+                                       .ctrl_outlet(inter_stage_outlet[i]),
+                                       .ctrl_bead(inter_bead[i]),
+                                       .pump(inter_pump[i]),
+                                       .flush_ring_in(inter_stage_in[i+1]),
+                                       .flush_ring_out(inter_stage_out[i+1]),
+                                       .flush_sieve(inter_sieve[i+1]),
+                                       .flush_collect(inter_collect[i+1]),
+                                       .flush_inlet(inter_stage_inlet[i+1]),
+                                       .flush_outlet(inter_stage_outlet[i+1]),
+                                       .flush_bead(inter_bead[i+1]),
+                                       .flush_pump(inter_pump[i+1]),
+                                       .flow_ring_in(prep_to_ring),
+                                       .flow_inlet(ring_inlet[i]),
+                                       .flow_outlet(ring_outlet[i]),
+                                      .bead_in(bead_in),
+                                       .collect(collect[i]));
+    end
+  endgenerate
+endmodule
+module ChIP_pads((* type="flow" *) input [4:0] pad_prep_inlet,
+             (* type="flow" *) input [SIZE-1:0] pad_ring_inlet,
+             (* type="flow" *) output [1:0] pad_prep_outlet,
+             (* type="flow" *) output [SIZE-1:0] pad_ring_outlet,
+             (* type="flow" *) output [SIZE-1:0] pad_collect,
+            (* type="flow" *) input pad_bead_in,
+             (* type="ctrl" *) input [4:0] pad_ctrl_inlet,
+             (* type="ctrl" *) input pad_ctrl_prep_inlet,
+             pad_ctrl_v1, pad_ctrl_v2, pad_ctrl_sv1,
+             pad_ctrl_stage_in,
+             pad_ctrl_stage_out, pad_ctrl_sieve,
+             pad_ctrl_collect,
+             pad_ctrl_stage_inlet, pad_ctrl_stage_outlet, pad_ctrl_bead,
+            pad_ctrl_prep_ringout,
+             (* type="ctrl" *) input  [1:0] pad_ctrl_prep_outlet,
+             (* type="ctrl" *) input [2:0] pad_pump,
+             (* type="flush" *) output [4:0] pad_flush_inlet,
+             (* type="flush" *) output pad_flush_prep_inlet,
+             pad_flush_v1, pad_flush_v2, pad_flush_sv1,
+             pad_flush_stage_in,
+             pad_flush_stage_out, pad_flush_sieve,
+             pad_flush_collect,
+             pad_flush_stage_inlet, pad_flush_stage_outlet, pad_flush_bead,
+            pad_flush_prep_ringout,
+             (* type="flush" *) output [1:0] pad_flush_prep_outlet,
+             (* type="flush" *) output [2:0] pad_flush_pump);
+  parameter SIZE = 1;
+
+(* type="flow" *) wire [4:0] prep_inlet;
+             (* type="flow" *) wire [SIZE-1:0] ring_inlet;
+             (* type="flow" *) wire [1:0] prep_outlet;
+             (* type="flow" *) wire [SIZE-1:0] ring_outlet;
+             (* type="flow" *) wire [SIZE-1:0] collect;
+            (* type="flow" *) wire bead_in;
+             (* type="ctrl" *) wire [4:0] ctrl_inlet;
+             (* type="ctrl" *) wire ctrl_prep_inlet,
+             ctrl_v1, ctrl_v2, ctrl_sv1,
+             ctrl_stage_in,
+             ctrl_stage_out, ctrl_sieve,
+             ctrl_collect,
+             ctrl_stage_inlet, ctrl_stage_outlet, ctrl_bead,
+            ctrl_prep_ringout;
+             (* type="ctrl" *) wire  [1:0] ctrl_prep_outlet;
+             (* type="ctrl" *) wire [2:0] pump;
+             (* type="flush" *) wire [4:0] flush_inlet;
+             (* type="flush" *) wire flush_prep_inlet,
+             flush_v1, flush_v2, flush_sv1,
+             flush_stage_in,
+             flush_stage_out, flush_sieve,
+             flush_collect,
+             flush_stage_inlet, flush_stage_outlet, flush_bead,
+            flush_prep_ringout;
+             (* type="flush" *) wire [1:0] flush_prep_outlet;
+             (* type="flush" *) wire [2:0] flush_pump;
+generate
+    genvar i, j;
+    for (i = 0; i < 5; i = i + 1) begin: prep_inlet_pinholes
+     pinhole_320px_0 hole(.connection(prep_inlet[i]), .pad(pad_prep_inlet[i]));
+    end
+    for (i = 0; i < SIZE; i = i + 1) begin: ring_inlet_pinholes
+     pinhole_320px_0 hole(.connection(ring_inlet[i]), .pad(pad_ring_inlet[i]));
+    end
+    for (i = 0; i < 2; i = i + 1) begin: prep_outlet_pinholes
+     pinhole_320px_0 hole(.connection(prep_outlet[i]), .pad(pad_prep_outlet[i]));
+    end
+    for (i = 0; i < SIZE; i = i + 1) begin: ring_outlet_pinholes
+     pinhole_320px_0 hole(.connection(ring_outlet[i]), .pad(pad_ring_outlet[i]));
+    end
+    for (i = 0; i < SIZE; i = i + 1) begin: collect_pinholes
+     pinhole_320px_0 hole(.connection(collect[i]), .pad(pad_collect[i]));
+    end
+    pinhole_320px_0 hole(.connection(bead_in), .pad(pad_bead_in));
+    for (i = 0; i < 3; i = i + 1) begin: pump_pinholes
+     ctrl_hole_0 hole(.connection(pump[i]), .pad(pad_pump[i]));
+    end
+    for (i = 0; i < 3; i = i + 1) begin: flush_pump_pinholes
+     flush_hole_0 hole(.connection(flush_pump[i]), .pad(pad_flush_pump[i]));
+    end
+    for (i = 0; i < 5; i = i + 1) begin: ctrl_inlet_pinholes
+     ctrl_hole_0 hole(.connection(ctrl_inlet[i]), .pad(pad_ctrl_inlet[i]));
+    end
+    for (i = 0; i < 2; i = i + 1) begin: ctrl_prep_outlet_pinholes
+     ctrl_hole_0 hole(.connection(ctrl_prep_outlet[i]), .pad(pad_ctrl_prep_outlet[i]));
+    end
+    ctrl_hole_0 ctrl_prep_inlet_hole(.connection(ctrl_prep_inlet), .pad(pad_ctrl_prep_inlet));
+    ctrl_hole_0 ctrl_v1_hole(.connection(ctrl_v1), .pad(pad_ctrl_v1));
+    ctrl_hole_0 ctrl_v2_hole(.connection(ctrl_v2), .pad(pad_ctrl_v2));
+    ctrl_hole_0 ctrl_sv1_hole(.connection(ctrl_sv1), .pad(pad_ctrl_sv1));
+    ctrl_hole_0 ctrl_stage_in_hole(.connection(ctrl_stage_in), .pad(pad_ctrl_stage_in));
+    ctrl_hole_0 ctrl_stage_out_hole(.connection(ctrl_stage_out), .pad(pad_ctrl_stage_out));
+    ctrl_hole_0 ctrl_sieve_hole(.connection(ctrl_sieve), .pad(pad_ctrl_sieve));
+    ctrl_hole_0 ctrl_collect_hole(.connection(ctrl_collect), .pad(pad_ctrl_collect));
+    ctrl_hole_0 ctrl_stage_inlet_hole(.connection(ctrl_stage_inlet), .pad(pad_ctrl_stage_inlet));
+    ctrl_hole_0 ctrl_stage_outlet_hole(.connection(ctrl_stage_outlet), .pad(pad_ctrl_stage_outlet));
+    ctrl_hole_0 ctrl_bead_hole(.connection(ctrl_bead), .pad(pad_ctrl_bead));
+    for (i = 0; i < 5; i = i + 1) begin: flush_inlet_pinholes
+     flush_hole_0 hole(.connection(flush_inlet[i]), .pad(pad_flush_inlet[i]));
+    end
+    for (i = 0; i < 2; i = i + 1) begin: flush_prep_outlet_pinholes
+     flush_hole_0 hole(.connection(flush_prep_outlet[i]), .pad(pad_flush_prep_outlet[i]));
+    end
+    flush_hole_0 flush_prep_inlet_hole(.connection(flush_prep_inlet), .pad(pad_flush_prep_inlet));
+    flush_hole_0 flush_v1_hole(.connection(flush_v1), .pad(pad_flush_v1));
+    flush_hole_0 flush_v2_hole(.connection(flush_v2), .pad(pad_flush_v2));
+    flush_hole_0 flush_sv1_hole(.connection(flush_sv1), .pad(pad_flush_sv1));
+    flush_hole_0 flush_stage_in_hole(.connection(flush_stage_in), .pad(pad_flush_stage_in));
+    flush_hole_0 flush_stage_out_hole(.connection(flush_stage_out), .pad(pad_flush_stage_out));
+    flush_hole_0 flush_sieve_hole(.connection(flush_sieve), .pad(pad_flush_sieve));
+    flush_hole_0 flush_collect_hole(.connection(flush_collect), .pad(pad_flush_collect));
+    flush_hole_0 flush_stage_inlet_hole(.connection(flush_stage_inlet), .pad(pad_flush_stage_inlet));
+    flush_hole_0 flush_stage_outlet_hole(.connection(flush_stage_outlet), .pad(pad_flush_stage_outlet));
+    flush_hole_0 flush_bead_hole(.connection(flush_bead), .pad(pad_flush_bead));
+  endgenerate
+      ChIP #(SIZE) thingy(
+      .prep_inlet(prep_inlet),
+       .ring_inlet(ring_inlet),
+       .prep_outlet(prep_outlet),
+       .ring_outlet(ring_outlet),
+       .collect(collect),
+       .bead_in(bead_in),
+       .ctrl_inlet(ctrl_inlet),
+       .ctrl_prep_inlet(ctrl_prep_inlet),
+       .ctrl_v1(ctrl_v1),
+       .ctrl_v2(ctrl_v2),
+       .ctrl_sv1(ctrl_sv1),
+       .ctrl_stage_in(ctrl_stage_in),
+       .ctrl_stage_out(ctrl_stage_out),
+       .ctrl_sieve(ctrl_sieve),
+       .ctrl_collect(ctrl_collect),
+       .ctrl_stage_inlet(ctrl_stage_inlet),
+       .ctrl_stage_outlet(ctrl_stage_outlet),
+       .ctrl_bead(ctrl_bead),
+       .ctrl_prep_ringout(ctrl_prep_ringout),
+       .ctrl_prep_outlet(ctrl_prep_outlet),
+       .pump(pump),
+       .flush_inlet(flush_inlet),
+       .flush_prep_inlet(flush_prep_inlet),
+       .flush_v1(flush_v1),
+       .flush_v2(flush_v2),
+       .flush_sv1(flush_sv1),
+       .flush_stage_in(flush_stage_in),
+             .flush_stage_out(flush_stage_out),
+       .flush_sieve(flush_sieve),
+       .flush_collect(flush_collect),
+       .flush_stage_inlet(flush_stage_inlet),
+       .flush_stage_outlet(flush_stage_outlet),
+       .flush_bead(flush_bead),
+       .flush_prep_ringout(flush_prep_ringout),
+       .flush_prep_outlet(flush_prep_outlet),
+       .flush_pump(flush_pump));
 endmodule

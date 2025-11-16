@@ -1,0 +1,2665 @@
+{
+  "creator": "Yosys 0.55+194 (git sha1 8576d2d14, g++ 8.5.0 -fPIC -O3)",
+  "modules": {
+    "thing": {
+      "attributes": {
+        "dynports": "00000000000000000000000000000001",
+        "top": "00000000000000000000000000000001",
+        "src": "benchmarks/mnacidpro_pads_2.v:1.1-23.10"
+      },
+      "parameter_default_values": {
+        "SIZE": "00000000000000000000000000000010"
+      },
+      "ports": {
+        "lysis_ctrl": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "wash_ctrl": {
+          "direction": "input",
+          "bits": [ 3 ]
+        },
+        "elute_ctrl": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "dead_end_ctrl": {
+          "direction": "input",
+          "bits": [ 5 ]
+        },
+        "vertical_ctrl": {
+          "direction": "input",
+          "bits": [ 6 ]
+        },
+        "horiz_ctrl": {
+          "direction": "input",
+          "bits": [ 7 ]
+        },
+        "waste_ctrl": {
+          "direction": "input",
+          "bits": [ 8 ]
+        },
+        "bead_ctrl": {
+          "direction": "input",
+          "bits": [ 9 ]
+        },
+        "loop_exit_ctrl": {
+          "direction": "input",
+          "bits": [ 10 ]
+        },
+        "bead_trap_ctrl": {
+          "direction": "input",
+          "bits": [ 11 ]
+        },
+        "collect_ctrl": {
+          "direction": "input",
+          "bits": [ 12 ]
+        },
+        "pump": {
+          "direction": "input",
+          "bits": [ 13, 14, 15 ]
+        },
+        "lysis_flush": {
+          "direction": "input",
+          "bits": [ 16 ]
+        },
+        "wash_flush": {
+          "direction": "input",
+          "bits": [ 17 ]
+        },
+        "elute_flush": {
+          "direction": "input",
+          "bits": [ 18 ]
+        },
+        "dead_end_flush": {
+          "direction": "input",
+          "bits": [ 19 ]
+        },
+        "vertical_flush": {
+          "direction": "input",
+          "bits": [ 20 ]
+        },
+        "horiz_flush": {
+          "direction": "input",
+          "bits": [ 21 ]
+        },
+        "waste_flush": {
+          "direction": "input",
+          "bits": [ 22 ]
+        },
+        "bead_flush": {
+          "direction": "input",
+          "bits": [ 23 ]
+        },
+        "loop_exit_flush": {
+          "direction": "input",
+          "bits": [ 24 ]
+        },
+        "bead_trap_flush": {
+          "direction": "input",
+          "bits": [ 25 ]
+        },
+        "collect_flush": {
+          "direction": "input",
+          "bits": [ 26 ]
+        },
+        "pump_flush": {
+          "direction": "input",
+          "bits": [ 27, 28, 29 ]
+        },
+        "bead_in": {
+          "direction": "input",
+          "bits": [ 30 ]
+        },
+        "buffer_in": {
+          "direction": "input",
+          "bits": [ 31 ]
+        },
+        "cell_in": {
+          "direction": "input",
+          "bits": [ 32 ]
+        },
+        "lysis_in": {
+          "direction": "input",
+          "bits": [ 33 ]
+        },
+        "wash_in": {
+          "direction": "input",
+          "bits": [ 34 ]
+        },
+        "elute_in": {
+          "direction": "input",
+          "bits": [ 35 ]
+        },
+        "collect": {
+          "direction": "output",
+          "bits": [ 36, 37 ]
+        },
+        "waste": {
+          "direction": "output",
+          "bits": [ 38 ]
+        },
+        "bead_out": {
+          "direction": "output",
+          "bits": [ 39 ]
+        },
+        "buffer_out": {
+          "direction": "output",
+          "bits": [ 40 ]
+        },
+        "cell_out": {
+          "direction": "output",
+          "bits": [ 41 ]
+        }
+      },
+      "cells": {
+        "thing": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/mnacidpro_pads_2.v:13.24-21.56",
+            "module": "$paramod\\mnacidpro_pads\\SIZE=s32'00000000000000000000000000000010",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "mnacidpro_pads",
+            "module_src": "benchmarks/library.v:485.1-557.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.bead_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing bead_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:524.15-524.74"
+          },
+          "connections": {
+            "connection": [ 42 ],
+            "pad": [ 9 ]
+          }
+        },
+        "thing.bead_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing bead_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:546.19-546.72"
+          },
+          "connections": {
+            "connection": [ 43 ],
+            "pad": [ 30 ]
+          }
+        },
+        "thing.bead_out_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing bead_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:554.19-554.75"
+          },
+          "connections": {
+            "connection": [ 44 ],
+            "pad": [ 39 ]
+          }
+        },
+        "thing.bead_trap_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing bead_trap_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:526.15-526.89"
+          },
+          "connections": {
+            "connection": [ 45 ],
+            "pad": [ 11 ]
+          }
+        },
+        "thing.buffer_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing buffer_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:547.19-547.78"
+          },
+          "connections": {
+            "connection": [ 46 ],
+            "pad": [ 31 ]
+          }
+        },
+        "thing.buffer_out_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing buffer_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:555.19-555.81"
+          },
+          "connections": {
+            "connection": [ 47 ],
+            "pad": [ 40 ]
+          }
+        },
+        "thing.cell_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing cell_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:548.19-548.72"
+          },
+          "connections": {
+            "connection": [ 48 ],
+            "pad": [ 32 ]
+          }
+        },
+        "thing.cell_out_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing cell_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:556.19-556.75"
+          },
+          "connections": {
+            "connection": [ 49 ],
+            "pad": [ 41 ]
+          }
+        },
+        "thing.collect_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing collect_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:527.15-527.83"
+          },
+          "connections": {
+            "connection": [ 50 ],
+            "pad": [ 12 ]
+          }
+        },
+        "thing.collect_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing collect_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:552.19-552.72"
+          },
+          "connections": {
+            "connection": [ 51, 52 ],
+            "pad": [ 36, 37 ]
+          }
+        },
+        "thing.dead_end_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing dead_end_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:520.15-520.86"
+          },
+          "connections": {
+            "connection": [ 53 ],
+            "pad": [ 5 ]
+          }
+        },
+        "thing.elute_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing elute_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:519.15-519.77"
+          },
+          "connections": {
+            "connection": [ 54 ],
+            "pad": [ 4 ]
+          }
+        },
+        "thing.elute_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing elute_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:551.19-551.75"
+          },
+          "connections": {
+            "connection": [ 55 ],
+            "pad": [ 35 ]
+          }
+        },
+        "thing.horiz_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing horiz_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:522.15-522.77"
+          },
+          "connections": {
+            "connection": [ 56 ],
+            "pad": [ 7 ]
+          }
+        },
+        "thing.loop_exit_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing loop_exit_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:525.15-525.89"
+          },
+          "connections": {
+            "connection": [ 57 ],
+            "pad": [ 10 ]
+          }
+        },
+        "thing.lysis_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing lysis_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:517.15-517.77"
+          },
+          "connections": {
+            "connection": [ 58 ],
+            "pad": [ 2 ]
+          }
+        },
+        "thing.lysis_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing lysis_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:549.19-549.75"
+          },
+          "connections": {
+            "connection": [ 59 ],
+            "pad": [ 33 ]
+          }
+        },
+        "thing.pump0_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing pump0_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:528.15-528.66"
+          },
+          "connections": {
+            "connection": [ 60 ],
+            "pad": [ 13 ]
+          }
+        },
+        "thing.pump1_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing pump1_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:529.15-529.66"
+          },
+          "connections": {
+            "connection": [ 61 ],
+            "pad": [ 14 ]
+          }
+        },
+        "thing.pump2_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing pump2_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:530.15-530.66"
+          },
+          "connections": {
+            "connection": [ 62 ],
+            "pad": [ 15 ]
+          }
+        },
+        "thing.pump_flush0_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing pump_flush0_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:543.16-543.85"
+          },
+          "connections": {
+            "connection": [ 63 ],
+            "pad": [ 27 ]
+          }
+        },
+        "thing.pump_flush1_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing pump_flush1_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:544.16-544.85"
+          },
+          "connections": {
+            "connection": [ 64 ],
+            "pad": [ 28 ]
+          }
+        },
+        "thing.pump_flush2_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing pump_flush2_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:545.16-545.85"
+          },
+          "connections": {
+            "connection": [ 65 ],
+            "pad": [ 29 ]
+          }
+        },
+        "thing.thing": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:507.21-516.60",
+            "hdlname": "thing thing",
+            "module": "$paramod\\mnacidpro\\SIZE=s32'00000000000000000000000000000010",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "mnacidpro",
+            "module_src": "benchmarks/library.v:240.1-330.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.thing.chamber[0].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:296.32-321.39",
+            "hdlname": "thing thing chamber[0].thingy",
+            "module": "mnacidpro_reactor_direct",
+            "module_src": "benchmarks/library.v:158.1-197.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.thing.chamber[0].thingy.p0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy p0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:188.14-188.90"
+          },
+          "connections": {
+            "air_in": [ 60 ],
+            "air_out": [ 66 ],
+            "fluid_in": [ 67 ],
+            "fluid_out": [ 68 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.p1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy p1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:189.14-189.90"
+          },
+          "connections": {
+            "air_in": [ 61 ],
+            "air_out": [ 69 ],
+            "fluid_in": [ 68 ],
+            "fluid_out": [ 70 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.p2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy p2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:190.14-190.91"
+          },
+          "connections": {
+            "air_in": [ 62 ],
+            "air_out": [ 71 ],
+            "fluid_in": [ 70 ],
+            "fluid_out": [ 72 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.r1c": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r1c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:177.11-177.46"
+          },
+          "connections": {
+            "fluid_in": [ 67 ],
+            "fluid_out": [ 72 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.r2c": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r2c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:178.11-178.46"
+          },
+          "connections": {
+            "fluid_in": [ 73 ],
+            "fluid_out": [ 74 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.r3c": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r3c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:179.11-179.46"
+          },
+          "connections": {
+            "fluid_in": [ 75 ],
+            "fluid_out": [ 76 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.r4c": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r4c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:180.11-180.46"
+          },
+          "connections": {
+            "fluid_in": [ 77 ],
+            "fluid_out": [ 78 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:173.9-173.95"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 79 ],
+            "air_out": [ 80 ],
+            "fluid_in": [ 81 ],
+            "fluid_out": [ 75 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:192.9-192.96"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 57 ],
+            "air_out": [ 82 ],
+            "fluid_in": [ 72 ],
+            "fluid_out": [ 77 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:193.9-193.96"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 45 ],
+            "air_out": [ 83 ],
+            "fluid_in": [ 78 ],
+            "fluid_out": [ 84 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:194.9-194.90"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 85 ],
+            "air_out": [ 86 ],
+            "fluid_in": [ 84 ],
+            "fluid_out": [ 87 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v13": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v13",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:195.9-195.96"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 50 ],
+            "air_out": [ 88 ],
+            "fluid_in": [ 84 ],
+            "fluid_out": [ 51 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:174.9-174.93"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 79 ],
+            "air_out": [ 80 ],
+            "fluid_in": [ 76 ],
+            "fluid_out": [ 73 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:175.9-175.92"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 79 ],
+            "air_out": [ 80 ],
+            "fluid_in": [ 73 ],
+            "fluid_out": [ 67 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:182.9-182.93"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 56 ],
+            "air_out": [ 89 ],
+            "fluid_in": [ 46 ],
+            "fluid_out": [ 75 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:183.9-183.94"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 56 ],
+            "air_out": [ 56 ],
+            "fluid_in": [ 90 ],
+            "fluid_out": [ 91 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:184.9-184.91"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 56 ],
+            "air_out": [ 89 ],
+            "fluid_in": [ 48 ],
+            "fluid_out": [ 73 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:185.9-185.93"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 56 ],
+            "air_out": [ 89 ],
+            "fluid_in": [ 74 ],
+            "fluid_out": [ 92 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:186.9-186.89"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 42 ],
+            "air_out": [ 93 ],
+            "fluid_in": [ 43 ],
+            "fluid_out": [ 77 ]
+          }
+        },
+        "thing.thing.chamber[0].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:187.9-187.91"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 42 ],
+            "air_out": [ 93 ],
+            "fluid_in": [ 78 ],
+            "fluid_out": [ 94 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:296.32-321.39",
+            "hdlname": "thing thing chamber[1].thingy",
+            "module": "mnacidpro_reactor_direct",
+            "module_src": "benchmarks/library.v:158.1-197.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "thing.thing.chamber[1].thingy.p0": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy p0",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:188.14-188.90"
+          },
+          "connections": {
+            "air_in": [ 66 ],
+            "air_out": [ 63 ],
+            "fluid_in": [ 95 ],
+            "fluid_out": [ 96 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.p1": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy p1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:189.14-189.90"
+          },
+          "connections": {
+            "air_in": [ 69 ],
+            "air_out": [ 64 ],
+            "fluid_in": [ 96 ],
+            "fluid_out": [ 97 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.p2": {
+          "hide_name": 0,
+          "type": "pump_valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy p2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:190.14-190.91"
+          },
+          "connections": {
+            "air_in": [ 71 ],
+            "air_out": [ 65 ],
+            "fluid_in": [ 97 ],
+            "fluid_out": [ 98 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.r1c": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r1c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:177.11-177.46"
+          },
+          "connections": {
+            "fluid_in": [ 95 ],
+            "fluid_out": [ 98 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.r2c": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r2c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:178.11-178.46"
+          },
+          "connections": {
+            "fluid_in": [ 99 ],
+            "fluid_out": [ 100 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.r3c": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r3c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:179.11-179.46"
+          },
+          "connections": {
+            "fluid_in": [ 101 ],
+            "fluid_out": [ 102 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.r4c": {
+          "hide_name": 0,
+          "type": "chamber",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r4c",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:180.11-180.46"
+          },
+          "connections": {
+            "fluid_in": [ 103 ],
+            "fluid_out": [ 104 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:173.9-173.95"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 80 ],
+            "air_out": [ 105 ],
+            "fluid_in": [ 81 ],
+            "fluid_out": [ 101 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v10": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v10",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:192.9-192.96"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 82 ],
+            "air_out": [ 106 ],
+            "fluid_in": [ 98 ],
+            "fluid_out": [ 103 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v11": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v11",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:193.9-193.96"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 83 ],
+            "air_out": [ 107 ],
+            "fluid_in": [ 104 ],
+            "fluid_out": [ 108 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v12": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v12",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:194.9-194.90"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 86 ],
+            "air_out": [ 109 ],
+            "fluid_in": [ 108 ],
+            "fluid_out": [ 87 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v13": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v13",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:195.9-195.96"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 88 ],
+            "air_out": [ 110 ],
+            "fluid_in": [ 108 ],
+            "fluid_out": [ 52 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:174.9-174.93"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 80 ],
+            "air_out": [ 105 ],
+            "fluid_in": [ 102 ],
+            "fluid_out": [ 99 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:175.9-175.92"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 80 ],
+            "air_out": [ 105 ],
+            "fluid_in": [ 99 ],
+            "fluid_out": [ 95 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v4": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v4",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:182.9-182.93"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 89 ],
+            "air_out": [ 111 ],
+            "fluid_in": [ 91 ],
+            "fluid_out": [ 101 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v5": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v5",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:183.9-183.94"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 89 ],
+            "air_out": [ 89 ],
+            "fluid_in": [ 112 ],
+            "fluid_out": [ 113 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v6": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v6",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:184.9-184.91"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 89 ],
+            "air_out": [ 111 ],
+            "fluid_in": [ 92 ],
+            "fluid_out": [ 99 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v7": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v7",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:185.9-185.93"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 89 ],
+            "air_out": [ 111 ],
+            "fluid_in": [ 100 ],
+            "fluid_out": [ 114 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v8": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v8",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:186.9-186.89"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 93 ],
+            "air_out": [ 115 ],
+            "fluid_in": [ 94 ],
+            "fluid_out": [ 103 ]
+          }
+        },
+        "thing.thing.chamber[1].thingy.v9": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy v9",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:187.9-187.91"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 93 ],
+            "air_out": [ 115 ],
+            "fluid_in": [ 104 ],
+            "fluid_out": [ 116 ]
+          }
+        },
+        "thing.thing.dead_bead": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing dead_bead",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:329.9-329.110"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 117 ],
+            "air_out": [ 118 ],
+            "fluid_in": [ 116 ],
+            "fluid_out": [ 44 ]
+          }
+        },
+        "thing.thing.dead_buffer": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing dead_buffer",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:327.9-327.115"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 53 ],
+            "air_out": [ 119 ],
+            "fluid_in": [ 113 ],
+            "fluid_out": [ 47 ]
+          }
+        },
+        "thing.thing.dead_cell": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing dead_cell",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:328.9-328.98"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 119 ],
+            "air_out": [ 117 ],
+            "fluid_in": [ 114 ],
+            "fluid_out": [ 49 ]
+          }
+        },
+        "thing.thing.elute": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing elute",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:291.9-291.98"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 54 ],
+            "air_out": [ 120 ],
+            "fluid_in": [ 55 ],
+            "fluid_out": [ 81 ]
+          }
+        },
+        "thing.thing.lysis": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing lysis",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:289.9-289.98"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 58 ],
+            "air_out": [ 121 ],
+            "fluid_in": [ 59 ],
+            "fluid_out": [ 81 ]
+          }
+        },
+        "thing.thing.wash": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing thing wash",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:290.9-290.94"
+          },
+          "port_directions": {
+            "air_in": "input",
+            "air_out": "output",
+            "fluid_in": "inout",
+            "fluid_out": "inout"
+          },
+          "connections": {
+            "air_in": [ 122 ],
+            "air_out": [ 123 ],
+            "fluid_in": [ 124 ],
+            "fluid_out": [ 81 ]
+          }
+        },
+        "thing.vertical_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing vertical_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:521.15-521.86"
+          },
+          "connections": {
+            "connection": [ 79 ],
+            "pad": [ 6 ]
+          }
+        },
+        "thing.wash_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing wash_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:518.15-518.74"
+          },
+          "connections": {
+            "connection": [ 122 ],
+            "pad": [ 3 ]
+          }
+        },
+        "thing.wash_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing wash_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:550.19-550.72"
+          },
+          "connections": {
+            "connection": [ 124 ],
+            "pad": [ 34 ]
+          }
+        },
+        "thing.waste_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing waste_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:523.15-523.77"
+          },
+          "connections": {
+            "connection": [ 85 ],
+            "pad": [ 8 ]
+          }
+        },
+        "thing.waste_hole": {
+          "hide_name": 0,
+          "type": "pinhole_320px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "thing waste_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:553.19-553.66"
+          },
+          "connections": {
+            "connection": [ 87 ],
+            "pad": [ 38 ]
+          }
+        }
+      },
+      "netnames": {
+        "bead_ctrl": {
+          "hide_name": 0,
+          "bits": [ 9 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:2.57-2.66",
+            "type": "ctrl"
+          }
+        },
+        "bead_flush": {
+          "hide_name": 0,
+          "bits": [ 23 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:5.60-5.70",
+            "type": "flush"
+          }
+        },
+        "bead_in": {
+          "hide_name": 0,
+          "bits": [ 30 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:7.42-7.49",
+            "type": "flow"
+          }
+        },
+        "bead_out": {
+          "hide_name": 0,
+          "bits": [ 39 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:10.50-10.58",
+            "type": "flow"
+          }
+        },
+        "bead_trap_ctrl": {
+          "hide_name": 0,
+          "bits": [ 11 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:2.84-2.98",
+            "type": "ctrl"
+          }
+        },
+        "bead_trap_flush": {
+          "hide_name": 0,
+          "bits": [ 25 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:5.89-5.104",
+            "type": "flush"
+          }
+        },
+        "buffer_in": {
+          "hide_name": 0,
+          "bits": [ 31 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:7.51-7.60",
+            "type": "flow"
+          }
+        },
+        "buffer_out": {
+          "hide_name": 0,
+          "bits": [ 40 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:10.60-10.70",
+            "type": "flow"
+          }
+        },
+        "cell_in": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:7.62-7.69",
+            "type": "flow"
+          }
+        },
+        "cell_out": {
+          "hide_name": 0,
+          "bits": [ 41 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:10.72-10.80",
+            "type": "flow"
+          }
+        },
+        "collect": {
+          "hide_name": 0,
+          "bits": [ 36, 37 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:9.54-9.61",
+            "type": "flow"
+          }
+        },
+        "collect_ctrl": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:2.100-2.112",
+            "type": "ctrl"
+          }
+        },
+        "collect_flush": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:5.106-5.119",
+            "type": "flush"
+          }
+        },
+        "dead_end_ctrl": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:1.73-1.86",
+            "type": "ctrl"
+          }
+        },
+        "dead_end_flush": {
+          "hide_name": 0,
+          "bits": [ 19 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:4.82-4.96",
+            "type": "flush"
+          }
+        },
+        "elute_ctrl": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:1.61-1.71",
+            "type": "ctrl"
+          }
+        },
+        "elute_flush": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:4.69-4.80",
+            "type": "flush"
+          }
+        },
+        "elute_in": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:8.61-8.69",
+            "type": "flow"
+          }
+        },
+        "horiz_ctrl": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:2.33-2.43",
+            "type": "ctrl"
+          }
+        },
+        "horiz_flush": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:5.34-5.45",
+            "type": "flush"
+          }
+        },
+        "loop_exit_ctrl": {
+          "hide_name": 0,
+          "bits": [ 10 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:2.68-2.82",
+            "type": "ctrl"
+          }
+        },
+        "loop_exit_flush": {
+          "hide_name": 0,
+          "bits": [ 24 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:5.72-5.87",
+            "type": "flush"
+          }
+        },
+        "lysis_ctrl": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:1.38-1.48",
+            "type": "ctrl"
+          }
+        },
+        "lysis_flush": {
+          "hide_name": 0,
+          "bits": [ 16 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:4.44-4.55",
+            "type": "flush"
+          }
+        },
+        "lysis_in": {
+          "hide_name": 0,
+          "bits": [ 33 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:8.42-8.50",
+            "type": "flow"
+          }
+        },
+        "pump": {
+          "hide_name": 0,
+          "bits": [ 13, 14, 15 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:3.48-3.52",
+            "type": "ctrl"
+          }
+        },
+        "pump_flush": {
+          "hide_name": 0,
+          "bits": [ 27, 28, 29 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:6.49-6.59",
+            "type": "flush"
+          }
+        },
+        "thing.bead_ctrl": {
+          "hide_name": 0,
+          "bits": [ 42 ],
+          "attributes": {
+            "hdlname": "thing bead_ctrl",
+            "src": "benchmarks/library.v:498.57-498.66",
+            "type": "ctrl"
+          }
+        },
+        "thing.bead_flush": {
+          "hide_name": 0,
+          "bits": [ 115 ],
+          "attributes": {
+            "hdlname": "thing bead_flush",
+            "src": "benchmarks/library.v:501.60-501.70",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.bead_in": {
+          "hide_name": 0,
+          "bits": [ 43 ],
+          "attributes": {
+            "hdlname": "thing bead_in",
+            "src": "benchmarks/library.v:503.41-503.48",
+            "type": "flow"
+          }
+        },
+        "thing.bead_out": {
+          "hide_name": 0,
+          "bits": [ 44 ],
+          "attributes": {
+            "hdlname": "thing bead_out",
+            "src": "benchmarks/library.v:506.48-506.56",
+            "type": "flow"
+          }
+        },
+        "thing.bead_trap_ctrl": {
+          "hide_name": 0,
+          "bits": [ 45 ],
+          "attributes": {
+            "hdlname": "thing bead_trap_ctrl",
+            "src": "benchmarks/library.v:498.84-498.98",
+            "type": "ctrl"
+          }
+        },
+        "thing.bead_trap_flush": {
+          "hide_name": 0,
+          "bits": [ 107 ],
+          "attributes": {
+            "hdlname": "thing bead_trap_flush",
+            "src": "benchmarks/library.v:501.89-501.104",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.buffer_in": {
+          "hide_name": 0,
+          "bits": [ 46 ],
+          "attributes": {
+            "hdlname": "thing buffer_in",
+            "src": "benchmarks/library.v:503.50-503.59",
+            "type": "flow"
+          }
+        },
+        "thing.buffer_out": {
+          "hide_name": 0,
+          "bits": [ 47 ],
+          "attributes": {
+            "hdlname": "thing buffer_out",
+            "src": "benchmarks/library.v:506.58-506.68",
+            "type": "flow"
+          }
+        },
+        "thing.cell_in": {
+          "hide_name": 0,
+          "bits": [ 48 ],
+          "attributes": {
+            "hdlname": "thing cell_in",
+            "src": "benchmarks/library.v:503.61-503.68",
+            "type": "flow"
+          }
+        },
+        "thing.cell_out": {
+          "hide_name": 0,
+          "bits": [ 49 ],
+          "attributes": {
+            "hdlname": "thing cell_out",
+            "src": "benchmarks/library.v:506.70-506.78",
+            "type": "flow"
+          }
+        },
+        "thing.collect_ctrl": {
+          "hide_name": 0,
+          "bits": [ 50 ],
+          "attributes": {
+            "hdlname": "thing collect_ctrl",
+            "src": "benchmarks/library.v:498.100-498.112",
+            "type": "ctrl"
+          }
+        },
+        "thing.collect_flush": {
+          "hide_name": 0,
+          "bits": [ 110 ],
+          "attributes": {
+            "hdlname": "thing collect_flush",
+            "src": "benchmarks/library.v:501.106-501.119",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.dead_end_ctrl": {
+          "hide_name": 0,
+          "bits": [ 53 ],
+          "attributes": {
+            "hdlname": "thing dead_end_ctrl",
+            "src": "benchmarks/library.v:497.59-497.72",
+            "type": "ctrl"
+          }
+        },
+        "thing.dead_end_flush": {
+          "hide_name": 0,
+          "bits": [ 118 ],
+          "attributes": {
+            "hdlname": "thing dead_end_flush",
+            "src": "benchmarks/library.v:500.81-500.95",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.elute_ctrl": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "hdlname": "thing elute_ctrl",
+            "src": "benchmarks/library.v:497.47-497.57",
+            "type": "ctrl"
+          }
+        },
+        "thing.elute_flush": {
+          "hide_name": 0,
+          "bits": [ 120 ],
+          "attributes": {
+            "hdlname": "thing elute_flush",
+            "src": "benchmarks/library.v:500.68-500.79",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.elute_in": {
+          "hide_name": 0,
+          "bits": [ 55 ],
+          "attributes": {
+            "hdlname": "thing elute_in",
+            "src": "benchmarks/library.v:504.60-504.68",
+            "type": "flow"
+          }
+        },
+        "thing.horiz_ctrl": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "hdlname": "thing horiz_ctrl",
+            "src": "benchmarks/library.v:498.33-498.43",
+            "type": "ctrl"
+          }
+        },
+        "thing.horiz_flush": {
+          "hide_name": 0,
+          "bits": [ 111 ],
+          "attributes": {
+            "hdlname": "thing horiz_flush",
+            "src": "benchmarks/library.v:501.34-501.45",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.loop_exit_ctrl": {
+          "hide_name": 0,
+          "bits": [ 57 ],
+          "attributes": {
+            "hdlname": "thing loop_exit_ctrl",
+            "src": "benchmarks/library.v:498.68-498.82",
+            "type": "ctrl"
+          }
+        },
+        "thing.loop_exit_flush": {
+          "hide_name": 0,
+          "bits": [ 106 ],
+          "attributes": {
+            "hdlname": "thing loop_exit_flush",
+            "src": "benchmarks/library.v:501.72-501.87",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.lysis_ctrl": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "hdlname": "thing lysis_ctrl",
+            "src": "benchmarks/library.v:497.24-497.34",
+            "type": "ctrl"
+          }
+        },
+        "thing.lysis_flush": {
+          "hide_name": 0,
+          "bits": [ 121 ],
+          "attributes": {
+            "hdlname": "thing lysis_flush",
+            "src": "benchmarks/library.v:500.43-500.54",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.lysis_in": {
+          "hide_name": 0,
+          "bits": [ 59 ],
+          "attributes": {
+            "hdlname": "thing lysis_in",
+            "src": "benchmarks/library.v:504.41-504.49",
+            "type": "flow"
+          }
+        },
+        "thing.pump": {
+          "hide_name": 0,
+          "bits": [ 60, 61, 62 ],
+          "attributes": {
+            "hdlname": "thing pump",
+            "src": "benchmarks/library.v:499.47-499.51",
+            "type": "ctrl"
+          }
+        },
+        "thing.pump_flush": {
+          "hide_name": 0,
+          "bits": [ 63, 64, 65 ],
+          "attributes": {
+            "hdlname": "thing pump_flush",
+            "src": "benchmarks/library.v:502.48-502.58",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[0].thingy.bead_flush": {
+          "hide_name": 0,
+          "bits": [ 93 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy bead_flush",
+            "src": "benchmarks/library.v:162.71-162.81",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[0].thingy.bead_out": {
+          "hide_name": 0,
+          "bits": [ 94 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy bead_out",
+            "src": "benchmarks/library.v:166.44-166.52",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[0].thingy.bead_trap_flush": {
+          "hide_name": 0,
+          "bits": [ 83 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy bead_trap_flush",
+            "src": "benchmarks/library.v:163.20-163.35",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[0].thingy.buffer_out": {
+          "hide_name": 0,
+          "bits": [ 91 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy buffer_out",
+            "src": "benchmarks/library.v:166.54-166.64",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[0].thingy.cell_out": {
+          "hide_name": 0,
+          "bits": [ 92 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy cell_out",
+            "src": "benchmarks/library.v:166.66-166.74",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[0].thingy.collect": {
+          "hide_name": 0,
+          "bits": [ 51 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy collect",
+            "src": "benchmarks/library.v:166.28-166.35",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.collect_flush": {
+          "hide_name": 0,
+          "bits": [ 88 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy collect_flush",
+            "src": "benchmarks/library.v:163.37-163.50",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[0].thingy.drive": {
+          "hide_name": 0,
+          "bits": [ 81 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy drive",
+            "src": "benchmarks/library.v:165.27-165.32",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[0].thingy.horiz_flush": {
+          "hide_name": 0,
+          "bits": [ 89 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy horiz_flush",
+            "src": "benchmarks/library.v:162.45-162.56",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[0].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 68 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy j1",
+            "src": "benchmarks/library.v:168.42-168.44",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 70 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy j2",
+            "src": "benchmarks/library.v:168.46-168.48",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.loop_exit_flush": {
+          "hide_name": 0,
+          "bits": [ 82 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy loop_exit_flush",
+            "src": "benchmarks/library.v:163.3-163.18",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[0].thingy.pump_flush": {
+          "hide_name": 0,
+          "bits": [ 66, 69, 71 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy pump_flush",
+            "src": "benchmarks/library.v:164.35-164.45",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r1": {
+          "hide_name": 0,
+          "bits": [ 67 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r1",
+            "src": "benchmarks/library.v:168.26-168.28",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r1o": {
+          "hide_name": 0,
+          "bits": [ 72 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r1o",
+            "src": "benchmarks/library.v:170.26-170.29",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r2": {
+          "hide_name": 0,
+          "bits": [ 73 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r2",
+            "src": "benchmarks/library.v:168.29-168.31",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r2o": {
+          "hide_name": 0,
+          "bits": [ 74 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r2o",
+            "src": "benchmarks/library.v:170.30-170.33",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r3": {
+          "hide_name": 0,
+          "bits": [ 75 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r3",
+            "src": "benchmarks/library.v:168.32-168.34",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r30": {
+          "hide_name": 0,
+          "bits": [ 90 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r30",
+            "src": "benchmarks/library.v:183.22-183.25",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[0].thingy.r3o": {
+          "hide_name": 0,
+          "bits": [ 76 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r3o",
+            "src": "benchmarks/library.v:170.34-170.37",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r4": {
+          "hide_name": 0,
+          "bits": [ 77 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r4",
+            "src": "benchmarks/library.v:168.35-168.37",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r4o": {
+          "hide_name": 0,
+          "bits": [ 78 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r4o",
+            "src": "benchmarks/library.v:170.38-170.41",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.r5": {
+          "hide_name": 0,
+          "bits": [ 84 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy r5",
+            "src": "benchmarks/library.v:168.38-168.40",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[0].thingy.vertical_ctrl": {
+          "hide_name": 0,
+          "bits": [ 79 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy vertical_ctrl",
+            "src": "benchmarks/library.v:159.27-159.40",
+            "type": "ctrl"
+          }
+        },
+        "thing.thing.chamber[0].thingy.vertical_flush": {
+          "hide_name": 0,
+          "bits": [ 80 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy vertical_flush",
+            "src": "benchmarks/library.v:162.29-162.43",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[0].thingy.waste": {
+          "hide_name": 0,
+          "bits": [ 87 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy waste",
+            "src": "benchmarks/library.v:166.37-166.42",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[0].thingy.waste_ctrl": {
+          "hide_name": 0,
+          "bits": [ 85 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy waste_ctrl",
+            "src": "benchmarks/library.v:159.54-159.64",
+            "type": "ctrl"
+          }
+        },
+        "thing.thing.chamber[0].thingy.waste_flush": {
+          "hide_name": 0,
+          "bits": [ 86 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[0].thingy waste_flush",
+            "src": "benchmarks/library.v:162.58-162.69",
+            "type": "flush"
+          }
+        },
+        "thing.thing.chamber[1].thingy.bead_out": {
+          "hide_name": 0,
+          "bits": [ 116 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy bead_out",
+            "src": "benchmarks/library.v:166.44-166.52",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[1].thingy.buffer_out": {
+          "hide_name": 0,
+          "bits": [ 113 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy buffer_out",
+            "src": "benchmarks/library.v:166.54-166.64",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[1].thingy.cell_out": {
+          "hide_name": 0,
+          "bits": [ 114 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy cell_out",
+            "src": "benchmarks/library.v:166.66-166.74",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[1].thingy.collect": {
+          "hide_name": 0,
+          "bits": [ 52 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy collect",
+            "src": "benchmarks/library.v:166.28-166.35",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 96 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy j1",
+            "src": "benchmarks/library.v:168.42-168.44",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 97 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy j2",
+            "src": "benchmarks/library.v:168.46-168.48",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r1": {
+          "hide_name": 0,
+          "bits": [ 95 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r1",
+            "src": "benchmarks/library.v:168.26-168.28",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r1o": {
+          "hide_name": 0,
+          "bits": [ 98 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r1o",
+            "src": "benchmarks/library.v:170.26-170.29",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r2": {
+          "hide_name": 0,
+          "bits": [ 99 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r2",
+            "src": "benchmarks/library.v:168.29-168.31",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r2o": {
+          "hide_name": 0,
+          "bits": [ 100 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r2o",
+            "src": "benchmarks/library.v:170.30-170.33",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r3": {
+          "hide_name": 0,
+          "bits": [ 101 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r3",
+            "src": "benchmarks/library.v:168.32-168.34",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r30": {
+          "hide_name": 0,
+          "bits": [ 112 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r30",
+            "src": "benchmarks/library.v:183.22-183.25",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[1].thingy.r3o": {
+          "hide_name": 0,
+          "bits": [ 102 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r3o",
+            "src": "benchmarks/library.v:170.34-170.37",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r4": {
+          "hide_name": 0,
+          "bits": [ 103 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r4",
+            "src": "benchmarks/library.v:168.35-168.37",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r4o": {
+          "hide_name": 0,
+          "bits": [ 104 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r4o",
+            "src": "benchmarks/library.v:170.38-170.41",
+            "type": "flow"
+          }
+        },
+        "thing.thing.chamber[1].thingy.r5": {
+          "hide_name": 0,
+          "bits": [ 108 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy r5",
+            "src": "benchmarks/library.v:168.38-168.40",
+            "type": "flow",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[1].thingy.vertical_flush": {
+          "hide_name": 0,
+          "bits": [ 105 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy vertical_flush",
+            "src": "benchmarks/library.v:162.29-162.43",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.chamber[1].thingy.waste_flush": {
+          "hide_name": 0,
+          "bits": [ 109 ],
+          "attributes": {
+            "hdlname": "thing thing chamber[1].thingy waste_flush",
+            "src": "benchmarks/library.v:162.58-162.69",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.e1": {
+          "hide_name": 0,
+          "bits": [ 119 ],
+          "attributes": {
+            "hdlname": "thing thing e1",
+            "src": "benchmarks/library.v:326.26-326.28",
+            "type": "ctrl"
+          }
+        },
+        "thing.thing.e2": {
+          "hide_name": 0,
+          "bits": [ 117 ],
+          "attributes": {
+            "hdlname": "thing thing e2",
+            "src": "benchmarks/library.v:326.30-326.32",
+            "type": "ctrl"
+          }
+        },
+        "thing.thing.wash_ctrl": {
+          "hide_name": 0,
+          "bits": [ 122 ],
+          "attributes": {
+            "hdlname": "thing thing wash_ctrl",
+            "src": "benchmarks/library.v:240.54-240.63",
+            "type": "ctrl"
+          }
+        },
+        "thing.thing.wash_flush": {
+          "hide_name": 0,
+          "bits": [ 123 ],
+          "attributes": {
+            "hdlname": "thing thing wash_flush",
+            "src": "benchmarks/library.v:243.58-243.68",
+            "type": "flush",
+            "unused_bits": "0 "
+          }
+        },
+        "thing.thing.wash_in": {
+          "hide_name": 0,
+          "bits": [ 124 ],
+          "attributes": {
+            "hdlname": "thing thing wash_in",
+            "src": "benchmarks/library.v:247.52-247.59",
+            "type": "flow"
+          }
+        },
+        "vertical_ctrl": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:2.18-2.31",
+            "type": "ctrl"
+          }
+        },
+        "vertical_flush": {
+          "hide_name": 0,
+          "bits": [ 20 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:5.18-5.32",
+            "type": "flush"
+          }
+        },
+        "wash_ctrl": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:1.50-1.59",
+            "type": "ctrl"
+          }
+        },
+        "wash_flush": {
+          "hide_name": 0,
+          "bits": [ 17 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:4.57-4.67",
+            "type": "flush"
+          }
+        },
+        "wash_in": {
+          "hide_name": 0,
+          "bits": [ 34 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:8.52-8.59",
+            "type": "flow"
+          }
+        },
+        "waste": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:10.43-10.48",
+            "type": "flow"
+          }
+        },
+        "waste_ctrl": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:2.45-2.55",
+            "type": "ctrl"
+          }
+        },
+        "waste_flush": {
+          "hide_name": 0,
+          "bits": [ 22 ],
+          "attributes": {
+            "src": "benchmarks/mnacidpro_pads_2.v:5.47-5.58",
+            "type": "flush"
+          }
+        }
+      }
+    },
+    "valve": {
+      "attributes": {
+        "blackbox": "00000000000000000000000000000001",
+        "src": "benchmarks/library.v:683.1-684.10"
+      },
+      "ports": {
+        "fluid_in": {
+          "direction": "inout",
+          "bits": [ 2 ]
+        },
+        "fluid_out": {
+          "direction": "inout",
+          "bits": [ 3 ]
+        },
+        "air_in": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "air_out": {
+          "direction": "output",
+          "bits": [ 5 ]
+        }
+      },
+      "cells": {
+      },
+      "netnames": {
+        "air_in": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "src": "benchmarks/library.v:683.105-683.111",
+            "type": "ctrl"
+          }
+        },
+        "air_out": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "src": "benchmarks/library.v:683.137-683.144",
+            "type": "ctrl"
+          }
+        },
+        "fluid_in": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "benchmarks/library.v:683.38-683.46",
+            "type": "flow"
+          }
+        },
+        "fluid_out": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "src": "benchmarks/library.v:683.71-683.80",
+            "type": "flow"
+          }
+        }
+      }
+    }
+  }
+}

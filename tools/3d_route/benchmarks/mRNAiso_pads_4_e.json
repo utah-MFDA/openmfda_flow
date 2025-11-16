@@ -1,0 +1,1631 @@
+{
+  "creator": "Yosys 0.55+194 (git sha1 8576d2d14, g++ 8.5.0 -fPIC -O3)",
+  "modules": {
+    "thing": {
+      "attributes": {
+        "dynports": "00000000000000000000000000000001",
+        "top": "00000000000000000000000000000001",
+        "src": "benchmarks/mRNAiso_pads_4_e.v:1.1-64.10"
+      },
+      "parameter_default_values": {
+        "SIZE": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "beads_in": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "beads_out": {
+          "direction": "output",
+          "bits": [ 3 ]
+        },
+        "cells_in": {
+          "direction": "input",
+          "bits": [ 4 ]
+        },
+        "cells_out": {
+          "direction": "output",
+          "bits": [ 5 ]
+        },
+        "collect": {
+          "direction": "output",
+          "bits": [ 6 ]
+        },
+        "lysis_buffer_in": {
+          "direction": "input",
+          "bits": [ 7 ]
+        },
+        "lysis_buffer_out": {
+          "direction": "output",
+          "bits": [ 8 ]
+        },
+        "push_line": {
+          "direction": "input",
+          "bits": [ 9 ]
+        },
+        "waste_out": {
+          "direction": "output",
+          "bits": [ 10 ]
+        },
+        "collect_ctrl": {
+          "direction": "input",
+          "bits": [ 11 ]
+        },
+        "lysis_in_ctrl": {
+          "direction": "input",
+          "bits": [ 12 ]
+        },
+        "lysis_out_ctrl": {
+          "direction": "input",
+          "bits": [ 13 ]
+        },
+        "push_ctrl": {
+          "direction": "input",
+          "bits": [ 14 ]
+        },
+        "pump1": {
+          "direction": "input",
+          "bits": [ 15 ]
+        },
+        "pump2": {
+          "direction": "input",
+          "bits": [ 16 ]
+        },
+        "pump3": {
+          "direction": "input",
+          "bits": [ 17 ]
+        },
+        "sep_ctrl": {
+          "direction": "input",
+          "bits": [ 18 ]
+        },
+        "sieve_ctrl": {
+          "direction": "input",
+          "bits": [ 19 ]
+        },
+        "waste_ctrl": {
+          "direction": "input",
+          "bits": [ 20 ]
+        },
+        "beads_ctrl": {
+          "direction": "input",
+          "bits": [ 21 ]
+        },
+        "cells_in_ctrl": {
+          "direction": "input",
+          "bits": [ 22 ]
+        },
+        "cells_out_ctrl": {
+          "direction": "input",
+          "bits": [ 23 ]
+        },
+        "collect_flush": {
+          "direction": "output",
+          "bits": [ 24 ]
+        },
+        "lysis_in_flush": {
+          "direction": "output",
+          "bits": [ 25 ]
+        },
+        "lysis_out_flush": {
+          "direction": "output",
+          "bits": [ 26 ]
+        },
+        "push_flush": {
+          "direction": "output",
+          "bits": [ 27 ]
+        },
+        "pump1_flush": {
+          "direction": "output",
+          "bits": [ 28 ]
+        },
+        "pump2_flush": {
+          "direction": "output",
+          "bits": [ 29 ]
+        },
+        "pump3_flush": {
+          "direction": "output",
+          "bits": [ 30 ]
+        },
+        "sep_flush": {
+          "direction": "output",
+          "bits": [ 31 ]
+        },
+        "sieve_flush": {
+          "direction": "output",
+          "bits": [ 32 ]
+        },
+        "waste_flush": {
+          "direction": "output",
+          "bits": [ 33 ]
+        },
+        "beads_flush": {
+          "direction": "output",
+          "bits": [ 34 ]
+        },
+        "cells_in_flush": {
+          "direction": "output",
+          "bits": [ 35 ]
+        },
+        "cells_out_flush": {
+          "direction": "output",
+          "bits": [ 36 ]
+        }
+      },
+      "cells": {
+        "bank": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/mRNAiso_pads_4_e.v:28.22-63.39",
+            "module": "$paramod\\mRNAiso_pads\\SIZE=s32'00000000000000000000000000000001",
+            "module_hdlname": "mRNAiso_pads",
+            "module_src": "benchmarks/library.v:558.1-682.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "bank.beads_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank beads_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:630.13-630.75"
+          },
+          "connections": {
+            "connection": [ 37 ],
+            "pad": [ 21 ]
+          }
+        },
+        "bank.beads_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank beads_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:643.14-643.79"
+          },
+          "connections": {
+            "connection": [ 38 ],
+            "pad": [ 34 ]
+          }
+        },
+        "bank.beads_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank beads_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:611.17-611.73"
+          },
+          "connections": {
+            "connection": [ 39 ],
+            "pad": [ 2 ]
+          }
+        },
+        "bank.beads_out_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank beads_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:612.17-612.76"
+          },
+          "connections": {
+            "connection": [ 40 ],
+            "pad": [ 3 ]
+          }
+        },
+        "bank.cells_in_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank cells_in_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:631.13-631.84"
+          },
+          "connections": {
+            "connection": [ 41 ],
+            "pad": [ 22 ]
+          }
+        },
+        "bank.cells_in_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank cells_in_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:644.14-644.88"
+          },
+          "connections": {
+            "connection": [ 42 ],
+            "pad": [ 35 ]
+          }
+        },
+        "bank.cells_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank cells_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:613.17-613.73"
+          },
+          "connections": {
+            "connection": [ 43 ],
+            "pad": [ 4 ]
+          }
+        },
+        "bank.cells_out_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank cells_out_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:632.13-632.87"
+          },
+          "connections": {
+            "connection": [ 44 ],
+            "pad": [ 23 ]
+          }
+        },
+        "bank.cells_out_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank cells_out_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:645.14-645.91"
+          },
+          "connections": {
+            "connection": [ 45 ],
+            "pad": [ 36 ]
+          }
+        },
+        "bank.cells_out_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank cells_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:614.17-614.76"
+          },
+          "connections": {
+            "connection": [ 46 ],
+            "pad": [ 5 ]
+          }
+        },
+        "bank.collect_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank collect_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:620.13-620.81"
+          },
+          "connections": {
+            "connection": [ 47 ],
+            "pad": [ 11 ]
+          }
+        },
+        "bank.collect_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank collect_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:633.14-633.85"
+          },
+          "connections": {
+            "connection": [ 48 ],
+            "pad": [ 24 ]
+          }
+        },
+        "bank.collect_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank collect_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:615.17-615.70"
+          },
+          "connections": {
+            "connection": [ 49 ],
+            "pad": [ 6 ]
+          }
+        },
+        "bank.lysis_buffer_in_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank lysis_buffer_in_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:616.17-616.94"
+          },
+          "connections": {
+            "connection": [ 50 ],
+            "pad": [ 7 ]
+          }
+        },
+        "bank.lysis_buffer_out_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank lysis_buffer_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:617.17-617.97"
+          },
+          "connections": {
+            "connection": [ 51 ],
+            "pad": [ 8 ]
+          }
+        },
+        "bank.lysis_in_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank lysis_in_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:621.13-621.84"
+          },
+          "connections": {
+            "connection": [ 52 ],
+            "pad": [ 12 ]
+          }
+        },
+        "bank.lysis_in_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank lysis_in_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:634.14-634.88"
+          },
+          "connections": {
+            "connection": [ 53 ],
+            "pad": [ 25 ]
+          }
+        },
+        "bank.lysis_out_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank lysis_out_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:622.13-622.87"
+          },
+          "connections": {
+            "connection": [ 54 ],
+            "pad": [ 13 ]
+          }
+        },
+        "bank.lysis_out_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank lysis_out_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:635.14-635.91"
+          },
+          "connections": {
+            "connection": [ 55 ],
+            "pad": [ 26 ]
+          }
+        },
+        "bank.pump1_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank pump1_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:637.14-637.79"
+          },
+          "connections": {
+            "connection": [ 56 ],
+            "pad": [ 28 ]
+          }
+        },
+        "bank.pump1_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank pump1_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:624.13-624.60"
+          },
+          "connections": {
+            "connection": [ 57 ],
+            "pad": [ 15 ]
+          }
+        },
+        "bank.pump2_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank pump2_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:638.14-638.79"
+          },
+          "connections": {
+            "connection": [ 58 ],
+            "pad": [ 29 ]
+          }
+        },
+        "bank.pump2_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank pump2_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:625.13-625.60"
+          },
+          "connections": {
+            "connection": [ 59 ],
+            "pad": [ 16 ]
+          }
+        },
+        "bank.pump3_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank pump3_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:639.14-639.79"
+          },
+          "connections": {
+            "connection": [ 60 ],
+            "pad": [ 30 ]
+          }
+        },
+        "bank.pump3_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank pump3_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:626.13-626.60"
+          },
+          "connections": {
+            "connection": [ 61 ],
+            "pad": [ 17 ]
+          }
+        },
+        "bank.push_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank push_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:623.13-623.72"
+          },
+          "connections": {
+            "connection": [ 62 ],
+            "pad": [ 14 ]
+          }
+        },
+        "bank.push_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank push_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:636.14-636.76"
+          },
+          "connections": {
+            "connection": [ 63 ],
+            "pad": [ 27 ]
+          }
+        },
+        "bank.push_line_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank push_line_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:618.17-618.76"
+          },
+          "connections": {
+            "connection": [ 64 ],
+            "pad": [ 9 ]
+          }
+        },
+        "bank.sep_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank sep_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:627.13-627.69"
+          },
+          "connections": {
+            "connection": [ 65 ],
+            "pad": [ 18 ]
+          }
+        },
+        "bank.sep_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank sep_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:640.14-640.73"
+          },
+          "connections": {
+            "connection": [ 66 ],
+            "pad": [ 31 ]
+          }
+        },
+        "bank.sieve_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank sieve_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:628.13-628.75"
+          },
+          "connections": {
+            "connection": [ 67 ],
+            "pad": [ 19 ]
+          }
+        },
+        "bank.sieve_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank sieve_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:641.14-641.79"
+          },
+          "connections": {
+            "connection": [ 68 ],
+            "pad": [ 32 ]
+          }
+        },
+        "bank.thing": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_src": "benchmarks/library.v:646.24-681.35",
+            "hdlname": "bank thing",
+            "module": "$paramod\\mRNAiso_bank\\SIZE=s32'00000000000000000000000000000001",
+            "module_dynports": "00000000000000000000000000000001",
+            "module_hdlname": "mRNAiso_bank",
+            "module_src": "benchmarks/library.v:376.1-484.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "bank.thing.devices[0].thingy": {
+          "hide_name": 0,
+          "type": "$scopeinfo",
+          "parameters": {
+            "TYPE": "module"
+          },
+          "attributes": {
+            "cell_module_not_derived": "00000000000000000000000000000001",
+            "cell_src": "benchmarks/library.v:446.17-481.51",
+            "hdlname": "bank thing devices[0].thingy",
+            "module": "mRNAiso",
+            "module_src": "benchmarks/library.v:332.1-373.10"
+          },
+          "port_directions": {
+          },
+          "connections": {
+          }
+        },
+        "bank.thing.devices[0].thingy.vbead_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vbead_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:370.9-370.98"
+          },
+          "connections": {
+            "air_in": [ 37 ],
+            "air_out": [ 38 ],
+            "fluid_in": [ 39 ],
+            "fluid_out": [ 69 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vbead_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vbead_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:371.9-371.100"
+          },
+          "connections": {
+            "air_in": [ 37 ],
+            "air_out": [ 38 ],
+            "fluid_in": [ 69 ],
+            "fluid_out": [ 40 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vcell_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vcell_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:361.9-361.104"
+          },
+          "connections": {
+            "air_in": [ 41 ],
+            "air_out": [ 42 ],
+            "fluid_in": [ 43 ],
+            "fluid_out": [ 70 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vcell_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vcell_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:366.9-366.108"
+          },
+          "connections": {
+            "air_in": [ 44 ],
+            "air_out": [ 45 ],
+            "fluid_in": [ 70 ],
+            "fluid_out": [ 46 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vcollect": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vcollect",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:359.9-359.101"
+          },
+          "connections": {
+            "air_in": [ 47 ],
+            "air_out": [ 48 ],
+            "fluid_in": [ 71 ],
+            "fluid_out": [ 49 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vlysis_in": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vlysis_in",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:367.9-367.112"
+          },
+          "connections": {
+            "air_in": [ 52 ],
+            "air_out": [ 53 ],
+            "fluid_in": [ 50 ],
+            "fluid_out": [ 72 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vlysis_out": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vlysis_out",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:368.9-368.116"
+          },
+          "connections": {
+            "air_in": [ 54 ],
+            "air_out": [ 55 ],
+            "fluid_in": [ 73 ],
+            "fluid_out": [ 51 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vpump1": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vpump1",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:363.9-363.85"
+          },
+          "connections": {
+            "air_in": [ 57 ],
+            "air_out": [ 56 ],
+            "fluid_in": [ 72 ],
+            "fluid_out": [ 70 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vpump2": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vpump2",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:364.9-364.85"
+          },
+          "connections": {
+            "air_in": [ 59 ],
+            "air_out": [ 58 ],
+            "fluid_in": [ 70 ],
+            "fluid_out": [ 73 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vpump3": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vpump3",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:365.9-365.85"
+          },
+          "connections": {
+            "air_in": [ 61 ],
+            "air_out": [ 60 ],
+            "fluid_in": [ 73 ],
+            "fluid_out": [ 72 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vpush": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vpush",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:362.9-362.94"
+          },
+          "connections": {
+            "air_in": [ 62 ],
+            "air_out": [ 63 ],
+            "fluid_in": [ 64 ],
+            "fluid_out": [ 70 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vsep": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vsep",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:369.9-369.84"
+          },
+          "connections": {
+            "air_in": [ 65 ],
+            "air_out": [ 66 ],
+            "fluid_in": [ 72 ],
+            "fluid_out": [ 69 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vsieve": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vsieve",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:372.9-372.90"
+          },
+          "connections": {
+            "air_in": [ 67 ],
+            "air_out": [ 68 ],
+            "fluid_in": [ 69 ],
+            "fluid_out": [ 71 ]
+          }
+        },
+        "bank.thing.devices[0].thingy.vwaste": {
+          "hide_name": 0,
+          "type": "valve",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy vwaste",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:360.9-360.97"
+          },
+          "connections": {
+            "air_in": [ 74 ],
+            "air_out": [ 75 ],
+            "fluid_in": [ 71 ],
+            "fluid_out": [ 76 ]
+          }
+        },
+        "bank.waste_ctrl_hole": {
+          "hide_name": 0,
+          "type": "ctrl_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank waste_ctrl_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:629.13-629.75"
+          },
+          "connections": {
+            "connection": [ 74 ],
+            "pad": [ 20 ]
+          }
+        },
+        "bank.waste_flush_hole": {
+          "hide_name": 0,
+          "type": "flush_hole_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank waste_flush_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:642.14-642.79"
+          },
+          "connections": {
+            "connection": [ 75 ],
+            "pad": [ 33 ]
+          }
+        },
+        "bank.waste_out_hole": {
+          "hide_name": 0,
+          "type": "pinhole_325px_0",
+          "parameters": {
+          },
+          "attributes": {
+            "hdlname": "bank waste_out_hole",
+            "module_not_derived": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:619.17-619.76"
+          },
+          "connections": {
+            "connection": [ 76 ],
+            "pad": [ 10 ]
+          }
+        }
+      },
+      "netnames": {
+        "bank.beads_ctrl": {
+          "hide_name": 0,
+          "bits": [ 37 ],
+          "attributes": {
+            "hdlname": "bank beads_ctrl",
+            "src": "benchmarks/library.v:601.16-601.26",
+            "type": "ctrl"
+          }
+        },
+        "bank.beads_flush": {
+          "hide_name": 0,
+          "bits": [ 38 ],
+          "attributes": {
+            "hdlname": "bank beads_flush",
+            "src": "benchmarks/library.v:609.16-609.27",
+            "type": "flush"
+          }
+        },
+        "bank.cells_in_ctrl": {
+          "hide_name": 0,
+          "bits": [ 41 ],
+          "attributes": {
+            "hdlname": "bank cells_in_ctrl",
+            "src": "benchmarks/library.v:601.28-601.41",
+            "type": "ctrl"
+          }
+        },
+        "bank.cells_in_flush": {
+          "hide_name": 0,
+          "bits": [ 42 ],
+          "attributes": {
+            "hdlname": "bank cells_in_flush",
+            "src": "benchmarks/library.v:609.29-609.43",
+            "type": "flush"
+          }
+        },
+        "bank.cells_out_ctrl": {
+          "hide_name": 0,
+          "bits": [ 44 ],
+          "attributes": {
+            "hdlname": "bank cells_out_ctrl",
+            "src": "benchmarks/library.v:601.43-601.57",
+            "type": "ctrl"
+          }
+        },
+        "bank.cells_out_flush": {
+          "hide_name": 0,
+          "bits": [ 45 ],
+          "attributes": {
+            "hdlname": "bank cells_out_flush",
+            "src": "benchmarks/library.v:609.45-609.60",
+            "type": "flush"
+          }
+        },
+        "bank.collect_ctrl": {
+          "hide_name": 0,
+          "bits": [ 47 ],
+          "attributes": {
+            "hdlname": "bank collect_ctrl",
+            "src": "benchmarks/library.v:594.39-594.51",
+            "type": "ctrl"
+          }
+        },
+        "bank.collect_flush": {
+          "hide_name": 0,
+          "bits": [ 48 ],
+          "attributes": {
+            "hdlname": "bank collect_flush",
+            "src": "benchmarks/library.v:602.40-602.53",
+            "type": "flush"
+          }
+        },
+        "bank.lysis_in_ctrl": {
+          "hide_name": 0,
+          "bits": [ 52 ],
+          "attributes": {
+            "hdlname": "bank lysis_in_ctrl",
+            "src": "benchmarks/library.v:595.16-595.29",
+            "type": "ctrl"
+          }
+        },
+        "bank.lysis_in_flush": {
+          "hide_name": 0,
+          "bits": [ 53 ],
+          "attributes": {
+            "hdlname": "bank lysis_in_flush",
+            "src": "benchmarks/library.v:603.16-603.30",
+            "type": "flush"
+          }
+        },
+        "bank.lysis_out_ctrl": {
+          "hide_name": 0,
+          "bits": [ 54 ],
+          "attributes": {
+            "hdlname": "bank lysis_out_ctrl",
+            "src": "benchmarks/library.v:595.31-595.45",
+            "type": "ctrl"
+          }
+        },
+        "bank.lysis_out_flush": {
+          "hide_name": 0,
+          "bits": [ 55 ],
+          "attributes": {
+            "hdlname": "bank lysis_out_flush",
+            "src": "benchmarks/library.v:603.32-603.47",
+            "type": "flush"
+          }
+        },
+        "bank.pump1": {
+          "hide_name": 0,
+          "bits": [ 57 ],
+          "attributes": {
+            "hdlname": "bank pump1",
+            "src": "benchmarks/library.v:597.16-597.21",
+            "type": "ctrl"
+          }
+        },
+        "bank.pump1_flush": {
+          "hide_name": 0,
+          "bits": [ 56 ],
+          "attributes": {
+            "hdlname": "bank pump1_flush",
+            "src": "benchmarks/library.v:605.16-605.27",
+            "type": "flush"
+          }
+        },
+        "bank.pump2": {
+          "hide_name": 0,
+          "bits": [ 59 ],
+          "attributes": {
+            "hdlname": "bank pump2",
+            "src": "benchmarks/library.v:597.23-597.28",
+            "type": "ctrl"
+          }
+        },
+        "bank.pump2_flush": {
+          "hide_name": 0,
+          "bits": [ 58 ],
+          "attributes": {
+            "hdlname": "bank pump2_flush",
+            "src": "benchmarks/library.v:605.29-605.40",
+            "type": "flush"
+          }
+        },
+        "bank.pump3": {
+          "hide_name": 0,
+          "bits": [ 61 ],
+          "attributes": {
+            "hdlname": "bank pump3",
+            "src": "benchmarks/library.v:597.30-597.35",
+            "type": "ctrl"
+          }
+        },
+        "bank.pump3_flush": {
+          "hide_name": 0,
+          "bits": [ 60 ],
+          "attributes": {
+            "hdlname": "bank pump3_flush",
+            "src": "benchmarks/library.v:605.42-605.53",
+            "type": "flush"
+          }
+        },
+        "bank.push_ctrl": {
+          "hide_name": 0,
+          "bits": [ 62 ],
+          "attributes": {
+            "hdlname": "bank push_ctrl",
+            "src": "benchmarks/library.v:596.16-596.25",
+            "type": "ctrl"
+          }
+        },
+        "bank.push_flush": {
+          "hide_name": 0,
+          "bits": [ 63 ],
+          "attributes": {
+            "hdlname": "bank push_flush",
+            "src": "benchmarks/library.v:604.16-604.26",
+            "type": "flush"
+          }
+        },
+        "bank.sep_ctrl": {
+          "hide_name": 0,
+          "bits": [ 65 ],
+          "attributes": {
+            "hdlname": "bank sep_ctrl",
+            "src": "benchmarks/library.v:598.16-598.24",
+            "type": "ctrl"
+          }
+        },
+        "bank.sep_flush": {
+          "hide_name": 0,
+          "bits": [ 66 ],
+          "attributes": {
+            "hdlname": "bank sep_flush",
+            "src": "benchmarks/library.v:606.16-606.25",
+            "type": "flush"
+          }
+        },
+        "bank.sieve_ctrl": {
+          "hide_name": 0,
+          "bits": [ 67 ],
+          "attributes": {
+            "hdlname": "bank sieve_ctrl",
+            "src": "benchmarks/library.v:599.16-599.26",
+            "type": "ctrl"
+          }
+        },
+        "bank.sieve_flush": {
+          "hide_name": 0,
+          "bits": [ 68 ],
+          "attributes": {
+            "hdlname": "bank sieve_flush",
+            "src": "benchmarks/library.v:607.16-607.27",
+            "type": "flush"
+          }
+        },
+        "bank.thing.beads_in": {
+          "hide_name": 0,
+          "bits": [ 39 ],
+          "attributes": {
+            "hdlname": "bank thing beads_in",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:376.55-376.63",
+            "type": "flow"
+          }
+        },
+        "bank.thing.beads_out": {
+          "hide_name": 0,
+          "bits": [ 40 ],
+          "attributes": {
+            "hdlname": "bank thing beads_out",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:377.51-377.60",
+            "type": "flow"
+          }
+        },
+        "bank.thing.cells_in": {
+          "hide_name": 0,
+          "bits": [ 43 ],
+          "attributes": {
+            "hdlname": "bank thing cells_in",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:378.49-378.57",
+            "type": "flow"
+          }
+        },
+        "bank.thing.cells_out": {
+          "hide_name": 0,
+          "bits": [ 46 ],
+          "attributes": {
+            "hdlname": "bank thing cells_out",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:379.51-379.60",
+            "type": "flow"
+          }
+        },
+        "bank.thing.collect": {
+          "hide_name": 0,
+          "bits": [ 49 ],
+          "attributes": {
+            "hdlname": "bank thing collect",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:380.51-380.58",
+            "type": "flow"
+          }
+        },
+        "bank.thing.devices[0].thingy.j1": {
+          "hide_name": 0,
+          "bits": [ 70 ],
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy j1",
+            "src": "benchmarks/library.v:357.8-357.10"
+          }
+        },
+        "bank.thing.devices[0].thingy.j2": {
+          "hide_name": 0,
+          "bits": [ 73 ],
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy j2",
+            "src": "benchmarks/library.v:357.11-357.13"
+          }
+        },
+        "bank.thing.devices[0].thingy.j3": {
+          "hide_name": 0,
+          "bits": [ 72 ],
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy j3",
+            "src": "benchmarks/library.v:357.14-357.16"
+          }
+        },
+        "bank.thing.devices[0].thingy.j4": {
+          "hide_name": 0,
+          "bits": [ 69 ],
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy j4",
+            "src": "benchmarks/library.v:357.17-357.19"
+          }
+        },
+        "bank.thing.devices[0].thingy.j5": {
+          "hide_name": 0,
+          "bits": [ 71 ],
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy j5",
+            "src": "benchmarks/library.v:357.20-357.22"
+          }
+        },
+        "bank.thing.devices[0].thingy.waste_ctrl": {
+          "hide_name": 0,
+          "bits": [ 74 ],
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy waste_ctrl",
+            "src": "benchmarks/library.v:347.16-347.26",
+            "type": "ctrl"
+          }
+        },
+        "bank.thing.devices[0].thingy.waste_flush": {
+          "hide_name": 0,
+          "bits": [ 75 ],
+          "attributes": {
+            "hdlname": "bank thing devices[0].thingy waste_flush",
+            "src": "benchmarks/library.v:355.16-355.27",
+            "type": "flush"
+          }
+        },
+        "bank.thing.lysis_buffer_in": {
+          "hide_name": 0,
+          "bits": [ 50 ],
+          "attributes": {
+            "hdlname": "bank thing lysis_buffer_in",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:381.50-381.65",
+            "type": "flow"
+          }
+        },
+        "bank.thing.lysis_buffer_out": {
+          "hide_name": 0,
+          "bits": [ 51 ],
+          "attributes": {
+            "hdlname": "bank thing lysis_buffer_out",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:382.51-382.67",
+            "type": "flow"
+          }
+        },
+        "bank.thing.push_line": {
+          "hide_name": 0,
+          "bits": [ 64 ],
+          "attributes": {
+            "hdlname": "bank thing push_line",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:383.50-383.59",
+            "type": "flow"
+          }
+        },
+        "bank.thing.waste_out": {
+          "hide_name": 0,
+          "bits": [ 76 ],
+          "attributes": {
+            "hdlname": "bank thing waste_out",
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/library.v:384.51-384.60",
+            "type": "flow"
+          }
+        },
+        "beads_ctrl": {
+          "hide_name": 0,
+          "bits": [ 21 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:17.16-17.26",
+            "type": "ctrl"
+          }
+        },
+        "beads_flush": {
+          "hide_name": 0,
+          "bits": [ 34 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:25.16-25.27",
+            "type": "flush"
+          }
+        },
+        "beads_in": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:1.48-1.56",
+            "type": "flow"
+          }
+        },
+        "beads_out": {
+          "hide_name": 0,
+          "bits": [ 3 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:2.51-2.60",
+            "type": "flow"
+          }
+        },
+        "cells_in": {
+          "hide_name": 0,
+          "bits": [ 4 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:3.49-3.57",
+            "type": "flow"
+          }
+        },
+        "cells_in_ctrl": {
+          "hide_name": 0,
+          "bits": [ 22 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:17.28-17.41",
+            "type": "ctrl"
+          }
+        },
+        "cells_in_flush": {
+          "hide_name": 0,
+          "bits": [ 35 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:25.29-25.43",
+            "type": "flush"
+          }
+        },
+        "cells_out": {
+          "hide_name": 0,
+          "bits": [ 5 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:4.51-4.60",
+            "type": "flow"
+          }
+        },
+        "cells_out_ctrl": {
+          "hide_name": 0,
+          "bits": [ 23 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:17.43-17.57",
+            "type": "ctrl"
+          }
+        },
+        "cells_out_flush": {
+          "hide_name": 0,
+          "bits": [ 36 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:25.45-25.60",
+            "type": "flush"
+          }
+        },
+        "collect": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:5.51-5.58",
+            "type": "flow"
+          }
+        },
+        "collect_ctrl": {
+          "hide_name": 0,
+          "bits": [ 11 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:10.40-10.52",
+            "type": "ctrl"
+          }
+        },
+        "collect_flush": {
+          "hide_name": 0,
+          "bits": [ 24 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:18.42-18.55",
+            "type": "flush"
+          }
+        },
+        "lysis_buffer_in": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:6.50-6.65",
+            "type": "flow"
+          }
+        },
+        "lysis_buffer_out": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:7.51-7.67",
+            "type": "flow"
+          }
+        },
+        "lysis_in_ctrl": {
+          "hide_name": 0,
+          "bits": [ 12 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:11.16-11.29",
+            "type": "ctrl"
+          }
+        },
+        "lysis_in_flush": {
+          "hide_name": 0,
+          "bits": [ 25 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:19.16-19.30",
+            "type": "flush"
+          }
+        },
+        "lysis_out_ctrl": {
+          "hide_name": 0,
+          "bits": [ 13 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:11.31-11.45",
+            "type": "ctrl"
+          }
+        },
+        "lysis_out_flush": {
+          "hide_name": 0,
+          "bits": [ 26 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:19.32-19.47",
+            "type": "flush"
+          }
+        },
+        "pump1": {
+          "hide_name": 0,
+          "bits": [ 15 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:13.16-13.21",
+            "type": "ctrl"
+          }
+        },
+        "pump1_flush": {
+          "hide_name": 0,
+          "bits": [ 28 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:21.16-21.27",
+            "type": "flush"
+          }
+        },
+        "pump2": {
+          "hide_name": 0,
+          "bits": [ 16 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:13.23-13.28",
+            "type": "ctrl"
+          }
+        },
+        "pump2_flush": {
+          "hide_name": 0,
+          "bits": [ 29 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:21.29-21.40",
+            "type": "flush"
+          }
+        },
+        "pump3": {
+          "hide_name": 0,
+          "bits": [ 17 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:13.30-13.35",
+            "type": "ctrl"
+          }
+        },
+        "pump3_flush": {
+          "hide_name": 0,
+          "bits": [ 30 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:21.42-21.53",
+            "type": "flush"
+          }
+        },
+        "push_ctrl": {
+          "hide_name": 0,
+          "bits": [ 14 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:12.16-12.25",
+            "type": "ctrl"
+          }
+        },
+        "push_flush": {
+          "hide_name": 0,
+          "bits": [ 27 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:20.16-20.26",
+            "type": "flush"
+          }
+        },
+        "push_line": {
+          "hide_name": 0,
+          "bits": [ 9 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:8.50-8.59",
+            "type": "flow"
+          }
+        },
+        "sep_ctrl": {
+          "hide_name": 0,
+          "bits": [ 18 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:14.16-14.24",
+            "type": "ctrl"
+          }
+        },
+        "sep_flush": {
+          "hide_name": 0,
+          "bits": [ 31 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:22.16-22.25",
+            "type": "flush"
+          }
+        },
+        "sieve_ctrl": {
+          "hide_name": 0,
+          "bits": [ 19 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:15.16-15.26",
+            "type": "ctrl"
+          }
+        },
+        "sieve_flush": {
+          "hide_name": 0,
+          "bits": [ 32 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:23.16-23.27",
+            "type": "flush"
+          }
+        },
+        "waste_ctrl": {
+          "hide_name": 0,
+          "bits": [ 20 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:16.16-16.26",
+            "type": "ctrl"
+          }
+        },
+        "waste_flush": {
+          "hide_name": 0,
+          "bits": [ 33 ],
+          "attributes": {
+            "src": "benchmarks/mRNAiso_pads_4_e.v:24.16-24.27",
+            "type": "flush"
+          }
+        },
+        "waste_out": {
+          "hide_name": 0,
+          "bits": [ 10 ],
+          "attributes": {
+            "single_bit_vector": "00000000000000000000000000000001",
+            "src": "benchmarks/mRNAiso_pads_4_e.v:9.51-9.60",
+            "type": "flow"
+          }
+        }
+      }
+    }
+  }
+}
