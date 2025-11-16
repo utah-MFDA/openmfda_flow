@@ -338,26 +338,26 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
     ashell =  G.nodes[relative]["shell"]
     if direction(ashell, shell) and abs(ashell - shell) > 1:
         relations = G.nodes[relative][orientation]
-        # dist = 2*(abs(ashell - shell))
-        dist = abs(ashell - shell)
+        dist = 2*(abs(ashell - shell))
+        # dist = abs(ashell - shell)
         group = relations.intersection(frontier)
         minim = []
         if len(group) > 1:
             log.debug("Adding bounds for %s %s at distance %d to %d children on layer %d", orientation, relative, dist, len(group), shell)
-            # if relax and minimize:
-            #     X = M.addVar(lb=0, ub=relax)
-            #     minim.append(X)
-            #     dist += X
-            # elif relax:
-            #     dist += relax
+            if relax and minimize:
+                X = M.addVar(lb=0, ub=relax)
+                minim.append(X)
+                dist += X
+            elif relax:
+                dist += relax
             for first in group:
                 fd = G.nodes[first]["coordinates"]
                 for second in group:
                     if first < second:
                         sd = G.nodes[second]["coordinates"]
                         for a, b in zip(fd, sd):
-                            minim += within_distance(G, M, a, b, dist, relax, minimize)
-                            # M.addCons(abs(a-b) <= dist)
+                            # minim += within_distance(G, M, a, b, dist, relax, minimize)
+                            M.addCons(abs(a-b) <= dist)
         return minim
     return []
 
@@ -566,6 +566,7 @@ def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
             models.append(M)
             success = solve_shell(G, M, outfile, skip, overlap, inside, distance, proximate, a, b,
                                      latest, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout, minimize)
+
             if success:
                 render_scad(G, f"{outfile[:-5]}.tmp.scad", shells, colorful)
                 if not reversed or (working == shell and reversed):
@@ -590,6 +591,8 @@ def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
                     write_cache(g, cache, {"highwater":highwater,"reversed":reversed,"relax":relax})
                 break
             if cache:
+                data = extract_stats(g)
+                log.info("Got error histogram %s", ", ".join(f"{i}:{j}" for i, j in data["dist"].value_counts(sort=True, ascending=True).items()))
                 write_cache(G, cache, {"highwater":highwater,"reversed":reversed,"relax":relax})
     return shells
 count = 0
@@ -604,7 +607,7 @@ def solve_shell(G, M: scip.Model, cache, skip, overlap, inside, distance, proxim
 
     # solve and extract position values
     if minim:
-        M.setObjective(scip.quicksum(minim), sense="minimize")
+        obj = M.setObjective(scip.quicksum(minim), sense="minimize")
     stem = cache[:-5]
     global count
     count += 1
@@ -636,12 +639,14 @@ def solve_shell(G, M: scip.Model, cache, skip, overlap, inside, distance, proxim
     M.readSol(sol_file)
     log.info("Got status code %d, reading solution %s with %d solutions found", results.returncode, sol_file, M.getNSols())
     M.optimize()
-    log.info("Finished optimizing, %d solutions found", M.getNSols())
+    log.info("Finished optimizing, %d solutions found in %f", M.getNSols(), M.getTotalTime())
     if M.getNSols() == 0:
         for node in frontier:
             del G.nodes[node]["coordinates"]
         return False
     sol = M.getBestSol()
+    if minim:
+        log.info("Objective was %d", M.getObjVal())
     for node in frontier:
         props = G.nodes[node]
         props["coordinates"] = [int(sol[i]) for i in props["coordinates"]]
@@ -665,7 +670,7 @@ def add_constraints(G, M, skip, overlap, inside, distance, proximate, ahead, att
     for ancestor in G.nodes:
         if skip(G, ancestor):
             continue
-        minim += distance(G, M, ancestor, frontier, bounding, shell, offset, relax, minimize)
+        minim += distance(G, M, ancestor, frontier, bounding, shell, offset, 0, False)
     for node in frontier:
 
         if skip(G, node):
@@ -762,7 +767,19 @@ def write_cache(g, filename, meta=None):
         log.info("Writing meta to %s", meta_file)
         with open(meta_file, "+w") as j:
             json.dump(meta, j)
-
+def extract_stats(g):
+    # for node in g.nodes:
+        # if "coordinates" not in g.nodes[node]:
+            # log.warning("No coordinates for %s", node)
+    data = ([start, end, *extract_coord(g.nodes[start]["coordinates"], g.nodes[start]["shell"]), *extract_coord(g.nodes[end]["coordinates"], g.nodes[start]["shell"])]
+        for start, end in g.edges
+        if "coordinates" in g.nodes[start] and "coordinates" in g.nodes[end])
+    data = pd.DataFrame(data, columns=["start", "end", "sx", "sy", "sz", "ex", "ey", "ez"])
+    data["dx"] = (data["sx"] - data["ex"]).abs()
+    data["dy"] = (data["sy"] - data["ey"]).abs()
+    data["dz"] = (data["sz"] - data["ez"]).abs()
+    data["dist"] = data[["dx", "dy", "dz"]].max(axis=1)
+    return data
 ################# Main #########################
 
 if __name__ == "__main__":
@@ -857,4 +874,8 @@ if __name__ == "__main__":
     render_scad(g, args.output, shells, colorful)
     if args.cache:
         write_cache(g, args.cache)
+        data = extract_stats(g)
+        data.to_csv(f"{args.cache[:-4]}.dist.csv")
+        log.info("Got error histogram %s", ", ".join(f"{i}:{j}" for i, j in data["dist"].value_counts(sort=True).items()))
+        print(data["dist"].value_counts())
     log.info("Done")

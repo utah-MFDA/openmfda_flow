@@ -31,12 +31,5 @@ if __name__ == "__main__":
     for node in g.nodes:
         if "coordinates" not in g.nodes[node]:
             log.warning("No coordinates for %s", node)
-    data = ([start, end, *g.nodes[start]["coordinates"], *g.nodes[end]["coordinates"]]
-        for start, end in g.edges
-        if "coordinates" in g.nodes[start] and "coordinates" in g.nodes[end])
-    data = pd.DataFrame(data, columns=["start", "end", "sx", "sy", "sz", "ex", "ey", "ez"])
-    data["dx"] = (data["sx"] - data["ex"]).abs()
-    data["dy"] = (data["sy"] - data["ey"]).abs()
-    data["dz"] = (data["sz"] - data["ez"]).abs()
-    data["dist"] = data[["dx", "dy", "dz"]].max(axis=1)
+    data = extract_stats(g)
     data.to_csv(f"{args.cache[:-4]}.dist.csv")
