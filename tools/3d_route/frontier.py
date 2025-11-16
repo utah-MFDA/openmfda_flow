@@ -2,6 +2,7 @@ import math
 import json
 from math import ceil, sqrt, acos, atan2, pi
 from collections import deque
+import subprocess
 import networkx as nx
 from numpy.testing._private.utils import break_cycles
 import pyscipopt as scip
@@ -591,8 +592,8 @@ def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
             if cache:
                 write_cache(G, cache, {"highwater":highwater,"reversed":reversed,"relax":relax})
     return shells
-
-def solve_shell(G, M, cache, skip, overlap, inside, distance, proximate, ahead, attach,
+count = 0
+def solve_shell(G, M: scip.Model, cache, skip, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
                 relax = 0, limit=4, timeout=30, minimize=False):
     M.setParam("limits/time", timeout)
@@ -604,20 +605,46 @@ def solve_shell(G, M, cache, skip, overlap, inside, distance, proximate, ahead, 
     # solve and extract position values
     if minim:
         M.setObjective(scip.quicksum(minim), sense="minimize")
-    M.writeProblem(f"{cache}.cip")
-    log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
-    M.presolve()
+    stem = cache[:-5]
+    global count
+    count += 1
+    prob_file = f"{stem}_{count}.cip"
+    sol_file = f"{stem}_{count}.sol"
+    log_file = f"{stem}_{count}.scip.log"
+
+    M.writeProblem(prob_file)
+    # log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
+    # M.presolve()
     log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
+
+    log.info("Writing problem to %s", prob_file)
+    results = subprocess.run(["scip",
+                              "-s",
+                              "scip.set",
+                              "-c",
+                              f"read {prob_file}",
+                              "-c",
+                              "optimize",
+                              "-c",
+                              f"write solution {sol_file}",
+                              "-c",
+                              "quit",
+                              "-l",
+                              log_file],
+                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    results.check_returncode()
+    M.readSol(sol_file)
+    log.info("Got status code %d, reading solution %s with %d solutions found", results.returncode, sol_file, M.getNSols())
     M.optimize()
+    log.info("Finished optimizing, %d solutions found", M.getNSols())
     if M.getNSols() == 0:
         for node in frontier:
             del G.nodes[node]["coordinates"]
         return False
-    log.info("Finished optimizing, %d solutions found", M.getNSols())
+    sol = M.getBestSol()
     for node in frontier:
         props = G.nodes[node]
-        props["coordinates"] = [int(M.getVal(i)) for i in props["coordinates"]]
-        # log.debug("Final coordinates: %s %s", node, props["coordinates"])
+        props["coordinates"] = [int(sol[i]) for i in props["coordinates"]]
     return True
 def add_constraints(G, M, skip, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,

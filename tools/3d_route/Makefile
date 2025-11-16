@@ -1,24 +1,24 @@
 TEE=>
 INPUTS = \
-benchmarks/mnacidpro_1.v \
-benchmarks/mnacidpro_2.v \
-benchmarks/mnacidpro_3.v \
-benchmarks/mnacidpro_4.v \
-benchmarks/mRNAiso_1.v \
-benchmarks/mRNAiso_2.v \
-benchmarks/mRNAiso_3.v \
-benchmarks/mRNAiso_4.v \
-benchmarks/kinase_1.v \
-benchmarks/kinase_2.v \
-benchmarks/kinase_3.v \
-benchmarks/kinase_4.v
+benchmarks/mnacidpro_pads_1.v \
+benchmarks/mnacidpro_pads_2.v \
+benchmarks/mnacidpro_pads_3.v \
+benchmarks/mnacidpro_pads_4.v
+# benchmarks/mRNAiso_pads_1.v \
+# benchmarks/mRNAiso_pads_2.v \
+# benchmarks/mRNAiso_pads_3.v \
+# benchmarks/mRNAiso_pads_4.v \
+# benchmarks/kinase_1.v \
+# benchmarks/kinase_2.v \
+# benchmarks/kinase_3.v \
+# benchmarks/kinase_4.v
 HORIZ_RESULTS = $(INPUTS:%.v=%.horizontal.scad)
 CYL_RESULTS = $(INPUTS:%.v=%.cylinder.scad)
 CUBE_RESULTS = $(INPUTS:%.v=%.cube.scad)
 EVERYTHING_RESULTS = $(INPUTS:%.v=%.everything.scad)
 EVERYTHING_CYLINDER_RESULTS = $(INPUTS:%.v=%.everything_cylinder.scad)
 
-all: $(HORIZ_RESULTS) $(CYL_RESULTS) $(CUBE_RESULTS)
+all: $(HORIZ_RESULTS) $(CYL_RESULTS) $(EVERYTHING_RESULTS)
 
 benchmarks/library.v: benchmarks/kinase_activity.v benchmarks/kinase_pads.v benchmarks/mnacidpro.v benchmarks/mRNAiso.v benchmarks/mnacidpro_pads.v benchmarks/mRNAiso_pads.v benchmarks/ChIP.v benchmarks/ChIP_pads.v
 	cat $^ > $@
@@ -44,7 +44,7 @@ benchmarks/picorv32.json: benchmarks/picorv32.v
 
 %.horizontal.scad: %.json frontier.py
 	date --iso-8601=seconds >> $*.horizontal.timer
-	${PYTHON3} frontier.py $< --orientation horizontal --output $@ ${COMMON_ARGS} --logfile $*.horizontal.log --cache $*.horizontal.csv  --add_buffers --backtrack 2>&1 >> $*.horizontal.err.log
+	${PYTHON3} frontier.py $< --orientation horizontal --output $@ ${COMMON_ARGS} --logfile $*.horizontal.log --cache $*.horizontal.csv  --add_buffers --backtrack --minimize 2>&1 >> $*.horizontal.err.log
 	date --iso-8601=seconds >> $*.horizontal.timer
 
 %.everything.scad: %.json frontier.py
