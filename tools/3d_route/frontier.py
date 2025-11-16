@@ -465,12 +465,14 @@ def run_by_dimension(G, skip, outfile, cache, start_condition, buffer_condition,
     shells = find_center(G, start_condition, buffer_condition)
     if cache:
         try:
-            start_shell = read_cache(G, cache)
+            start_shell, _ = read_cache(G, cache)
             log.info("Loaded cache, starting at %d", start_shell)
         except FileNotFoundError:
             start_shell = 0
     else:
         start_shell = 0
+    # trying to track these to see if garbage collector is causing memory issues
+    models = []
     for shell in range(start_shell, shells):
         relax = 0
         current = {node for node, d in G.nodes.items() if d["shell"] == shell}
@@ -478,7 +480,9 @@ def run_by_dimension(G, skip, outfile, cache, start_condition, buffer_condition,
         flat = [i for j in bounds for i in j]
         log.info("Bounded " + "(%d, %d) "*len(bounds), *flat)
         while True:
-            success = solve_shell(G, outfile[:-5], skip, overlap, inside, distance, proximate, ahead, attach,
+            M = scip.Model()
+            models.append(M)
+            success = solve_shell(G, M, outfile[:-5], skip, overlap, inside, distance, proximate, ahead, attach,
                                  current, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout, minimize)
             if success:
                 break
@@ -526,19 +530,23 @@ def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
                  offset=0, limit=10, timeout=60, minimize=False):
     render_dot_undir(G, "raw.dot")
     shells = find_center(G, start_condition, buffer_condition)
-    if cache:
-        try:
-            start_shell = read_cache(G, cache)
-            log.info("Loaded cache, starting at %d", start_shell)
-        except FileNotFoundError:
-            start_shell = 0
-    else:
-        start_shell = 0
-    working = start_shell
+    start_shell = 0
     reversed = False
     relax = 0
     highwater = 0
+    if cache:
+        try:
+            start_shell, setup = read_cache(G, cache)
+            if setup:
+                reversed = setup["reversed"]
+                relax = setup["relax"]
+                highwater = setup["highwater"]
+            log.info("Loaded cache, starting at shell %d reversed %s relax %d highwater %d", start_shell,reversed, relax, highwater)
+        except FileNotFoundError:
+            log.warning("Requested cache but file not found")
+    working = start_shell
     borked = 0
+    models = []
     while working < shells:
         if reversed:
             direction = range(working, -1, -1)
@@ -553,11 +561,11 @@ def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
                 a, b = ahead, attach
             else:
                 b, a= ahead, attach
-            success = solve_shell(G, outfile, skip, overlap, inside, distance, proximate, a, b,
+            M = scip.Model()
+            models.append(M)
+            success = solve_shell(G, M, outfile, skip, overlap, inside, distance, proximate, a, b,
                                      latest, shell, width, height, depth, bounds, offset, shells, relax, limit, timeout, minimize)
             if success:
-                if cache:
-                    write_cache(G, cache)
                 render_scad(G, f"{outfile[:-5]}.tmp.scad", shells, colorful)
                 if not reversed or (working == shell and reversed):
                     working = shell + 1
@@ -577,13 +585,16 @@ def run_backwards(G, skip, outfile, cache, start_condition, buffer_condition,
                     if relax > highwater:
                         reversed = True
                 highwater = max(highwater, relax)
+                if cache:
+                    write_cache(g, cache, {"highwater":highwater,"reversed":reversed,"relax":relax})
                 break
+            if cache:
+                write_cache(G, cache, {"highwater":highwater,"reversed":reversed,"relax":relax})
     return shells
 
-def solve_shell(G, cache, skip, overlap, inside, distance, proximate, ahead, attach,
+def solve_shell(G, M, cache, skip, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
                 relax = 0, limit=4, timeout=30, minimize=False):
-    M = scip.Model()
     M.setParam("limits/time", timeout)
 #     M.setParam("limits/solutions", 1)
     minim = add_constraints(G, M, skip, overlap, inside, distance, proximate, ahead, attach,
@@ -593,23 +604,20 @@ def solve_shell(G, cache, skip, overlap, inside, distance, proximate, ahead, att
     # solve and extract position values
     if minim:
         M.setObjective(scip.quicksum(minim), sense="minimize")
-    M.writeProblem(f"{cache}.{shell}_{relax}.cip")
+    M.writeProblem(f"{cache}.cip")
     log.info("Presolving with %d variables and %d constraints", M.getNVars(), M.getNConss())
     M.presolve()
     log.info("Starting optimizations with %d variables and %d constraints", M.getNVars(), M.getNConss())
     M.optimize()
     if M.getNSols() == 0:
         for node in frontier:
-            props = G.nodes[node]
-            del props["coordinates"]
-        del M
+            del G.nodes[node]["coordinates"]
         return False
     log.info("Finished optimizing, %d solutions found", M.getNSols())
     for node in frontier:
         props = G.nodes[node]
         props["coordinates"] = [int(M.getVal(i)) for i in props["coordinates"]]
         # log.debug("Final coordinates: %s %s", node, props["coordinates"])
-    del M
     return True
 def add_constraints(G, M, skip, overlap, inside, distance, proximate, ahead, attach,
                 frontier, shell, width, height, depth, bounding, offset, max_shell,
@@ -698,7 +706,13 @@ def read_cache(g, filename):
     for node, props in data.iterrows():
         g.nodes[node]["coordinates"] = (int(props["x"]), int(props["y"]), int(props["z"]))
         g.nodes[node]["shell"] = int(props["shell"])
-    return int(data["shell"].max() + 1)
+    meta = None
+    try:
+        with open(f"{filename}.json") as j:
+            meta = json.load(j)
+    except FileNotFoundError:
+        log.warning("Requested cache, but json metadata missing.")
+    return int(data["shell"].max() + 1), meta
 
 def extract_coord(coordinates, shell):
     if len(coordinates) == 2:
@@ -707,7 +721,7 @@ def extract_coord(coordinates, shell):
     else:
         return coordinates
 
-def write_cache(g, filename):
+def write_cache(g, filename, meta=None):
     # I love how pandas is the defacto csv reader
     data = ((node, *extract_coord(props["coordinates"], props["shell"]), props["shell"])
             for node, props in g.nodes.items() if "coordinates" in props)
@@ -715,6 +729,12 @@ def write_cache(g, filename):
 
     df = pd.DataFrame({"node": node, "x": x, "y": y, "z": z, "shell": shell})
     df.to_csv(filename)
+    if meta:
+
+        meta_file = f"{filename}.json"
+        log.info("Writing meta to %s", meta_file)
+        with open(meta_file, "+w") as j:
+            json.dump(meta, j)
 
 ################# Main #########################
 
