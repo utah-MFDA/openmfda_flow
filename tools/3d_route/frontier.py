@@ -343,6 +343,12 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
         minim = []
         if len(group) > 1:
             log.debug("Adding bounds for %s %s at distance %d to %d children on layer %d", orientation, relative, dist, len(group), shell)
+            # if relax and minimize:
+            #     X = M.addVar(lb=0, ub=relax)
+            #     minim.append(X)
+            #     dist += X
+            # elif relax:
+            #     dist += relax
             for first in group:
                 fd = G.nodes[first]["coordinates"]
                 for second in group:
@@ -350,6 +356,7 @@ def bounded_dimension(G, M, direction, orientation, relative, frontier, bounding
                         sd = G.nodes[second]["coordinates"]
                         for a, b in zip(fd, sd):
                             minim += within_distance(G, M, a, b, dist, relax, minimize)
+                            # M.addCons(abs(a-b) <= dist)
         return minim
     return []
 
