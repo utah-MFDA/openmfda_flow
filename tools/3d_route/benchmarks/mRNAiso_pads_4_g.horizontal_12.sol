@@ -1,0 +1,18 @@
+solution status: optimal solution found
+objective value:                                   10
+x9                                                  1 	(obj:1)
+x12                                                 1 	(obj:1)
+x13                                                 1 	(obj:1)
+x17                                                 1 	(obj:1)
+x19                                                 1 	(obj:1)
+x20                                                 1 	(obj:1)
+x21                                                 1 	(obj:1)
+x27                                                 1 	(obj:1)
+x29                                                 1 	(obj:1)
+x32                                                 1 	(obj:1)
+bank.thing.devices[0].thingy.vcell_in_z                   18 	(obj:0)
+bank.thing.devices[0].thingy.vpush_z                   17 	(obj:0)
+bank.thing.devices[0].thingy.vbead_in_y                    5 	(obj:0)
+bank.thing.devices[0].thingy.vbead_in_z                   20 	(obj:0)
+bank.thing.devices[0].thingy.vlysis_in_y                    1 	(obj:0)
+bank.thing.devices[0].thingy.vlysis_in_z                   18 	(obj:0)

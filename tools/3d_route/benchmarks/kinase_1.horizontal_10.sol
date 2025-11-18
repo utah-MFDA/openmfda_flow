@@ -1,0 +1,16 @@
+solution status: optimal solution found
+objective value:                                    0
+$_6__9_y                                            2 	(obj:0)
+$_6__9_z                                           25 	(obj:0)
+one.ctrl_a[10].hole_y                              16 	(obj:0)
+one.ctrl_a[10].hole_z                              20 	(obj:0)
+one.ctrl_a[10].flush_y                             16 	(obj:0)
+one.ctrl_a[10].flush_z                             21 	(obj:0)
+one.thingy.devices[0].thingy.vs3_y                   17 	(obj:0)
+one.thingy.devices[0].thingy.vs3_z                   22 	(obj:0)
+one.ctrl_a[11].hole_y                              15 	(obj:0)
+one.ctrl_a[11].hole_z                              19 	(obj:0)
+one.ctrl_a[11].flush_y                             15 	(obj:0)
+one.ctrl_a[11].flush_z                             20 	(obj:0)
+one.pinholes[0].hole_out_c_y                       17 	(obj:0)
+one.pinholes[0].hole_out_c_z                       21 	(obj:0)

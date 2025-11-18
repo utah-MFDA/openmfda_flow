@@ -1,0 +1,18 @@
+solution status: optimal solution found
+objective value:                                    0
+$_28_y                                             19 	(obj:0)
+$_28_z                                             19 	(obj:0)
+$_84_y                                             20 	(obj:0)
+$_84_z                                             19 	(obj:0)
+$_30_y                                             19 	(obj:0)
+$_30_z                                             18 	(obj:0)
+$_52_y                                             19 	(obj:0)
+$_52_z                                             20 	(obj:0)
+$_105_y                                            22 	(obj:0)
+$_105_z                                            22 	(obj:0)
+$_83_y                                             20 	(obj:0)
+$_83_z                                             20 	(obj:0)
+$_118_y                                            22 	(obj:0)
+$_118_z                                            21 	(obj:0)
+$_50_y                                             19 	(obj:0)
+$_50_z                                             21 	(obj:0)

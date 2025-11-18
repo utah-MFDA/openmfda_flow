@@ -1,0 +1,18 @@
+solution status: optimal solution found
+objective value:                                    0
+one.ctrl_a[0].flush_y                              19 	(obj:0)
+one.ctrl_a[0].flush_z                              17 	(obj:0)
+one.ctrl_a[12].hole_y                              17 	(obj:0)
+one.ctrl_a[12].hole_z                              18 	(obj:0)
+one.ctrl_a[0].hole_y                               18 	(obj:0)
+one.ctrl_a[0].hole_z                               16 	(obj:0)
+one.pinholes[0].hole_out_d_y                       18 	(obj:0)
+one.pinholes[0].hole_out_d_z                       18 	(obj:0)
+one.pinholes[0].hole_out_a_y                       17 	(obj:0)
+one.pinholes[0].hole_out_a_z                       17 	(obj:0)
+$_7__1_y                                           15 	(obj:0)
+$_7__1_z                                           14 	(obj:0)
+$_6__1_y                                           13 	(obj:0)
+$_6__1_z                                           13 	(obj:0)
+one.ctrl_a[12].flush_y                             17 	(obj:0)
+one.ctrl_a[12].flush_z                             16 	(obj:0)

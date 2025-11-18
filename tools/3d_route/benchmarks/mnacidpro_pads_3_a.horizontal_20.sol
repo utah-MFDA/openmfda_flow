@@ -1,0 +1,18 @@
+solution status: optimal solution found
+objective value:                                    8
+thing.thing.chamber[0].thingy.v8_y                   16 	(obj:0)
+thing.thing.chamber[0].thingy.v8_z                   18 	(obj:0)
+thing.thing.lysis_y                                14 	(obj:0)
+thing.thing.lysis_z                                15 	(obj:0)
+thing.thing.elute_y                                11 	(obj:0)
+thing.thing.elute_z                                17 	(obj:0)
+thing.thing.wash_y                                 15 	(obj:0)
+thing.thing.wash_z                                 15 	(obj:0)
+thing.thing.chamber[0].thingy.v6_y                   14 	(obj:0)
+thing.thing.chamber[0].thingy.v6_z                   17 	(obj:0)
+thing.thing.chamber[0].thingy.v4_y                   13 	(obj:0)
+thing.thing.chamber[0].thingy.v4_z                   17 	(obj:0)
+x24                                                 2 	(obj:1)
+x29                                                 2 	(obj:1)
+x33                                                 2 	(obj:1)
+x36                                                 2 	(obj:1)
