@@ -22,8 +22,11 @@ from generator_class import NetBuilder
 from generator_class import Pin, Component, Nets
 #from route_scripts import link_routes, convert_layers, convert_lengths, get_intersections
 #from route_scripts import check_net_intersections
-import route_scripts
 import component_parse
+# fmt:off
+#sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import route_scripts
+from route_scripts import link_routes
 
 ## Regex parsing
 #pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$' # last implementation
@@ -303,7 +306,17 @@ def get_comp_line(in_comp):
 
     return mo
 
-def write_components(o_file, comp_list, layer_h, px, def_scale, bottom_layers=0, mode="w+", pcell_file=None):
+
+def write_components(
+        o_file,
+        comp_list,
+        layer_h,
+        px,
+        def_scale,
+        bottom_layers=0,
+        mode="w+",
+        pcell_file=None
+):
 
     if isinstance(o_file, str):
         o_file = open(o_file, mode)
@@ -325,8 +338,9 @@ def write_components(o_file, comp_list, layer_h, px, def_scale, bottom_layers=0,
 
     print('pcell dict: ', pc_dict)
 
-    o_file.write("""
+    o_file.write(f"""
 // Components
+// has pcells : {has_pcells}
 """)
 
     for c in comp_list:
@@ -364,11 +378,21 @@ hc_net_property = {
 }
 
 
-def get_nets(in_def, design, tlef=None, tlef_property=None,
-             report_len_file=None, pins=None, components=None,
-             component_lef=None, debug={}, testing=False,
-             dimm_file=None, report_route_net_file=None,
-             gen_with_px_conversion=True, skip_u_adj=(not run_u_adjustment_script)
+def get_nets(in_def,
+             design,
+             tlef=None,
+             tlef_property=None,
+             report_len_file=None,
+             pins=None,
+             components=None,
+             component_lef=None,
+             debug={},
+             testing=False,
+             dimm_file=None,
+             report_route_net_file=None,
+             gen_with_px_conversion=True,
+             skip_u_adj=(not run_u_adjustment_script),
+             just_return_net=False
              ):
 
     mod_re = bytes(nets_block_reg, 'utf-8')
@@ -408,6 +432,8 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         s = tlef_property['px']*1000/tlef_property['def_scale']
     nb.import_tlef(tlef)
     nb.import_met(mets)
+    px_size = nb.px
+    def_scale = nb.def_scale
 
 
     os.environ["XYCE_WL_GRAPH"] = ''
@@ -498,6 +524,9 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         def_scale = 1000
         px_size = 1
 
+    if just_return_net:
+        return nets_list
+
     for n in nets_list:
         print("ROUTE:",n.route)
         if 'compress_routes' in debug and debug['compress_routes'] is True:
@@ -506,30 +535,31 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         else:
             if components is None:
                 n.compress_routes(design=design, pin_list=pins, def_scale=def_scale)
-                # linked_net = link_routes(
+                # n.route = link_routes(
                 #     n.route,
                 #     n.devs,
-                #     debug=True,
+                #     debug=False,
                 #     design=design,
                 #     pin_list=pins,
                 #     def_scale=def_scale,
                 #     px_sz=px_size
                 # )
             else:
-                n.compress_routes(design=design, pin_list=pins, component_list=components,
-                                  components_lef=component_lef, comp_dict=comp_dict,
-                                  def_scale=def_scale)
-                # linked_net = link_routes(
-                #     n.route,
-                #     n.devs,
-                #     debug=True,
-                #     design=design,
-                #     pin_list=pins,
-                #     component_list=components,
-                #     components_lef=component_lef,
-                #     def_scale=def_scale,
-                #     px_sz=px_size
-                # )
+                # n.compress_routes(design=design, pin_list=pins, component_list=components,
+                #                   components_lef=component_lef, comp_dict=comp_dict,
+                #                   def_scale=def_scale)
+                n.route = link_routes(
+                    n.route,
+                    n.devs,
+                    debug=True,
+                    design=design,
+                    pin_list=pins,
+                    component_list=components,
+                    components_lef=component_lef,
+                    def_scale=def_scale,
+                    px_sz=px_size
+                )
+                n.compress = True
 
         if gen_with_px_conversion:
             n.convert_layers(nb)
@@ -1212,10 +1242,12 @@ if($preview) {fb}
 {bb}
 """)
 
-    print("""
+    print(f"""
     --------------------------------
           OpenSCAD complete
     --------------------------------
+
+    output file: {o_file}
     """)
 
 
