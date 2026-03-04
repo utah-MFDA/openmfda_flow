@@ -4,6 +4,7 @@ import json
 import routing_fix
 import astar_route
 import Astr_grid
+import copy
 
 # fmt: off
 this_file_dir = os.path.abspath(os.path.dirname(__file__))
@@ -25,6 +26,13 @@ import def_obj_load
 sys.path.append(f'{openmfda_base_dir}/tools/scad_render')
 import route_scripts
 import component_parse
+
+
+if "LOG_DIR" in os.environ:
+    log_file_base = f"{LOG_DIR}/route_fix"
+else:
+    log_file_base = "./route_fix"
+
 # fmt: on
 
 
@@ -198,10 +206,12 @@ def fix_routes(
     out_def=None,
     grid_size=[0, 0, 0],
     def_scale=1000,
-    write_polyroute=False
+    write_polyroute=False,
+    log_intersections=False
 ):
     # ---------------------------------------
     # load def_file
+    #   external class in openmfda_py dir
     def_obj = def_obj_load.Design().import_def(os.path.abspath(def_file))
 
     # TODO iterate for multiple modules
@@ -210,13 +220,15 @@ def fix_routes(
     platform_conf = json.load(open(platform_config_file))
 
     # ---------------------------------------
-    # convert nets
+    # convert nets to a list of points
+    #   adjacent points form a single channel route
     lnk_routes = {}
 
     for net in design_obj.nets.keys():
         lnk_routes[net] = route_scripts.link_routes(
             route=design_obj.nets[net].export_as_list(
                 as_3pts=True, via_map=platform_conf["via_map"]),
+            # create a list of components
             route_devs=[{'dev': c[1].component_type}
                         for c in design_obj.components.items()],
             components_lef=lef_files,
@@ -232,7 +244,6 @@ def fix_routes(
 
     # ---------------------------------------
     # convert routing pts to grid pts
-
     if 'def_scale' in def_obj:
         def_scale = def_obj['def_scale']
 
@@ -260,12 +271,16 @@ def fix_routes(
     if 0 in grid_size:
         raise ValueError('grid size contains a zero in an index')
 
+    # -----------------------------
+    # build grid object
     G_col = grid_size[0]
     G_row = grid_size[1]
     G_lay = grid_size[2]
 
     solv_grid = Astr_grid.AStr_grid(G_col, G_row, G_lay)
 
+    # -----------------------------
+    #   get relevant components
     CompP = component_parse.ComponentParser()
 
     loaded_lefs = []
@@ -278,6 +293,9 @@ def fix_routes(
         for l in loaded_lefs[1:]:
             lef_dict.update(l)
 
+    # -----------------------------
+    #   initiallize the device with components blocking routing grids
+
     astar_route.initialize_components_in_grid(
         solv_grid,
         design_obj.components,
@@ -285,6 +303,7 @@ def fix_routes(
         layers_map=platform_conf["layers"]
     )
 
+    # block grid points for routes
     def add_routes_2_grid(a_grid, lnk_rts, v=0):
         for net in lnk_rts.items():
             net_name = net[0]
@@ -320,22 +339,58 @@ def fix_routes(
         )
 
         return o_net_sol
+    # end check_inters
 
-    def route(lnk_routes):
+    # --------------------------------------
+    # routing solver
+    def route(
+        lnk_routes,
+        log_segment_intersections=False,
+        log_queue=False
+    ):
 
-        # in astar_route
+        # extract the intersections from check_net_intersections
+        #    based on routing grid
+        #    output looks like:
+        #       [(net1, net2): [['issue', pt1, pt2], ...], ... ]
         seg_inters = astar_route.get_intersections(lnk_routes)
+        if log_segment_intersections:
+            with open(log_file_base+"_0_intersections.txt", "w+") as log_file:
+                log_file.write(str(seg_inters)
+                               .replace(": [", ":\n[")
+                               .replace("), (", "),\n    (")
+                               .replace("], '", "],\n    '")
+                               )
 
+        # convert net-pair (net1, net2): intersections_list
+        #   to a list-list of intersection points
+        #   ex. {net1: {net2: [pt list], net3: [] }, ... }
         ex_inter_pts = routing_fix.extract_intersect_pt_list2(
             seg_inters,
         )
+        if log_segment_intersections:
+            with open(log_file_base+"_1_inter_pt.txt", "w+") as log_file:
+                log_file.write(str(ex_inter_pts)
+                               .replace(": {", ":\n{")
+                               .replace("), (", "),\n    (")
+                               .replace("], '", "],\n    '")
+                               )
 
-        # where is this function found?
+        # get intersection points
+        #    from routing grid to segment index
         inter_pts_sgmts = astar_route.get_intersect_indexes(
             ex_inter_pts,
             lnk_routes
         )
+        if log_segment_intersections:
+            with open(log_file_base+"_2_inter_ind.txt", "w+") as log_file:
+                log_file.write(str(inter_pts_sgmts)
+                               .replace(": {", ":\n{")
+                               .replace("), (", "),\n    (")
+                               .replace("], '", "],\n    '")
+                               )
 
+        # condense list of pts to only thier outter points
         o_net_sol = routing_fix.get_outter_sgmt_pts(
             lnk_rts=lnk_routes,
             inter_pts_sgmts=inter_pts_sgmts
@@ -344,6 +399,12 @@ def fix_routes(
         print("Len o_net_sol", len(o_net_sol))
 
         sol_q = routing_fix.create_solve_queue(o_net_sol)
+
+        # if log_queue:
+        #     sol_qpr = copy.deepcopy(sol_q)
+        #     with open(log_file_base+"_3_queue.txt", "w+") as log_file:
+        #         log_file.write(str([ob for ob in iter(sol_qpr.get, None)]))
+
 
         # I think I can unload CompP
 
@@ -362,7 +423,19 @@ def fix_routes(
         rt_stack = []
 
         cur_net = ''
+        
+        q_count = 0
+        if log_queue:
+            with open(log_file_base+"_3_queue.txt", "w+") as log_file:
+                log_file.write('start:\n')
+
+        # iterate through nets that need to be solved for
         for rt in iter(sol_q.get, None):
+            if log_queue:
+                with open(log_file_base+"_3_queue.txt", "a+") as log_file:
+                    log_file.write(f'{q_count}: {rt}\n')
+                q_count += 1
+            # 
             if cur_net == '':
                 cur_net = rt[0]
             # rt = ['rt_name', [pt1, pt2]]
@@ -372,6 +445,7 @@ def fix_routes(
                     if len(rt_stack) == 0:
                         break
                 cur_net = rt[0]
+
             routing_fix.solve_rt(
                 pt_pair=rt[1],
                 net_name=rt[0],
@@ -381,6 +455,8 @@ def fix_routes(
                 grid=solv_grid,
                 write_2_grid=True
             )
+
+            # note which nets have been solved
             if rt[0] not in sol_rts:
                 sol_rts.append(rt[0])
 
@@ -399,20 +475,27 @@ def fix_routes(
                 break
 
         return lnk_routes
+    # end route
 
     num_inters = len(check_inters(lnk_routes))
 
     count = 0
 
+    # iterate through list of routes verifing the
+    #   that there are no more intersections
     while num_inters > 1 and count < 5:
-        lnk_routes = route(lnk_routes)
+        lnk_routes = route(
+            lnk_routes,
+            log_intersections,
+            log_intersections,
+            )
         num_inters = len(check_inters(lnk_routes))
         count += 1
 
     if num_inters == 0:
         print("Solved all routes")
 
-    # ---
+    # -------------------------------------------
     # Write routes
 
     if write_polyroute:
@@ -479,6 +562,8 @@ if __name__ == "__main__":
     parser.add_argument('--def_scale', type=int)
     parser.add_argument('--write_polyroute',
                         action='store_true', default=False)
+    parser.add_argument('--log_intersection',
+                        action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -494,5 +579,6 @@ if __name__ == "__main__":
             args.grid_size[2]
         ],
         def_scale=args.def_scale,
-        write_polyroute=args.write_polyroute
+        write_polyroute=args.write_polyroute,
+        log_intersections=args.log_intersection
     )

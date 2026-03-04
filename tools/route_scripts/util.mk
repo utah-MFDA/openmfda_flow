@@ -7,19 +7,24 @@ endif
 ifneq ($(FLOW_DIR),)
 THIS_DIR_FROM_FLOW = $(realpath $(FLOW_DIR)/../tools/route_scripts)
 endif
+
 FIX_PY_SCRIPT = $(THIS_DIR_FROM_FLOW)/routing_fix_main.py
 
 FIX_DEF ?=
 
 FIX_SCAD ?=
 
-ifneq ($(FIX_DEF),)
+# --------------------------------
+#  run if FIX_DEF is nonblank
+ifneq ($(strip $(FIX_DEF)),)
 OUT_FIX_DEF = $(patsubst %.def,%_fix.def,$(FIX_DEF))
 
 OUT_FIX_SCAD = $(patsubst %.def,%_fixbase.scad,$(FIX_DEF))
 
 OPT_FIX_ARGS ?=
 
+# --------------------------------
+#  include additional LEF files
 ifneq ($(ADDITIONAL_LEFS),)
 OPT_FIX_ARGS += --additional_lefs $(ADDITIONAL_LEFS)
 endif
@@ -28,6 +33,8 @@ ifeq ($(PLATFORM),h.r.3.3)
 PLATFORM_CONF_JSON ?= $(THIS_DIR_FROM_FLOW)/testing_files/h.r.3.3.techlef.config.json
 endif
 
+# --------------------------------
+#  manual definition of the routing grid
 ifeq ($(strip $(FIX_GRID_SIZE)),)
 OPT_FIX_ARGS += --grid_size 88 52 10
 else
@@ -36,6 +43,7 @@ endif
 
 OPT_FIX_ARGS += --def_scale 1000
 
+# run fix def
 $(OUT_FIX_DEF): $(FIX_DEF)
 	$(PYTHON3) $(FIX_PY_SCRIPT) \
 		--def_file $(FIX_DEF) \
@@ -58,9 +66,13 @@ $(OUT_FIX_DEF): $(FIX_DEF)
 #                     action='store_true', default=False)
 
 endif
+# of if FIX_DEF
 
 ifneq ($(OUT_FIX_SCAD),)
 
+
+# --------------------------------
+# add additional scad files
 SCAD_LIB ?= $(PLATFORM_DIR)/pdk/scad_lib
 
 ifneq ($(SCAD_INCLUDE_FILES),)
@@ -73,6 +85,7 @@ ifneq ($(PCELL_MERGE_LEF),)
 SCAD_ARGS += --pcell $(SCAD_PCELL)
 endif
 
+# run generate scad of fixed device
 $(OUT_FIX_SCAD): $(OUT_FIX_DEF) $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \

@@ -32,6 +32,16 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
             comp_dict = {}
             if isinstance(components_lef, str):
                 comp_dict = component_parse.ComponentParser(
+# <<<<<<< HEAD
+#                 ).get_comp_pins_from_lef(components_lef, scale=s)
+#             elif isinstance(components_lef, list):
+#                 for c_lef in components_lef:
+#                     new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(c_lef, scale=s)
+#                     for cmp in new_dict.items():
+#                         if cmp[0] in comp_dict:
+#                             print(
+#                                 f"Component {cmp[0]} already read in, skipping")
+# =======
                     ).get_comp_pins_from_lef(components_lef, scale=s, silent=silent)
             elif isinstance(components_lef, list):
                 for c_lef in components_lef:

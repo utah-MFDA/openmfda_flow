@@ -75,8 +75,16 @@ def get_intersections2(rt_dict, silent=False):
 # %% dafk
 
 
-def extract_intersect_pt_list2(inters_dict,
-                               print_debug=True):
+# this function extracts the pt from a list of intersections
+#  and condenses the
+
+def extract_intersect_pt_list2(
+    inters_dict,
+    print_debug=True
+):
+    # inter fnct
+    #   checks if the point already exists in the list of
+    #   points to fix in a net
     def add_if_unique(pt, pt_list, dkey=None):
         if dkey is None:
             if pt not in pt_list:
@@ -84,6 +92,8 @@ def extract_intersect_pt_list2(inters_dict,
         else:
             if pt not in pt_list[dkey]:
                 pt_list[dkey].append(pt)
+    # end fnct
+
     inter_net_list = {}
 
     for net_pair in inters_dict.items():
@@ -91,6 +101,7 @@ def extract_intersect_pt_list2(inters_dict,
             print("Extracting from ", net_pair[0])
         net1 = net_pair[0][0]
         net2 = net_pair[0][1]
+
         if net1 not in inter_net_list:
             inter_net_list[net1] = {}
         inter_net_list[net1][net2] = []
