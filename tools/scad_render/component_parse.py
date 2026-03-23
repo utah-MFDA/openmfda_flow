@@ -60,12 +60,12 @@ def t_ESCAPED_STRING(t):
 
 # Error handling rule
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print("Illegal character '%s' while parsing" % t.value[0])
     t.lexer.skip(1)
 
 
 t_ignore = " \t\n"
-t_ignore_COMMENT = r"\#.*"
+t_ignore_COMMENT = r"\#+.*"
 
 lexer = lex.lex()
 
@@ -427,23 +427,31 @@ class Component:
         for p in self.pins.items():
             for i, pt in enumerate(p[1]["pos"]):
                 if orient == "N":
+                    # R0
                     new_pin_pos[p[0]]["pos"][i] = [
                         (pt[0] + pos[0]) * rescale,
                         (pt[1] + pos[1]) * rescale,
                     ]
-                elif orient == "FN":
+                elif orient == "FN" or orient == "MY":
+                    # MY
                     new_pin_pos[p[0]]["pos"][i] = [
                         (self.size[0] - pt[0] + pos[0]) * rescale,
                         (pt[1] + pos[1]) * rescale,
+                        #(pt[0] + pos[0]) * rescale,
+                        #(self.size[1] - pt[1] + pos[1]) * rescale,
                     ]
-                elif orient == "FS":
+                elif orient == "FS" or orient == "MX":
+                    # MX
                     # print(pos)
                     # print(self.size[1], pt[1], self.size[1] - pt[1])
                     new_pin_pos[p[0]]["pos"][i] = [
                         (pt[0] + pos[0]) * rescale,
                         ((self.size[1] - pt[1]) + pos[1]) * rescale,
+                        #((self.size[0] - pt[0]) + pos[0]) * rescale,
+                        #(pt[1] + pos[1]) * rescale,
                     ]
                 elif orient == "S":
+                    # R180
                     new_pin_pos[p[0]]["pos"][i] = [
                         (self.size[0] - pt[0] + pos[0]) * rescale,
                         (self.size[1] - pt[1] + pos[1]) * rescale,
@@ -451,12 +459,12 @@ class Component:
 
         return new_pin_pos
 
-    def is_pt_in_rect(self, pt, rect, err=0.0):
+    def is_pt_in_rect(self, pt, rect, err=0.001):
         if (
-            pt[0] > rect[0][0] - err
-            and pt[0] < rect[1][0] + err
-            and pt[1] > rect[0][1] - err
-            and pt[1] < rect[1][1] + err
+            pt[0] > min(rect[0][0], rect[1][0]) - err
+            and pt[0] < max(rect[0][0], rect[1][0]) + err
+            and pt[1] > min(rect[0][1], rect[1][1]) - err
+            and pt[1] < max(rect[0][1], rect[1][1]) + err
         ):
             return True
         else:
@@ -469,14 +477,15 @@ class Component:
         orient=None,
         layer=None,
         rescale=1,
-        err=0.0,
-        silent=True
+        err=0.001,
+        silent=False
     ):
         ref_pins = self.get_pins_from_pos(pos, orient, rescale)
         for p in ref_pins.items():
+            pt_pin = p[1]["pos"]
             if not silent:
                 print("Component pin:", p[0], p[1]["pos"])
-            if self.is_pt_in_rect(pt, p[1]["pos"], err):
+            if self.is_pt_in_rect(pt, pt_pin, err):
                 if layer is None:
                     return True, p[0]
                 elif isinstance(layer, str) and layer == p[1]["layer"]:
