@@ -1,6 +1,8 @@
 # fmt:off
 import json
-import regex, mmap, re
+#import regex
+import mmap
+import re
 import networkx as nx
 
 # custom classes
@@ -844,7 +846,7 @@ class NetBuilder:
 
         print(f"Importing TECH_LEF: {tlef_f}")
         # get layers
-        layer_re = r'LAYER\s*(?P<layer_name>\w*)\s*(?|(?:TYPE\s*(?P<type>(?:ROUTING|CUT))\s*;|DIRECTION\s*(?P<direction>(?:HORIZONTAL|VERTICAL))\s*;|MINWIDTH\s*(?P<minwidth>[\d.]*)\s*;|WIDTH\s*(?P<width>[\d.]*)\s*;)\s*)*END\s*(\w*)\s$' 
+        layer_re = r'LAYER\s*(?P<layer_name>\w*)\s*(?:(?:TYPE\s*(?P<type>(?:ROUTING|CUT))\s*;|DIRECTION\s*(?P<direction>(?:HORIZONTAL|VERTICAL))\s*;|MINWIDTH\s*(?P<minwidth>[\d.]*)\s*;|WIDTH\s*(?P<width>[\d.]*)\s*;)\s*)*END\s*(\w*)\s$' 
         layer_re = bytes(layer_re, 'utf-8')
 
         self.layers_list = {
@@ -853,13 +855,14 @@ class NetBuilder:
 
         with open(tlef_f, 'r+') as f:
             data = mmap.mmap(f.fileno(), 0)
-            mo_l = regex.finditer(layer_re, data, re.MULTILINE)
+            mo_l = re.finditer(layer_re, data, re.MULTILINE)
 
             for l in mo_l:
                 self.layers_list[l.group('type').decode('utf-8')].append(l.group('layer_name').decode('utf-8'))
 
         # get vias
-        via_re   = r'VIA\s*(?P<via_name>\w*)\s*(?P<type>\w*)(?|.*\n)*?(?:END\s*(?&via_name)\s*$)'
+        #via_re   = r'VIA\s*(?P<via_name>\w*)\s*(?P<type>\w*)(?:.*\n)*?(?:END\s*((?&via_name))\s*?$)'
+        via_re   = r'VIA\s*(?P<via_name>\w*)\s*(?P<type>\w*)(?:.*\n)*?(?:END\s*(\w+)\s*?$)'
         via_l_re = r'LAYER (?P<met_name>\w*)\s*;\s*(?:RECT\s*(?P<x1>[\d.-]*)\s*(?P<y1>[\d.-]*)\s*(?P<x2>[\d.-]*)\s*(?P<y2>[\d.-]*)\s*;)*'
 
         via_re = bytes(via_re, 'utf-8')
@@ -869,12 +872,12 @@ class NetBuilder:
         # parse template
         with open(tlef_f, 'r+') as f:
             data = mmap.mmap(f.fileno(), 0)
-            mo_v = regex.finditer(via_re, data, re.MULTILINE)
+            mo_v = re.finditer(via_re, data, re.MULTILINE)
 
             for m in mo_v:
                 #print(m.group(0))
                 v_m = []
-                mo_vl = regex.finditer(via_l_re, m.group(0), re.MULTILINE)
+                mo_vl = re.finditer(via_l_re, m.group(0), re.MULTILINE)
                 for vl in mo_vl:
                     v_m.append(vl.group('met_name').decode('utf-8'))
 

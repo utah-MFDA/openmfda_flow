@@ -1,21 +1,20 @@
-#fmt:off
+# fmt:off
 import networkx as nx
 import copy
+from pprint import pp
 from math import sqrt
 
 
-#<<<<<<< HEAD
 # this script tries to order the routes in consecutive segments
+"""
+    route - list of segements of the net
+    route_devs - devices connected to the net
+"""
 def link_routes(route, route_devs, debug=False, design='', component_list=None,
                 components_lef=None, comp_dict=None, pin_list=None,
                 report_route=False, subsegment=True, def_scale=1000,
-                px_sz=7.6e-3, pt_err=0.05, silent=False
-# =======
-# def link_routes(route, route_devs, debug=False, design='', component_list=None,
-#                     components_lef=None, comp_dict=None, pin_list=None,
-#                     report_route=False, subsegment=True,def_scale=1000,
-#                     px_sz = 7.6e-3, pt_err=0.05
-# >>>>>>> dafa4f78692090b001f90a8bea2fe60ae248bc31
+                px_sz=7.6e-3, pt_err=0.05, silent=False,
+                pre_subsegment_file=None
                 ):
 
     cp_route = copy.deepcopy(route)
@@ -39,16 +38,6 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
             comp_dict = {}
             if isinstance(components_lef, str):
                 comp_dict = component_parse.ComponentParser(
-# <<<<<<< HEAD
-#                 ).get_comp_pins_from_lef(components_lef, scale=s)
-#             elif isinstance(components_lef, list):
-#                 for c_lef in components_lef:
-#                     new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(c_lef, scale=s)
-#                     for cmp in new_dict.items():
-#                         if cmp[0] in comp_dict:
-#                             print(
-#                                 f"Component {cmp[0]} already read in, skipping")
-# =======
                     ).get_comp_pins_from_lef(components_lef, scale=s, silent=silent)
             elif isinstance(components_lef, list):
                 for c_lef in components_lef:
@@ -64,6 +53,17 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                                     f"Component {cmp[0]} already read in, skipping")
                         else:
                             comp_dict[cmp[0]] = cmp[1]
+
+    def check_pt_vec(p1, p2, acc):
+        if isinstance(p1[2], str) and isinstance(p2[2], str):
+            return abs(p1[0]-p2[0]) < acc and \
+                abs(p1[1]-p2[1]) < acc and \
+                p1[2] == p2[2]
+        else:
+            return abs(p1[0]-p2[0]) < acc and \
+                abs(p1[1]-p2[1]) < acc and \
+                abs(p1[2]-p2[2]) < acc
+    # assume either x1 == x2 or y1 == y2
 
     def check_inner(r_list, node, head=False):
         # that inner node is not inside
@@ -98,27 +98,36 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
             else:
                 r_list.append(node)
 
+    # check if the segment (r_node) can attach to the
+    #   the route (r_list)
     def check_route_ends(r_nodes, r_list):
         r = r_nodes
-        if r[0] == r_list[0]:
+        if len(r_list) == 2:
+            if (check_pt_vec(r[0], r_list[0], pt_err) and \
+                    check_pt_vec(r[1], r_list[1], pt_err)) or \
+                    (check_pt_vec(r[1], r_list[0], pt_err) and \
+                    check_pt_vec(r[0], r_list[1], pt_err)):
+                cp_route.pop(ind)
+                return True
+        if check_pt_vec(r[0], r_list[0], pt_err):
             if debug:
                 print(str(r[0])+" at head")
             check_inner(r_list, r[1], head=True)
             cp_route.pop(ind)
             return True
-        elif r[0] == r_list[-1]:
+        elif check_pt_vec(r[0], r_list[-1], pt_err):
             if debug:
                 print(str(r[0])+" at tail")
             check_inner(r_list, r[1], head=False)
             cp_route.pop(ind)
             return True
-        elif r[-1] == r_list[0]:
+        elif check_pt_vec(r[-1], r_list[0], pt_err):
             if debug:
                 print(str(r[1])+" at head")
             check_inner(r_list, r[0], head=True)
             cp_route.pop(ind)
             return True
-        elif r[-1] == r_list[-1]:
+        elif check_pt_vec(r[-1], r_list[-1], pt_err):
             if debug:
                 print(str(r[1])+" at tail")
             check_inner(r_list, r[0], head=False)
@@ -154,17 +163,6 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
             def seg_sl(lofl, l_ind):
                 return [a[l_ind] for a in lofl]
 
-            def check_pt_vec(p1, p2, acc):
-                if isinstance(p1[2], str) and isinstance(p2[2], str):
-                    return abs(p1[0]-p2[0]) < acc and \
-                        abs(p1[1]-p2[1]) < acc and \
-                        p1[2] == p2[2]
-                else:
-                    return abs(p1[0]-p2[0]) < acc and \
-                        abs(p1[1]-p2[1]) < acc and \
-                        abs(p1[2]-p2[2]) < acc
-            # assume either x1 == x2 or y1 == y2
-
             def check_pt_in_segment(p1, seg, acc):
                 # print(f"Check pair {seg} for {p1}")
                 if isinstance(p1[2], str) and isinstance(seg[0][2], str) and isinstance(seg[1][2], str):
@@ -194,10 +192,12 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                     # elif abs(route_ends_check[-1] - pt) < pt_acc:
                     return "tail", pt, ind
                 # check between route segments
-                elif (prev_pt is not None) and check_pt_in_segment(route_ends_check[0], [pt, prev_pt], pt_acc):
+                elif (prev_pt is not None) and \
+                        check_pt_in_segment(route_ends_check[0], [pt, prev_pt], pt_acc):
                     return "head_ins", route_ends_check[0], ind
                     pass
-                elif (prev_pt is not None) and check_pt_in_segment(route_ends_check[-1], [pt, prev_pt], pt_acc):
+                elif (prev_pt is not None) and \
+                        check_pt_in_segment(route_ends_check[-1], [pt, prev_pt], pt_acc):
                     return "tail_ins", route_ends_check[-1], ind
                     pass
                 else:
@@ -273,24 +273,41 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
 
         print("Subsegmenting route")
         # TODO what if a break is at another break
+        # loop through a list of each route
         for ind_ends, dr_ends in enumerate(in_routes):
             for ind_srch, dr_srch in enumerate(in_routes):
                 if ind_ends == ind_srch:  # this means we are checking the same route, skip
                     continue
-                # returns (1) type of return (2) pt value (3) index on segment
+                # returns
+                #   (1) type of return "head" or "tail" (of 1st arg)
+                #   (2) pt value
+                #   (3) index on the checked segment (2nd arg)
                 seg_return, out_pt, out_pt_ind = check_ends_in_route(
                     dr_ends['route'], dr_srch['route'])
+
                 if seg_return == "head":
-                    # dr_head_in_r[ind_ends] = ind_ch
+                    # assigns the segment index of the segment to attach to
                     in_routes[ind_ends]['head'] = ind_srch
+                    # addes a breakpoint to the base segment
                     # TODO check if exists, ifso append
                     in_routes[ind_srch]['break'].append(
-                        {'pt_ind': out_pt_ind, 'pt': out_pt, 'r_ind': [[ind_ends, 'head']]})
+                        {
+                            'pt_ind': out_pt_ind,
+                            'pt': out_pt,
+                            'r_ind': [[ind_ends, 'head']]
+                        })
                 elif seg_return == "tail":
-                    # dr_tail_in_r[ind_ends] = ind_ch
+                    # assigns the segment index of the segment to attach to
                     in_routes[ind_ends]['tail'] = ind_srch
+                    # addes a breakpoint to the base segment
                     in_routes[ind_srch]['break'].append(
-                        {'pt_ind': out_pt_ind, 'pt': out_pt, 'r_ind': [[ind_ends, 'tail']]})
+                        {
+                            'pt_ind': out_pt_ind,
+                            'pt': out_pt,
+                            'r_ind': [[ind_ends, 'tail']]
+                        })
+
+                # VVV these are not common and may be unnessary
                 elif seg_return == "head_ins":
                     in_routes[ind_srch]['route'].insert(out_pt_ind, out_pt)
                     # move break_pts after
@@ -332,6 +349,9 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                             {'pt_ind': pt_ind, 'pt': pt, 'r_ind': [[dev_out, 'pin']]})
                         break
 
+        print("INROUTES")
+        pp(in_routes)
+
         debug = False
 
         net_G = nx.Graph()
@@ -349,14 +369,23 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                 new_node = f'{ind}_{br_count}'
                 # check if node exists; they can be created through add_edge
                 if new_node in net_G.nodes:
-                    net_G.nodes[new_node]['route'] = r_t['route'][last_br_ind:br_pt['pt_ind']+1]
+                    net_G.nodes[new_node]['route'] = \
+                        r_t['route'][last_br_ind:br_pt['pt_ind']+1]
                 else:
                     net_G.add_node(
-                        f'{ind}_{br_count}', route=r_t['route'][last_br_ind:br_pt['pt_ind']+1])
+                        f'{ind}_{br_count}', # node name
+                        route=r_t['route'][last_br_ind:br_pt['pt_ind']+1])
 
-                net_G.add_edge(f'{ind}_{br_count}', f'br_{ind}_{br_count}')
-                net_G.add_edge(f'{ind}_{br_count+1}',
-                               f'br_{ind}_{br_count}')
+                # add break pt to graph
+                net_G.add_edge(
+                    f'{ind}_{br_count}',
+                    f'br_{ind}_{br_count}'
+                )
+                net_G.add_edge(
+                    f'{ind}_{br_count+1}',
+                    f'br_{ind}_{br_count}'
+                )
+
                 # check if node is at 0 or 1; this adds the branching route node and edge
                 for ch_end in list(br_pt['r_ind']):
                     # number of breaks in ref route
@@ -365,6 +394,7 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                     #     net_G.add_edge(f'{ch_end[0]}_{0}', f'br_{ind}_{br_count}')
                     # elif ch_end[1] == "tail": # we assume last seg is # of break pts
                     #     net_G.add_edge(f'{ch_end[0]}_{num_br}', f'br_{ind}_{br_count}')
+
                     if isinstance(ch_end[0], int):
                         num_br = len(in_routes[ch_end[0]]["break"])
                         if ch_end[1] == "head":
@@ -373,6 +403,7 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                         elif ch_end[1] == "tail":  # we assume last seg is # of break pts
                             net_G.add_edge(
                                 f'{ch_end[0]}_{num_br}', f'br_{ind}_{br_count}')
+
                     elif isinstance(ch_end[0], str):
                         if ch_end[1] == "pin":
                             net_G.add_edge(
@@ -446,7 +477,9 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
     #################### BEGIN FUNCTION compress_routes ######################
     route_validation(route)
 
+    # new route list of points
     nr = []
+    # dangling routes list of list of points
     d_routes = []
     dangle_routes = False
     count = 0
@@ -460,11 +493,19 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
     # while len(self.route) > 1:
     while True:
         if debug:
-            print("sr:"+str(len(cp_route))+":"+str(cp_route))
+            print("unconct-segmts-list: len("+str(len(cp_route))+") :")
+            pp(cp_route)
         if len(nr) >= 1 and debug:
-            print("nr:"+str(len(nr))+":"+str(nr))
+            print("new-r:"+str(len(nr))+":")
+            pp(nr)
+        if len(d_routes) >= 1 and debug:
+            print('d_routes: len('+str(len(d_routes))+') :')
+            pp(d_routes)
+        # -----------------------------------
         r_init_len = len(cp_route)
+        # iterate through the route segments
         for ind, r in enumerate(cp_route):
+            # initial points
             if len(nr) < 1:
                 cp_route.pop(ind)
                 nr.append(r[0])
@@ -472,7 +513,8 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                 break
             else:
                 if debug:
-                    print("r:"+str(r))
+                    print("check-r:"+str(r))
+                # --------
                 if check_route_ends(r, nr):
                     break
                 if len(d_routes) > 0:
@@ -487,13 +529,13 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                     d_routes.append({'head': r[0], 'route': r})
                     cp_route.pop(ind)
                     dangle_routes = True
-                    print("has dangling route")
+                    print("has dangling route 0 : len-" + str(len(d_routes)))
                     break
                 if len(nr) > 4 and r[1] in nr[2:-3]:
                     d_routes.append({'head': r[1], 'route': r})
                     cp_route.pop(ind)
                     dangle_routes = True
-                    print("has dangling route")
+                    print("has dangling route 1 : len-" + str(len(d_routes)))
                     break
             # TODO start new route after running through entire list
             if ind + 1 == r_init_len:
@@ -502,7 +544,7 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
                     d_routes.append({'head': None, 'route': r})
                     cp_route.pop(ind)
                     dangle_routes = True
-                    print("has dangling route (Unconnected)")
+                    print("has dangling route (Unconnected) : len-" + str(len(d_routes)))
 
         if len(cp_route) < 1:
             break
@@ -522,8 +564,19 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
             for r in d_routes:
                 rep_out.write(f"{r}\n")
 
+    print("PRESUBSEGMENT")
+    pp(nr)
+    print("d_routes")
+    pp(d_routes)
     if dangle_routes and subsegment:
+        if pre_subsegment_file is not None:
+            with open(pre_subsegment_file, 'w+') as pre_subsg:
+                pre_subsg.write(nr + '\n' + d_routes)
         g_route = subsegment_routes(nr, d_routes)
+        # remove single point routes
+        # for n in list(g_route.nodes):
+        #     if 'route' in g_route.nodes[n] and len(g_route.nodes[n]['route']) == 1:
+        #         g_route.remove_node(n)
     else:
         dangling_routes = d_routes
         g_route = nx.Graph()
@@ -531,7 +584,7 @@ def link_routes(route, route_devs, debug=False, design='', component_list=None,
 
     if debug:
         print("Final routes:")
-        print(g_route['route'])
+        print([g_route.nodes[n] for n in g_route.nodes])
 
     return g_route
 

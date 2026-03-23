@@ -371,7 +371,7 @@ class ComponentParser:
         self,
         in_file,
         scale=1,
-        # silent=False
+        silent=False
     ):
         par_f = self.parser_multi_file(in_file)
         if par_f is None:
@@ -397,7 +397,7 @@ class ComponentParser:
                     # ]
                 }
 
-            #if not silent:
+            # if not silent:
             #    print("SIZE:", [i * scale for i in c[1]["SIZE"]])
             c_list[c[0]] = Component(
                 c[0], pins, [i * scale for i in c[1]["SIZE"]])
@@ -463,11 +463,19 @@ class Component:
             return False
 
     def is_pt_in_pins(
-        self, pt, pos=[0, 0], orient=None, layer=None, rescale=1, err=0.0
+        self,
+        pt,
+        pos=[0, 0],
+        orient=None,
+        layer=None,
+        rescale=1,
+        err=0.0,
+        silent=True
     ):
         ref_pins = self.get_pins_from_pos(pos, orient, rescale)
         for p in ref_pins.items():
-            print("Component pin:", p[0], p[1]["pos"])
+            if not silent:
+                print("Component pin:", p[0], p[1]["pos"])
             if self.is_pt_in_rect(pt, p[1]["pos"], err):
                 if layer is None:
                     return True, p[0]

@@ -12,7 +12,7 @@ import argparse
 #from generator_class import *
 
 #import solid
-import regex
+#import regex
 import json
 import csv
 import pandas as pd
@@ -22,21 +22,28 @@ from generator_class import NetBuilder
 from generator_class import Pin, Component, Nets
 #from route_scripts import link_routes, convert_layers, convert_lengths, get_intersections
 #from route_scripts import check_net_intersections
-import route_scripts
 import component_parse
+# fmt:off
+#sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import route_scripts
+from route_scripts import link_routes
 
 ## Regex parsing
-pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$'
+#pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$' # last implementation
+pin_block_reg = r'^PINS\s*\d*\s*;\w*\n([\s\S]*)^\s*END\s*PINS$'
 pin_line_reg  = r'^\s*-\s*(?P<pin>\w*)\s*\+\s*NET\s*(?P<net>[\w\.]*)\s*\+\s*DIRECTION\s*(?P<dir>\w*)\s*\+\sUSE\s*SIGNAL\s*\+\s*PORT\s*\+\s*LAYER\s*(?P<layer>\w*)\s*(\(\s*(?P<lx1>[-\d]*)\s*(?P<ly1>[-\d]*)\s*\))\s*(\(\s*(?P<lx2>[-\d]*)\s*(?P<ly2>[-\d]*)\s*\))\s*\+\s*FIXED\s*(\(\s*(?P<fx1>\d*)\s*(?P<fy1>\d*)\s*\)\s*(?P<fdir>\w))\s*;'
 
-comp_block_reg = r'^COMPONENTS\s*\d*\s*;\w*\n(?|.*\n)*END\s*COMPONENTS$'
+#comp_block_reg = r'^COMPONENTS\s*\d*\s*;\w*\n(?|.*\n)*END\s*COMPONENTS$' # last implementation
+comp_block_reg = r'^\s*COMPONENTS\s*\d*\s*;([\s\S]*)^\s*END\s*COMPONENTS$'
 comp_line_reg = r'^\s*-\s*(?P<name>[\w\.]*)\s*(?P<comp>\w*)\s*\+\s*(?:PLACED|FIXED)\s*(\(\s*(?P<x1>\d*)\s*(?P<y1>\d*)\s*\)\s*(?P<dir>\w*))\s*;'
 
-nets_block_reg = r'^NETS\s*\d*\s*;\w*\n(?|.*\n)*END\s*NETS$'
+#nets_block_reg = r'^NETS\s*\d*\s*;\w*\n(?|.*\n)*END\s*NETS$' # last implementation
+nets_block_reg = r'^NETS\s*\d*\s*;\w*\n([\s\S]*)^\s*END\s*NETS$'
 #nets_line_reg = r'-\s*(?P<net>\w*)\s*(\(\s*(?P<dev1>\w*)\s*(?P<p1>\w*)\s*\))\s*(\(\s*(?P<dev2>\w*)\s*(?P<p2>\w*)\s*\))\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
 #nets_line_reg = r'^[ ]*-\s*(?P<net>\w*)\s*(?P<dev_groups>(\(\s*\w*\s*\w*\s*\))\s*(\(\s*\w*\s*\w*\s*\)\s*?)+)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
 #nets_line_reg = r'^[ ]*-\s*(?P<net>\w*)\s*(?P<dev_groups>(\(\s*\w*\s*\w*\s*\)\s*?)+)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
-nets_line_reg = r'^[ ]*-\s*(?P<net>[\w\.]*)\s*(?P<dev_groups>[\(\s\w\.\)]*?)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n?(?|\s*NEW.*)*;$'
+#nets_line_reg = r'^[ ]*-\s*(?P<net>[\w\.]*)\s*(?P<dev_groups>[\(\s\w\.\)]*?)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n?(?|\s*NEW.*)*;$' # last implemenation
+nets_line_reg = r'^[ ]*-\s*(?P<net>[\w\.]*)\s*(?P<dev_groups>[\(\s\w\.\)\-]*?)\s*\+\s*USE\s+SIGNAL.*\s*\+\s*ROUTED.*\n?(?:[\s\S]*?);$'
 nets_route_reg= r'(?:ROUTED|NEW)\s*(?P<layer>\w*)\s*((?:\(\s*(?P<x1>[\d\*]*)\s*(?P<y1>[\d\*]*)\s*(?P<z1>[\d\*]*)\s*\)))\s((?:\(\s*(?P<x2>[\d\*]*)\s*(?P<y2>[\d\*]*)\s*(?P<z2>[\d\*]*)\s*\)|(?P<via>\w*)))'
 
 # solid imports
@@ -99,7 +106,8 @@ def get_pins(in_def, in_pins_cdir, debug=False):
     # parse template
     with open(in_def, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
-        mo = regex.findall(mod_re, data, re.MULTILINE)
+        #mo = regex.findall(mod_re, data, re.MULTILINE)
+        mo = re.findall(mod_re, data, re.MULTILINE)
 
     if in_pins_cdir is None:
         _only_top = True
@@ -162,7 +170,7 @@ def get_pin_line(in_pin):
     else:
         data = in_pin
 
-    mo = regex.finditer(mod_re, data, re.MULTILINE)
+    mo = re.finditer(mod_re, data, re.MULTILINE)
 
     return mo
 
@@ -179,7 +187,7 @@ def write_pins(
         debug=False):
 
     f = open(o_file, mode)
-    f.write("\n// PINS")
+    f.write("\n// PINS\n")
 
     nl = '\n'
 
@@ -253,7 +261,7 @@ def get_components(in_def, in_lef_merged=None):
     # parse template
     with open(in_def, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
-        mo = regex.findall(mod_re, data, re.MULTILINE)
+        mo = re.findall(mod_re, data, re.MULTILINE)
 
     mo_l = get_comp_line(mo)
 
@@ -290,15 +298,25 @@ def get_comp_line(in_comp):
     if not isinstance(in_comp, bytes):
         with open(in_comp, 'r+') as f:
             data = mmap.mmap(f.fileno(), 0)
-            mo = regex.findall(mod_re, data, re.MULTILINE)
+            mo = re.findall(mod_re, data, re.MULTILINE)
     else:
         data = in_comp
 
-    mo = regex.finditer(mod_re, data, re.MULTILINE)
+    mo = re.finditer(mod_re, data, re.MULTILINE)
 
     return mo
 
-def write_components(o_file, comp_list, layer_h, px, def_scale, bottom_layers=0, mode="w+", pcell_file=None):
+
+def write_components(
+        o_file,
+        comp_list,
+        layer_h,
+        px,
+        def_scale,
+        bottom_layers=0,
+        mode="w+",
+        pcell_file=None
+):
 
     if isinstance(o_file, str):
         o_file = open(o_file, mode)
@@ -320,8 +338,9 @@ def write_components(o_file, comp_list, layer_h, px, def_scale, bottom_layers=0,
 
     print('pcell dict: ', pc_dict)
 
-    o_file.write("""
+    o_file.write(f"""
 // Components
+// has pcells : {has_pcells}
 """)
 
     for c in comp_list:
@@ -359,11 +378,21 @@ hc_net_property = {
 }
 
 
-def get_nets(in_def, design, tlef=None, tlef_property=None,
-             report_len_file=None, pins=None, components=None,
-             component_lef=None, debug={}, testing=False,
-             dimm_file=None, report_route_net_file=None,
-             gen_with_px_conversion=True, skip_u_adj=(not run_u_adjustment_script)
+def get_nets(in_def,
+             design,
+             tlef=None,
+             tlef_property=None,
+             report_len_file=None,
+             pins=None,
+             components=None,
+             component_lef=None,
+             debug={},
+             testing=False,
+             dimm_file=None,
+             report_route_net_file=None,
+             gen_with_px_conversion=True,
+             skip_u_adj=(not run_u_adjustment_script),
+             just_return_net=False
              ):
 
     mod_re = bytes(nets_block_reg, 'utf-8')
@@ -373,7 +402,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
     # parse template
     with open(in_def, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
-        mo = regex.findall(mod_re, data, re.MULTILINE)
+        mo = re.findall(mod_re, data, re.MULTILINE)
 
     mo_l = get_net_lines(mo)
 
@@ -403,6 +432,8 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         s = tlef_property['px']*1000/tlef_property['def_scale']
     nb.import_tlef(tlef)
     nb.import_met(mets)
+    px_size = nb.px
+    def_scale = nb.def_scale
 
 
     os.environ["XYCE_WL_GRAPH"] = ''
@@ -431,7 +462,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
 
         print(l.group('net'))
         print(l.group('dev_groups'))
-        devs = regex.finditer(bytes(net_dev_reg, 'utf-8'), l.group('dev_groups'))
+        devs = re.finditer(bytes(net_dev_reg, 'utf-8'), l.group('dev_groups'))
 
         dev_list = []
         for d in devs:
@@ -493,6 +524,9 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         def_scale = 1000
         px_size = 1
 
+    if just_return_net:
+        return nets_list
+
     for n in nets_list:
         print("ROUTE:",n.route)
         if 'compress_routes' in debug and debug['compress_routes'] is True:
@@ -501,30 +535,31 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         else:
             if components is None:
                 n.compress_routes(design=design, pin_list=pins, def_scale=def_scale)
-                # linked_net = link_routes(
+                # n.route = link_routes(
                 #     n.route,
                 #     n.devs,
-                #     debug=True,
+                #     debug=False,
                 #     design=design,
                 #     pin_list=pins,
                 #     def_scale=def_scale,
                 #     px_sz=px_size
                 # )
             else:
-                n.compress_routes(design=design, pin_list=pins, component_list=components,
-                                  components_lef=component_lef, comp_dict=comp_dict,
-                                  def_scale=def_scale)
-                # linked_net = link_routes(
-                #     n.route,
-                #     n.devs,
-                #     debug=True,
-                #     design=design,
-                #     pin_list=pins,
-                #     component_list=components,
-                #     components_lef=component_lef,
-                #     def_scale=def_scale,
-                #     px_sz=px_size
-                # )
+                # n.compress_routes(design=design, pin_list=pins, component_list=components,
+                #                   components_lef=component_lef, comp_dict=comp_dict,
+                #                   def_scale=def_scale)
+                n.route = link_routes(
+                    n.route,
+                    n.devs,
+                    debug=True,
+                    design=design,
+                    pin_list=pins,
+                    component_list=components,
+                    components_lef=component_lef,
+                    def_scale=def_scale,
+                    px_sz=px_size
+                )
+                n.compress = True
 
         if gen_with_px_conversion:
             n.convert_layers(nb)
@@ -615,7 +650,7 @@ def get_net_lines(in_net):
     else:
         data = in_net
 
-    mo = regex.finditer(mod_re, data, re.MULTILINE)
+    mo = re.finditer(mod_re, data, re.MULTILINE)
     return mo
 
 
@@ -629,7 +664,7 @@ def get_net_route(in_net_line):
     else:
         data = in_net_line
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
     return mo
 
 
@@ -923,11 +958,13 @@ def read_dimm(dimm_file):
             print(f"Line {ind} is defined incorrectly, expecting [net_name, dimm_wd_1, dimm_wd_2, dimm_ht]")
     return out_dict
 
-
-tlef_bl_re = r'(?P<key>(?:LAYER|SITE|VIA|PROPERTYDEFINITIONS|UNITS))\s*(?|.*\s*)*?END\s*\w*'
+# these are currently unused
+#tlef_bl_re = r'(?P<key>(?:LAYER|SITE|VIA|PROPERTYDEFINITIONS|UNITS))\s*(?|.*\s*)*?END\s*\w*'
+tlef_bl_re = r'(?P<key>(?:LAYER|SITE|VIA|PROPERTYDEFINITIONS|UNITS))\s*(?:[\S\s]*?)*?END\s*\w*'
 tlef_layer_re = r'LAYER\s*(?P<layer_name>\w*)\s*(?|(?:TYPE\s*(?P<type>(?:ROUTING|CUT))\s*;|DIRECTION\s*(?P<direction>(?:HORIZONTAL|VERTICAL))\s*;|MINWIDTH\s*(?P<minwidth>[\d.]*)\s*;|WIDTH\s*(?P<width>[\d.]*)\s*;)\s*)*END\s*(\w*)\s$'
 tlef_via_re  = r'VIA\s*(?P<via_name>\w*)\s*(?P<type>\w*)(?|.*\n)*?(?:END\s*(?&via_name)\s*$)'
 tlef_via_l_re= r'LAYER (?P<via_name>\w*)\s*;\s*(?:RECT\s*(?P<x1>[\d.-]*)\s*(?P<y1>[\d.-]*)\s*(?P<x2>[\d.-]*)\s*(?P<y2>[\d.-]*)\s*;)*'
+#tlef_site_re= r'SITE*\s(?P<site_name>\w*)\s*(?|(?:CLASS\s*(?P<class>\w*)\s*;|SYMMETRY\s*(?P<symmetry>\w*)\s*;|\s*SIZE\s*(?P<size_x>\d*)\s*BY\s*(?P<size_y>\d*)\s*;)\s*)*END\s*(\w*)\s*$'
 tlef_site_re= r'SITE*\s(?P<site_name>\w*)\s*(?|(?:CLASS\s*(?P<class>\w*)\s*;|SYMMETRY\s*(?P<symmetry>\w*)\s*;|\s*SIZE\s*(?P<size_x>\d*)\s*BY\s*(?P<size_y>\d*)\s*;)\s*)*END\s*(\w*)\s*$'
 
 
@@ -939,7 +976,7 @@ def get_tlef_layer(tlef):
     with open(tlef, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
 
 
 def get_tlef_via(tlef):
@@ -950,7 +987,7 @@ def get_tlef_via(tlef):
     with open(tlef, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
 
 
 def tlef_via_layer(in_via):
@@ -963,7 +1000,7 @@ def tlef_via_layer(in_via):
     else:
         data = in_via
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
     return mo
 
 
@@ -975,7 +1012,7 @@ def get_tlef_site(tlef):
     with open(tlef, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
 
 def write_bulk(o_file, bulk_dim, transparent=False, mode='a'):
 
@@ -1051,12 +1088,14 @@ def main(
     if isinstance(routing_scad, str):
         routing_scad = [routing_scad]
     elif routing_scad is None:
+        print("No instances of routing scad files supplied")
         routing_scad = ['polychannel_v2.scad', 'routing.scad']
 
     if component_scad is None and comp_file is not None:
         component_scad = comp_file
-    elif component_scad is None and comp_file is None:
-        component_scad = f"scad_flow/support_libs/{platform}_pdk_merged.scad"
+    # old implementation needs remove, this is a bad default path
+    # elif component_scad is None and comp_file is None:
+    #     component_scad = f"scad_flow/support_libs/{platform}_pdk_merged.scad"
     if isinstance(component_scad, str):
         component_scad = [component_scad]
 
@@ -1203,10 +1242,12 @@ if($preview) {fb}
 {bb}
 """)
 
-    print("""
+    print(f"""
     --------------------------------
           OpenSCAD complete
     --------------------------------
+
+    output file: {o_file}
     """)
 
 
