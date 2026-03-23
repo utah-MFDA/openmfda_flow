@@ -1,8 +1,8 @@
 # ==============================================================================
 # Uncomment or add the design to run
 # ==============================================================================
-PLATFORM ?= p.m.8.k
-export DESIGN ?= test_lib
+PLATFORM ?= h.r.3.3
+export DESIGN ?= demo
 
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
@@ -612,6 +612,10 @@ $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIG
 		--length_file $(LENGTH_FILE) \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
 
+# 		--netlist $(RESULTS_DIR)/4_final.v \
+# 		--netlist ./designs/src/multiplex/multiplex.v  \
+
+
 # cp $(RESULTS_DIR)/Chem_Eval.csv Chem_Eval_base.csv
 
 # --output_dir $(RESULTS_DIR) \
@@ -621,7 +625,7 @@ endif
 # 		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
 # 		--length_file $(RESULTS_DIR)/$(DESIGN)_length.csv \
 # 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
-# endif
+#endif
 #>>>>>>> main
 
 # ==============================================================================
