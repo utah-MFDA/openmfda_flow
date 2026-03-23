@@ -67,4 +67,6 @@ proc report_metrics { when {include_erc true} } {
   report_design_area
 
   puts ""
+  ord::get_die_area
+  ord::get_core_area
 }

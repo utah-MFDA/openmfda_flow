@@ -37,7 +37,7 @@ if {[info exists ::env(FOOTPRINT)]} {
   initialize_floorplan \
     -die_area  [ICeWall get_die_area] \
     -core_area [ICeWall get_core_area] \
-    -sites      $::env(PLACE_SITE)
+    -site      $::env(PLACE_SITE)
 
   ICeWall init_footprint $env(SIG_MAP_FILE)
 

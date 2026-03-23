@@ -1,0 +1,10 @@
+diffmix_flow
+
+.control
+pre_osdi diffmix_flow.osdi
+.endc
+
+.model diffmix_flow_model diffmix_flow height=10u width=10u
+.subckt mix a b y params: height width
+N1 a b y diffmix_flow_model height=height width=width
+.ends

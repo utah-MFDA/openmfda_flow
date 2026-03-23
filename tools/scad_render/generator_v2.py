@@ -28,6 +28,8 @@ import component_parse
 import route_scripts
 from route_scripts import link_routes
 
+#import def_obj_load
+
 ## Regex parsing
 #pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$' # last implementation
 pin_block_reg = r'^PINS\s*\d*\s*;\w*\n([\s\S]*)^\s*END\s*PINS$'
@@ -412,24 +414,27 @@ def get_nets(in_def,
         print("Testing! Using test tlef file")
         tlef = tlef_f
 
-    if tlef_property is None:  # load defaults
-        nb = NetBuilder(
-            px        =hc_net_property['px'],
-            layer     =hc_net_property['layer'],
-            lpv       =hc_net_property['lpv'],
-            def_scale =hc_net_property['def_scale'],
-            bottom_layers=hc_net_property['bot_layers']
-        )
-        s = hc_net_property['px']*1000/hc_net_property['def_scale']
-    else:
-        nb = NetBuilder(
-            px        =tlef_property['px'],
-            layer     =tlef_property['layer'],
-            lpv       =tlef_property['lpv'],
-            def_scale =tlef_property['def_scale'],
-            bottom_layers=tlef_property['bot_layers']
-        )
-        s = tlef_property['px']*1000/tlef_property['def_scale']
+    # hard coded defaults
+    # if tlef_property is None:  # load defaults
+    #     nb = NetBuilder(
+    #         px        =hc_net_property['px'],
+    #         layer     =hc_net_property['layer'],
+    #         lpv       =hc_net_property['lpv'],
+    #         def_scale =hc_net_property['def_scale'],
+    #         bottom_layers=hc_net_property['bot_layers']
+    #     )
+    #     s = hc_net_property['px']*1000/hc_net_property['def_scale']
+    #else:
+    if tlef_property is None:
+        raise ValueError("Get nets tlef error")
+    nb = NetBuilder(
+        px        =tlef_property['px'],
+        layer     =tlef_property['layer'],
+        lpv       =tlef_property['lpv'],
+        def_scale =tlef_property['def_scale'],
+        bottom_layers=tlef_property['bot_layers']
+    )
+    s = tlef_property['px']*1000/tlef_property['def_scale']
     nb.import_tlef(tlef)
     nb.import_met(mets)
     px_size = nb.px
@@ -437,12 +442,6 @@ def get_nets(in_def,
 
 
     os.environ["XYCE_WL_GRAPH"] = ''
-    # with open(components_lef, 'r') as f:
-    # component pins can be checked by
-    # def is_pt_in_pins(self, pt, pos=None, layer=None):
-    #get_comp_pins_from_lef
-    # comp_dict = component_parse.ComponentParser().parser_multi_file(components_lef)
-    # s = 7.6/1000  # hard coded scale
     comp_dict = {}
     if isinstance(component_lef, str):
         comp_dict = component_parse.ComponentParser().get_comp_pins_from_lef(component_lef, scale=s)
@@ -477,7 +476,6 @@ def get_nets(in_def,
         for route in mo_r:
             r_deco = {}
             v_deco = ''
-            #print(route.group('layer'))
             for coor in ['x1', 'y1', 'z1', 'x2', 'y2', 'z2']:
                 if route.group(coor) is not None:
                     r_deco[coor] = route.group(coor).decode('utf-8')
@@ -517,9 +515,8 @@ def get_nets(in_def,
         nets_list.append(nb.export_net())
 
     if gen_with_px_conversion:
-        def_scale = 7.6e-6
-        # def_scale = 1e3
-        # px_size = 7.6e-3
+        #def_scale = 7.6e-6
+        def_scale = 1000
     else:
         def_scale = 1000
         px_size = 1
@@ -530,10 +527,12 @@ def get_nets(in_def,
     for n in nets_list:
         print("ROUTE:",n.route)
         if 'compress_routes' in debug and debug['compress_routes'] is True:
+            #raise Exception("Old compression implementation, TODO update")
             n.compress_routes(debug=True, design=design)
             # linked_net = link_routes(n.route, n.devs, debug=True, design=design)
         else:
             if components is None:
+                #raise Exception("Old compression implementation, TODO update")
                 n.compress_routes(design=design, pin_list=pins, def_scale=def_scale)
                 # n.route = link_routes(
                 #     n.route,
@@ -554,7 +553,7 @@ def get_nets(in_def,
                     debug=True,
                     design=design,
                     pin_list=pins,
-                    component_list=components,
+                    full_component_list=components,
                     components_lef=component_lef,
                     def_scale=def_scale,
                     px_sz=px_size
@@ -672,8 +671,10 @@ def write_nets(o_file, net_list, shape='cube',
                size=[14, 14, 10], mode="w+",
                dimm_file=None, init_size=[14, 14, 10],
                report_len_file=None, report_route_net_file=None,
-               tlef=None, tlef_property=None,
-               dim_is_converted=False, poly_px_module=False,
+               tlef=None, 
+               tlef_property=None,
+               dim_is_converted=False,
+               poly_px_module=False,
                px_conversion=1
                ):
 
@@ -696,24 +697,25 @@ def write_nets(o_file, net_list, shape='cube',
         else:
             return f"[{sz[0]}*px, {sz[1]}*px, {sz[2]}*layer]"
 
-    if tlef_property is None:  # load defaults
-        nb = NetBuilder(
-            px        =hc_net_property['px'],
-            layer     =hc_net_property['layer'],
-            lpv       =hc_net_property['lpv'],
-            def_scale =hc_net_property['def_scale'],
-            bottom_layers=hc_net_property['bot_layers']
-        )
-        s = hc_net_property['px']*1000/hc_net_property['def_scale']
-    else:
-        nb = NetBuilder(
-            px        =tlef_property['px'],
-            layer     =tlef_property['layer'],
-            lpv       =tlef_property['lpv'],
-            def_scale =tlef_property['def_scale'],
-            bottom_layers=tlef_property['bot_layers']
-        )
-        s = tlef_property['px']*1000/tlef_property['def_scale']
+    # hard coded defaults
+    # if tlef_property is None:  # load defaults
+    #     nb = NetBuilder(
+    #         px        =hc_net_property['px'],
+    #         layer     =hc_net_property['layer'],
+    #         lpv       =hc_net_property['lpv'],
+    #         def_scale =hc_net_property['def_scale'],
+    #         bottom_layers=hc_net_property['bot_layers']
+    #     )
+    #     s = hc_net_property['px']*1000/hc_net_property['def_scale']
+    #else:
+    nb = NetBuilder(
+        px        =tlef_property['px'],
+        layer     =tlef_property['layer'],
+        lpv       =tlef_property['lpv'],
+        def_scale =tlef_property['def_scale'],
+        bottom_layers=tlef_property['bot_layers']
+    )
+    s = tlef_property['px']*1000/tlef_property['def_scale']
     nb.import_tlef(tlef)
     nb.import_met(mets)
 
@@ -1037,8 +1039,6 @@ difference() {fb}
 
 # hard coded support files
 
-
-
 def main(
         platform,
         design,
@@ -1103,6 +1103,9 @@ def main(
         scad_includes = [scad_includes]
 
     #o_file = f"{results_dir}/{design}.scad"
+
+    # read in def object
+    def_obj = def_obj_load.Design().import_def(def_file)
 
     net_properties = {
         'px': px,

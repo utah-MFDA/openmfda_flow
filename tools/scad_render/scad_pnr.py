@@ -7,6 +7,80 @@ import numpy as np
 import pandas as pd
 import opendbpy as odb
 from functools import reduce
+def wire_iter(wire):
+    dec = odb.dbWireDecoder()
+    dec.begin(wire)
+    opcode = dec.next()
+    while opcode != odb.dbWireDecoder.END_DECODE:
+        layer = dec.getLayer()
+        if opcode == odb.dbWireDecoder.BTERM:
+            term = dec.getBTerm()
+            yield (opcode, layer, term)
+        elif opcode == odb.dbWireDecoder.ITERM:
+            term = dec.getITerm()
+            yield (opcode, layer, term)
+        elif opcode == odb.dbWireDecoder.JUNCTION:
+            wire_type = dec.getWireType()
+            jid = dec.getJunctionId()
+            jval = dec.getJunctionValue()
+            yield (opcode, layer, (wire_type, jid, jval))
+        elif opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
+            wire_type = dec.getWireType()
+            yield (opcode, layer, wire_type)
+        elif opcode == odb.dbWireDecoder.POINT_EXT:
+            point = dec.getPoint_ext()
+            yield (opcode, layer, point)
+        elif opcode == odb.dbWireDecoder.POINT:
+            point = dec.getPoint()
+            yield (opcode, layer, point)
+        elif opcode == odb.dbWireDecoder.RECT:
+            rect = dec.getRect()
+            yield (opcode, layer, rect)
+        elif opcode == odb.dbWireDecoder.RULE:
+            rule = dec.getRule()
+            yield (opcode, layer, rule)
+        elif opcode == odb.dbWireDecoder.TECH_VIA:
+            via = dec.getTechVia()
+            yield (opcode, layer, via)
+        elif opcode == odb.dbWireDecoder.VIA:
+            via = dec.getVia()
+            yield (opcode, layer, via)
+        else:
+            raise ValueError()
+        opcode = dec.next()
+
+def segment_iter(wire):
+    last = None
+    for (opcode, layer, vals) in wire_iter(wire):
+        if opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
+            last = None
+        elif opcode == odb.dbWireDecoder.POINT_EXT:
+            point = vals
+            if last is not None:
+                yield (layer, last, point)
+            last = point
+        elif opcode == odb.dbWireDecoder.POINT:
+            (x,y) = vals
+            width = layer.getWidth()
+            # By default, no extension means half the width.
+            ext = int(width / 2)
+            point = (x, y, ext)
+            if last is not None:
+                yield (layer, last, point)
+            last = point
+        elif opcode == odb.dbWireDecoder.TECH_VIA:
+            via = vals
+            if last is not None:
+                yield (layer, last, via)
+            last = via
+        elif opcode == odb.dbWireDecoder.VIA:
+            via = vals
+            if last is not None:
+                yield (layer, last, via)
+            last = via # TODO squash multilayer vias
+        else:
+            raise NotImplemented
+
 class Params():
     def __init__(self, db):
         self.route_params = None
@@ -149,7 +223,9 @@ class place:
         self.mapOrient = {"R180": "S",
                           "R0": "N",
                           "MY": "FN",
-                          "MX": "FS"}
+                          "MX": "FS",
+                          "MYR90": "FS",
+                          "MXR90": "FN"}
     def get_components(self):
         block = self.db.getChip().getBlock()
         # TODO abstract dimension calculations
@@ -182,75 +258,6 @@ class route:
         self.db = db
         self.params = params
 
-    def wire_iter(self, wire):
-        dec = odb.dbWireDecoder()
-        dec.begin(wire)
-        opcode = dec.next()
-        while opcode != odb.dbWireDecoder.END_DECODE:
-            layer = dec.getLayer()
-            if opcode == odb.dbWireDecoder.BTERM:
-                term = dec.getBTerm()
-                yield (opcode, layer, (term,))
-            elif opcode == odb.dbWireDecoder.ITERM:
-                term = dec.getITerm()
-                yield (opcode, layer, (term,))
-            elif opcode == odb.dbWireDecoder.JUNCTION:
-                wire_type = dec.getWireType()
-                jid = dec.getJunctionId()
-                jval = dec.getJunctionValue()
-                yield (opcode, layer, (wire_type, jid, jval))
-            elif opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
-                wire_type = dec.getWireType()
-                yield (opcode, layer, (wire_type,))
-            elif opcode == odb.dbWireDecoder.POINT or opcode == odb.dbWireDecoder.POINT_EXT:
-                point = dec.getPoint()
-                prop = dec.getProperty()
-                yield (opcode, layer, (point, prop))
-            elif opcode == odb.dbWireDecoder.RECT:
-                rect = dec.getRect()
-                yield (opcode, layer, (rect,))
-            elif opcode == odb.dbWireDecoder.RULE:
-                rule = dec.getRule()
-                yield (opcode, layer, (rule,))
-            elif opcode == odb.dbWireDecoder.TECH_VIA:
-                via = dec.getTechVia()
-                yield (opcode, layer, (via,))
-            elif opcode == odb.dbWireDecoder.VIA:
-                via = dec.getVia()
-                yield (opcode, layer, (via,))
-            else:
-                raise ValueError()
-            opcode = dec.next()
-
-    def segment_iter(self, wire):
-        last = None
-        dimm_x, _, _ = self.params.net_dimm(wire.getNet())
-        # TODO This is not in the same units as the def file
-        dimm_x = self.params.def_scale_ * dimm_x
-        for (opcode, layer, vals) in self.wire_iter(wire):
-            if opcode == odb.dbWireDecoder.PATH or opcode == odb.dbWireDecoder.VWIRE or opcode == odb.dbWireDecoder.SHORT:
-                last = None
-            elif opcode == odb.dbWireDecoder.POINT or opcode == odb.dbWireDecoder.POINT_EXT:
-                (point, prop) = vals
-                if len(point) == 2:
-                    # By default, no extension means half the width.
-                    ext = dimm_x / 2
-                    point = (point[0], point[1], ext)
-                if last is not None:
-                    yield (layer, last, point)
-                last = point
-            elif opcode == odb.dbWireDecoder.TECH_VIA:
-                (via,) = vals
-                if last is not None:
-                    yield (layer, last, via)
-                last = via
-            elif opcode == odb.dbWireDecoder.VIA:
-                (via,) = vals
-                if last is not None:
-                    yield (layer, last, via)
-                last = via
-            else:
-                raise NotImplementedError()
 
     def generate_dimm(self, wchan, xychan, hchan):
         return [
@@ -310,7 +317,7 @@ class route:
             wire = net.getWire()
             if wire is None:
                 continue
-            for layer, start, end in self.segment_iter(wire):
+            for layer, start, end in segment_iter(wire):
                 total += self.segment_length(layer, net, start, end)
             lengths[net.getName()] = total
 
@@ -324,7 +331,7 @@ class route:
             wire = net.getWire()
             if wire is None:
                 continue
-            for (layer, start, end) in self.segment_iter(wire):
+            for (layer, start, end) in segment_iter(wire):
                 yield self.add_channel(layer, net, start, end)
 
     def perform_routing(self):
@@ -551,14 +558,14 @@ if __name__ == "__main__":
                     help="The design name.")
     ap.add_argument('--def_file', metavar='<path>', dest='def_file', type=str,
                     help="Path to the .def file from OpenROAD flow.")
-    ap.add_argument('--lef_file', metavar='<path>', dest='lef_file', type=str, nargs='+',
-                    help="Path to the .lef file from OpenROAD flow.")
+    ap.add_argument('--tlef_file', '-t', metavar='<path>', action='append', dest='tlef_files', type=str,
+                    help="Path to .tlef file.")
+    ap.add_argument('--lef_file', '-l', metavar='<path>', action='append', dest='lef_files', type=str,
+                    help="Path to .lef file.")
     ap.add_argument('--routing_file', metavar='<path>', dest='routing_file', type=str,
                     help="Path to the scad routing definitions.")
     ap.add_argument('--component_file', metavar='<path>', dest='component_file', type=str,
                     help="Path to the scad component definitions.")
-    ap.add_argument('--tlef_file', metavar='<path>', dest='tlef_file', type=str,
-                    help="Path to the .tlef file from OpenROAD flow.")
     ap.add_argument('--results_dir', metavar='<path>', dest='results_dir', type=str,
                     help="Path where the results are generated.")
     ap.add_argument('--px', metavar='<value>', dest='px', type=float,
@@ -590,12 +597,10 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
     db = odb.dbDatabase.create()
-    odb.read_lef(db, args.tlef_file)
-    if isinstance(args.lef_file, str):
-        odb.read_lef(db, args.lef_file)
-    if isinstance(args.lef_file, list):
-        for lef in args.lef_file:
-            odb.read_lef(db, lef)
+    for tlef_file in args.tlef_files:
+        odb.read_lef(db, tlef_file)
+    for lef_file in args.lef_files:
+        odb.read_lef(db, lef_file)
     odb.read_def(db, args.def_file)
     scad_pnr(db,
              args.component_file,

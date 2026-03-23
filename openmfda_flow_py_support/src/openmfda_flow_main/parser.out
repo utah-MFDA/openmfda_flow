@@ -1,0 +1,1396 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> in_file
+Rule 1     in_file -> in_file macro
+Rule 2     in_file -> in_file lef_noimp
+Rule 3     in_file -> macro
+Rule 4     in_file -> lef_noimp
+Rule 5     lef_noimp -> end_lib
+Rule 6     lef_noimp -> busbit
+Rule 7     lef_noimp -> divider
+Rule 8     lef_noimp -> version
+Rule 9     end_lib -> END LIBRARY
+Rule 10    busbit -> BUSBITCHARS ESCAPED_STRING END_STMT
+Rule 11    divider -> DIVIDERCHAR ESCAPED_STRING END_STMT
+Rule 12    version -> VERSION NUMBER END_STMT
+Rule 13    macro -> MACRO CNAME macro_stmt_list END CNAME
+Rule 14    macro_stmt_list -> macro_stmt_list macro_stmt
+Rule 15    macro_stmt_list -> macro_stmt_list comment
+Rule 16    macro_stmt_list -> macro_stmt
+Rule 17    macro_stmt_list -> comment
+Rule 18    macro_stmt -> class
+Rule 19    macro_stmt -> origin
+Rule 20    macro_stmt -> foreign
+Rule 21    macro_stmt -> size
+Rule 22    macro_stmt -> symmetry
+Rule 23    macro_stmt -> site
+Rule 24    macro_stmt -> pin
+Rule 25    macro_stmt -> obs
+Rule 26    macro_stmt -> property
+Rule 27    class -> CLASS CNAME END_STMT
+Rule 28    origin -> ORIGIN NUMBER NUMBER END_STMT
+Rule 29    foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT
+Rule 30    size -> SIZE NUMBER BY NUMBER END_STMT
+Rule 31    symmetry -> SYMMETRY CNAME CNAME END_STMT
+Rule 32    symmetry -> SYMMETRY CNAME END_STMT
+Rule 33    site -> SITE CNAME END_STMT
+Rule 34    pin -> PIN CNAME pin_stmt_list END CNAME
+Rule 35    pin_stmt_list -> pin_stmt_list pin_stmt
+Rule 36    pin_stmt_list -> pin_stmt
+Rule 37    pin_stmt -> direction
+Rule 38    pin_stmt -> use
+Rule 39    pin_stmt -> port
+Rule 40    direction -> DIRECTION OUTPUT END_STMT
+Rule 41    direction -> DIRECTION INPUT END_STMT
+Rule 42    direction -> DIRECTION INOUT END_STMT
+Rule 43    use -> USE SIGNAL END_STMT
+Rule 44    port -> PORT geom END
+Rule 45    obs -> OBS geom_list END
+Rule 46    geom_list -> geom_list geom
+Rule 47    geom_list -> geom
+Rule 48    geom -> LAYER CNAME END_STMT rect
+Rule 49    rect -> RECT NUMBER NUMBER NUMBER NUMBER END_STMT
+Rule 50    property -> PROPERTY CNAME ESCAPED_STRING END_STMT
+Rule 51    comment -> COMMENT
+
+Terminals, with rules where they appear
+
+BUSBITCHARS          : 10
+BY                   : 30
+CLASS                : 27
+CNAME                : 13 13 27 29 31 31 32 33 34 34 48 50
+COMMENT              : 51
+DIRECTION            : 40 41 42
+DIVIDERCHAR          : 11
+END                  : 9 13 34 44 45
+END_STMT             : 10 11 12 27 28 29 30 31 32 33 40 41 42 43 48 49 50
+ESCAPED_STRING       : 10 11 50
+FOREIGN              : 29
+INOUT                : 42
+INPUT                : 41
+LAYER                : 48
+LIBRARY              : 9
+MACRO                : 13
+NUMBER               : 12 28 28 29 29 30 30 49 49 49 49
+OBS                  : 45
+ORIGIN               : 28
+OUTPUT               : 40
+PIN                  : 34
+PORT                 : 44
+PROPERTY             : 50
+RECT                 : 49
+SIGNAL               : 43
+SITE                 : 33
+SIZE                 : 30
+SYMMETRY             : 31 32
+USE                  : 43
+VERSION              : 12
+error                : 
+
+Nonterminals, with rules where they appear
+
+busbit               : 6
+class                : 18
+comment              : 15 17
+direction            : 37
+divider              : 7
+end_lib              : 5
+foreign              : 20
+geom                 : 44 46 47
+geom_list            : 45 46
+in_file              : 1 2 0
+lef_noimp            : 2 4
+macro                : 1 3
+macro_stmt           : 14 16
+macro_stmt_list      : 13 14 15
+obs                  : 25
+origin               : 19
+pin                  : 24
+pin_stmt             : 35 36
+pin_stmt_list        : 34 35
+port                 : 39
+property             : 26
+rect                 : 48
+site                 : 23
+size                 : 21
+symmetry             : 22
+use                  : 38
+version              : 8
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . in_file
+    (1) in_file -> . in_file macro
+    (2) in_file -> . in_file lef_noimp
+    (3) in_file -> . macro
+    (4) in_file -> . lef_noimp
+    (13) macro -> . MACRO CNAME macro_stmt_list END CNAME
+    (5) lef_noimp -> . end_lib
+    (6) lef_noimp -> . busbit
+    (7) lef_noimp -> . divider
+    (8) lef_noimp -> . version
+    (9) end_lib -> . END LIBRARY
+    (10) busbit -> . BUSBITCHARS ESCAPED_STRING END_STMT
+    (11) divider -> . DIVIDERCHAR ESCAPED_STRING END_STMT
+    (12) version -> . VERSION NUMBER END_STMT
+
+    MACRO           shift and go to state 4
+    END             shift and go to state 5
+    BUSBITCHARS     shift and go to state 10
+    DIVIDERCHAR     shift and go to state 11
+    VERSION         shift and go to state 12
+
+    in_file                        shift and go to state 1
+    macro                          shift and go to state 2
+    lef_noimp                      shift and go to state 3
+    end_lib                        shift and go to state 6
+    busbit                         shift and go to state 7
+    divider                        shift and go to state 8
+    version                        shift and go to state 9
+
+state 1
+
+    (0) S' -> in_file .
+    (1) in_file -> in_file . macro
+    (2) in_file -> in_file . lef_noimp
+    (13) macro -> . MACRO CNAME macro_stmt_list END CNAME
+    (5) lef_noimp -> . end_lib
+    (6) lef_noimp -> . busbit
+    (7) lef_noimp -> . divider
+    (8) lef_noimp -> . version
+    (9) end_lib -> . END LIBRARY
+    (10) busbit -> . BUSBITCHARS ESCAPED_STRING END_STMT
+    (11) divider -> . DIVIDERCHAR ESCAPED_STRING END_STMT
+    (12) version -> . VERSION NUMBER END_STMT
+
+    MACRO           shift and go to state 4
+    END             shift and go to state 5
+    BUSBITCHARS     shift and go to state 10
+    DIVIDERCHAR     shift and go to state 11
+    VERSION         shift and go to state 12
+
+    macro                          shift and go to state 13
+    lef_noimp                      shift and go to state 14
+    end_lib                        shift and go to state 6
+    busbit                         shift and go to state 7
+    divider                        shift and go to state 8
+    version                        shift and go to state 9
+
+state 2
+
+    (3) in_file -> macro .
+
+    MACRO           reduce using rule 3 (in_file -> macro .)
+    END             reduce using rule 3 (in_file -> macro .)
+    BUSBITCHARS     reduce using rule 3 (in_file -> macro .)
+    DIVIDERCHAR     reduce using rule 3 (in_file -> macro .)
+    VERSION         reduce using rule 3 (in_file -> macro .)
+    $end            reduce using rule 3 (in_file -> macro .)
+
+
+state 3
+
+    (4) in_file -> lef_noimp .
+
+    MACRO           reduce using rule 4 (in_file -> lef_noimp .)
+    END             reduce using rule 4 (in_file -> lef_noimp .)
+    BUSBITCHARS     reduce using rule 4 (in_file -> lef_noimp .)
+    DIVIDERCHAR     reduce using rule 4 (in_file -> lef_noimp .)
+    VERSION         reduce using rule 4 (in_file -> lef_noimp .)
+    $end            reduce using rule 4 (in_file -> lef_noimp .)
+
+
+state 4
+
+    (13) macro -> MACRO . CNAME macro_stmt_list END CNAME
+
+    CNAME           shift and go to state 15
+
+
+state 5
+
+    (9) end_lib -> END . LIBRARY
+
+    LIBRARY         shift and go to state 16
+
+
+state 6
+
+    (5) lef_noimp -> end_lib .
+
+    MACRO           reduce using rule 5 (lef_noimp -> end_lib .)
+    END             reduce using rule 5 (lef_noimp -> end_lib .)
+    BUSBITCHARS     reduce using rule 5 (lef_noimp -> end_lib .)
+    DIVIDERCHAR     reduce using rule 5 (lef_noimp -> end_lib .)
+    VERSION         reduce using rule 5 (lef_noimp -> end_lib .)
+    $end            reduce using rule 5 (lef_noimp -> end_lib .)
+
+
+state 7
+
+    (6) lef_noimp -> busbit .
+
+    MACRO           reduce using rule 6 (lef_noimp -> busbit .)
+    END             reduce using rule 6 (lef_noimp -> busbit .)
+    BUSBITCHARS     reduce using rule 6 (lef_noimp -> busbit .)
+    DIVIDERCHAR     reduce using rule 6 (lef_noimp -> busbit .)
+    VERSION         reduce using rule 6 (lef_noimp -> busbit .)
+    $end            reduce using rule 6 (lef_noimp -> busbit .)
+
+
+state 8
+
+    (7) lef_noimp -> divider .
+
+    MACRO           reduce using rule 7 (lef_noimp -> divider .)
+    END             reduce using rule 7 (lef_noimp -> divider .)
+    BUSBITCHARS     reduce using rule 7 (lef_noimp -> divider .)
+    DIVIDERCHAR     reduce using rule 7 (lef_noimp -> divider .)
+    VERSION         reduce using rule 7 (lef_noimp -> divider .)
+    $end            reduce using rule 7 (lef_noimp -> divider .)
+
+
+state 9
+
+    (8) lef_noimp -> version .
+
+    MACRO           reduce using rule 8 (lef_noimp -> version .)
+    END             reduce using rule 8 (lef_noimp -> version .)
+    BUSBITCHARS     reduce using rule 8 (lef_noimp -> version .)
+    DIVIDERCHAR     reduce using rule 8 (lef_noimp -> version .)
+    VERSION         reduce using rule 8 (lef_noimp -> version .)
+    $end            reduce using rule 8 (lef_noimp -> version .)
+
+
+state 10
+
+    (10) busbit -> BUSBITCHARS . ESCAPED_STRING END_STMT
+
+    ESCAPED_STRING  shift and go to state 17
+
+
+state 11
+
+    (11) divider -> DIVIDERCHAR . ESCAPED_STRING END_STMT
+
+    ESCAPED_STRING  shift and go to state 18
+
+
+state 12
+
+    (12) version -> VERSION . NUMBER END_STMT
+
+    NUMBER          shift and go to state 19
+
+
+state 13
+
+    (1) in_file -> in_file macro .
+
+    MACRO           reduce using rule 1 (in_file -> in_file macro .)
+    END             reduce using rule 1 (in_file -> in_file macro .)
+    BUSBITCHARS     reduce using rule 1 (in_file -> in_file macro .)
+    DIVIDERCHAR     reduce using rule 1 (in_file -> in_file macro .)
+    VERSION         reduce using rule 1 (in_file -> in_file macro .)
+    $end            reduce using rule 1 (in_file -> in_file macro .)
+
+
+state 14
+
+    (2) in_file -> in_file lef_noimp .
+
+    MACRO           reduce using rule 2 (in_file -> in_file lef_noimp .)
+    END             reduce using rule 2 (in_file -> in_file lef_noimp .)
+    BUSBITCHARS     reduce using rule 2 (in_file -> in_file lef_noimp .)
+    DIVIDERCHAR     reduce using rule 2 (in_file -> in_file lef_noimp .)
+    VERSION         reduce using rule 2 (in_file -> in_file lef_noimp .)
+    $end            reduce using rule 2 (in_file -> in_file lef_noimp .)
+
+
+state 15
+
+    (13) macro -> MACRO CNAME . macro_stmt_list END CNAME
+    (14) macro_stmt_list -> . macro_stmt_list macro_stmt
+    (15) macro_stmt_list -> . macro_stmt_list comment
+    (16) macro_stmt_list -> . macro_stmt
+    (17) macro_stmt_list -> . comment
+    (18) macro_stmt -> . class
+    (19) macro_stmt -> . origin
+    (20) macro_stmt -> . foreign
+    (21) macro_stmt -> . size
+    (22) macro_stmt -> . symmetry
+    (23) macro_stmt -> . site
+    (24) macro_stmt -> . pin
+    (25) macro_stmt -> . obs
+    (26) macro_stmt -> . property
+    (51) comment -> . COMMENT
+    (27) class -> . CLASS CNAME END_STMT
+    (28) origin -> . ORIGIN NUMBER NUMBER END_STMT
+    (29) foreign -> . FOREIGN CNAME NUMBER NUMBER END_STMT
+    (30) size -> . SIZE NUMBER BY NUMBER END_STMT
+    (31) symmetry -> . SYMMETRY CNAME CNAME END_STMT
+    (32) symmetry -> . SYMMETRY CNAME END_STMT
+    (33) site -> . SITE CNAME END_STMT
+    (34) pin -> . PIN CNAME pin_stmt_list END CNAME
+    (45) obs -> . OBS geom_list END
+    (50) property -> . PROPERTY CNAME ESCAPED_STRING END_STMT
+
+    COMMENT         shift and go to state 32
+    CLASS           shift and go to state 33
+    ORIGIN          shift and go to state 34
+    FOREIGN         shift and go to state 35
+    SIZE            shift and go to state 36
+    SYMMETRY        shift and go to state 37
+    SITE            shift and go to state 38
+    PIN             shift and go to state 39
+    OBS             shift and go to state 40
+    PROPERTY        shift and go to state 41
+
+    macro_stmt_list                shift and go to state 20
+    macro_stmt                     shift and go to state 21
+    comment                        shift and go to state 22
+    class                          shift and go to state 23
+    origin                         shift and go to state 24
+    foreign                        shift and go to state 25
+    size                           shift and go to state 26
+    symmetry                       shift and go to state 27
+    site                           shift and go to state 28
+    pin                            shift and go to state 29
+    obs                            shift and go to state 30
+    property                       shift and go to state 31
+
+state 16
+
+    (9) end_lib -> END LIBRARY .
+
+    MACRO           reduce using rule 9 (end_lib -> END LIBRARY .)
+    END             reduce using rule 9 (end_lib -> END LIBRARY .)
+    BUSBITCHARS     reduce using rule 9 (end_lib -> END LIBRARY .)
+    DIVIDERCHAR     reduce using rule 9 (end_lib -> END LIBRARY .)
+    VERSION         reduce using rule 9 (end_lib -> END LIBRARY .)
+    $end            reduce using rule 9 (end_lib -> END LIBRARY .)
+
+
+state 17
+
+    (10) busbit -> BUSBITCHARS ESCAPED_STRING . END_STMT
+
+    END_STMT        shift and go to state 42
+
+
+state 18
+
+    (11) divider -> DIVIDERCHAR ESCAPED_STRING . END_STMT
+
+    END_STMT        shift and go to state 43
+
+
+state 19
+
+    (12) version -> VERSION NUMBER . END_STMT
+
+    END_STMT        shift and go to state 44
+
+
+state 20
+
+    (13) macro -> MACRO CNAME macro_stmt_list . END CNAME
+    (14) macro_stmt_list -> macro_stmt_list . macro_stmt
+    (15) macro_stmt_list -> macro_stmt_list . comment
+    (18) macro_stmt -> . class
+    (19) macro_stmt -> . origin
+    (20) macro_stmt -> . foreign
+    (21) macro_stmt -> . size
+    (22) macro_stmt -> . symmetry
+    (23) macro_stmt -> . site
+    (24) macro_stmt -> . pin
+    (25) macro_stmt -> . obs
+    (26) macro_stmt -> . property
+    (51) comment -> . COMMENT
+    (27) class -> . CLASS CNAME END_STMT
+    (28) origin -> . ORIGIN NUMBER NUMBER END_STMT
+    (29) foreign -> . FOREIGN CNAME NUMBER NUMBER END_STMT
+    (30) size -> . SIZE NUMBER BY NUMBER END_STMT
+    (31) symmetry -> . SYMMETRY CNAME CNAME END_STMT
+    (32) symmetry -> . SYMMETRY CNAME END_STMT
+    (33) site -> . SITE CNAME END_STMT
+    (34) pin -> . PIN CNAME pin_stmt_list END CNAME
+    (45) obs -> . OBS geom_list END
+    (50) property -> . PROPERTY CNAME ESCAPED_STRING END_STMT
+
+    END             shift and go to state 45
+    COMMENT         shift and go to state 32
+    CLASS           shift and go to state 33
+    ORIGIN          shift and go to state 34
+    FOREIGN         shift and go to state 35
+    SIZE            shift and go to state 36
+    SYMMETRY        shift and go to state 37
+    SITE            shift and go to state 38
+    PIN             shift and go to state 39
+    OBS             shift and go to state 40
+    PROPERTY        shift and go to state 41
+
+    macro_stmt                     shift and go to state 46
+    comment                        shift and go to state 47
+    class                          shift and go to state 23
+    origin                         shift and go to state 24
+    foreign                        shift and go to state 25
+    size                           shift and go to state 26
+    symmetry                       shift and go to state 27
+    site                           shift and go to state 28
+    pin                            shift and go to state 29
+    obs                            shift and go to state 30
+    property                       shift and go to state 31
+
+state 21
+
+    (16) macro_stmt_list -> macro_stmt .
+
+    END             reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    COMMENT         reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    CLASS           reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    ORIGIN          reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    FOREIGN         reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    SIZE            reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    SYMMETRY        reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    SITE            reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    PIN             reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    OBS             reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+    PROPERTY        reduce using rule 16 (macro_stmt_list -> macro_stmt .)
+
+
+state 22
+
+    (17) macro_stmt_list -> comment .
+
+    END             reduce using rule 17 (macro_stmt_list -> comment .)
+    COMMENT         reduce using rule 17 (macro_stmt_list -> comment .)
+    CLASS           reduce using rule 17 (macro_stmt_list -> comment .)
+    ORIGIN          reduce using rule 17 (macro_stmt_list -> comment .)
+    FOREIGN         reduce using rule 17 (macro_stmt_list -> comment .)
+    SIZE            reduce using rule 17 (macro_stmt_list -> comment .)
+    SYMMETRY        reduce using rule 17 (macro_stmt_list -> comment .)
+    SITE            reduce using rule 17 (macro_stmt_list -> comment .)
+    PIN             reduce using rule 17 (macro_stmt_list -> comment .)
+    OBS             reduce using rule 17 (macro_stmt_list -> comment .)
+    PROPERTY        reduce using rule 17 (macro_stmt_list -> comment .)
+
+
+state 23
+
+    (18) macro_stmt -> class .
+
+    END             reduce using rule 18 (macro_stmt -> class .)
+    COMMENT         reduce using rule 18 (macro_stmt -> class .)
+    CLASS           reduce using rule 18 (macro_stmt -> class .)
+    ORIGIN          reduce using rule 18 (macro_stmt -> class .)
+    FOREIGN         reduce using rule 18 (macro_stmt -> class .)
+    SIZE            reduce using rule 18 (macro_stmt -> class .)
+    SYMMETRY        reduce using rule 18 (macro_stmt -> class .)
+    SITE            reduce using rule 18 (macro_stmt -> class .)
+    PIN             reduce using rule 18 (macro_stmt -> class .)
+    OBS             reduce using rule 18 (macro_stmt -> class .)
+    PROPERTY        reduce using rule 18 (macro_stmt -> class .)
+
+
+state 24
+
+    (19) macro_stmt -> origin .
+
+    END             reduce using rule 19 (macro_stmt -> origin .)
+    COMMENT         reduce using rule 19 (macro_stmt -> origin .)
+    CLASS           reduce using rule 19 (macro_stmt -> origin .)
+    ORIGIN          reduce using rule 19 (macro_stmt -> origin .)
+    FOREIGN         reduce using rule 19 (macro_stmt -> origin .)
+    SIZE            reduce using rule 19 (macro_stmt -> origin .)
+    SYMMETRY        reduce using rule 19 (macro_stmt -> origin .)
+    SITE            reduce using rule 19 (macro_stmt -> origin .)
+    PIN             reduce using rule 19 (macro_stmt -> origin .)
+    OBS             reduce using rule 19 (macro_stmt -> origin .)
+    PROPERTY        reduce using rule 19 (macro_stmt -> origin .)
+
+
+state 25
+
+    (20) macro_stmt -> foreign .
+
+    END             reduce using rule 20 (macro_stmt -> foreign .)
+    COMMENT         reduce using rule 20 (macro_stmt -> foreign .)
+    CLASS           reduce using rule 20 (macro_stmt -> foreign .)
+    ORIGIN          reduce using rule 20 (macro_stmt -> foreign .)
+    FOREIGN         reduce using rule 20 (macro_stmt -> foreign .)
+    SIZE            reduce using rule 20 (macro_stmt -> foreign .)
+    SYMMETRY        reduce using rule 20 (macro_stmt -> foreign .)
+    SITE            reduce using rule 20 (macro_stmt -> foreign .)
+    PIN             reduce using rule 20 (macro_stmt -> foreign .)
+    OBS             reduce using rule 20 (macro_stmt -> foreign .)
+    PROPERTY        reduce using rule 20 (macro_stmt -> foreign .)
+
+
+state 26
+
+    (21) macro_stmt -> size .
+
+    END             reduce using rule 21 (macro_stmt -> size .)
+    COMMENT         reduce using rule 21 (macro_stmt -> size .)
+    CLASS           reduce using rule 21 (macro_stmt -> size .)
+    ORIGIN          reduce using rule 21 (macro_stmt -> size .)
+    FOREIGN         reduce using rule 21 (macro_stmt -> size .)
+    SIZE            reduce using rule 21 (macro_stmt -> size .)
+    SYMMETRY        reduce using rule 21 (macro_stmt -> size .)
+    SITE            reduce using rule 21 (macro_stmt -> size .)
+    PIN             reduce using rule 21 (macro_stmt -> size .)
+    OBS             reduce using rule 21 (macro_stmt -> size .)
+    PROPERTY        reduce using rule 21 (macro_stmt -> size .)
+
+
+state 27
+
+    (22) macro_stmt -> symmetry .
+
+    END             reduce using rule 22 (macro_stmt -> symmetry .)
+    COMMENT         reduce using rule 22 (macro_stmt -> symmetry .)
+    CLASS           reduce using rule 22 (macro_stmt -> symmetry .)
+    ORIGIN          reduce using rule 22 (macro_stmt -> symmetry .)
+    FOREIGN         reduce using rule 22 (macro_stmt -> symmetry .)
+    SIZE            reduce using rule 22 (macro_stmt -> symmetry .)
+    SYMMETRY        reduce using rule 22 (macro_stmt -> symmetry .)
+    SITE            reduce using rule 22 (macro_stmt -> symmetry .)
+    PIN             reduce using rule 22 (macro_stmt -> symmetry .)
+    OBS             reduce using rule 22 (macro_stmt -> symmetry .)
+    PROPERTY        reduce using rule 22 (macro_stmt -> symmetry .)
+
+
+state 28
+
+    (23) macro_stmt -> site .
+
+    END             reduce using rule 23 (macro_stmt -> site .)
+    COMMENT         reduce using rule 23 (macro_stmt -> site .)
+    CLASS           reduce using rule 23 (macro_stmt -> site .)
+    ORIGIN          reduce using rule 23 (macro_stmt -> site .)
+    FOREIGN         reduce using rule 23 (macro_stmt -> site .)
+    SIZE            reduce using rule 23 (macro_stmt -> site .)
+    SYMMETRY        reduce using rule 23 (macro_stmt -> site .)
+    SITE            reduce using rule 23 (macro_stmt -> site .)
+    PIN             reduce using rule 23 (macro_stmt -> site .)
+    OBS             reduce using rule 23 (macro_stmt -> site .)
+    PROPERTY        reduce using rule 23 (macro_stmt -> site .)
+
+
+state 29
+
+    (24) macro_stmt -> pin .
+
+    END             reduce using rule 24 (macro_stmt -> pin .)
+    COMMENT         reduce using rule 24 (macro_stmt -> pin .)
+    CLASS           reduce using rule 24 (macro_stmt -> pin .)
+    ORIGIN          reduce using rule 24 (macro_stmt -> pin .)
+    FOREIGN         reduce using rule 24 (macro_stmt -> pin .)
+    SIZE            reduce using rule 24 (macro_stmt -> pin .)
+    SYMMETRY        reduce using rule 24 (macro_stmt -> pin .)
+    SITE            reduce using rule 24 (macro_stmt -> pin .)
+    PIN             reduce using rule 24 (macro_stmt -> pin .)
+    OBS             reduce using rule 24 (macro_stmt -> pin .)
+    PROPERTY        reduce using rule 24 (macro_stmt -> pin .)
+
+
+state 30
+
+    (25) macro_stmt -> obs .
+
+    END             reduce using rule 25 (macro_stmt -> obs .)
+    COMMENT         reduce using rule 25 (macro_stmt -> obs .)
+    CLASS           reduce using rule 25 (macro_stmt -> obs .)
+    ORIGIN          reduce using rule 25 (macro_stmt -> obs .)
+    FOREIGN         reduce using rule 25 (macro_stmt -> obs .)
+    SIZE            reduce using rule 25 (macro_stmt -> obs .)
+    SYMMETRY        reduce using rule 25 (macro_stmt -> obs .)
+    SITE            reduce using rule 25 (macro_stmt -> obs .)
+    PIN             reduce using rule 25 (macro_stmt -> obs .)
+    OBS             reduce using rule 25 (macro_stmt -> obs .)
+    PROPERTY        reduce using rule 25 (macro_stmt -> obs .)
+
+
+state 31
+
+    (26) macro_stmt -> property .
+
+    END             reduce using rule 26 (macro_stmt -> property .)
+    COMMENT         reduce using rule 26 (macro_stmt -> property .)
+    CLASS           reduce using rule 26 (macro_stmt -> property .)
+    ORIGIN          reduce using rule 26 (macro_stmt -> property .)
+    FOREIGN         reduce using rule 26 (macro_stmt -> property .)
+    SIZE            reduce using rule 26 (macro_stmt -> property .)
+    SYMMETRY        reduce using rule 26 (macro_stmt -> property .)
+    SITE            reduce using rule 26 (macro_stmt -> property .)
+    PIN             reduce using rule 26 (macro_stmt -> property .)
+    OBS             reduce using rule 26 (macro_stmt -> property .)
+    PROPERTY        reduce using rule 26 (macro_stmt -> property .)
+
+
+state 32
+
+    (51) comment -> COMMENT .
+
+    END             reduce using rule 51 (comment -> COMMENT .)
+    COMMENT         reduce using rule 51 (comment -> COMMENT .)
+    CLASS           reduce using rule 51 (comment -> COMMENT .)
+    ORIGIN          reduce using rule 51 (comment -> COMMENT .)
+    FOREIGN         reduce using rule 51 (comment -> COMMENT .)
+    SIZE            reduce using rule 51 (comment -> COMMENT .)
+    SYMMETRY        reduce using rule 51 (comment -> COMMENT .)
+    SITE            reduce using rule 51 (comment -> COMMENT .)
+    PIN             reduce using rule 51 (comment -> COMMENT .)
+    OBS             reduce using rule 51 (comment -> COMMENT .)
+    PROPERTY        reduce using rule 51 (comment -> COMMENT .)
+
+
+state 33
+
+    (27) class -> CLASS . CNAME END_STMT
+
+    CNAME           shift and go to state 48
+
+
+state 34
+
+    (28) origin -> ORIGIN . NUMBER NUMBER END_STMT
+
+    NUMBER          shift and go to state 49
+
+
+state 35
+
+    (29) foreign -> FOREIGN . CNAME NUMBER NUMBER END_STMT
+
+    CNAME           shift and go to state 50
+
+
+state 36
+
+    (30) size -> SIZE . NUMBER BY NUMBER END_STMT
+
+    NUMBER          shift and go to state 51
+
+
+state 37
+
+    (31) symmetry -> SYMMETRY . CNAME CNAME END_STMT
+    (32) symmetry -> SYMMETRY . CNAME END_STMT
+
+    CNAME           shift and go to state 52
+
+
+state 38
+
+    (33) site -> SITE . CNAME END_STMT
+
+    CNAME           shift and go to state 53
+
+
+state 39
+
+    (34) pin -> PIN . CNAME pin_stmt_list END CNAME
+
+    CNAME           shift and go to state 54
+
+
+state 40
+
+    (45) obs -> OBS . geom_list END
+    (46) geom_list -> . geom_list geom
+    (47) geom_list -> . geom
+    (48) geom -> . LAYER CNAME END_STMT rect
+
+    LAYER           shift and go to state 57
+
+    geom_list                      shift and go to state 55
+    geom                           shift and go to state 56
+
+state 41
+
+    (50) property -> PROPERTY . CNAME ESCAPED_STRING END_STMT
+
+    CNAME           shift and go to state 58
+
+
+state 42
+
+    (10) busbit -> BUSBITCHARS ESCAPED_STRING END_STMT .
+
+    MACRO           reduce using rule 10 (busbit -> BUSBITCHARS ESCAPED_STRING END_STMT .)
+    END             reduce using rule 10 (busbit -> BUSBITCHARS ESCAPED_STRING END_STMT .)
+    BUSBITCHARS     reduce using rule 10 (busbit -> BUSBITCHARS ESCAPED_STRING END_STMT .)
+    DIVIDERCHAR     reduce using rule 10 (busbit -> BUSBITCHARS ESCAPED_STRING END_STMT .)
+    VERSION         reduce using rule 10 (busbit -> BUSBITCHARS ESCAPED_STRING END_STMT .)
+    $end            reduce using rule 10 (busbit -> BUSBITCHARS ESCAPED_STRING END_STMT .)
+
+
+state 43
+
+    (11) divider -> DIVIDERCHAR ESCAPED_STRING END_STMT .
+
+    MACRO           reduce using rule 11 (divider -> DIVIDERCHAR ESCAPED_STRING END_STMT .)
+    END             reduce using rule 11 (divider -> DIVIDERCHAR ESCAPED_STRING END_STMT .)
+    BUSBITCHARS     reduce using rule 11 (divider -> DIVIDERCHAR ESCAPED_STRING END_STMT .)
+    DIVIDERCHAR     reduce using rule 11 (divider -> DIVIDERCHAR ESCAPED_STRING END_STMT .)
+    VERSION         reduce using rule 11 (divider -> DIVIDERCHAR ESCAPED_STRING END_STMT .)
+    $end            reduce using rule 11 (divider -> DIVIDERCHAR ESCAPED_STRING END_STMT .)
+
+
+state 44
+
+    (12) version -> VERSION NUMBER END_STMT .
+
+    MACRO           reduce using rule 12 (version -> VERSION NUMBER END_STMT .)
+    END             reduce using rule 12 (version -> VERSION NUMBER END_STMT .)
+    BUSBITCHARS     reduce using rule 12 (version -> VERSION NUMBER END_STMT .)
+    DIVIDERCHAR     reduce using rule 12 (version -> VERSION NUMBER END_STMT .)
+    VERSION         reduce using rule 12 (version -> VERSION NUMBER END_STMT .)
+    $end            reduce using rule 12 (version -> VERSION NUMBER END_STMT .)
+
+
+state 45
+
+    (13) macro -> MACRO CNAME macro_stmt_list END . CNAME
+
+    CNAME           shift and go to state 59
+
+
+state 46
+
+    (14) macro_stmt_list -> macro_stmt_list macro_stmt .
+
+    END             reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    COMMENT         reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    CLASS           reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    ORIGIN          reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    FOREIGN         reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    SIZE            reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    SYMMETRY        reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    SITE            reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    PIN             reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    OBS             reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+    PROPERTY        reduce using rule 14 (macro_stmt_list -> macro_stmt_list macro_stmt .)
+
+
+state 47
+
+    (15) macro_stmt_list -> macro_stmt_list comment .
+
+    END             reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    COMMENT         reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    CLASS           reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    ORIGIN          reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    FOREIGN         reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    SIZE            reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    SYMMETRY        reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    SITE            reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    PIN             reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    OBS             reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+    PROPERTY        reduce using rule 15 (macro_stmt_list -> macro_stmt_list comment .)
+
+
+state 48
+
+    (27) class -> CLASS CNAME . END_STMT
+
+    END_STMT        shift and go to state 60
+
+
+state 49
+
+    (28) origin -> ORIGIN NUMBER . NUMBER END_STMT
+
+    NUMBER          shift and go to state 61
+
+
+state 50
+
+    (29) foreign -> FOREIGN CNAME . NUMBER NUMBER END_STMT
+
+    NUMBER          shift and go to state 62
+
+
+state 51
+
+    (30) size -> SIZE NUMBER . BY NUMBER END_STMT
+
+    BY              shift and go to state 63
+
+
+state 52
+
+    (31) symmetry -> SYMMETRY CNAME . CNAME END_STMT
+    (32) symmetry -> SYMMETRY CNAME . END_STMT
+
+    CNAME           shift and go to state 64
+    END_STMT        shift and go to state 65
+
+
+state 53
+
+    (33) site -> SITE CNAME . END_STMT
+
+    END_STMT        shift and go to state 66
+
+
+state 54
+
+    (34) pin -> PIN CNAME . pin_stmt_list END CNAME
+    (35) pin_stmt_list -> . pin_stmt_list pin_stmt
+    (36) pin_stmt_list -> . pin_stmt
+    (37) pin_stmt -> . direction
+    (38) pin_stmt -> . use
+    (39) pin_stmt -> . port
+    (40) direction -> . DIRECTION OUTPUT END_STMT
+    (41) direction -> . DIRECTION INPUT END_STMT
+    (42) direction -> . DIRECTION INOUT END_STMT
+    (43) use -> . USE SIGNAL END_STMT
+    (44) port -> . PORT geom END
+
+    DIRECTION       shift and go to state 72
+    USE             shift and go to state 73
+    PORT            shift and go to state 74
+
+    pin_stmt_list                  shift and go to state 67
+    pin_stmt                       shift and go to state 68
+    direction                      shift and go to state 69
+    use                            shift and go to state 70
+    port                           shift and go to state 71
+
+state 55
+
+    (45) obs -> OBS geom_list . END
+    (46) geom_list -> geom_list . geom
+    (48) geom -> . LAYER CNAME END_STMT rect
+
+    END             shift and go to state 75
+    LAYER           shift and go to state 57
+
+    geom                           shift and go to state 76
+
+state 56
+
+    (47) geom_list -> geom .
+
+    END             reduce using rule 47 (geom_list -> geom .)
+    LAYER           reduce using rule 47 (geom_list -> geom .)
+
+
+state 57
+
+    (48) geom -> LAYER . CNAME END_STMT rect
+
+    CNAME           shift and go to state 77
+
+
+state 58
+
+    (50) property -> PROPERTY CNAME . ESCAPED_STRING END_STMT
+
+    ESCAPED_STRING  shift and go to state 78
+
+
+state 59
+
+    (13) macro -> MACRO CNAME macro_stmt_list END CNAME .
+
+    MACRO           reduce using rule 13 (macro -> MACRO CNAME macro_stmt_list END CNAME .)
+    END             reduce using rule 13 (macro -> MACRO CNAME macro_stmt_list END CNAME .)
+    BUSBITCHARS     reduce using rule 13 (macro -> MACRO CNAME macro_stmt_list END CNAME .)
+    DIVIDERCHAR     reduce using rule 13 (macro -> MACRO CNAME macro_stmt_list END CNAME .)
+    VERSION         reduce using rule 13 (macro -> MACRO CNAME macro_stmt_list END CNAME .)
+    $end            reduce using rule 13 (macro -> MACRO CNAME macro_stmt_list END CNAME .)
+
+
+state 60
+
+    (27) class -> CLASS CNAME END_STMT .
+
+    END             reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    COMMENT         reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    CLASS           reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    ORIGIN          reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    FOREIGN         reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    SIZE            reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    SYMMETRY        reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    SITE            reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    PIN             reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    OBS             reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+    PROPERTY        reduce using rule 27 (class -> CLASS CNAME END_STMT .)
+
+
+state 61
+
+    (28) origin -> ORIGIN NUMBER NUMBER . END_STMT
+
+    END_STMT        shift and go to state 79
+
+
+state 62
+
+    (29) foreign -> FOREIGN CNAME NUMBER . NUMBER END_STMT
+
+    NUMBER          shift and go to state 80
+
+
+state 63
+
+    (30) size -> SIZE NUMBER BY . NUMBER END_STMT
+
+    NUMBER          shift and go to state 81
+
+
+state 64
+
+    (31) symmetry -> SYMMETRY CNAME CNAME . END_STMT
+
+    END_STMT        shift and go to state 82
+
+
+state 65
+
+    (32) symmetry -> SYMMETRY CNAME END_STMT .
+
+    END             reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    COMMENT         reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    CLASS           reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    ORIGIN          reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    FOREIGN         reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    SIZE            reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    SYMMETRY        reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    SITE            reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    PIN             reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    OBS             reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+    PROPERTY        reduce using rule 32 (symmetry -> SYMMETRY CNAME END_STMT .)
+
+
+state 66
+
+    (33) site -> SITE CNAME END_STMT .
+
+    END             reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    COMMENT         reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    CLASS           reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    ORIGIN          reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    FOREIGN         reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    SIZE            reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    SYMMETRY        reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    SITE            reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    PIN             reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    OBS             reduce using rule 33 (site -> SITE CNAME END_STMT .)
+    PROPERTY        reduce using rule 33 (site -> SITE CNAME END_STMT .)
+
+
+state 67
+
+    (34) pin -> PIN CNAME pin_stmt_list . END CNAME
+    (35) pin_stmt_list -> pin_stmt_list . pin_stmt
+    (37) pin_stmt -> . direction
+    (38) pin_stmt -> . use
+    (39) pin_stmt -> . port
+    (40) direction -> . DIRECTION OUTPUT END_STMT
+    (41) direction -> . DIRECTION INPUT END_STMT
+    (42) direction -> . DIRECTION INOUT END_STMT
+    (43) use -> . USE SIGNAL END_STMT
+    (44) port -> . PORT geom END
+
+    END             shift and go to state 83
+    DIRECTION       shift and go to state 72
+    USE             shift and go to state 73
+    PORT            shift and go to state 74
+
+    pin_stmt                       shift and go to state 84
+    direction                      shift and go to state 69
+    use                            shift and go to state 70
+    port                           shift and go to state 71
+
+state 68
+
+    (36) pin_stmt_list -> pin_stmt .
+
+    END             reduce using rule 36 (pin_stmt_list -> pin_stmt .)
+    DIRECTION       reduce using rule 36 (pin_stmt_list -> pin_stmt .)
+    USE             reduce using rule 36 (pin_stmt_list -> pin_stmt .)
+    PORT            reduce using rule 36 (pin_stmt_list -> pin_stmt .)
+
+
+state 69
+
+    (37) pin_stmt -> direction .
+
+    END             reduce using rule 37 (pin_stmt -> direction .)
+    DIRECTION       reduce using rule 37 (pin_stmt -> direction .)
+    USE             reduce using rule 37 (pin_stmt -> direction .)
+    PORT            reduce using rule 37 (pin_stmt -> direction .)
+
+
+state 70
+
+    (38) pin_stmt -> use .
+
+    END             reduce using rule 38 (pin_stmt -> use .)
+    DIRECTION       reduce using rule 38 (pin_stmt -> use .)
+    USE             reduce using rule 38 (pin_stmt -> use .)
+    PORT            reduce using rule 38 (pin_stmt -> use .)
+
+
+state 71
+
+    (39) pin_stmt -> port .
+
+    END             reduce using rule 39 (pin_stmt -> port .)
+    DIRECTION       reduce using rule 39 (pin_stmt -> port .)
+    USE             reduce using rule 39 (pin_stmt -> port .)
+    PORT            reduce using rule 39 (pin_stmt -> port .)
+
+
+state 72
+
+    (40) direction -> DIRECTION . OUTPUT END_STMT
+    (41) direction -> DIRECTION . INPUT END_STMT
+    (42) direction -> DIRECTION . INOUT END_STMT
+
+    OUTPUT          shift and go to state 85
+    INPUT           shift and go to state 86
+    INOUT           shift and go to state 87
+
+
+state 73
+
+    (43) use -> USE . SIGNAL END_STMT
+
+    SIGNAL          shift and go to state 88
+
+
+state 74
+
+    (44) port -> PORT . geom END
+    (48) geom -> . LAYER CNAME END_STMT rect
+
+    LAYER           shift and go to state 57
+
+    geom                           shift and go to state 89
+
+state 75
+
+    (45) obs -> OBS geom_list END .
+
+    END             reduce using rule 45 (obs -> OBS geom_list END .)
+    COMMENT         reduce using rule 45 (obs -> OBS geom_list END .)
+    CLASS           reduce using rule 45 (obs -> OBS geom_list END .)
+    ORIGIN          reduce using rule 45 (obs -> OBS geom_list END .)
+    FOREIGN         reduce using rule 45 (obs -> OBS geom_list END .)
+    SIZE            reduce using rule 45 (obs -> OBS geom_list END .)
+    SYMMETRY        reduce using rule 45 (obs -> OBS geom_list END .)
+    SITE            reduce using rule 45 (obs -> OBS geom_list END .)
+    PIN             reduce using rule 45 (obs -> OBS geom_list END .)
+    OBS             reduce using rule 45 (obs -> OBS geom_list END .)
+    PROPERTY        reduce using rule 45 (obs -> OBS geom_list END .)
+
+
+state 76
+
+    (46) geom_list -> geom_list geom .
+
+    END             reduce using rule 46 (geom_list -> geom_list geom .)
+    LAYER           reduce using rule 46 (geom_list -> geom_list geom .)
+
+
+state 77
+
+    (48) geom -> LAYER CNAME . END_STMT rect
+
+    END_STMT        shift and go to state 90
+
+
+state 78
+
+    (50) property -> PROPERTY CNAME ESCAPED_STRING . END_STMT
+
+    END_STMT        shift and go to state 91
+
+
+state 79
+
+    (28) origin -> ORIGIN NUMBER NUMBER END_STMT .
+
+    END             reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    COMMENT         reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    CLASS           reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    ORIGIN          reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    FOREIGN         reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    SIZE            reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    SYMMETRY        reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    SITE            reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    PIN             reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    OBS             reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+    PROPERTY        reduce using rule 28 (origin -> ORIGIN NUMBER NUMBER END_STMT .)
+
+
+state 80
+
+    (29) foreign -> FOREIGN CNAME NUMBER NUMBER . END_STMT
+
+    END_STMT        shift and go to state 92
+
+
+state 81
+
+    (30) size -> SIZE NUMBER BY NUMBER . END_STMT
+
+    END_STMT        shift and go to state 93
+
+
+state 82
+
+    (31) symmetry -> SYMMETRY CNAME CNAME END_STMT .
+
+    END             reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    COMMENT         reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    CLASS           reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    ORIGIN          reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    FOREIGN         reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    SIZE            reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    SYMMETRY        reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    SITE            reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    PIN             reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    OBS             reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+    PROPERTY        reduce using rule 31 (symmetry -> SYMMETRY CNAME CNAME END_STMT .)
+
+
+state 83
+
+    (34) pin -> PIN CNAME pin_stmt_list END . CNAME
+
+    CNAME           shift and go to state 94
+
+
+state 84
+
+    (35) pin_stmt_list -> pin_stmt_list pin_stmt .
+
+    END             reduce using rule 35 (pin_stmt_list -> pin_stmt_list pin_stmt .)
+    DIRECTION       reduce using rule 35 (pin_stmt_list -> pin_stmt_list pin_stmt .)
+    USE             reduce using rule 35 (pin_stmt_list -> pin_stmt_list pin_stmt .)
+    PORT            reduce using rule 35 (pin_stmt_list -> pin_stmt_list pin_stmt .)
+
+
+state 85
+
+    (40) direction -> DIRECTION OUTPUT . END_STMT
+
+    END_STMT        shift and go to state 95
+
+
+state 86
+
+    (41) direction -> DIRECTION INPUT . END_STMT
+
+    END_STMT        shift and go to state 96
+
+
+state 87
+
+    (42) direction -> DIRECTION INOUT . END_STMT
+
+    END_STMT        shift and go to state 97
+
+
+state 88
+
+    (43) use -> USE SIGNAL . END_STMT
+
+    END_STMT        shift and go to state 98
+
+
+state 89
+
+    (44) port -> PORT geom . END
+
+    END             shift and go to state 99
+
+
+state 90
+
+    (48) geom -> LAYER CNAME END_STMT . rect
+    (49) rect -> . RECT NUMBER NUMBER NUMBER NUMBER END_STMT
+
+    RECT            shift and go to state 101
+
+    rect                           shift and go to state 100
+
+state 91
+
+    (50) property -> PROPERTY CNAME ESCAPED_STRING END_STMT .
+
+    END             reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    COMMENT         reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    CLASS           reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    ORIGIN          reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    FOREIGN         reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    SIZE            reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    SYMMETRY        reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    SITE            reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    PIN             reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    OBS             reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+    PROPERTY        reduce using rule 50 (property -> PROPERTY CNAME ESCAPED_STRING END_STMT .)
+
+
+state 92
+
+    (29) foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .
+
+    END             reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    COMMENT         reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    CLASS           reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    ORIGIN          reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    FOREIGN         reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    SIZE            reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    SYMMETRY        reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    SITE            reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    PIN             reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    OBS             reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+    PROPERTY        reduce using rule 29 (foreign -> FOREIGN CNAME NUMBER NUMBER END_STMT .)
+
+
+state 93
+
+    (30) size -> SIZE NUMBER BY NUMBER END_STMT .
+
+    END             reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    COMMENT         reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    CLASS           reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    ORIGIN          reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    FOREIGN         reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    SIZE            reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    SYMMETRY        reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    SITE            reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    PIN             reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    OBS             reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+    PROPERTY        reduce using rule 30 (size -> SIZE NUMBER BY NUMBER END_STMT .)
+
+
+state 94
+
+    (34) pin -> PIN CNAME pin_stmt_list END CNAME .
+
+    END             reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    COMMENT         reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    CLASS           reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    ORIGIN          reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    FOREIGN         reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    SIZE            reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    SYMMETRY        reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    SITE            reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    PIN             reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    OBS             reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+    PROPERTY        reduce using rule 34 (pin -> PIN CNAME pin_stmt_list END CNAME .)
+
+
+state 95
+
+    (40) direction -> DIRECTION OUTPUT END_STMT .
+
+    END             reduce using rule 40 (direction -> DIRECTION OUTPUT END_STMT .)
+    DIRECTION       reduce using rule 40 (direction -> DIRECTION OUTPUT END_STMT .)
+    USE             reduce using rule 40 (direction -> DIRECTION OUTPUT END_STMT .)
+    PORT            reduce using rule 40 (direction -> DIRECTION OUTPUT END_STMT .)
+
+
+state 96
+
+    (41) direction -> DIRECTION INPUT END_STMT .
+
+    END             reduce using rule 41 (direction -> DIRECTION INPUT END_STMT .)
+    DIRECTION       reduce using rule 41 (direction -> DIRECTION INPUT END_STMT .)
+    USE             reduce using rule 41 (direction -> DIRECTION INPUT END_STMT .)
+    PORT            reduce using rule 41 (direction -> DIRECTION INPUT END_STMT .)
+
+
+state 97
+
+    (42) direction -> DIRECTION INOUT END_STMT .
+
+    END             reduce using rule 42 (direction -> DIRECTION INOUT END_STMT .)
+    DIRECTION       reduce using rule 42 (direction -> DIRECTION INOUT END_STMT .)
+    USE             reduce using rule 42 (direction -> DIRECTION INOUT END_STMT .)
+    PORT            reduce using rule 42 (direction -> DIRECTION INOUT END_STMT .)
+
+
+state 98
+
+    (43) use -> USE SIGNAL END_STMT .
+
+    END             reduce using rule 43 (use -> USE SIGNAL END_STMT .)
+    DIRECTION       reduce using rule 43 (use -> USE SIGNAL END_STMT .)
+    USE             reduce using rule 43 (use -> USE SIGNAL END_STMT .)
+    PORT            reduce using rule 43 (use -> USE SIGNAL END_STMT .)
+
+
+state 99
+
+    (44) port -> PORT geom END .
+
+    END             reduce using rule 44 (port -> PORT geom END .)
+    DIRECTION       reduce using rule 44 (port -> PORT geom END .)
+    USE             reduce using rule 44 (port -> PORT geom END .)
+    PORT            reduce using rule 44 (port -> PORT geom END .)
+
+
+state 100
+
+    (48) geom -> LAYER CNAME END_STMT rect .
+
+    END             reduce using rule 48 (geom -> LAYER CNAME END_STMT rect .)
+    LAYER           reduce using rule 48 (geom -> LAYER CNAME END_STMT rect .)
+
+
+state 101
+
+    (49) rect -> RECT . NUMBER NUMBER NUMBER NUMBER END_STMT
+
+    NUMBER          shift and go to state 102
+
+
+state 102
+
+    (49) rect -> RECT NUMBER . NUMBER NUMBER NUMBER END_STMT
+
+    NUMBER          shift and go to state 103
+
+
+state 103
+
+    (49) rect -> RECT NUMBER NUMBER . NUMBER NUMBER END_STMT
+
+    NUMBER          shift and go to state 104
+
+
+state 104
+
+    (49) rect -> RECT NUMBER NUMBER NUMBER . NUMBER END_STMT
+
+    NUMBER          shift and go to state 105
+
+
+state 105
+
+    (49) rect -> RECT NUMBER NUMBER NUMBER NUMBER . END_STMT
+
+    END_STMT        shift and go to state 106
+
+
+state 106
+
+    (49) rect -> RECT NUMBER NUMBER NUMBER NUMBER END_STMT .
+
+    END             reduce using rule 49 (rect -> RECT NUMBER NUMBER NUMBER NUMBER END_STMT .)
+    LAYER           reduce using rule 49 (rect -> RECT NUMBER NUMBER NUMBER NUMBER END_STMT .)
+

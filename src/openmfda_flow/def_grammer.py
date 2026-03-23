@@ -85,6 +85,7 @@ def import_def_parser():
     INT : /[-+]?(0|[1-9][0-9]*)/x
     VERSION : /[-+]?(0|[1-9][0-9]*)(\.[0-9]+)+/x
     CNAME : /[a-zA-Z_][a-zA-Z0-9_\.]*/
+    COMPNAME : /[a-zA-Z_][a-zA-Z0-9_\.]*/
     // MOD_NAME : /[a-zA-Z_][a-zA-Z0-9_.]*/
     COMMENT : /\/\/.*$/
     %import common.ESCAPED_STRING

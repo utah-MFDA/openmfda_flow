@@ -4,8 +4,7 @@
  <description/>
  <group/>
  <dbu>0.001</dbu>
- <base-path>./platforms/h.r.3.3/</base-path>
- <original-base-path>.klayout/tech/h.r.3.3</original-base-path>
+ <base-path>flow/platforms/h.r.3.3/</base-path>
  <layer-properties_file>h.r.3.3.lyp</layer-properties_file>
  <add-other-layers>true</add-other-layers>
  <reader-options>

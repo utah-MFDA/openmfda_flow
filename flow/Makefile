@@ -7,17 +7,19 @@ export DESIGN ?= demo
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
-
-# add a space to the below to definition to build library
+OPENSCAD ?= openscad
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
 export BUILD_PDK_LIBRARY ?=
 
 # The docker image does not have the OpenROAD OpenBD
 # 	references a compatible version
-ifeq (HAS_OPENDB,T)
-export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
-else
-export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
-endif
+#### vvvvv removed merge with kicad
+#ifeq (HAS_OPENDB,T)
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+#else
+#export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
+#endif
 
 
 # Add design configure paths here
@@ -35,6 +37,10 @@ export NEW_VER_FL_SITE ?=
 ifndef DISPLAY
 export QT_QPA_PLATFORM ?= offscreen
 endif
+
+PYTHON3 ?= python3
+
+SLICER_SCRIPT = ../tools/simple_slicer/slice_geom.py
 
 # Global override Floorplan
 # export CORE_UTILIZATION := 30
@@ -115,6 +121,10 @@ export SDC_FILE ?= $(DESIGN_DIR)/constraint.sdc
 export IO_CONSTRAINTS ?= $(DESIGN_DIR)/io_constraints.tcl
 endif
 
+ifeq ($(strip $(GLOBAL_PLACEMENT_ARGS_FILE)),'')
+export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
+endif
+
 export FLOW_VARIANT ?= base
 
 # Setup working directories
@@ -158,6 +168,7 @@ endif
 export NUM_CORES := $(NPROC)
 
 #-------------------------------------------------------------------------------
+XVFB_CMD=xvfb-run
 # setup all commands used within this flow
 TIME_CMD=/usr/bin/time --verbose
 # TIME_TEST = $(shell $(TIME_CMD) echo foo 2>/dev/null)
@@ -593,14 +604,19 @@ ifneq ($(SIMULATION_CONFIG),)
 XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 
 #ifneq ($(SIMULATION_CONFIG),)
+.PHONY: xyce_run_config
+xyce_run_config: $(RESULTS_DIR)/xyce_run.config
+
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
 #<<<<<<< HEAD
 #$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+	# we want to work towards VVVVVVVVVVVVVVVV
+#$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
-	$(TIME_CMD) python3 $(SIMULATION_SCRIPT) \
+	$(TIME_CMD) $(PYTHON3) $(SIMULATION_SCRIPT) \
 		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
 		--netlist $(RESULTS_DIR)/4_final.v \
 		--sim_config $(SIMULATION_CONFIG) \
@@ -611,10 +627,6 @@ $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIG
 		--xyce_run_config $(XYCE_RUN_CONFIG) \
 		--length_file $(LENGTH_FILE) \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
-
-# 		--netlist $(RESULTS_DIR)/4_final.v \
-# 		--netlist ./designs/src/multiplex/multiplex.v  \
-
 
 # cp $(RESULTS_DIR)/Chem_Eval.csv Chem_Eval_base.csv
 
@@ -634,13 +646,15 @@ endif
 # \___ \| |     / _ \ | | | |
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
-# <<<<<<< HEAD
-# render: $(RESULTS_DIR)/4_final.scad
 # =======
 
-render: $(RESULTS_DIR)/$(DESIGN)_base.scad
-#>>>>>>> main
-slice: $(RESULTS_DIR)/$(DESIGN).slices
+# render: $(RESULTS_DIR)/4_final.scad # old scad call
+# render: $(RESULTS_DIR)/$(DESIGN)_base.scad # the stl is the new output
+.PHONY: scad render slice zip
+scad: $(RESULTS_DIR)/$(DESIGN)_base.scad
+render: $(RESULTS_DIR)/$(DESIGN)_base.stl
+slice: $(RESULTS_DIR)/slices/1.png # we reference first png slice
+#slice: $(RESULTS_DIR)/$(DESIGN).slices
 zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
@@ -650,6 +664,11 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # $(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 # =======
 # additional pcell files to include
+
+ifeq ($(SCAD_LIB),)
+SCAD_LIB = $(PLATFORM_DIR)/pdk/scad_lib
+endif
+
 ifneq ($(SCAD_INCLUDE_FILES),)
 SCAD_INCLUDE_FILES += $(SCAD_LIB)/polychannel_v2.scad $(SCAD_LIB)/lef_helper.scad $(SCAD_LIB)/lef_scad_config.scad
 else
@@ -663,7 +682,7 @@ endif
 #$(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
-	$(TIME_CMD) python3 $(SCAD_SCRIPT) $(SCAD_ARGS) \
+	$(TIME_CMD) $(PYTHON3) $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
         --design ${DESIGN} \
 				--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
@@ -671,15 +690,22 @@ $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
 
-#--scad_out_file $(RESULTS_DIR)/$(DESIGN)_base.scad \
-# $(RESULTS_DIR)/5_scad.scad: $(RESULTS_DIR)/$(DESIGN).scad
-# 	cp $^ $@
+$(RESULTS_DIR)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
+	openscad $< -o $@
 
 %.stl: %.scad
-	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
+	$(TIME_CMD) $(OPENSCAD) -m make -o $@ -d $@.deps $< 2>&1 | tee $(LOG_DIR)/5_2_stl_render.log
 
 %.slices: %.stl
-	$(TIME_CMD) xvfb-run python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_HEIGHT} $@ 2>&1 | tee $@.log
+	$(TIME_CMD) $(XBUF) python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_VAL} $@ 2>&1 | tee $(LOG_DIR)/5_3_slicer.log
+
+$(RESULTS_DIR)/slices/1.png: $(RESULTS_DIR)/$(DESIGN)_base.stl
+	$(PYTHON3) $(SLICER_SCRIPT) \
+		--stl $< \
+		--out_dir $(RESULTS_DIR)/slices \
+		--resolution $(PRINTER_PX_RES) \
+		--layer_height $(LAYER_VAL)
+
 
 ${RESULTS_DIR}/${DESIGN}.${PLATFORM}.zip: ${RESULTS_DIR}/${DESIGN}.slices
 	7z a -tzip $@ ${RESULTS_DIR}

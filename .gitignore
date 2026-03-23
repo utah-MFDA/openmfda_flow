@@ -16,3 +16,4 @@ replace_vars.csv*
 parsetab.py
 parser.out
 .flake8
+~$*

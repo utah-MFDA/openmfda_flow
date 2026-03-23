@@ -477,7 +477,7 @@ class OpenMFDA:
         bb = "}"
 
         if not os.path.exists(os.path.dirname(replace_args_filename)):
-            os.mkdir(os.path.dirname(replace_args_filename))
+            os.makedirs(os.path.dirname(replace_args_filename))
 
         with open(replace_args_filename, "w+") as f:
             print(
@@ -538,6 +538,7 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
     -initial_place_max_iter $initial_place_max_iter {bs}
     -initial_place_max_fanout $initial_place_max_fanout"
 
+puts $global_place_args
 #set ::env(GLOBAL_PLACEMENT_ARGS) $global_place_args
 #puts $::env(GLOBAL_PLACEMENT_ARGS)
 
