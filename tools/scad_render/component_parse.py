@@ -1,6 +1,7 @@
 import ply.lex as lex
 import ply.yacc as yacc
 
+from math import sqrt
 
 RESERVED = {
     "MACRO": "MACRO",
@@ -469,6 +470,18 @@ class Component:
             return True
         else:
             return False
+    
+    
+    def dist_from_line(self, pt1, pt2, ch_pt):
+        return abs((pt2[1] - pt1[1])*ch_pt[0] - (pt2[0] - pt1[0])*ch_pt[1] + \
+            pt2[0]*pt1[1] - pt2[1]*pt1[0]) / \
+            (sqrt((pt2[1] - pt1[1])**2 + (pt2[0] - pt1[0])**2))
+            
+    def inside_pts(self, pt1, pt2, ch_pt):
+        return ch_pt[0] < max(pt1[0], pt2[0]) and \
+            ch_pt[0] > min(pt1[0], pt2[0]) and \
+            ch_pt[1] < max(pt1[1], pt2[1]) and \
+            ch_pt[1] < min(pt1[1], pt2[1])
 
     def is_pt_in_pins(
         self,
@@ -493,6 +506,43 @@ class Component:
                 else:
                     continue
         return False, None
+
+    def is_segmt_in_pins(
+        self,
+        segmt,
+        pos=[0, 0],
+        orient=None,
+        layer=None,
+        rescale=1,
+        err=0.1, # we need to add a channel width parameter
+        silent=False
+    ):
+        ref_pins = self.get_pins_from_pos(pos, orient, rescale)
+        for p in ref_pins.items():
+            pt_pin = p[1]["pos"]
+            if not silent:
+                print("Component pin:", p[0], p[1]["pos"])
+            if isinstance(layer, str) and layer != p[1]["layer"]:
+                return False, None, None
+            # if self.is_pt_in_rect(pt, pt_pin, err):
+            # checks center point # TODO develop more robust line through pin
+            if self.dist_from_line(segmt[0], segmt[1], 
+                    [
+                        pt_pin[0][0] + pt_pin[1][0]/2,
+                        pt_pin[0][1] + pt_pin[1][1]/2
+                        ]) < err \
+                    and self.inside_pts(segmt[0], segmt[1],
+                    [
+                        pt_pin[0][0] + pt_pin[1][0]/2,
+                        pt_pin[0][1] + pt_pin[1][1]/2
+                    ]):
+                if layer is None:
+                    return True, p[0], pt_pin
+                elif isinstance(layer, str) and layer == p[1]["layer"]:
+                    return True, p[0], pt_pin
+                else:
+                    continue
+        return False, None, None
 
 
 #################### TESTING FUNCTIONS ###########################
