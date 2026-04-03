@@ -133,8 +133,8 @@ export DESIGN_NICKNAME ?= $(DESIGN_NAME)
 export DESIGN_DIR  = $(dir $(DESIGN_CONFIG))
 export LOG_DIR     = $(WORK_HOME)/logs/$(DESIGN_NICKNAME)/$(FLOW_VARIANT)
 export OBJECTS_DIR = $(WORK_HOME)/objects/$(DESIGN_NICKNAME)/$(FLOW_VARIANT)
-export REPORTS_DIR = $(WORK_HOME)/reports/$(DESIGN_NICKNAME)/$(FLOW_VARIANT)
-export RESULTS_DIR = $(WORK_HOME)/results/$(DESIGN_NICKNAME)/$(FLOW_VARIANT)
+export REPORTS_DIR ?= $(WORK_HOME)/reports/$(DESIGN_NICKNAME)/$(FLOW_VARIANT)
+export RESULTS_DIR ?= $(WORK_HOME)/results/$(DESIGN_NICKNAME)/$(FLOW_VARIANT)
 
 ifdef BLOCKS
   $(info [INFO][FLOW] Invoked hierarchical flow.)
@@ -605,7 +605,6 @@ xyce_run_config: $(RESULTS_DIR)/xyce_run.config
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
-#<<<<<<< HEAD
 #$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	# we want to work towards VVVVVVVVVVVVVVVV
 #$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
@@ -622,8 +621,6 @@ $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIG
 		--xyce_run_config $(XYCE_RUN_CONFIG) \
 		--length_file $(LENGTH_FILE) \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
-
-# cp $(RESULTS_DIR)/Chem_Eval.csv Chem_Eval_base.csv
 
 # --output_dir $(RESULTS_DIR) \
 # --length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv
@@ -684,6 +681,24 @@ $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4
 				--scad_include $(SCAD_INCLUDE_FILES) \
 		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 	cp $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/4_final.scad
+
+# used for manual render of a system part way through OpenROAD
+
+ifneq ($(strip $(MANUAL_DEF)),)
+MANUAL_SCAD_RENDER = $(RESULTS_DIR)/manrend_$(notdir $(MANUAL_DEF)).scad
+
+$(MANUAL_SCAD_RENDER): $(MANUAL_DEF) $(LIBRARY_DEPS)
+	mkdir -p "$(RESULTS_DIR)"
+	$(TIME_CMD) $(PYTHON3) $(SCAD_SCRIPT) $(SCAD_ARGS) \
+		--def_file $< \
+        --design ${DESIGN} \
+				--scad_out_file $(MANUAL_SCAD_RENDER) \
+				--scad_include $(SCAD_INCLUDE_FILES) \
+		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+endif
+
+.PHONY: manual_scad_render
+manual_scad_render: $(MANUAL_SCAD_RENDER)
 
 $(RESULTS_DIR)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
 	openscad $< -o $@
