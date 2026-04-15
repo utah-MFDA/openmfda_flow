@@ -1,0 +1,1 @@
+../plugins/slice_dialog.py
