@@ -28,7 +28,7 @@ import component_parse
 import route_scripts
 from route_scripts import link_routes
 
-#import def_obj_load
+import def_obj_load
 
 ## Regex parsing
 #pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$' # last implementation
@@ -442,6 +442,7 @@ def get_nets(in_def,
 
 
     os.environ["XYCE_WL_GRAPH"] = ''
+
     comp_dict = {}
     if isinstance(component_lef, str):
         comp_dict = component_parse.ComponentParser().get_comp_pins_from_lef(component_lef, scale=s)
@@ -527,12 +528,12 @@ def get_nets(in_def,
     for n in nets_list:
         print("ROUTE:",n.route)
         if 'compress_routes' in debug and debug['compress_routes'] is True:
-            #raise Exception("Old compression implementation, TODO update")
+            raise Exception("Old compression implementation, TODO update")
             n.compress_routes(debug=True, design=design)
             # linked_net = link_routes(n.route, n.devs, debug=True, design=design)
         else:
             if components is None:
-                #raise Exception("Old compression implementation, TODO update")
+                raise Exception("Old compression implementation, TODO update")
                 n.compress_routes(design=design, pin_list=pins, def_scale=def_scale)
                 # n.route = link_routes(
                 #     n.route,
