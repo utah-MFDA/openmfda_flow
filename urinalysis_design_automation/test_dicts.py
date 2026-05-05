@@ -1,3 +1,5 @@
+# Benchmark cases for the class of continuous-flow, pressure-driven microfluidic devices
+
 # 2 samples
 assay = "two_samples"
 num_samples = 2

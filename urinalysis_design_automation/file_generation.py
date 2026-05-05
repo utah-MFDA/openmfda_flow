@@ -1,21 +1,23 @@
 from design_automation import init_mix, v_file
 import os
+import random 
 
 # Generate all necessary files
 def file_generation(platform, assay, num_samples, input_dict):
-    ratio_dict, length_dict = conc_ratio(input_dict, num_samples)
+    ratio_dict, length_dict = conc_ratio(input_dict)
     # Generate necessary files
     configure_file(assay, platform)
     make_file(assay, platform)
     constraint_file(assay, platform)
-    io_file(assay, platform, num_samples, solution_dict(length_dict))
+    io_loc = io_file(assay, platform, num_samples)
     sim_eval_files(assay, platform, solution_dict(length_dict), ratio_dict)
     # Initial mixing and verilog file
     len_list, layer_list, pitch_list, turn_list, chan_vol, reg_vol = init_mix(num_samples, length_dict)
     v_file(assay, num_samples, len_list, layer_list, pitch_list, turn_list)
+    return io_loc
 
 # Function to define concentration ratios
-def conc_ratio(input_dict, num_samples):
+def conc_ratio(input_dict):
     # Calculate total concentration
     conc_sum = sum(input_dict.values())
     # Calculate relative ratio of each sample
@@ -72,7 +74,7 @@ proj.set_replace_arg('bin'    , 4)
 proj.set_replace_arg('max_phi', 1.04)
 proj.set_replace_arg('overflow', 0.1)
 
-make_targets = ['gen_pcells', 'pnr','render', 'simulate', '-B']
+make_targets = ['gen_pcells', 'pnr','scad', 'simulate', '-B']
 
 if args.run_all_deps:
     make_targets.append("-B")
@@ -130,7 +132,8 @@ $(RESULTS_DIR)/$(DESIGN)_reroute.scad: $(RESULTS_DIR)/$(SCAD_DEF) $(LIBRARY_DEPS
 		--length_out $(LENGTH_FILE_REROUTE) \\
 		--route_map_out $(ROUTE_MAP_OUT_REROUTE) \\
 		--scad_out_file $(RESULTS_DIR)/$(DESIGN)_reroute.scad \\
-		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+		--scad_include $(SCAD_INCLUDE_FILES) \\
+        --results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 
 $(RESULTS_DIR)/xyceOut_1.csv: $(RESULTS_DIR)/$(DESIGN)_reroute.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
@@ -149,6 +152,8 @@ $(RESULTS_DIR)/xyceOut_1.csv: $(RESULTS_DIR)/$(DESIGN)_reroute.scad $(SIMULATION
 --lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
         """)
 
+
+
 # Function to create constraint.sdc
 def constraint_file(assay, platform):
     # Create configure.py file
@@ -160,7 +165,7 @@ def constraint_file(assay, platform):
         f.write(f"current_design {assay}")
 
 # Function to create io_constraints.tcl
-def io_file(assay, platform, num_samples, soln_dict):
+def io_file(assay, platform, num_samples):
     pin_str = ""
     f1 = 1050
     f2 = 660
@@ -177,7 +182,6 @@ def io_file(assay, platform, num_samples, soln_dict):
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(f"{pin_str}")
-
 
 # Function to create simulation.config and eval.config
 def sim_eval_files(assay, platform, soln_dict, ratio_dict):

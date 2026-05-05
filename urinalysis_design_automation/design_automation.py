@@ -66,14 +66,9 @@ def init_mix(num_samples, length_dict):
             turn_list[key_num][0] = max_turn
         # Calculate actual px length versus expected
         actual_px_len = calc_px_len(px_int, turn_list[key_num][0], layer_list[key_num][0], pitch_list[key_num][0])
-        # print("Actual px len", actual_px_len)
         actual_px_len_list.append(actual_px_len)
         error_val = error_calc((px_len * mult_factor), actual_px_len)
-        # print("Percent error: ", error_val)
         key_num += 1
-    # print("Expected px length list", expect_px_len_list) 
-    # print("Actual px length list", actual_px_len_list)   
-    # print("Actual len list", actual_len_list)
     chan_vol, reg_vol = volume(expect_px_len_list)
     return len_list, layer_list, pitch_list, turn_list, chan_vol, reg_vol
 
@@ -83,7 +78,6 @@ def calc_px_len(len, turn, layer, pitch):
     actual_px_len += pitch * turn
     actual_px_len *= (layer + 1)
     # Account for double counted corners
-    ### CHECK WIDTH OF CHANNEL IN PIXELS
     actual_px_len -= 14 * turn * 2 * (layer + 1)
     return actual_px_len
 
@@ -173,31 +167,52 @@ wire\t{connect}\n
     """)
 
 # Function for displaying concentration results from Chem_Eval.csv
-def con_results(assay):
+import csv
+
+def con_results(assay, num_samples):
     error_list = []
     expect_conc = []
     eval_conc = []
-    table_str = f"\n"
+
+    table_str = "\n"
     table_str += "-" * 65
     table_str += f"\n|{assay.upper().center(63)}|\n"
     table_str += "-" * 65
     table_str += f"\n| SAMPLES/REAGENTS | EXPECTED CON. | EVALUATED CON. | ERROR [%] |\n"
     table_str += "-" * 65
-    csv_file_path = f"flow/results/{assay}/base/simulation/Chem_Eval.csv"
-    with open(csv_file_path, mode="r", newline="") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            table_str += f"\n|{row['Chemical'].center(18)}|"\
-            f"{str(round(float(row['Expected Conc']), 5)).center(15)}|"\
-            f"{str(round(float(row['Eval Conc']), 5)).center(16)}|"
-            percent_error = "{:.2f}".format(round(float(row['Error']), 4) * 100)
-            table_str += percent_error.center(11) + "|"
-            error_list.append(float(row['Error']))
-            expect_conc.append(float(row['Expected Conc']))
-            eval_conc.append(float(row['Eval Conc']))
-    table_str += f"\n"
-    table_str += "-" * 65
-    return table_str, error_list, expect_conc, eval_conc 
+
+    base_path = f"flow/results/{assay}/base"
+    paths = [
+        f"{base_path}/Chem_Eval.csv",
+        f"{base_path}/simulation/Chem_Eval.csv",
+    ]
+
+    for path in paths:
+        try:
+            with open(path, mode="r", newline="") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    table_str += f"\n|{row['Chemical'].center(18)}|"\
+                    f"{str(round(float(row['Expected Conc']), 5)).center(15)}|"\
+                    f"{str(round(float(row['Eval Conc']), 5)).center(16)}|"
+
+                    percent_error = "{:.2f}".format(round(float(row['Error']), 4) * 100)
+                    table_str += percent_error.center(11) + "|"
+
+                    error_list.append(float(row['Error']))
+                    expect_conc.append(float(row['Expected Conc']))
+                    eval_conc.append(float(row['Eval Conc']))
+            break
+
+        except FileNotFoundError:
+            continue
+    else:
+        table_str += f"\n|{'CSV FILE NOT FOUND'.center(63)}|"
+        table_str += f"\n" + "-" * 65
+        return table_str, [10 for _ in range(num_samples)], [], []
+
+    table_str += f"\n" + "-" * 65
+    return table_str, error_list, expect_conc, eval_conc
 
 # Function for replacing serpentine information in specified file(s)
 def edit_file(filename, num_samples, serp_num, old_serp, new_serp, max_x, zero):
@@ -235,36 +250,14 @@ def edit_file(filename, num_samples, serp_num, old_serp, new_serp, max_x, zero):
     # if 0 < len(set(y_pos)) < num_samples:
     for i in range(len(y_pos)):
         width_x_i, width_y_i = calc_width(i, serp_ls, x_pos)
-        print("Wdith_x_iu", int(width_x_i))
         if int(width_x_i) > x_coord and num_samples == 4:
-                # print("OUT of BOUNDS")
-                # print("(width_x_i)", int(width_x_i))
-                # add_px_x = (int(width_x_i) - x_coord) + 20000 
-                # print("add_px_x", add_px_x)
-                # print("int(x_pos[i]) - add_px_x", int(x_pos[i]) - add_px_x)
-                # edit_file(filename, num_samples, f"serp{j}", f"( {x_pos[i]}", f"( {int(x_pos[i]) - add_px_x}", max_x, zero)
-                # time.sleep(5)
                 edit_file(filename, num_samples, serp_num, old_serp, new_serp, max_x, True)
         for j in range(len(y_pos)):
             width_x_j, width_y_j = calc_width(j, serp_ls, x_pos)
-            print("Wdith_x_iu", int(width_x_i))
             if int(width_x_i) > max_x:
                 max_x = int(width_x_i)
             if i != j:
-                print("I: ", i)
-                print("J: ", j)
-                print("x_pos[i] <= x_pos[j]", int(x_pos[i]) <= int(x_pos[j]))
-                print("x_pos[i]: ", x_pos[i])
-                print("x_pos[j]: ", x_pos[j])
-                print("x_pos[j] <= width_x_i", int(x_pos[j]) <= int(width_x_i))
-                print("width_x_i: ", int(width_x_i))
-                print("((int(y_pos[i]) - width_y_i) <= int(y_pos[j]) <= (int(y_pos[i]) + width_y_i) or (int(y_pos[j]) - width_y_j) <= int(y_pos[i]) <= (int(y_pos[j]) + width_y_j))", ((int(y_pos[i]) - width_y_i) <= int(y_pos[j]) <= (int(y_pos[i]) + width_y_i) or (int(y_pos[j]) - width_y_j) <= int(y_pos[i]) <= (int(y_pos[j]) + width_y_j)))
-                print("y_pos[i]: ", y_pos[i])
-                print("y_pos[j]: ", y_pos[j])
-                print("width_y_i", width_y_i)
-                print(f"\n\n\n")
                 if (int(x_pos[i]) <= int(x_pos[j])) and (int(x_pos[j]) <= int(width_x_i)) and ((int(y_pos[i]) - width_y_i) <= int(y_pos[j]) <= (int(y_pos[i]) + width_y_i) or (int(y_pos[j]) - width_y_j) <= int(y_pos[i]) <= (int(y_pos[j]) + width_y_j)): 
-                    time.sleep(5)
                     if serp_ls[i].split("_")[3] > serp_ls[j].split("_")[3]:
                         px_add = serp_ls[i].split("_")[3]
                     else:
@@ -274,45 +267,15 @@ def edit_file(filename, num_samples, serp_num, old_serp, new_serp, max_x, zero):
                         add_px_x = (int(width_x_i) - int(x_pos[i])) + 120000
                         if int(x_pos[j]) + add_px_x >= x_coord - 100000:
                             if int(x_pos[j]) - add_px_x < 0:
-                                print("x_pos[j]", int(x_pos[j]))
-                                print("0", 0)
-                                time.sleep(2)
                                 edit_file(filename, num_samples, f"serp{j}", f"( {x_pos[j]}", "( 0", max_x, zero)
                             else:
-                                print("x_pos[j]", int(x_pos[j]))
-                                print("add_px_x", add_px_x)
-                                print("int(x_pos[j]) - add_px_x", int(x_pos[j]) - add_px_x)
-                                time.sleep(2)
                                 edit_file(filename, num_samples, f"serp{j}", f"( {x_pos[j]}", f"( {int(x_pos[j]) - add_px_x}", max_x, zero)
                         else:
-                            print("x_pos[j]", int(x_pos[j]))
-                            print("add_px_x", add_px_x)
-                            print("int(x_pos[j]) + add_px_x", int(x_pos[j]) + add_px_x)
-                            time.sleep(2)
                             edit_file(filename, num_samples, f"serp{j}", f"( {x_pos[j]}", f"( {int(x_pos[j]) + add_px_x}", max_x, zero)
                     else:
-                        print("y_pos[j]", int(y_pos[j]))
-                        print("add_px_y", add_px_y)
-                        print("{int(y_pos[j]) + add_px_y}", int(y_pos[j]) + add_px_y)
-                        time.sleep(2)
                         edit_file(filename, num_samples, f"serp{j}", f" {y_pos[j]} )", f" {int(y_pos[j]) + add_px_y} )", max_x, zero)      
     return max_x    
 
-    # # Working check for serpentines that share same ypos
-    # if 0 < len(set(y_pos)) < num_samples:
-    #     for i in range(len(y_pos) - 1):
-    #         for j in range(len(y_pos)-1):
-    #             width_x, width_y = calc_width(i, serp_ls, x_pos)
-    #             if i != j:
-    #                 if x_pos[i] < x_pos[j] and width_x >= x_pos[j] and (int(y_pos[i]) - width_y) <= int(y_pos[j]) <= (int(y_pos[i]) + width_y):  
-    #                     if serp_ls[i].split("_")[3] > serp_ls[j].split("_")[3]:
-    #                         px_add = serp_ls[i].split("_")[3]
-    #                     else:
-    #                         px_add = serp_ls[j].split("_")[3]
-    #                     add_px_y = int(px_add + '000') + 120000
-    #                     edit_file(filename, num_samples, f"serp{j}", f"{y_pos[j]}", f"{int(y_pos[j]) + add_px_y}", max_x, zero)
-
-    
 # Function to calculate x_pos + width of serpentine
 def calc_width(i, serp_ls, x_pos):
     width_x = int(serp_ls[i].split("_")[4]) * (int(serp_ls[i].split("_")[5]) + 1)
@@ -323,7 +286,6 @@ def calc_width(i, serp_ls, x_pos):
 def update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero):
     # Edit .def and .v files
     def_file = f"flow/results/{assay}/base/2_place.def"
-    # def_file = f"flow/results/{assay}/base/2_2_place_iop.def"
     verilog_file = f"flow/designs/src/{assay}/{assay}.v"
     
     max_x = edit_file(def_file, num_samples, serp_num, old_serp, new_serp, 0, zero)
@@ -334,28 +296,23 @@ def update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero):
     result = subprocess.run(command, shell=True)
 
     # Print results
-    table_str, error_list, expect_conc, eval_conc = con_results(assay)
+    table_str, error_list, expect_conc, eval_conc = con_results(assay, num_samples)
     print(table_str)
     return error_list, expect_conc, eval_conc, result, max_x
 
 # Function to perform Newton-Raphson method on number of turns
 def newton_method(i, assay, num_samples, len_list, layer_list, pitch_list, turn_list, eval_conc, error_condition, eval_list, count, old_error, max_x, zero):
-    ### NEED TO CHECK FOR ERROR CONDITION IN NEWTON-RAPHSON?
     serp_num = f"serp{i}"
     count += 1
-    table_str, error_list, expect_conc, eval_conc = con_results(assay)
+    table_str, error_list, expect_conc, eval_conc = con_results(assay, num_samples)
     eval_list.append(eval_conc[i])
     if eval_conc[i] > expect_conc[i]:
         old_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{turn_list[i][len(turn_list[i])-1]}"
         while eval_conc[i] > expect_conc[i]:
             if turn_list[i][len(turn_list[i])-1] >= max_turn or turn_list[i][len(turn_list[i])-1] * 2 >= max_turn:
                 if layer_list[i][len(turn_list[i])-1] == 3:
-                    #### MAY NEED TO REVISIT 
                     a = turn_list[i][len(turn_list[i])-1]
                     b = max_turn
-                    print("A", a)
-                    print("B", b)
-                    time.sleep(5)
                     turn_list[i][len(turn_list[i])-1] = b
                     new_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{turn_list[i][len(turn_list[i])-1]}"
                     error_list, expect_conc, eval_conc, result, max_x = update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
@@ -379,8 +336,6 @@ def newton_method(i, assay, num_samples, len_list, layer_list, pitch_list, turn_
                     layer_list[i][len(turn_list[i])-1] += 1
                     b = 41
                 else: 
-                    # b = turn_list[i][len(turn_list[i])-1]
-                    # b -= 2
                     b = 41
                 turn_list[i][len(turn_list[i])-1] = b
                 new_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{turn_list[i][len(turn_list[i])-1]}"
@@ -453,7 +408,7 @@ def error_diff(old_error, new_error):
 def min_error(i, len_list, layer_list, pitch_list, turn_list, error_condition, assay, num_samples, recurv_count, platform, length_dict, old_error, start_time, error_list_stored, max_x):
     end_time = time.time()
     # Display results
-    table_str, error_list, expect_conc, eval_conc = con_results(assay)
+    table_str, error_list, expect_conc, eval_conc = con_results(assay, num_samples)
     # print(table_str)
     # Store best design 
     if max(error_list) < max(error_list_stored):
@@ -476,11 +431,6 @@ def min_error(i, len_list, layer_list, pitch_list, turn_list, error_condition, a
             # or error_calc(old_error, error_list[j]) * 100 <= error_diff_condition:
                 continue
             else:
-                # if error_list[j] * 100 <= 10 and error_list == error_list_stored:
-                #     recurv_count += 1
-                #     if recurv_count > 200:
-                #         return 
-                # else:
                 break 
     # Exit error minimiation after 30 min 
     if end_time - start_time > cutoff_time:
@@ -503,7 +453,7 @@ def min_error(i, len_list, layer_list, pitch_list, turn_list, error_condition, a
         result = subprocess.run(command, shell=True)
 
         # Print results
-        table_str, error_list, expect_conc, eval_conc = con_results(assay)
+        table_str, error_list, expect_conc, eval_conc = con_results(assay, num_samples)
         print(f"AFTER {cutoff_time/60} MINUTES")
         print(table_str)
         return error_list, opt_time, max_x
@@ -526,3 +476,4 @@ def min_error(i, len_list, layer_list, pitch_list, turn_list, error_condition, a
         recurv_count = 0
     error_list, opt_time, max_x = min_error(i, len_list, layer_list, pitch_list, turn_list, error_condition, assay, num_samples, recurv_count, platform, length_dict, error_list[i], start_time, error_list_stored, max_x)
     return error_list, opt_time, max_x
+
