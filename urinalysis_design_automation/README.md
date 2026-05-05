@@ -14,5 +14,5 @@ To replicate the urinalysis suite and class of continuous-flow, pressure driven 
 
 From the command line, call 'python3 main.py' to run OpenMFDA+. The user will be presented with different prompts about their assay from which a design will be automated. 
 
-The urinalysis suite assay information (as automated in publication) is listed in 'urinalysis_dicts.py". Likewise, OpenMFDA+ benchmark assays are found in 'test_dicts.py'.
+The urinalysis suite assay information (as automated in publication) is listed in 'urinalysis_dicts.py'. Likewise, OpenMFDA+ benchmark assays are found in 'test_dicts.py'.
 
