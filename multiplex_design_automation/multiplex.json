@@ -1,0 +1,83 @@
+{
+"albumin":{
+    "num_samples": 4,
+    "input_dict": {
+            "sample":6e-6, 
+            "R1":215e-6,
+            "R2":225e-6,
+            "H2O":10e-6
+        }
+    },
+
+"caffeine": {
+    "num_samples": 3,
+    "input_dict": {
+            "sample":3e-6, 
+            "R1":162e-6,
+            "R2":162e-6
+        }
+    },
+
+"calcium": {
+    "num_samples": 3,
+    "input_dict": {
+            "sample":2e-6, 
+            "R1":25e-6,
+            "H2O":225e-6
+        }
+    },
+
+"cocaine": {
+    "num_samples": 3,
+    "input_dict": {
+            "sample":9e-6, 
+            "R1":130e-6,
+            "R2":55e-6
+        }
+    },
+
+"ethyl": {
+    "num_samples": 3,
+    "input_dict": {
+            "sample":4e-6, 
+            "R1":210e-6,
+            "R2":90e-6
+        }
+    },
+
+"ketone": {
+    "num_samples": 2,
+    "input_dict": {
+            "sample":50e-6, 
+            "R1":50e-6
+        }
+    },
+
+"nitrite": {
+    "num_samples": 3,
+    "input_dict": {
+            "sample":100e-6, 
+            "R1":50e-6,
+            "R2":50e-6
+        }
+    },
+
+"salicylic_acid": {
+    "num_samples": 4,
+    "input_dict": {
+            "sample":3e-6, 
+            "R1":150e-6,
+            "R2":75e-6,
+            "H2O":10e-6
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
