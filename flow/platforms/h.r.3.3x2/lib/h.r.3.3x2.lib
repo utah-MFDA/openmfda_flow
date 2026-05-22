@@ -1,0 +1,59 @@
+    library ("mfda_30px") {
+        technology("cmos");
+        delay_model : "table_lookup";
+        bus_naming_style : "%s[%d]";
+        time_unit : "1ns";
+        voltage_unit : "1V";
+        leakage_power_unit : "1nW";
+        current_unit : "1mA";
+        pulling_resistance_unit : "1kohm";
+        capacitive_load_unit(1.0000000000, "pf");
+        revision : 1.0000000000;
+        default_cell_leakage_power : 0.0000000000;
+        default_fanout_load : 0.0000000000;
+        default_inout_pin_cap : 0.0000000000;
+        default_input_pin_cap : 0.0000000000;
+        default_max_transition : 1.0000000000;
+        default_output_pin_cap : 0.0000000000;
+        default_leakage_power_density : 0.0000000000;
+        default_operating_conditions : "typ";
+        operating_conditions ("typ") {
+            voltage : 1.8000000000;
+            process : 1.0000000000;
+            temperature : 25.000000000;
+            tree_type : "balanced_tree";
+        }
+        library_features("report_delay_calculation");
+        voltage_map("VPWR", 1.8000000000);
+        voltage_map("VPB", 1.8000000000);
+        voltage_map("VNB", 0.0000000000);
+        voltage_map("VGND", 0.0000000000);
+        voltage_map("KAPWR", 1.8000000000);
+        voltage_map("KAGND", 0.0000000000);
+        in_place_swap_mode : "match_footprint";
+        input_threshold_pct_fall : 50.000000000;
+        input_threshold_pct_rise : 50.000000000;
+        nom_process : 1.0000000000;
+        nom_temperature : 25.000000000;
+        nom_voltage : 1.8000000000;
+        output_threshold_pct_fall : 50.000000000;
+        output_threshold_pct_rise : 50.000000000;
+        simulation : "true";
+        slew_derate_from_library : 1.0000000000;
+        slew_lower_threshold_pct_fall : 20.000000000;
+        slew_lower_threshold_pct_rise : 20.000000000;
+        slew_upper_threshold_pct_fall : 80.000000000;
+        slew_upper_threshold_pct_rise : 80.000000000;
+
+        cell("route_test") {
+            pin ("in") {
+                capacitance : 0.0;
+                direction : "input";
+            }
+            pin ("out") {
+                capacitance : 0.0;
+                direction : "output";
+
+            }
+        }
+    }
