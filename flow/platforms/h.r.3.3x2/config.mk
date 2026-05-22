@@ -1,0 +1,126 @@
+# MFDA Process Config
+
+#-----------------------------------------------------
+# Tech/Libs
+# ----------------------------------------------------
+export GENERAL_MAP_FILE = $(PLATFORM_DIR)/lib/common.v
+
+ifeq ($(BUILD_PDK_LIBRARY),)
+# General distribution files
+export GDS_FILES = $(sort $(wildcard $(PLATFORM_DIR)/gds/*.gds)) \
+                      $(ADDITIONAL_GDS)
+export TECH_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3x2.tlef
+export SC_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3x2_merged.lef
+
+export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3x2.lib \
+                     $(ADDITIONAL_LIBS)
+#export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/scad/components.scad
+export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3x2_merged.scad
+export SCAD_ROUTING_LIBRARY = $(PLATFORM_DIR)/scad/routing.scad
+else
+# Locally built distribution files
+#ROOT_DIR=$(PLATFORM_DIR)/pdk/Components
+ROOT_DIR=$(PLATFORM_DIR)/pdk
+include $(PLATFORM_DIR)/pdk/Componets/Makefile
+export LIBRARY_DEPS = $(SC_LEF) $(TECH_LEF) $(LIB_FILES) $(SCAD_COMPONENT_LIBRARY) $(SCAD_ROUTING_LIBRARY) $(GDS_FILES) $(XYCE_LIB)
+endif
+
+# # Dont use cells to ease congestion
+# # Specify at least one filler cell if none
+# export DONT_USE_CELLS =
+
+#--------------------------------------------------------
+# Floorplan
+# -------------------------------------------------------
+
+# Placement site for core cells
+# This can be found in the technology lef
+export PLACE_SITE = CoreSite
+
+# IO Placer pin layers
+export IO_PLACER_H = met3
+export IO_PLACER_V = met2
+
+# defaults specified here, override in local file as needed
+export DIE_AREA    	 	?= 0 0 5100 3180
+export CORE_AREA   	 	?= 0 0 5100 3180
+
+#---------------------------------------------------------
+# Place
+# --------------------------------------------------------
+
+export PLACE_PINS_ARGS = -min_distance 5 -min_distance_in_tracks
+
+# Cell padding in SITE widths to ease rout-ability.  Applied to both sides
+export CELL_PAD_IN_SITES_GLOBAL_PLACEMENT ?= 0
+export CELL_PAD_IN_SITES_DETAIL_PLACEMENT ?= 0
+
+export PLACE_DENSITY ?= 1
+
+# ---------------------------------------------------------
+#  Route
+# ---------------------------------------------------------
+
+# FastRoute options
+export MIN_ROUTING_LAYER = met1
+export MAX_ROUTING_LAYER = met8
+
+# Define fastRoute tcl
+export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
+
+# KLayout technology file
+export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
+
+# export SCAD_DESIGN_INCLUDE=$(PLATFORM_DIR)/pdk/Components/scad_use/lef_helper.scad \
+# 									 $(PLATFORM_DIR)/pdk/Components/scad_use/lef_scad_config.scad \
+# 									 $(PLATFORM_DIR)/pdk/Components/scad_use/polychannel_v2.scad
+
+export SCAD_DESIGN_INCLUDE = $(PLATFORM_DIR)/pdk/scad_include/polychannel_v2.scad \
+                             $(PLATFORM_DIR)/pdk/scad_include/lef_scad_config.scad \
+														 $(PLATFORM_DIR)/pdk/scad_include/lef_helper.scad
+
+export SCAD_LIB ?= $(PLATFORM_DIR)/pdk/scad_lib
+
+#------------------------------------------------------------------------------
+# PRINTER PARAMETERS
+#------------------------------------------------------------------------------s
+# mm/px value - xy resolution of printer 
+export PX_VAL 			= 0.0076
+# mm/layer value - keep same to start 
+export LAYER_VAL		= 0.01
+# layer number for the bottom layer - keep same to start
+export BOT_LAYER_VAL	= 75
+# layers/via value - keep same to start 
+export LPV_VAL			= 20
+# bulk x value in pixels - number of pixels printer has in x direction; printer bed size 
+export XBULK_VAL		= 5100
+# bulk y value in pixels - number of pixels printer has in y direction; printer bed size 
+export YBULK_VAL		= 3180
+# bulk z value in layers - number of pixels printer has in z direction; printer bed size 
+export ZBULK_VAL		= 230
+# chip min and max x values in pixels - arbitrary
+export XCHIP_VALS		= 325 2225
+# chip min and max y values in pixels - arbitrary 
+export YCHIP_VALS		= 325 1275
+# render smoothness in scad render - keep same to start, for rendering 
+export RES_VAL			= 120
+
+export PITCH            = 30
+# Default SCAD script arguments
+ifeq ($(SCAD_SCRIPT),../tools/scad_render/generator_v2.py)
+SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
+			--routing_file ${SCAD_ROUTING_LIBRARY} --scad_include $(SCAD_DESIGN_INCLUDE) \
+			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
+            --platform "$(PLATFORM)" \
+            --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
+            --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
+            --pitch $(PITCH) --res $(RES_VAL)
+else
+SCAD_ARGS = --component_file ${SCAD_COMPONENT_LIBRARY} \
+			--routing_file ${SCAD_ROUTING_LIBRARY} \
+			--lef_file ${SC_LEF} ${ADDITIONAL_LEFS} --tlef_file ${TECH_LEF} \
+            --platform "$(PLATFORM)" \
+            --px $(PX_VAL) --layer $(LAYER_VAL) --bottom_layer $(BOT_LAYER_VAL) --lpv $(LPV_VAL) --xbulk $(XBULK_VAL) \
+            --ybulk $(YBULK_VAL) --zbulk $(ZBULK_VAL) --xchip $(XCHIP_VALS) --ychip $(YCHIP_VALS) \
+            --pitch $(PITCH) --res $(RES_VAL)
+endif
