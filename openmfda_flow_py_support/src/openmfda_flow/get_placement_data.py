@@ -12,6 +12,9 @@ from PIL import Image, ImageDraw
 import logging
 import os
 
+GLOBAL_PL = ["gp", "global", "global place"]
+DETAIL_PL = ["dp", "detail", "detail place"]
+
 
 def load_lefs():
     return component_parse.ComponentParser().get_comp_pins_from_lef()
@@ -21,7 +24,8 @@ def get_placement_data(
         results_dir_root,
         design,
         design_varient="base",
-        placement_step='both'
+        placement_step='both',
+        placement_data=None # possible rm
 ):
 
     print(f"looking for file in {os.getcwd()}/{results_dir_root}")

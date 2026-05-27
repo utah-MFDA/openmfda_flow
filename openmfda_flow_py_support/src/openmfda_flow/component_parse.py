@@ -69,6 +69,8 @@ t_ignore_COMMENT = r"\#+.*"
 
 lexer = lex.lex()
 
+silent = True
+
 
 def p_in_file(p):
     """in_file : in_file macro
@@ -104,7 +106,8 @@ def p_in_file(p):
         elif p[2] is None:
             p[0] = p[1]
         else:
-            print(f"Parsing macro: {list(p[2].keys())[0]}")
+            if not silent:
+                print(f"Parsing macro: {list(p[2].keys())[0]}")
             p[0] = p[1] | p[2]
 
 
@@ -368,7 +371,7 @@ class ComponentParser:
         # for c in p_out.items():
         # print(c[0], c[1].values())
 
-    def get_comp_pins_from_lef(self, in_file, scale=1):
+    def get_comp_pins_from_lef(self, in_file, scale=1, silent=False):
         par_f = self.parser_multi_file(in_file)
         if len(par_f) == 0:
             raise Exception(f"No macros in file: '{in_file}'")
@@ -390,9 +393,42 @@ class ComponentParser:
                     # for p in pin[1]["PORT"]["RECT"]
                     # ]
                 }
-            print("SIZE:", [i * scale for i in c[1]["SIZE"]])
-            c_list[c[0]] = Component(c[0], pins, [i * scale for i in c[1]["SIZE"]])
+            if not silent:
+                print("SIZE:", [i * scale for i in c[1]["SIZE"]])
+            c_list[c[0]] = Component(
+                c[0], pins, [i * scale for i in c[1]["SIZE"]])
         return c_list
+
+    def print_lef(self, lef_name, lef_prop, lef_type="MACRO"):
+        return f"""{lef_type} {lef_name}
+  CLASS {lef_prop['CLASS']} ;
+  ORIGIN {' '.join(lef_prop['ORIGIN'])} ;
+  FOREIGN {lef_prop['FOREIGN']} ;
+  SIZE {' '.join(lef_prop['SIZE'])} ;
+  SYMMETRY {' '.join(list(lef_prop['SYMMETRY']))} ;
+  SITE {lef_prop['SITE']} ;
+""" + ''.join([f"""  PIN {p[0]}
+    DIRECTION {p[1]['DIRECTION']} ;
+    USE {p[1]['USE']} ;
+    PORT
+      LAYER {p[1]['PORT']['LAYER']} ;
+        RECT {' '.join(p[1]['PORT']['RECT'][0] + p[1]['PORT']['RECT'][1])} ;
+    END
+  END
+""" for p in lef_prop['PIN'].items()]) + """  OBS
+""" + ''.join([f"""    LAYER {obs['LAYER']} ;
+      RECT  {obs['RECT'][0].join(' ') + obs['RECT'][1].join(' ')} ;""" for obs in lef_prop['OBS']]) + f"""
+  END
+  PROPERTY 'CatenaDesignType' {lef_prop['CatenaDesignType']}
+END {lef_name}
+"""
+
+    def write_lef_out(self, out_file, lefs, lef_macro=None):
+        with open(out_file, 'w+') as ot_file:
+            for lf in lefs.items():
+                name = lf[0]
+                props = lf[1]
+                ot_file.write(self.print_lef(name, props))
 
 
 class Component:
@@ -402,12 +438,12 @@ class Component:
         self.pins = pins
         self.size = size
 
-    def get_component_center(self, pos=[0,0]):
+    def get_component_center(self, pos=[0, 0]):
         return [
             sum(self.size[0::2])/(len(self.size)/2) + pos[0],
             sum(self.size[1::2])/(len(self.size)/2) + pos[1]]
 
-    def get_pin_center(self, pin_name, pos=[0,0], orient="N"):
+    def get_pin_center(self, pin_name, pos=[0, 0], orient="N"):
         p = self.pins[pin_name]["pos"]
         return [sum(p[0::2])/(len(p)/2), sum(p[1::2])/(len(p)/2)]
 

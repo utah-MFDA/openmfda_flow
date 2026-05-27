@@ -750,6 +750,7 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                     print(self.to_string_probes())
                                     self.build()
                                     try:
+                                        # replace "render" with "scad" ?
                                         self.run_flow(
                                             mk_targets=[
                                                 "pnr", "render", "simulate"]
@@ -997,6 +998,7 @@ set global_place_args "$global_place_args -bin_grid_count $bin_grid_count {bs}
                                         self.write_replace_config(
                                             replace_config_loc)
                                     try:
+                                        # replace "render" with "scad"?
                                         self.run_flow(
                                             mk_targets=[
                                                 "pnr", "render", "simulate"]
