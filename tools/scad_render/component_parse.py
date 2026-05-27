@@ -438,8 +438,8 @@ class Component:
                     new_pin_pos[p[0]]["pos"][i] = [
                         (self.size[0] - pt[0] + pos[0]) * rescale,
                         (pt[1] + pos[1]) * rescale,
-                        #(pt[0] + pos[0]) * rescale,
-                        #(self.size[1] - pt[1] + pos[1]) * rescale,
+                        # (pt[0] + pos[0]) * rescale,
+                        # (self.size[1] - pt[1] + pos[1]) * rescale,
                     ]
                 elif orient == "FS" or orient == "MX":
                     # MX
@@ -448,8 +448,8 @@ class Component:
                     new_pin_pos[p[0]]["pos"][i] = [
                         (pt[0] + pos[0]) * rescale,
                         ((self.size[1] - pt[1]) + pos[1]) * rescale,
-                        #((self.size[0] - pt[0]) + pos[0]) * rescale,
-                        #(pt[1] + pos[1]) * rescale,
+                        # ((self.size[0] - pt[0]) + pos[0]) * rescale,
+                        # (pt[1] + pos[1]) * rescale,
                     ]
                 elif orient == "S":
                     # R180
@@ -470,13 +470,12 @@ class Component:
             return True
         else:
             return False
-    
-    
+
     def dist_from_line(self, pt1, pt2, ch_pt):
-        return abs((pt2[1] - pt1[1])*ch_pt[0] - (pt2[0] - pt1[0])*ch_pt[1] + \
-            pt2[0]*pt1[1] - pt2[1]*pt1[0]) / \
+        return abs((pt2[1] - pt1[1])*ch_pt[0] - (pt2[0] - pt1[0])*ch_pt[1] +
+                   pt2[0]*pt1[1] - pt2[1]*pt1[0]) / \
             (sqrt((pt2[1] - pt1[1])**2 + (pt2[0] - pt1[0])**2))
-            
+
     def inside_pts(self, pt1, pt2, ch_pt):
         return ch_pt[0] < max(pt1[0], pt2[0]) and \
             ch_pt[0] > min(pt1[0], pt2[0]) and \
@@ -514,7 +513,7 @@ class Component:
         orient=None,
         layer=None,
         rescale=1,
-        err=0.1, # we need to add a channel width parameter
+        err=0.1,  # we need to add a channel width parameter
         silent=False
     ):
         ref_pins = self.get_pins_from_pos(pos, orient, rescale)
@@ -526,13 +525,13 @@ class Component:
                 return False, None, None
             # if self.is_pt_in_rect(pt, pt_pin, err):
             # checks center point # TODO develop more robust line through pin
-            if self.dist_from_line(segmt[0], segmt[1], 
-                    [
-                        pt_pin[0][0] + pt_pin[1][0]/2,
-                        pt_pin[0][1] + pt_pin[1][1]/2
-                        ]) < err \
+            if self.dist_from_line(segmt[0], segmt[1],
+                                   [
+                    pt_pin[0][0] + pt_pin[1][0]/2,
+                    pt_pin[0][1] + pt_pin[1][1]/2
+                ]) < err \
                     and self.inside_pts(segmt[0], segmt[1],
-                    [
+                                        [
                         pt_pin[0][0] + pt_pin[1][0]/2,
                         pt_pin[0][1] + pt_pin[1][1]/2
                     ]):

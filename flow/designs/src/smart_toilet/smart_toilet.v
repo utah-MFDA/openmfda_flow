@@ -2,12 +2,14 @@ module smart_toilet(
     soln1,
     soln2,
     soln3,
-    out_1,
-    out_2
+    out
+    //out_1,
+    //out_2
 );
 
 input   soln1, soln2, soln3;
-output  out_1, out_2;
+output  out ;
+//output  out_1, out_2;
 
 wire    connect01, connect02, connect0, connect1, connect2, connect3, connect5, connect6, connect31, connect32, connect33, connect34, connect35, connect36, connect37;
 

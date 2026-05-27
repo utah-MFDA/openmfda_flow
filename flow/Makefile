@@ -80,6 +80,7 @@ export FLOW_HOME ?= .
 export DESIGN_HOME   ?= $(FLOW_HOME)/designs
 export PLATFORM_HOME ?= $(FLOW_HOME)/platforms
 export WORK_HOME     ?= .
+export TOOL_HOME     ?= ../tools
 
 export UTILS_DIR     ?= $(FLOW_HOME)/util
 export SCRIPTS_DIR   ?= $(FLOW_HOME)/scripts
@@ -112,8 +113,9 @@ export DEF_FIX_UTIL = ../tools/route_scripts/util.mk
 include $(DESIGN_CONFIG)
 
 ifneq (,$(strip $(DISTRIB_V)))
-export TECH_LEF = ./platforms/$(PLATFORM)/lef/$(PLATFORM)_$(DISTRIB_V).tlef
-export SC_LEF   = ./platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_$(DISTRIB_V).lef
+export FLOW_DIR ?= ./
+export TECH_LEF ?= $(FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_$(DISTRIB_V).tlef
+export SC_LEF   ?= $(FLOW_DIR)/platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_$(DISTRIB_V).lef
 endif
 
 ifneq (,$(strip $(DESIGN_DIR)))
@@ -598,7 +600,6 @@ clean_simulate:
 ifneq ($(SIMULATION_CONFIG),)
 XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 
-#ifneq ($(SIMULATION_CONFIG),)
 .PHONY: xyce_run_config
 xyce_run_config: $(RESULTS_DIR)/xyce_run.config
 
@@ -622,15 +623,7 @@ $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIG
 		--length_file $(LENGTH_FILE) \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
 
-# --output_dir $(RESULTS_DIR) \
-# --length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv
 endif
-# =======
-# 		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
-# 		--length_file $(RESULTS_DIR)/$(DESIGN)_length.csv \
-# 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
-#endif
-#>>>>>>> main
 
 # ==============================================================================
 #  ____   ____    _    ____
@@ -651,14 +644,12 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
-# <<<<<<< HEAD
-# #$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
-# $(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
-# =======
+
 # additional pcell files to include
 
+# This needs to be moved to the platfrom implementation
 ifeq ($(SCAD_LIB),)
-SCAD_LIB = $(PLATFORM_DIR)/pdk/scad_lib
+SCAD_LIB ?= $(PLATFORM_DIR)/pdk/scad_lib
 endif
 
 ifneq ($(SCAD_INCLUDE_FILES),)
@@ -685,20 +676,31 @@ $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4
 # used for manual render of a system part way through OpenROAD
 
 ifneq ($(strip $(MANUAL_DEF)),)
-MANUAL_SCAD_RENDER = $(RESULTS_DIR)/manrend_$(notdir $(MANUAL_DEF)).scad
+MANUAL_DEF_RESULTS_DIR = $(dir $(MANUAL_DEF))
+MANUAL_SCAD_RENDER = $(MANUAL_DEF_RESULTS_DIR)/manrend_$(notdir $(MANUAL_DEF)).scad
 
 $(MANUAL_SCAD_RENDER): $(MANUAL_DEF) $(LIBRARY_DEPS)
-	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) $(PYTHON3) $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
-        --design ${DESIGN} \
+        --design $(DESIGN) \
 				--scad_out_file $(MANUAL_SCAD_RENDER) \
 				--scad_include $(SCAD_INCLUDE_FILES) \
-		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+		--results_dir "$(MANUAL_DEF_RESULTS_DIR)" 2>&1 | tee $@.log
+
+MANUAL_UADJ_DEF = $(MANUAL_DEF_RESULTS_DIR)/uadj_$(notdir $(MANUAL_DEF)).scad
+UADJ_SCRIPT = $(TOOL_HOME)/scad_render/route_scripts.py --uadj
+
+$(MANUAL_UADJ_DEF):
+	$(PYTHON3) $(UADJ_SCRIPT) \
+		--in_def $(MANUAL_DEF) \
+		--component_lefs $(SC_LEF) \
+		--results_file $(MANUAL_UADJ_DEF)
+
 endif
 
-.PHONY: manual_scad_render
+.PHONY: manual_scad_render manual_uadj
 manual_scad_render: $(MANUAL_SCAD_RENDER)
+manual_uadj: $(MANUAL_UADJ_DEF)
 
 $(RESULTS_DIR)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
 	openscad $< -o $@

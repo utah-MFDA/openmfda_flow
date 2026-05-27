@@ -860,7 +860,7 @@ def write_imports(
                 raise ValueError("No results directory")
             if scad_lib_dir == '.':
                 shutil.copy(
-                    cf,
+                    os.path.realpath(cf),
                     f"{results_dir}/{cf.split('/')[-1]}"
                 )
             else:

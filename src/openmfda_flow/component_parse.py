@@ -1,6 +1,7 @@
 import ply.lex as lex
 import ply.yacc as yacc
 
+from math import sqrt
 
 RESERVED = {
     "MACRO": "MACRO",
@@ -75,8 +76,8 @@ def p_in_file(p):
     | in_file lef_noimp
     | macro
     | lef_noimp"""
-    # | comment
     # | in_file comment
+    # | comment
     # | in_file NL
     # | NL"""
     # if p is None:
@@ -368,8 +369,15 @@ class ComponentParser:
         # for c in p_out.items():
         # print(c[0], c[1].values())
 
-    def get_comp_pins_from_lef(self, in_file, scale=1):
+    def get_comp_pins_from_lef(
+        self,
+        in_file,
+        scale=1,
+        silent=False
+    ):
         par_f = self.parser_multi_file(in_file)
+        if par_f is None:
+            return {}
         if len(par_f) == 0:
             raise Exception(f"No macros in file: '{in_file}'")
         c_list = {}
@@ -390,8 +398,9 @@ class ComponentParser:
                     # for p in pin[1]["PORT"]["RECT"]
                     # ]
                 }
-            print("SIZE:", [i * scale for i in c[1]["SIZE"]])
-            c_list[c[0]] = Component(c[0], pins, [i * scale for i in c[1]["SIZE"]])
+            #    print("SIZE:", [i * scale for i in c[1]["SIZE"]])
+            c_list[c[0]] = Component(
+                c[0], pins, [i * scale for i in c[1]["SIZE"]])
         return c_list
 
 
@@ -402,12 +411,12 @@ class Component:
         self.pins = pins
         self.size = size
 
-    def get_component_center(self, pos=[0,0]):
+    def get_component_center(self, pos=[0, 0]):
         return [
             sum(self.size[0::2])/(len(self.size)/2) + pos[0],
             sum(self.size[1::2])/(len(self.size)/2) + pos[1]]
 
-    def get_pin_center(self, pin_name, pos=[0,0], orient="N"):
+    def get_pin_center(self, pin_name, pos=[0, 0], orient="N"):
         p = self.pins[pin_name]["pos"]
         return [sum(p[0::2])/(len(p)/2), sum(p[1::2])/(len(p)/2)]
 
@@ -418,16 +427,19 @@ class Component:
         for p in self.pins.items():
             for i, pt in enumerate(p[1]["pos"]):
                 if orient == "N":
+                    # R0
                     new_pin_pos[p[0]]["pos"][i] = [
                         (pt[0] + pos[0]) * rescale,
                         (pt[1] + pos[1]) * rescale,
                     ]
-                elif orient == "FN":
+                elif orient == "FN" or orient == "MY":
+                    # MY
                     new_pin_pos[p[0]]["pos"][i] = [
                         (self.size[0] - pt[0] + pos[0]) * rescale,
                         (pt[1] + pos[1]) * rescale,
                     ]
-                elif orient == "FS":
+                elif orient == "FS" or orient == "MX":
+                    # MX
                     # print(pos)
                     # print(self.size[1], pt[1], self.size[1] - pt[1])
                     new_pin_pos[p[0]]["pos"][i] = [
@@ -435,6 +447,7 @@ class Component:
                         ((self.size[1] - pt[1]) + pos[1]) * rescale,
                     ]
                 elif orient == "S":
+                    # R180
                     new_pin_pos[p[0]]["pos"][i] = [
                         (self.size[0] - pt[0] + pos[0]) * rescale,
                         (self.size[1] - pt[1] + pos[1]) * rescale,
@@ -442,24 +455,46 @@ class Component:
 
         return new_pin_pos
 
-    def is_pt_in_rect(self, pt, rect, err=0.0):
+    def is_pt_in_rect(self, pt, rect, err=0.001):
         if (
-            pt[0] > rect[0][0] - err
-            and pt[0] < rect[1][0] + err
-            and pt[1] > rect[0][1] - err
-            and pt[1] < rect[1][1] + err
+            pt[0] > min(rect[0][0], rect[1][0]) - err
+            and pt[0] < max(rect[0][0], rect[1][0]) + err
+            and pt[1] > min(rect[0][1], rect[1][1]) - err
+            and pt[1] < max(rect[0][1], rect[1][1]) + err
         ):
             return True
         else:
             return False
 
+    def dist_from_line(self, pt1, pt2, ch_pt):
+        return abs((pt2[1] - pt1[1])*ch_pt[0] - (pt2[0] - pt1[0])*ch_pt[1] +
+                   pt2[0]*pt1[1] - pt2[1]*pt1[0]) / \
+            (sqrt((pt2[1] - pt1[1])**2 + (pt2[0] - pt1[0])**2))
+        # return abs((pt2[1] - pt1[1])*ch_pt[0] - (pt2[0] - pt1[0])*ch_pt[1] +
+        #            pt2[0]*pt1[1] - pt2[1]*pt1[0]) / \
+
+    def inside_pts(self, pt1, pt2, ch_pt):
+        return ch_pt[0] < max(pt1[0], pt2[0]) and \
+            ch_pt[0] > min(pt1[0], pt2[0]) and \
+            ch_pt[1] < max(pt1[1], pt2[1]) and \
+            ch_pt[1] < min(pt1[1], pt2[1])
+
     def is_pt_in_pins(
-        self, pt, pos=[0, 0], orient=None, layer=None, rescale=1, err=0.0
+        self,
+        pt,
+        pos=[0, 0],
+        orient=None,
+        layer=None,
+        rescale=1,
+        err=0.001,
+        silent=True
     ):
         ref_pins = self.get_pins_from_pos(pos, orient, rescale)
         for p in ref_pins.items():
-            print("Component pin:", p[0], p[1]["pos"])
-            if self.is_pt_in_rect(pt, p[1]["pos"], err):
+            pt_pin = p[1]["pos"]
+            if not silent:
+                print("Component pin:", p[0], p[1]["pos"])
+            if self.is_pt_in_rect(pt, pt_pin, err):
                 if layer is None:
                     return True, p[0]
                 elif isinstance(layer, str) and layer == p[1]["layer"]:
@@ -467,6 +502,43 @@ class Component:
                 else:
                     continue
         return False, None
+
+    def is_segmt_in_pins(
+        self,
+        segmt,
+        pos=[0, 0],
+        orient=None,
+        layer=None,
+        rescale=1,
+        err=0.1,  # we need to add a channel width parameter
+        silent=False
+    ):
+        ref_pins = self.get_pins_from_pos(pos, orient, rescale)
+        for p in ref_pins.items():
+            pt_pin = p[1]["pos"]
+            if not silent:
+                print("Component pin:", p[0], p[1]["pos"])
+            if isinstance(layer, str) and layer != p[1]["layer"]:
+                return False, None, None
+            # if self.is_pt_in_rect(pt, pt_pin, err):
+            # checks center point # TODO develop more robust line through pin
+            if self.dist_from_line(segmt[0], segmt[1],
+                                   [
+                pt_pin[0][0] + pt_pin[1][0]/2,
+                pt_pin[0][1] + pt_pin[1][1]/2
+            ]) < err \
+                    and self.inside_pts(segmt[0], segmt[1],
+                                        [
+                        pt_pin[0][0] + pt_pin[1][0]/2,
+                        pt_pin[0][1] + pt_pin[1][1]/2
+                    ]):
+                if layer is None:
+                    return True, p[0], pt_pin
+                elif isinstance(layer, str) and layer == p[1]["layer"]:
+                    return True, p[0], pt_pin
+                else:
+                    continue
+        return False, None, None
 
 
 #################### TESTING FUNCTIONS ###########################

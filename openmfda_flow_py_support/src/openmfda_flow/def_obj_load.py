@@ -5,6 +5,10 @@ import json
 import os
 import sys
 
+"""
+New implementation of parser
+"""
+
 # if __name__ != "__main__":
 #     import openmfda_flow.def_obj_grammer as def_grammer
 # else:
@@ -19,6 +23,9 @@ except ModuleNotFoundError:
         )
         import def_obj_grammer as def_grammer
 # import def_obj_grammer as def_grammer
+
+def read_def(def_file):
+    return Design.import_def(def_file)
 
 
 def write_def_header():

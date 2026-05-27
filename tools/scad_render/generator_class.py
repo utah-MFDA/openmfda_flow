@@ -986,7 +986,7 @@ class Component:
             y1=None,
             dir=None,
             conversion_factor=None
-                 ):
+    ):
 
         self.name = name
         self.comp = comp

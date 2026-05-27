@@ -1,6 +1,48 @@
 VERSION 5.7 ;
 BUSBITCHARS "[]" ;
 DIVIDERCHAR "/" ;
+
+MACRO valve_20px_1
+  CLASS CORE ;
+  ORIGIN 0 0 ;
+  FOREIGN valve_20px_1 0 0 ;
+  SIZE 120 BY 120 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_air
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 40.0 65.0 60.0 85.0 ;
+    END
+  END in_air
+  PIN out_air
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 30.0 15.0 60.0 35.0 ;
+    END
+  END out_air
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 16.0 40.0 15.0 60.0 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 65.0 40.0 85.0 60.0 ;
+    END
+  END out_fluid
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END valve_20px_1
  
 MACRO serpentine_100px_0
   CLASS CORE ;
@@ -511,6 +553,50 @@ MACRO directional_res_1000nl
   PROPERTY CatenaDesignType "deviceLevel" ;
 END directional_res_1000nl
 
+MACRO directional_res_2000nl
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN directional_res_2000nl 0 0 ;
+  SIZE 360 BY 150 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met8 ;
+        RECT 23 66 37 80 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 331 66 345 80 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 20 338 130 ;
+    LAYER met2 ;
+      RECT 30 20 338 130 ;
+    LAYER met3 ;
+      RECT 30 20 338 130 ;
+    LAYER met4 ;
+      RECT 30 20 338 130 ;
+    LAYER met5 ;
+      RECT 30 20 338 130 ;
+    LAYER met6 ;
+      RECT 30 20 338 130 ;
+    LAYER met7 ;
+      RECT 30 20 338 130 ;
+    LAYER met8 ;
+      RECT 30 20 338 130 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END directional_res_2000nl
+
 MACRO directional_res_400nl
   CLASS CORE ;
   ORIGIN  0 0 ;
@@ -770,7 +856,7 @@ MACRO valve_40px_1
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
-      LAYER met1 ;
+      LAYER met2 ;
         RECT 23 83 37 97 ;
     END
   END in_fluid
@@ -778,7 +864,7 @@ MACRO valve_40px_1
     DIRECTION OUTPUT ;
     USE SIGNAL ;
     PORT
-      LAYER met1 ;
+      LAYER met2 ;
         RECT 143 83 157 97 ;
     END
   END out_fluid
@@ -786,7 +872,7 @@ MACRO valve_40px_1
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
-      LAYER met3 ;
+      LAYER met4 ;
         RECT 83 23 97 37 ;
     END
   END in_air
@@ -794,16 +880,16 @@ MACRO valve_40px_1
     DIRECTION OUTPUT ;
     USE SIGNAL ;
     PORT
-      LAYER met3 ;
+      LAYER met4 ;
         RECT 83 143 97 157 ;
     END
   END out_air
   OBS
-    LAYER met1 ;
-      RECT 30 30 150 150 ;
     LAYER met2 ;
       RECT 30 30 150 150 ;
     LAYER met3 ;
+      RECT 30 30 150 150 ;
+    LAYER met4 ;
       RECT 30 30 150 150 ;
   END
   PROPERTY CatenaDesignType "deviceLevel" ;

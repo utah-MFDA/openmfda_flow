@@ -13,6 +13,8 @@ ifeq ($(BUILD_PDK_LIBRARY),)
 export TECH_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3.tlef
 export SC_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
 
+export XYCE_LIB ?= $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so
+
 # lib file is not required
 #export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      #$(ADDITIONAL_LIBS)

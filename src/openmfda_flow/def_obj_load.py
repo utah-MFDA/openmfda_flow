@@ -12,6 +12,7 @@ if os.path.abspath(__file__) in sys.path:
     sys.path.append(os.path.abspath(__file__))
 try:
     import def_obj_grammer as def_grammer
+    from route_scripts import link_routes2
 except ModuleNotFoundError:
     if os.path.abspath(os.path.dirname(__file__)) not in sys.path:
         sys.path.append(
@@ -21,22 +22,173 @@ except ModuleNotFoundError:
 # import def_obj_grammer as def_grammer
 
 
+def read_def(def_file):
+    if not os.path.exists(def_file):
+        raise FileNotFoundError(f"File {def_file} not found.")
+    def_d = Design().import_def(def_file)
+    return def_d
+
+
 def write_def_header():
     return """VERSION 5.8 ;
 DIVIDERCHAR "/" ;
 BUSBITCHARS "[]" ;"""
 
 
-class Def_Graph:
-    def __init__(self):
-        self.graph = None
+class Def_Graph(nx.Graph):
+    class component_node:
+        def __init__(
+                self,
+                comp_inst,
+                comp_name,
+                comp_ports=None):
+            name = comp_name
+            cinst = comp_inst
+            ports = {}
+            if comp_ports is not None:
+                pass
 
-    def set_graph(self, graph):
-        self.graph = graph
+    class net_node:
+        def __init__(self):
+            pass
 
-    def get_graph(self):
-        return self.graph
+    def __init__(self, def_design=None):
+        self.design_name = ''
+        super().__init__(self)
 
+    def import_def_design_obj(self, def_design):
+
+        # we assume the name of the design is not passed
+        if isinstance(def_design, dict):
+            design = def_design['design'][
+                list(def_design['design'].keys())[0]
+            ]
+        elif isinstance(def_design, Design):
+            design = def_design
+
+        if not isinstance(design, Design):
+            raise ValueError("Incorrect import object")
+
+        # add pins
+        for pin in design.pins.values():
+            self.add_nodes_from([
+                (pin.pin_name, {
+                    "net": pin.pin_net,
+                    "direction": pin.dir,
+                    "pin_use": pin.use,
+                    "size": [pin.size[0], pin.size[1]],
+                    "layer": pin.size[2],
+                    "pos": pin.pos,
+                    "node_type": "PIN",
+                    "pin_is_net": (pin.pin_name == pin.pin_net)
+                })
+            ])
+
+        # add component nodes
+        for comp in design.components.values():
+            self.add_node(
+                comp.instance_name,
+                comp_type=comp.component_type,
+                is_placed=comp.is_placed,
+                pos=comp.pos,
+                orientation=comp.orientation,
+                node_type="COMPONENT"
+            )
+
+        # nets with
+        for net in design.nets.values():
+            if net.net_name not in self.nodes:
+                self.add_node(
+                    net.net_name,
+                    segments=[
+                        [s.pt1, s.pt2, s.layer]
+                        for s in net.net_segments
+                    ],
+                    components=net.net_components if net.net_components != "PIN" else net.net_name,
+                    node_type="NET"
+                )
+            else:
+                self.nodes[net.net_name]['segments'] = [
+                    [s.pt1, s.pt2, s.layer]
+                    for s in net.net_segments
+                ]
+                self.nodes[net.net_name]['components'] = net.net_components
+                self.nodes[net.net_name]["pin_is_net"] = True
+            self.add_edges_from([
+                (net.net_name, c) for c in net.net_components.keys() if c != "PIN"
+            ])
+
+    def convert_segments(self, via_map):
+        for net in self.get_nets():
+            net_obj = self.nodes[net]
+            for ind, seg in enumerate(net_obj['segments']):
+                if isinstance(seg[1], str) and seg[1] in via_map:
+                    via_mets = via_map[seg[1]]
+                    net_obj['segments'][ind] = [
+                        seg[0] + [via_mets[0]],
+                        seg[0] + [via_mets[1]]
+                    ]
+                else:
+                    net_obj['segments'][ind] = [
+                        seg[0] + [seg[2]],
+                        seg[1] + [seg[2]]
+                    ]
+
+    def get_node_type(self, nd_filter):
+        return [nd for nd in self.nodes if self.nodes[nd]['node_type'] == nd_filter]
+
+    def get_pins(self):
+        return self.get_node_type('PIN')
+
+    def get_components(self):
+        return self.get_node_type('COMPONENT')
+
+    def get_nets(self, wo_pins=False):
+        if wo_pins:
+            return self.get_node_type('NET')
+        else:
+            return self.get_node_type('NET') + [p for p in self.get_pins() if self.nodes[p]['pin_is_net']]
+
+    """
+    This function will reorder the routing segments to link with eachother
+        then add nested graphs within to reflect the sub nets of the
+        subsegments
+    """
+
+    def link_routes(self,
+                    comp_lef=None,
+                    px_sz=1,
+                    def_scale=1000,
+                    pt_err=1e-2,
+                    calc_len=False
+                    ):
+        for net in self.get_nets():
+            net_obj = self.nodes[net]
+
+            devs = {}
+
+            self.nodes[net]['route'] = link_routes2(
+                route=net_obj['segments'],
+                route_devs=net_obj['components'],
+                design=self.design_name,
+                full_component_list=[self.nodes[c]
+                                     for c in self.get_components()],
+                components_lef=comp_lef,
+                pin_list={p: self.nodes[p] for p in self.get_pins()},
+                def_scale=def_scale,
+                px_sz=px_sz,
+                pt_err=pt_err,
+                silent=True
+            )
+
+            if len(self.nodes[net]['route'].nodes) > 1:
+                for nd in self.nodes[net]['route']:
+                    pass
+            else:
+                pass
+
+
+# ===============
 
 class Design:
     def __init__(self, design_name=''):
@@ -57,6 +209,9 @@ class Design:
             parser = def_grammer.import_def_parser()
             with open(def_file, "r") as in_def:
                 return Def_transformer().transform(parser.parse(in_def.read()))
+        else:
+            raise FileNotFoundError(
+                f"Def file {os.path.realpath(def_file)} not found.")
 
     def add_row(self, new_row):
         pass
@@ -310,7 +465,7 @@ class Pin:
 
 
 class Net:
-    class segement:
+    class segment:
         def __init__(self, layer, pt1, pt2, is_via=False, init_segment=False):
             self.layer = layer
             self.pt1 = pt1
@@ -333,8 +488,21 @@ class Net:
 
     def __init__(self, net_name):
         self.net_name = net_name
+        #TODO link component to obj in net in generation
         self.net_components = {}
         self.net_segments = []
+
+    def get_segments(self, list_out=False):
+        if list_out:
+            l_out = []
+            for s in self.net_segments:
+                if isinstance(s.pt2, str):
+                    l_out.append([s.pt1 + [s.layer], s.pt2])
+                else:
+                    l_out.append([s.pt1 + [s.layer], s.pt2 + [s.layer]])
+            return l_out
+        else:
+            return self.net_segments
 
     def add_component(self, comp_inst, comp_port):
         if comp_inst in self.net_components:
@@ -344,10 +512,10 @@ class Net:
 
     def add_segment(self, s_layer, s_pt1, s_pt2):
         if isinstance(s_pt2, list):
-            self.net_segments.append(self.segement(
+            self.net_segments.append(self.segment(
                 s_layer, s_pt1, s_pt2, is_via=False))
         elif isinstance(s_pt2, str):
-            self.net_segments.append(self.segement(
+            self.net_segments.append(self.segment(
                 s_layer, s_pt1, s_pt2, is_via=True))
         else:
             raise ValueError("Pt2 is not of correct type "+str(type(s_pt2)))

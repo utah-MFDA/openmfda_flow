@@ -1,8 +1,5 @@
 # fmt:off
-import os
-import generator_class
 import networkx as nx
-import matplotlib.pyplot as plt
 import copy
 from pprint import pp
 from math import sqrt
@@ -11,54 +8,42 @@ from math import sqrt
 # this script tries to order the routes in consecutive segments
 """
     route - list of segements of the net
-    route_devs - list of dictionary of devices connected to the net
-            {'dev': name, 'port': port_name}
-    full_component_list - full list of netlist of components
-    component_lef  - path to lefs for component information
+    route_devs - devices connected to the net
 """
-def link_routes(
-    route,
-    route_devs,
-    debug=False,
-    design='',
-    full_component_list=None,
-    components_lef=None,
-    comp_dict=None,
-    pin_list=None,
-    report_route=False,
-    subsegment=True,
-    def_scale=1000,
-    px_sz=7.6e-3,
-    pt_err=0.01,
-    silent=False,
-    pre_subsegment_file=None
-):
+def link_routes(route, route_devs, debug=False, design='', component_list=None,
+                components_lef=None, comp_dict=None, pin_list=None,
+                report_route=False, subsegment=True, def_scale=1000,
+                px_sz=7.6e-3, pt_err=0.05, silent=False,
+                pre_subsegment_file=None
+                ):
 
     cp_route = copy.deepcopy(route)
 
     # TODO pass as variable
-    # s = px_sz
+    s = px_sz  # hard coded scale
+    # s1 = s/1000  # hard coded scale
     s1 = px_sz/def_scale
     err = pt_err
 
     if components_lef is not None:
-        if full_component_list is None:
+        if component_list is not None:
             if not silent:
                 print("Component list not passed!!!!")
         if comp_dict is None:
             print("Reading LEFs")
             import component_parse
+            import os
 
             os.environ["XYCE_WL_GRAPH"] = ''
             comp_dict = {}
             if isinstance(components_lef, str):
                 comp_dict = component_parse.ComponentParser(
-                    ).get_comp_pins_from_lef(components_lef, scale=px_sz, silent=silent)
+                    ).get_comp_pins_from_lef(components_lef, scale=s, silent=silent)
             elif isinstance(components_lef, list):
                 for c_lef in components_lef:
                     new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(
                         c_lef,
-                        scale=px_sz,
+                        scale=s,
                         # silent=silent
                     )
                     for cmp in new_dict.items():
@@ -68,743 +53,6 @@ def link_routes(
                                     f"Component {cmp[0]} already read in, skipping")
                         else:
                             comp_dict[cmp[0]] = cmp[1]
-
-    # end check component lef
-
-    def check_pt_vec(p1, p2, acc):
-        if isinstance(p1[2], str) and isinstance(p2[2], str):
-            return abs(p1[0]-p2[0]) < acc and \
-                abs(p1[1]-p2[1]) < acc and \
-                p1[2] == p2[2]
-        else:
-            return abs(p1[0]-p2[0]) < acc and \
-                abs(p1[1]-p2[1]) < acc and \
-                abs(p1[2]-p2[2]) < acc
-    # assume either x1 == x2 or y1 == y2
-
-    def check_inner(r_list, node, head=False):
-        # that inner node is not inside
-        if len(r_list) > 4:
-            if node in r_list[2:-3]:
-                if debug:
-                    print(str(node)+" is inner")
-                # get sub list
-                ii = r_list.index(node)
-                if head:
-                    l_list = r_list[:ii-1]
-                else:
-                    l_list = r_list[ii-1:]
-                # if head reverse list
-                l_list = list(reversed(l_list))
-                # reinsert list
-                if head:
-                    r_list = l_list+r_list[ii:]
-                else:
-                    r_list = r_list[:ii]+l_list
-
-                if debug:
-                    print("new list: "+r_list)
-            else:
-                if head:
-                    r_list.insert(0, node)
-                else:
-                    r_list.append(node)
-        else:
-            if head:
-                r_list.insert(0, node)
-            else:
-                r_list.append(node)
-
-    # check if the segment (r_node) can attach to the
-    #   the route (r_list)
-    def check_route_ends(r_nodes, r_list):
-        r = r_nodes
-        if len(r_list) == 2:
-            if (check_pt_vec(r[0], r_list[0], pt_err) and \
-                    check_pt_vec(r[1], r_list[1], pt_err)) or \
-                    (check_pt_vec(r[1], r_list[0], pt_err) and \
-                    check_pt_vec(r[0], r_list[1], pt_err)):
-                cp_route.pop(ind)
-                return True
-        if check_pt_vec(r[0], r_list[0], pt_err):
-            if debug:
-                print(str(r[0])+" at head")
-            check_inner(r_list, r[1], head=True)
-            cp_route.pop(ind)
-            return True
-        elif check_pt_vec(r[0], r_list[-1], pt_err):
-            if debug:
-                print(str(r[0])+" at tail")
-            check_inner(r_list, r[1], head=False)
-            cp_route.pop(ind)
-            return True
-        elif check_pt_vec(r[-1], r_list[0], pt_err):
-            if debug:
-                print(str(r[1])+" at head")
-            check_inner(r_list, r[0], head=True)
-            cp_route.pop(ind)
-            return True
-        elif check_pt_vec(r[-1], r_list[-1], pt_err):
-            if debug:
-                print(str(r[1])+" at tail")
-            check_inner(r_list, r[0], head=False)
-            cp_route.pop(ind)
-            return True
-        else:
-            return False
-
-    def check_d_routes(r, d_routes):
-        for dr in d_routes:
-            if check_route_ends(r, dr['route']):
-                return True
-        return False
-
-    def subsegment_routes(route, d_routes):
-        # check if route head or tail in other routes
-
-        in_routes = []
-        in_routes.append({'route': route, 'head': False,
-                         'tail': False, 'break': []})
-        if len(d_routes) > 0:
-            for dr in d_routes:
-                in_routes.append(
-                    {'route': dr['route'], 'head': False, 'tail': False, 'break': []})
-
-        """
-        This function checks if the ends in route_ends_check are in the target route.
-        It returns (head|tail|False, pt, pt_ind)
-        pt and pt_ind are of the target route
-        """
-        def check_ends_in_route(route_ends_check, targ_route):
-            pt_acc = 1e-4
-
-            def seg_sl(lofl, l_ind):
-                return [a[l_ind] for a in lofl]
-
-            def check_pt_in_segment(p1, seg, acc):
-                # print(f"Check pair {seg} for {p1}")
-                if isinstance(p1[2], str) and isinstance(seg[0][2], str) and isinstance(seg[1][2], str):
-                    return p1[0] > min(seg_sl(seg, 0))-acc and \
-                        p1[0] < max(seg_sl(seg, 0))+acc and \
-                        p1[1] > min(seg_sl(seg, 1))-acc and \
-                        p1[1] < max(seg_sl(seg, 1))+acc and \
-                        (p1[2] == seg[0][2] or p1[2] == seg[1][2])
-
-                elif isinstance(p1[2], float) and isinstance(seg[0][2], float) and isinstance(seg[1][2], float):
-                    return p1[0] > min(seg_sl(seg, 0))-acc and \
-                        p1[0] < max(seg_sl(seg, 0))+acc and \
-                        p1[1] > min(seg_sl(seg, 1))-acc and \
-                        p1[1] < max(seg_sl(seg, 1))+acc and \
-                        p1[2] < max(seg_sl(seg, 2))+acc and \
-                        p1[2] > min(seg_sl(seg, 2))-acc
-                else:
-                    raise ValueError(f"mixed pt definitions: {p1}, {seg}")
-
-            # START check ends in route
-            pt_acc = err
-            prev_pt = None
-            for ind, pt in enumerate(targ_route):
-                if check_pt_vec(route_ends_check[0], pt, pt_acc):
-                    return "head", pt, ind
-                if check_pt_vec(route_ends_check[-1], pt, pt_acc):
-                    # elif abs(route_ends_check[-1] - pt) < pt_acc:
-                    return "tail", pt, ind
-                # check between route segments
-                elif (prev_pt is not None) and \
-                        check_pt_in_segment(route_ends_check[0], [pt, prev_pt], pt_acc):
-                    return "head_ins", route_ends_check[0], ind
-                    pass
-                elif (prev_pt is not None) and \
-                        check_pt_in_segment(route_ends_check[-1], [pt, prev_pt], pt_acc):
-                    return "tail_ins", route_ends_check[-1], ind
-                    pass
-                else:
-                    prev_pt = pt
-
-            return False, None, None
-
-        # index does not have a functional impact useful for debugging
-
-        def get_dev(pt, ind=0, supress_output=False):
-            # check pins
-            if components_lef is None:
-                raise Exception(
-                    "Lef not imported, cannot check component pins")
-            if full_component_list is None:
-                raise Exception(
-                    "Component list not passed, cannot check component pins")
-
-            for d in route_devs:
-                c = None
-                # check if device is valid component
-                for c_i in full_component_list:
-                    if 'dev' in d and d['dev'] == c_i.name:
-                        c = c_i
-                    elif 'name' in d and d['components'] == c_i.name:
-                        c = c_i
-                # TODO check for pins
-                # if d['dev'] in pin_list.keys():
-                if d['dev'] == "PIN" and isinstance(pin_list, dict):
-                    p = pin_list[d['port']]
-                    pos = [[
-                            (float(p.fx1)+float(p.lx1))*px_sz/def_scale,
-                            (float(p.fy1)+float(p.ly1))*px_sz/def_scale
-                        ],
-                        [
-                            (float(p.fx1)+float(p.lx2))*px_sz/def_scale,
-                            (float(p.fy1)+float(p.ly2))*px_sz/def_scale
-                        ],
-                            p.layer
-                        ]
-                    if not supress_output:
-                        print(f"Checking pin {d['port']} at {pos}")
-                    if float(pt[0]) > pos[0][0] - err \
-                            and float(pt[0]) < pos[1][0] + err \
-                            and float(pt[1]) > pos[0][1] - err \
-                            and float(pt[1]) < pos[1][1] + err \
-                            and pt[2] == pos[2]:
-                        print("Found", d['port'], "!")
-                        return d['port']
-                if c is None:
-                    continue
-                c_pos = [float(c.x1)*c.lef_cv, float(c.y1)*c.lef_cv]
-                if not supress_output:
-                    print(f'Checking {pt} in {c.name} at {c_pos} {c.dir}')
-                is_in_c, comp = comp_dict[c.comp].is_pt_in_pins(
-                    [float(pt[0]), float(pt[1])],
-                    pos=c_pos,
-                    orient=c.dir,
-                    layer=pt[2],
-                    err=err,
-                    silent=False
-                )
-                if is_in_c:
-                    print("Found", c.name, "!", "pin", pt)
-                    return c.name
-            return False
-
-
-        def get_dev_seg(segmt, ind=0, supress_output=False):
-            # check pins
-            if components_lef is None:
-                raise Exception(
-                    "Lef not imported, cannot check component pins")
-            if full_component_list is None:
-                raise Exception(
-                    "Component list not passed, cannot check component pins")
-
-            for d in route_devs:
-                c = None
-                # check if device is valid component
-                for c_i in full_component_list:
-                    if 'dev' in d and d['dev'] == c_i.name:
-                        c = c_i
-                    elif 'name' in d and d['components'] == c_i.name:
-                        c = c_i
-                # TODO check for pins
-                # if d['dev'] in pin_list.keys():
-                if d['dev'] == "PIN" and isinstance(pin_list, dict):
-                    p = pin_list[d['port']]
-                    # convert pin location
-                    pos = [[
-                            (float(p.fx1)+float(p.lx1))*px_sz/def_scale,
-                            (float(p.fy1)+float(p.ly1))*px_sz/def_scale
-                        ],
-                        [
-                            (float(p.fx1)+float(p.lx2))*px_sz/def_scale,
-                            (float(p.fy1)+float(p.ly2))*px_sz/def_scale
-                        ],
-                            p.layer
-                        ]
-                    pos_center = [
-                        (pos[0][0]+pos[1][0])/2,
-                        (pos[0][1]+pos[1][1])/2
-                    ]
-                    if pos[2] != segmt[0][2]:
-                        return False, None
-                    dist1 = dist_from_pt(
-                        pos_center, [float(segmt[0][0]), float(segmt[0][1])], 
-                        )
-                    dist2 = dist_from_pt(
-                        pos_center, [float(segmt[1][0]), float(segmt[1][1])], 
-                        )
-                    # check pt is far from pos_center
-                    if dist1 < err or dist2 < err:
-                        # point is too close to segment ends
-                        return False, None
-                    if not supress_output:
-                        print(f"Checking pin {d['port']} at {pos}")
-                    if dist_from_line(
-                                [float(segmt[0][0]), float(segmt[0][1])], 
-                                [float(segmt[1][0]), float(segmt[1][1])], 
-                            pos_center) < err \
-                            and inside_pts(        
-                                [float(segmt[0][0]), float(segmt[0][1])], 
-                                [float(segmt[1][0]), float(segmt[1][1])], 
-                            pos_center):
-                        print("Found", d['port'], "!")
-                        return d['port'], pos
-                if c is None:
-                    continue
-                c_pos = [float(c.x1)*c.lef_cv, float(c.y1)*c.lef_cv]
-                if not supress_output:
-                    print(f'Checking {pt} in {c.name} at {c_pos} {c.dir}')
-                is_pts_in_c = (not comp_dict[c.comp].is_pt_in_pins( 
-                    [float(segmt[0][0]), float(segmt[0][1])],
-                    pos=c_pos,
-                    orient=c.dir,
-                    layer=segmt[0][2],
-                    err=err
-                    )[0] or not \
-                    comp_dict[c.comp].is_pt_in_pins( 
-                        [float(segmt[1][0]), float(segmt[1][1])],
-                        pos=c_pos,
-                        orient=c.dir,
-                        layer=segmt[1][2],
-                        err=err
-                    )[0])
-                if is_pts_in_c:
-                    return False, None
-                # if not is_pt2_in_c[0]:
-                #     return False, None
-                is_in_c, comp, pin_pt = comp_dict[c.comp].is_segmt_in_pins(
-                    segmt = [
-                        [float(segmt[0][0]), float(segmt[0][1])],
-                        [float(segmt[1][0]), float(segmt[1][1])]
-                    ],
-                    pos=c_pos,
-                    orient=c.dir,
-                    layer=segmt[0][2],
-                    err=err
-                )
-                if is_in_c:
-                    print("Found", c.name, "!", "segment:", segmt )
-                    return c.name, pin_pt
-            return False, None
-
-        #################### BEGIN FUNCTION subsegment ######################
-
-        # check d_routes
-
-        """
-        This for loop checks that routing of a new and tags the
-        breakpoints where subsegments intersect
-        """
-
-        print("Subsegmenting route")
-        # TODO what if a break is at another break
-        # loop through a list of each route
-        for ind_ends, dr_ends in enumerate(in_routes):
-            for ind_srch, dr_srch in enumerate(in_routes):
-                if ind_ends == ind_srch:  # this means we are checking the same route, skip
-                    continue
-                # returns
-                #   (1) type of return "head" or "tail" (of 1st arg)
-                #   (2) pt value
-                #   (3) index on the checked segment (2nd arg)
-                seg_return, out_pt, out_pt_ind = check_ends_in_route(
-                    dr_ends['route'], dr_srch['route'])
-
-                if seg_return == "head":
-                    # assigns the segment index of the segment to attach to
-                    in_routes[ind_ends]['head'] = ind_srch
-                    # addes a breakpoint to the base segment
-                    # TODO check if exists, ifso append
-                    in_routes[ind_srch]['break'].append(
-                        {
-                            'pt_ind': out_pt_ind,
-                            'pt': out_pt,
-                            'r_ind': [[ind_ends, 'head']]
-                        })
-                elif seg_return == "tail":
-                    # assigns the segment index of the segment to attach to
-                    in_routes[ind_ends]['tail'] = ind_srch
-                    # addes a breakpoint to the base segment
-                    in_routes[ind_srch]['break'].append(
-                        {
-                            'pt_ind': out_pt_ind,
-                            'pt': out_pt,
-                            'r_ind': [[ind_ends, 'tail']]
-                        })
-
-                # VVV these are not common and may be unnessary
-                elif seg_return == "head_ins":
-                    in_routes[ind_srch]['route'].insert(out_pt_ind, out_pt)
-                    # move break_pts after
-                    for br_pts in in_routes[ind_srch]['break']:
-                        if br_pts['pt_ind'] >= out_pt_ind:
-                            br_pts['pt_ind'] += 1
-                    # points segment end to attached segment
-                    in_routes[ind_ends]['head'] = ind_srch
-                    in_routes[ind_srch]['break'].append({
-                        'pt_ind': out_pt_ind,
-                        'pt': out_pt,
-                        'r_ind': [[ind_ends, 'head']]
-                    })
-                elif seg_return == "tail_ins":
-                    in_routes[ind_srch]['route'].insert(out_pt_ind, out_pt)
-                    # move break_pts after
-                    for br_pts in in_routes[ind_srch]['break']:
-                        if br_pts['pt_ind'] >= out_pt_ind:
-                            br_pts['pt_ind'] += 1
-                    # points segment end to attached segment
-                    in_routes[ind_ends]['tail'] = ind_srch
-                    in_routes[ind_srch]['break'].append({
-                        'pt_ind': out_pt_ind,
-                        'pt': out_pt,
-                        'r_ind': [[ind_ends, 'tail']]
-                    })
-                # stop once ends are found
-                if in_routes[ind_ends]['head'] and in_routes[ind_ends]['tail']:
-                    break
-
-        if components_lef is not None and (len(in_routes)+1 < len(route_devs)):
-            print("-------------------------------------------")
-            print("-- Checking for internal devs -")
-            print("    Route branches:", len(in_routes))
-            print("    Num devices: ", len(route_devs))
-            # in_routes is all current routes for the net
-            for ind_srch, dr_srch in enumerate(in_routes):
-                for pt_ind, pt in enumerate(dr_srch['route'][1:-1]):
-                    pt_ind += 1
-                    # chech if a device pin is on the net pt
-                    dev_out = get_dev(pt, supress_output=True)
-                    if dev_out is not False:
-                        # TODO change pin -> port
-                        in_routes[ind_srch]['break'].append(
-                            {'pt_ind': pt_ind, 'pt': pt, 'r_ind': [[dev_out, 'pin']]})
-                        break
-                dev_out = False
-                for pt_ind, pt in enumerate(dr_srch['route'][1:-2]):
-                    pt_ind = pt_ind+2
-                    print(pt_ind)
-                    sgmt = [dr_srch['route'][pt_ind], pt]
-                    # skip vias a component will not bisect a via
-                    dist = dist_from_pt(
-                                [float(sgmt[0][0]), float(sgmt[0][1])],
-                                [float(sgmt[1][0]), float(sgmt[1][1])]
-                            )
-                    if sgmt[0][2] != sgmt[1][2] or dist < 0.001:
-                        continue
-                    # check in segments
-                    dev_out, new_pt = get_dev_seg(sgmt, supress_output=True)
-                    if dev_out is not False:
-                        if new_pt is None:
-                            raise ValueError("Value not assigned to new_pt")
-                        # add new pt to list
-                        in_routes[ind_srch]['route'].insert(pt_ind, new_pt)
-                        # add pt to breaks
-                        in_routes[ind_srch]['break'].append(
-                            {'pt_ind':pt_ind, 'pt':pt, 'r_ind': [[dev_out, 'pin']]}
-                        )
-                        # shift all indexes of break points after pt_ind
-                        for br_pt_ind, br_pt in enumerate(in_routes[ind_srch]['break']):
-                            if br_pt['pt_ind'] > pt_ind:
-                                br_pt['pt_ind'] += 1
-                        break
-
-        net_G = nx.Graph()
-
-        for ind, r_t in enumerate(in_routes):
-            br_count = 0  # since 0 is the head of the route
-            last_br_ind = 0
-            # we want to go low to high nodes
-            r_t['break'] = sorted(r_t['break'], key=lambda k: k['pt_ind'])
-            if debug:
-                print(f'breaks for {ind}: ', r_t['break'])
-            if debug:
-                print(f'route: {r_t["route"]}')
-            for br_ind, br_pt in enumerate(r_t['break']):
-                new_node = f'{ind}_{br_count}'
-                # check if node exists; they can be created through add_edge
-                if new_node in net_G.nodes:
-                    net_G.nodes[new_node]['route'] = \
-                        r_t['route'][last_br_ind:br_pt['pt_ind']+1]
-                else:
-                    net_G.add_node(
-                        f'{ind}_{br_count}', # node name
-                        route=r_t['route'][last_br_ind:br_pt['pt_ind']+1])
-
-                # add break pt to graph
-                net_G.add_edge(
-                    f'{ind}_{br_count}',
-                    f'br_{ind}_{br_count}'
-                )
-                net_G.add_edge(
-                    f'{ind}_{br_count+1}',
-                    f'br_{ind}_{br_count}'
-                )
-
-                # check if node is at 0 or 1; this adds the branching route node and edge
-                for ch_end in list(br_pt['r_ind']):
-
-                    if isinstance(ch_end[0], int):
-                        num_br = len(in_routes[ch_end[0]]["break"])
-                        if ch_end[1] == "head":
-                            net_G.add_edge(
-                                f'{ch_end[0]}_{0}', f'br_{ind}_{br_count}')
-                        elif ch_end[1] == "tail":  # we assume last seg is # of break pts
-                            net_G.add_edge(
-                                f'{ch_end[0]}_{num_br}', f'br_{ind}_{br_count}')
-
-                    elif isinstance(ch_end[0], str):
-                        if ch_end[1] == "pin":
-                            net_G.add_edge(
-                                ch_end[0], f'br_{ind}_{br_count}')
-                        else:
-                            raise ValueError(
-                                f"{ch_end[0]} not a valid input for break pts")
-                    else:
-                        raise ValueError(
-                            f"{ch_end[0]} not a valid input for break pts")
-                if debug:
-                    print(
-                        f"branch route {new_node}: {net_G.nodes[new_node]['route']}")
-
-                last_br_ind = br_pt['pt_ind']
-                # for last route in list
-                if br_ind == len(r_t['break'])-1:
-                    net_G.nodes[f'{ind}_{br_count+1}']['route'] = r_t['route'][last_br_ind:]
-
-                # last_br_ind = br_pt['pt_ind']
-                # create final route
-                if ind == len(r_t['break'])-1:
-                    # last element is == to len? (but it works??? vvvv)
-                    net_G.nodes[f'{ind}_{br_count+1}']['route'] = r_t['route'][last_br_ind:len(
-                        r_t['route'])]
-                    if debug:
-                        print(
-                            f"last branch route {ind}_{br_count+1}: {net_G.nodes[f'{ind}_{br_count+1}']['route']}")
-
-                br_count += 1
-
-            if len(r_t['break']) == 0:
-                if f'{ind}_0' in net_G:
-                    net_G.nodes[f'{ind}_0']['route'] = r_t['route']
-                else:
-                    net_G.add_node(f'{ind}_0', route=r_t['route'])
-
-            # looks to find components is at the end of route
-            if full_component_list is not None and components_lef is not None:
-                if r_t['head'] is False:
-                    r_t['head'] = get_dev(r_t['route'][0], ind)
-                    # r_t['head'] = {'dev':get_dev(r_t['route'][0], ind)}
-                    if r_t['head'] is not False:
-                        print(r_t)
-                        net_G.nodes[f'{ind}_0']['head'] = r_t['head']
-                if r_t['tail'] is False:
-                    r_t['tail'] = get_dev(r_t['route'][-1], ind)
-                    # r_t['tail'] = {'dev':get_dev(r_t['route'][-1], ind)}
-                    if r_t['tail'] is not False:
-                        print(r_t)
-                        num_br = len(in_routes[ind]["break"])
-                        net_G.nodes[f'{ind}_{num_br}']['tail'] = r_t['tail']
-
-        return net_G
-
-    def route_validation(route):
-        print(route)
-        if not isinstance(route, list):
-            raise Exception(
-                f"Input route not of correct type, expecting list: {type(route)}")
-        for iseg, seg in enumerate(route):
-            if not isinstance(seg, list):
-                raise Exception(
-                    f"Element {iseg} of route not correct type, expecting list: {type(seg)}")
-            if len(seg) != 2:
-                raise Exception(
-                    f"Element {iseg} of route not correct length, should be 2: {len(seg)}")
-            if len(seg[0]) != 3 or len(seg[1]) != 3:
-                raise Exception(
-                    f"Segment points not formated correctly: {seg}")
-
-    #################### BEGIN FUNCTION compress_routes ######################
-    route_validation(route)
-
-    # new route list of points
-    nr = []
-    # dangling routes list of list of points
-    d_routes = []
-    dangle_routes = False
-    count = 0
-    # r_len = len(self.route)
-
-    if debug:
-        print("initial routes:")
-        print(cp_route)
-
-    # while len(nr) + sum([len(x['route']) for x in d_routes]) < r_len+1:
-    # while len(self.route) > 1:
-    while True:
-        if debug:
-            print("unconct-segmts-list: len("+str(len(cp_route))+") :")
-            pp(cp_route)
-        if len(nr) >= 1 and debug:
-            print("new-r:"+str(len(nr))+":")
-            pp(nr)
-        if len(d_routes) >= 1 and debug:
-            print('d_routes: len('+str(len(d_routes))+') :')
-            pp(d_routes)
-        # -----------------------------------
-        r_init_len = len(cp_route)
-        # iterate through the route segments
-        for ind, r in enumerate(cp_route):
-            # initial points
-            if len(nr) < 1:
-                cp_route.pop(ind)
-                nr.append(r[0])
-                nr.append(r[1])
-                break
-            else:
-                if debug:
-                    print("check-r:"+str(r))
-                # --------
-                if check_route_ends(r, nr):
-                    break
-                if len(d_routes) > 0:
-                    if check_d_routes(r, d_routes):
-                        break
-                    # for dr in d_routes:
-                    #    if check_route_ends(r, dr['route']):
-                    #        break
-                # no matches
-                # check if node is internal
-                if len(nr) > 4 and r[0] in nr[2:-3]:
-                    d_routes.append({'head': r[0], 'route': r})
-                    cp_route.pop(ind)
-                    dangle_routes = True
-                    print("has dangling route 0 : len-" + str(len(d_routes)))
-                    break
-                if len(nr) > 4 and r[1] in nr[2:-3]:
-                    d_routes.append({'head': r[1], 'route': r})
-                    cp_route.pop(ind)
-                    dangle_routes = True
-                    print("has dangling route 1 : len-" + str(len(d_routes)))
-                    break
-            # TODO start new route after running through entire list
-            if ind + 1 == r_init_len:
-                # loops again otherwise ind is too large
-                if len(cp_route) == r_init_len:
-                    d_routes.append({'head': None, 'route': r})
-                    cp_route.pop(ind)
-                    dangle_routes = True
-                    print("has dangling route (Unconnected) : len-" + str(len(d_routes)))
-
-        if len(cp_route) < 1:
-            break
-
-        if debug:
-            print('\n')
-        count += 1
-        if count > 200:
-            raise Exception("Unable to complete route before 200 inters")
-
-    # This is for debugging
-    if report_route:
-        route_report_file = f"routes_out_{design}.txt"
-        rep_out = open(route_report_file, 'a+')
-        rep_out.write(f"Devs:{route_devs}\nroutes:\n{nr}\n")
-        if dangle_routes:
-            for r in d_routes:
-                rep_out.write(f"{r}\n")
-
-    if dangle_routes and subsegment:
-        if pre_subsegment_file is not None:
-            with open(pre_subsegment_file, 'w+') as pre_subsg:
-                pre_subsg.write(nr + '\n' + d_routes)
-        g_route = subsegment_routes(nr, d_routes)
-    elif subsegment and len(route_devs) > 2:
-        g_route = subsegment_routes(nr, [])
-
-    else:
-        dangling_routes = d_routes
-        g_route = nx.Graph()
-        g_route.add_node('', route=nr)
-
-        nx.draw(g_route, with_labels=True)
-        plt.draw()
-
-    if debug:
-        print("Final routes:")
-        print([g_route.nodes[n] for n in g_route.nodes])
-
-    return g_route
-
-def dist_from_pt(pt, ch_pt):
-    return abs(sqrt((pt[1] - ch_pt[1])**2 + (pt[0] - ch_pt[0])**2))
-
-def dist_from_line(pt1, pt2, ch_pt):
-    return abs((pt2[1] - pt1[1])*ch_pt[0] - (pt2[0] - pt1[0])*ch_pt[1] + \
-        pt2[0]*pt1[1] - pt2[1]*pt1[0]) / \
-        (sqrt((pt2[1] - pt1[1])**2 + (pt2[0] - pt1[0])**2))
-
-def inside_pts(pt1, pt2, ch_pt):
-    return ch_pt[0] < max(pt1[0], pt2[0]) and \
-        ch_pt[0] > min(pt1[0], pt2[0]) and \
-        ch_pt[1] < max(pt1[1], pt2[1]) and \
-        ch_pt[1] < min(pt1[1], pt2[1])
-
-
-
-
-"""
-Re-developed version without odd classes
-"""
-def link_routes2(
-    route,
-    route_devs,
-    full_component_list,
-    components_lef,
-    pin_list,
-    design='',
-    #comp_dict=None,
-    report_route=False,
-    subsegment=True,
-    def_scale=1000,
-    px_sz=7.6e-3,
-    pt_err=0.05,
-    silent=False,
-    pre_subsegment_file=None,
-    debug=False,
-):
-
-    cp_route = copy.deepcopy(route)
-
-    # TODO pass as variable
-    s = px_sz
-    s1 = px_sz/def_scale
-    err = pt_err
-
-    # if components_lef is not None:
-    #     if component_list is not None:
-    #         if not silent:
-    #             print("Component list not passed!!!!")
-    #if comp_dict is None:
-    print("Reading LEFs")
-    import component_parse
-    import os
-
-    os.environ["XYCE_WL_GRAPH"] = ''
-    comp_dict = {}
-    if isinstance(components_lef, str):
-        comp_dict = component_parse.ComponentParser(
-            ).get_comp_pins_from_lef(components_lef, scale=s, silent=silent)
-    elif isinstance(components_lef, list):
-        for c_lef in components_lef:
-            new_dict = component_parse.ComponentParser().get_comp_pins_from_lef(
-                c_lef,
-                scale=s,
-                # silent=silent
-            )
-            for cmp in new_dict.items():
-                if cmp[0] in comp_dict:
-                    if not silent:
-                        print(
-                            f"Component {cmp[0]} already read in, skipping")
-                else:
-                    comp_dict[cmp[0]] = cmp[1]
-
-    # end check component lef
 
     def check_pt_vec(p1, p2, acc):
         if isinstance(p1[2], str) and isinstance(p2[2], str):
@@ -963,41 +211,40 @@ def link_routes2(
             if components_lef is None:
                 raise Exception(
                     "Lef not imported, cannot check component pins")
-            if full_component_list is None:
+            if component_list is None:
                 raise Exception(
                     "Component list not passed, cannot check component pins")
-
+            # for c in component_list:
+            # if not supress_output:
+                # print(f"Checking devs in {self.net}, ind: {ind}")
+                # print(f"devs: {self.devs}")
             for d in route_devs:
                 c = None
                 # check if device is valid component
-                for c_i in full_component_list:
+                for c_i in component_list:
                     if 'dev' in d and d['dev'] == c_i.name:
                         c = c_i
                     elif 'name' in d and d['components'] == c_i.name:
                         c = c_i
                 # TODO check for pins
-                if d == "PIN" and isinstance(pin_list, dict):
-                    pin_name = route_devs["PIN"]
-                    p = pin_list[route_devs["PIN"]]
+                # if d['dev'] in pin_list.keys():
+                if d['dev'] == "PIN" and isinstance(pin_list, list):
+                    p = pin_list[d['port']]
                     pos = [
-                        [
-                        p['pos'][0][0] + p['size'][0][0],
-                        p['pos'][0][1] + p['size'][1][0],
-                        ],
-                        [
-                        p['pos'][0][0] + p['size'][0][1],
-                        p['pos'][0][1] + p['size'][1][1],
-                        ],
+                        [(float(p.fx1)+float(p.lx1))*s1,
+                         (float(p.fy1)+float(p.ly1))*s1],
+                        [(float(p.fx1)+float(p.lx2))*s1,
+                         (float(p.fy1)+float(p.ly2))*s1]
                     ]
                     if not supress_output:
-                        print(f"Checking pin {pin_name} at {pos}")
-                    if float(pt[0]) > pos[0][0] - err \
+                        print(f"Checking pin {d['port']} at {pos}")
+                    if float(pt[0]) > pos[0][0] - err\
                             and float(pt[0]) < pos[1][0] + err \
                             and float(pt[1]) > pos[0][1] - err \
                             and float(pt[1]) < pos[0][1] + err \
                             and pt[2] == p.layer:
-                        print("Found", pin_name, "!")
-                        return pin_name
+                        print("Found", d['port'], "!")
+                        return d['port']
                 if c is None:
                     continue
                 c_pos = [float(c.x1)*c.lef_cv, float(c.y1)*c.lef_cv]
@@ -1090,7 +337,6 @@ def link_routes2(
                 # stop once ends are found
                 if in_routes[ind_ends]['head'] and in_routes[ind_ends]['tail']:
                     break
-
         if components_lef is not None:
             print("-------------------------------------------")
             # print("-- Checking for internal devs -", self.net)
@@ -1102,6 +348,11 @@ def link_routes2(
                         in_routes[ind_srch]['break'].append(
                             {'pt_ind': pt_ind, 'pt': pt, 'r_ind': [[dev_out, 'pin']]})
                         break
+
+        print("INROUTES")
+        pp(in_routes)
+
+        debug = False
 
         net_G = nx.Graph()
 
@@ -1137,6 +388,12 @@ def link_routes2(
 
                 # check if node is at 0 or 1; this adds the branching route node and edge
                 for ch_end in list(br_pt['r_ind']):
+                    # number of breaks in ref route
+                    # num_br = len(in_routes[ch_end[0]]["break"])
+                    # if ch_end[1] == "head":
+                    #     net_G.add_edge(f'{ch_end[0]}_{0}', f'br_{ind}_{br_count}')
+                    # elif ch_end[1] == "tail": # we assume last seg is # of break pts
+                    #     net_G.add_edge(f'{ch_end[0]}_{num_br}', f'br_{ind}_{br_count}')
 
                     if isinstance(ch_end[0], int):
                         num_br = len(in_routes[ch_end[0]]["break"])
@@ -1184,7 +441,7 @@ def link_routes2(
                 else:
                     net_G.add_node(f'{ind}_0', route=r_t['route'])
 
-            if full_component_list is not None and components_lef is not None:
+            if component_list is not None and components_lef is not None:
                 if r_t['head'] is False:
                     r_t['head'] = get_dev(r_t['route'][0], ind)
                     # r_t['head'] = {'dev':get_dev(r_t['route'][0], ind)}
@@ -1198,14 +455,6 @@ def link_routes2(
                         print(r_t)
                         num_br = len(in_routes[ind]["break"])
                         net_G.nodes[f'{ind}_{num_br}']['tail'] = r_t['tail']
-
-        # label break pt as intersection
-        for nd in net_G.nodes:
-            if nd[0:2] == 'br_':
-                net_G.nodes[nd]['is_intersection'] == True
-            else:
-                net_G.nodes[nd]['is_intersection'] == False
-
 
         return net_G
 
@@ -1315,19 +564,23 @@ def link_routes2(
             for r in d_routes:
                 rep_out.write(f"{r}\n")
 
+    print("PRESUBSEGMENT")
+    pp(nr)
+    print("d_routes")
+    pp(d_routes)
     if dangle_routes and subsegment:
         if pre_subsegment_file is not None:
             with open(pre_subsegment_file, 'w+') as pre_subsg:
                 pre_subsg.write(nr + '\n' + d_routes)
         g_route = subsegment_routes(nr, d_routes)
-
+        # remove single point routes
+        # for n in list(g_route.nodes):
+        #     if 'route' in g_route.nodes[n] and len(g_route.nodes[n]['route']) == 1:
+        #         g_route.remove_node(n)
     else:
         dangling_routes = d_routes
         g_route = nx.Graph()
         g_route.add_node('', route=nr)
-
-        nx.draw(g_route, with_labels=True)
-        plt.draw()
 
     if debug:
         print("Final routes:")
@@ -1650,12 +903,7 @@ We assume the route is an ordered list of points.
 """
 
 
-def u_adjustments(
-        route,
-        other_rt=None,
-        u_len_limit=0.0,
-        skip_intersection_check=False
-):
+def u_adjustments(route, other_rt=None, u_len_limit=0.0, skip_intersection_check=False):
     # nothing can be done too short.
     if len(route) < 4:
         return route
@@ -1745,123 +993,3 @@ def u_adjustments(
 
     print(new_route)
     return new_route
-
-
-def via_2_met_segmt(segments, via_map):
-    new_list = []
-    for s in segments:
-        if isinstance(s[1], str):
-            via_mets = via_map[s[1]]
-            if via_mets[0] == s[0][2]:
-                new_list.append([s[0], s[0][0:2] + [via_mets[1]]])
-            else:
-                new_list.append([s[0], s[0][0:2] + [via_mets[0]]])
-        else:
-            new_list.append(s)
-    return new_list
-
-
-hc_mets = {
-    'M1M2_PR':   ['met1',  'met2'],
-    'M2M3_PR':   ['met2',  'met3'],
-    'M3M4_PR':   ['met3',  'met4'],
-    'M4M5_PR':   ['met4',  'met5'],
-    'M5M6_PR':   ['met5',  'met6'],
-    'M6M7_PR':   ['met6',  'met7'],
-    'M7M8_PR':   ['met7',  'met8'],
-    'M8M9_PR':   ['met8',  'met9'],
-    'M9M10_PR':  ['met9',  'met10'],
-    'M10M11_PR': ['met10', 'met11'],
-}
-
-
-# def via_2_met_routes(segments, via_map):
-#     for segments
-
-
-if __name__ == "__main__":
-    import argparse
-    import def_obj_load
-
-    parser = argparse.ArgumentParser(
-        usage="",
-    )
-
-    parser.add_argument("--in_def", required=True, type=str)
-    parser.add_argument("--results_file", type=str, default=None)
-
-    parser.add_argument("--component_lefs", required=True, type=list)
-
-    parser.add_argument("--uadj", default=False, action="store_true")
-
-    args = parser.parse_args()
-
-    if args.results_file is None:
-        args.results_file = os.path.dirname(args.in_def) + '/u_adj_' + \
-            os.path.basename(args.in_def)
-
-    # ===== perform u adjustment
-
-    if args.uadj:
-
-        segmt_limit = 120*7.6e-3
-
-        px_size = 7.6
-        def_scale = 1000
-
-        def_obj = def_obj_load.read_def(args.in_def)
-        design_obj = list(def_obj['design'].values())[0]
-        design_name = list(def_obj['design'].keys())[0]
-
-        pins = {
-                p.pin_name: {
-                    'pos':p.pos, 'size': p.size
-            } for p in design_obj.pins.values()
-        }
-        components = [
-             generator_class.Component(
-                name=c.name,
-                comp=c.component_type,
-                x1=c.pos[0],
-                y1=c.pos[1],
-                dir=c.orientation,
-             ) for c in design_obj.components.values()
-        ]
-
-        # replace routes
-
-        # need to link routes
-        for net in design_obj.nets.values():
-            net.net_segments = via_2_met_segmt(
-                segments=net.get_segments(list_out=True),
-                via_map=hc_mets
-            )
-
-            net_devs = []
-            for cinst, port in net.net_components.items():
-                net_devs.append({'dev': cinst, 'port': port})
-
-            net = link_routes(
-                net.net_segments,
-                net_devs,
-                debug=True,
-                design=design_name,
-                pin_list=pins,
-                full_component_list=components,
-                components_lef=args.component_lefs,
-                def_scale=def_scale,
-                px_sz=px_size
-            )
-
-        for subnet in def_obj.nets:
-            u_adjustments(
-                route=subnet,
-                # this is a list of all other routes
-                other_rt=[
-                    ch_net.route.nodes[ck_subnet]['route']
-                    for ch_net in nets_list 
-                        if ch_net.net != net1.net
-                            for ck_subnet in ch_net.route.nodes
-                ],
-                u_len_limit=segmt_limit
-            )
