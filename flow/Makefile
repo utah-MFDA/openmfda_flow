@@ -7,15 +7,20 @@ export DESIGN ?= demo
 OPENROAD_EXE ?= openroad
 KLAYOUT_CMD ?= klayout
 YOSYS_CMD ?= yosys
+OPENSCAD ?= openscad
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
+export BUILD_PDK_LIBRARY ?=
 
 # The docker image does not have the OpenROAD OpenBD
 # 	references a compatible version
-ifeq (HAS_OPENDB,T)
-export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
-else
-export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
-endif
-export BUILD_PDK_LIBRARY ?=
+#### vvvvv removed merge with kicad
+#ifeq (HAS_OPENDB,T)
+#export SCAD_SCRIPT ?= ../tools/scad_render/scad_pnr.py
+#else
+#export SCAD_SCRIPT ?= ../tools/scad_render/generator_v2.py
+#endif
+
 
 # Add design configure paths here
 DESIGN_CONFIG ?= ./designs/${PLATFORM}/${DESIGN}/config.mk
@@ -65,6 +70,7 @@ SHELL          = /bin/bash
 # - Setup in environment but can be changed here if running Makefile standalone
 #   from root Makefile (pnr/Makefile)
 export FLOW_HOME ?= .
+#export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
 #-------------------------------------------------------------------------------
 # Setup variables to point to other location for the following sub directory
 # - designs - default is under current directory
@@ -79,6 +85,9 @@ export UTILS_DIR     ?= $(FLOW_HOME)/util
 export SCRIPTS_DIR   ?= $(FLOW_HOME)/scripts
 export TEST_DIR      ?= $(FLOW_HOME)/test
 
+export CUSTOM_SCRIPTS_DIR ?= $(FLOW_HOME)/scripts_custom
+export CUSTOM_TCL_DIR ?= $(FLOW_HOME)/scripts_custom
+
 #-------------------------------------------------------------------------------
 
 ifneq ($(wildcard $(PLATFORM_HOME)/$(PLATFORM)),)
@@ -92,8 +101,25 @@ endif
 $(info [INFO][FLOW] Using platform directory $(PLATFORM_DIR))
 include $(PLATFORM_DIR)/config.mk
 
+# additional modules 
+# 	the are includes below with evironment var defs
+
+# export FIX_DEF
+# 	call 'fix_route' or/and 'fix_render'
+export DEF_FIX_UTIL = ../tools/route_scripts/util.mk
+
 # Include design and platform configuration
 include $(DESIGN_CONFIG)
+
+ifneq (,$(strip $(DISTRIB_V)))
+export TECH_LEF = ./platforms/$(PLATFORM)/lef/$(PLATFORM)_$(DISTRIB_V).tlef
+export SC_LEF   = ./platforms/$(PLATFORM)/lef/$(PLATFORM)_merged_$(DISTRIB_V).lef
+endif
+
+ifneq (,$(strip $(DESIGN_DIR)))
+export SDC_FILE ?= $(DESIGN_DIR)/constraint.sdc
+export IO_CONSTRAINTS ?= $(DESIGN_DIR)/io_constraints.tcl
+endif
 
 ifeq ($(strip $(GLOBAL_PLACEMENT_ARGS_FILE)),'')
 export GLOBAL_PLACEMENT_ARGS ?= -skip_nesterov_place
@@ -142,6 +168,7 @@ endif
 export NUM_CORES := $(NPROC)
 
 #-------------------------------------------------------------------------------
+XVFB_CMD=xvfb-run
 # setup all commands used within this flow
 TIME_CMD=/usr/bin/time --verbose
 # TIME_TEST = $(shell $(TIME_CMD) echo foo 2>/dev/null)
@@ -228,6 +255,17 @@ $(WRAPPED_LEFS):
 $(WRAPPED_LIBS):
 	mkdir -p $(OBJECTS_DIR)/lib
 	sed 's/library(\(.*\))/library(\1_mod)/g' $(filter %$(notdir $(@:_mod.lib=.lib)),$(WRAP_LIBS)) | sed 's/cell(\(.*\))/cell(\1_mod)/g' > $@
+
+#include ../tools/verilog_preparser/Makefile
+#include $(FLOW_HOME)/../tools/p_cell_generator/util.mk
+
+#.PHONY: gen_pcells
+#gen_pcells: $(PCELL_MERGE_LEF)
+
+
+ifdef FIX_DEF
+include $(DEF_FIX_UTIL)
+endif
 
 # ==============================================================================
 #  _     ___ ____  ____      _    ______   __
@@ -345,15 +383,21 @@ clean_floorplan:
 # |  __/| |___ / ___ \ |___| |___
 # |_|   |_____/_/   \_\____|_____|
 #
+.PHONY: replace
 replace: $(RESULTS_DIR)/2_1_place_gp.def
+.PHONY: place
 place: $(RESULTS_DIR)/2_place.def \
 	   $(RESULTS_DIR)/2_place.sdc
 # ==============================================================================
+ifndef $(GLOBAL_PLACEMENT_ARGS_FILE)
+$(GLOBAL_PLACEMENT_ARGS_FILE):
+endif
 
 # STEP 1: Global placement + IO placement (not random)
+GLOBAL_PLACE_SCRIPT ?= $(SCRIPTS_DIR)/global_place.tcl
 #-------------------------------------------------------------------------------
-$(RESULTS_DIR)/2_1_place_gp.def: $(RESULTS_DIR)/1_floorplan.def $(RESULTS_DIR)/1_floorplan.sdc $(LIB_FILES)
-	($(TIME_CMD) $(OPENROAD_CMD) $(SCRIPTS_DIR)/global_place.tcl -metrics $(LOG_DIR)/2_1_place_gp.json) 2>&1 | tee $(LOG_DIR)/2_1_place_gp.log
+$(RESULTS_DIR)/2_1_place_gp.def: $(RESULTS_DIR)/1_floorplan.def $(RESULTS_DIR)/1_floorplan.sdc $(LIB_FILES) $(GLOBAL_PLACEMENT_ARGS_FILE)
+	($(TIME_CMD) $(OPENROAD_CMD) $(GLOBAL_PLACE_SCRIPT) -metrics $(LOG_DIR)/2_1_place_gp.json) 2>&1 | tee $(LOG_DIR)/2_1_place_gp.log
 
 # STEP 2: IO placement (non-random)
 #-------------------------------------------------------------------------------
@@ -393,6 +437,9 @@ clean_place:
 route: $(RESULTS_DIR)/3_route.def \
        $(RESULTS_DIR)/3_route.sdc
 # ==============================================================================
+
+reroute:
+	$(TIME_CMD) $(OPENROAD_CMD) $(CUSTOM_SCRIPTS_DIR)/reroute.tcl
 
 # STEP 1: Run global route
 #-------------------------------------------------------------------------------
@@ -541,14 +588,19 @@ clean_finish:
 #  ___) | || |  | | |_| | |___ / ___ \| |  | | |_| | |\  |
 # |____/___|_|  |_|\___/|_____/_/   \_\_| |___\___/|_| \_|
 # ==============================================================================
+SIMULATION_SCRIPT = ../tools/simulation/runMFDASim.py
+LENGTH_FILE       = $(RESULTS_DIR)/$(DESIGN)_length.csv
+XYCE_RUN_CONFIG   = $(RESULTS_DIR)/xyce_run.config
+
 .PHONY: simulate clean_simulate
-simulate: $(RESULTS_DIR)/xyceOut.csv
+simulate: $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv
 clean_simulate:
 	rm -rf $(RESULTS_DIR)/xyceOut.csv
 	rm -rf $(RESULTS_DIR)/simulation
 	rm -rf $(RESULTS_DIR)/simulation.log
 	rm -rf $(RESULTS_DIR)/xyce_run.config
 
+ifneq ($(SIMULATION_CONFIG),)
 XYCE_LIB ?= $(abspath $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so)
 
 #ifneq ($(SIMULATION_CONFIG),)
@@ -558,20 +610,35 @@ xyce_run_config: $(RESULTS_DIR)/xyce_run.config
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
-$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+#<<<<<<< HEAD
+#$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+	# we want to work towards VVVVVVVVVVVVVVVV
+#$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
+$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
-	$(TIME_CMD) $(PYTHON3) ../tools/simulation/runMFDASim.py \
-		--output_dir $(RESULTS_DIR) \
+	$(TIME_CMD) $(PYTHON3) $(SIMULATION_SCRIPT) \
+		$(SIMULATION_ARGS) $(XYCE_SCRIPT_ARGS) \
 		--netlist $(RESULTS_DIR)/4_final.v \
 		--sim_config $(SIMULATION_CONFIG) \
 		--design $(DESIGN) \
 		--sim_dir $(RESULTS_DIR)/simulation \
 		--cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp \
 		--local_xyce \
-		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
-		--length_file $(RESULTS_DIR)/$(DESIGN)_length.csv \
+		--xyce_run_config $(XYCE_RUN_CONFIG) \
+		--length_file $(LENGTH_FILE) \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
+
+# cp $(RESULTS_DIR)/Chem_Eval.csv Chem_Eval_base.csv
+
+# --output_dir $(RESULTS_DIR) \
+# --length_file $(RESULTS_DIR)/$(DESIGN)_lengths.csv
+endif
+# =======
+# 		--xyce_run_config $(RESULTS_DIR)/xyce_run.config \
+# 		--length_file $(RESULTS_DIR)/$(DESIGN)_length.csv \
+# 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
 #endif
+#>>>>>>> main
 
 # ==============================================================================
 #  ____   ____    _    ____
@@ -579,7 +646,11 @@ $(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_ba
 # \___ \| |     / _ \ | | | |
 #  ___) | |___ / ___ \| |_| |
 # |____/ \____/_/   \_\____/
+# =======
 
+# render: $(RESULTS_DIR)/4_final.scad # old scad call
+# render: $(RESULTS_DIR)/$(DESIGN)_base.scad # the stl is the new output
+.PHONY: scad render slice zip
 scad: $(RESULTS_DIR)/$(DESIGN)_base.scad
 render: $(RESULTS_DIR)/$(DESIGN)_base.stl
 slice: $(RESULTS_DIR)/slices/1.png # we reference first png slice
@@ -588,7 +659,16 @@ zip: $(RESULTS_DIR)/$(DESIGN).$(PLATFORM).zip
 # ==============================================================================
 # $(TIME_CMD) python3 ../../generator_v2/generator_v2.py $(SCAD_ARGS) \
 
+# <<<<<<< HEAD
+# #$(RESULTS_DIR)/$(DESIGN).scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+# $(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+# =======
 # additional pcell files to include
+
+ifeq ($(SCAD_LIB),)
+SCAD_LIB = $(PLATFORM_DIR)/pdk/scad_lib
+endif
+
 ifneq ($(SCAD_INCLUDE_FILES),)
 SCAD_INCLUDE_FILES += $(SCAD_LIB)/polychannel_v2.scad $(SCAD_LIB)/lef_helper.scad $(SCAD_LIB)/lef_scad_config.scad
 else
@@ -600,7 +680,7 @@ SCAD_ARGS += --pcell $(SCAD_PCELL)
 endif
 
 #$(RESULTS_DIR)/4_final.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
-$(RESULTS)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
+$(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/$(DESIGN)_base.scad: $(RESULTS_DIR)/4_final.def $(LIBRARY_DEPS)
 	mkdir -p "$(RESULTS_DIR)"
 	$(TIME_CMD) $(PYTHON3) $(SCAD_SCRIPT) $(SCAD_ARGS) \
 		--def_file $< \
@@ -614,10 +694,10 @@ $(RESULTS_DIR)/$(DESIGN)_base.stl: $(RESULTS_DIR)/$(DESIGN)_base.scad
 	openscad $< -o $@
 
 %.stl: %.scad
-	$(TIME_CMD) openscad -m make -o $@ -d $@.deps $< 2>&1 | tee $@.log
+	$(TIME_CMD) $(OPENSCAD) -m make -o $@ -d $@.deps $< 2>&1 | tee $(LOG_DIR)/5_2_stl_render.log
 
 %.slices: %.stl
-	$(TIME_CMD) xvfb-run python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_HEIGHT} $@ 2>&1 | tee $@.log
+	$(TIME_CMD) $(XBUF) python3 ../tools/slicer/pyqt5/app_qt.py $< ${LAYER_VAL} $@ 2>&1 | tee $(LOG_DIR)/5_3_slicer.log
 
 $(RESULTS_DIR)/slices/1.png: $(RESULTS_DIR)/$(DESIGN)_base.stl
 	$(PYTHON3) $(SLICER_SCRIPT) \
@@ -685,6 +765,6 @@ $(foreach file,$(RESULTS_DEF),gui_$(file)): gui_%:
 
 # Utilities
 #-------------------------------------------------------------------------------
-include $(UTILS_DIR)/utils.mk
+# include $(UTILS_DIR)/utils.mk
 #export PRIVATE_DIR = ../../private_tool_scripts
 #include $(PRIVATE_DIR)/private.mk

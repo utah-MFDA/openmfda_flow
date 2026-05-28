@@ -1,6 +1,8 @@
 # fmt:off
 import json
-import regex, mmap, re
+#import regex
+import mmap
+import re
 import networkx as nx
 
 # custom classes
@@ -13,17 +15,9 @@ class Nets:
         self,
         net = None,
         devs = None,
-        #dev1 = None,
-        #p1 = None,
-        #dev2 = None,
-        #p2 = None,
         ):
 
         self.net = net
-        #self.dev1 = dev1
-        #self.p1   = p1
-        #self.dev2 = dev2
-        #self.p2   = p2
         self.devs = devs
         self.route = []
         self.compress = False
@@ -68,6 +62,9 @@ class Nets:
         #print('Adding route: '+str(nr))
         self.route.append(nr)
 
+    """
+    Funciton used to calculate the lengths routes
+    """
     def calc_len_funct(self, in_route=None, route_name=None):
         if isinstance(in_route, type(None)):
             in_route = self.route
@@ -100,6 +97,10 @@ class Nets:
         return r_len
         #self.route_len = r_len
 
+    """
+    Iterates through the routes, passes the route object to
+        calc_len_funct to get the length
+    """
     def calc_len(self):
         print(f"calc len {self.net}")
         if isinstance(self.route, nx.Graph):
@@ -120,10 +121,14 @@ class Nets:
             self.calc_len()
         return self.route_len
 
-    def report_route_graph(self):
+    def report_route_graph(self, include_lengths=False):
         print("Reporting routing graph")
         for r in list(self.route.nodes):
             # print("head",self.route.nodes[r]['head'])
+            if include_lengths:
+                # TODO finish implementation
+                self.calc_len_funct(self.route.nodes[r]['route'])
+                self.route[r]['length']
             if 'tail' in self.route.nodes[r]:
                 print("tail",self.route.nodes[r]['tail'], 'at', r)
                 self.route.add_node(self.route.nodes[r]['tail'], component='')
@@ -844,7 +849,7 @@ class NetBuilder:
 
         print(f"Importing TECH_LEF: {tlef_f}")
         # get layers
-        layer_re = r'LAYER\s*(?P<layer_name>\w*)\s*(?|(?:TYPE\s*(?P<type>(?:ROUTING|CUT))\s*;|DIRECTION\s*(?P<direction>(?:HORIZONTAL|VERTICAL))\s*;|MINWIDTH\s*(?P<minwidth>[\d.]*)\s*;|WIDTH\s*(?P<width>[\d.]*)\s*;)\s*)*END\s*(\w*)\s$' 
+        layer_re = r'LAYER\s*(?P<layer_name>\w*)\s*(?:(?:TYPE\s*(?P<type>(?:ROUTING|CUT))\s*;|DIRECTION\s*(?P<direction>(?:HORIZONTAL|VERTICAL))\s*;|MINWIDTH\s*(?P<minwidth>[\d.]*)\s*;|WIDTH\s*(?P<width>[\d.]*)\s*;)\s*)*END\s*(\w*)\s$' 
         layer_re = bytes(layer_re, 'utf-8')
 
         self.layers_list = {
@@ -853,13 +858,14 @@ class NetBuilder:
 
         with open(tlef_f, 'r+') as f:
             data = mmap.mmap(f.fileno(), 0)
-            mo_l = regex.finditer(layer_re, data, re.MULTILINE)
+            mo_l = re.finditer(layer_re, data, re.MULTILINE)
 
             for l in mo_l:
                 self.layers_list[l.group('type').decode('utf-8')].append(l.group('layer_name').decode('utf-8'))
 
         # get vias
-        via_re   = r'VIA\s*(?P<via_name>\w*)\s*(?P<type>\w*)(?|.*\n)*?(?:END\s*(?&via_name)\s*$)'
+        #via_re   = r'VIA\s*(?P<via_name>\w*)\s*(?P<type>\w*)(?:.*\n)*?(?:END\s*((?&via_name))\s*?$)'
+        via_re   = r'VIA\s*(?P<via_name>\w*)\s*(?P<type>\w*)(?:.*\n)*?(?:END\s*(\w+)\s*?$)'
         via_l_re = r'LAYER (?P<met_name>\w*)\s*;\s*(?:RECT\s*(?P<x1>[\d.-]*)\s*(?P<y1>[\d.-]*)\s*(?P<x2>[\d.-]*)\s*(?P<y2>[\d.-]*)\s*;)*'
 
         via_re = bytes(via_re, 'utf-8')
@@ -869,12 +875,12 @@ class NetBuilder:
         # parse template
         with open(tlef_f, 'r+') as f:
             data = mmap.mmap(f.fileno(), 0)
-            mo_v = regex.finditer(via_re, data, re.MULTILINE)
+            mo_v = re.finditer(via_re, data, re.MULTILINE)
 
             for m in mo_v:
                 #print(m.group(0))
                 v_m = []
-                mo_vl = regex.finditer(via_l_re, m.group(0), re.MULTILINE)
+                mo_vl = re.finditer(via_l_re, m.group(0), re.MULTILINE)
                 for vl in mo_vl:
                     v_m.append(vl.group('met_name').decode('utf-8'))
 
