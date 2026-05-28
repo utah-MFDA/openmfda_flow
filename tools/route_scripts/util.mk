@@ -7,7 +7,6 @@ endif
 ifneq ($(FLOW_DIR),)
 THIS_DIR_FROM_FLOW = $(realpath $(FLOW_DIR)/../tools/route_scripts)
 endif
-
 FIX_PY_SCRIPT = $(THIS_DIR_FROM_FLOW)/routing_fix_main.py
 
 FIX_DEF ?=

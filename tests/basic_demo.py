@@ -12,17 +12,17 @@ sys.path.append(docker_run_dir)
 from run_mfda_docker import run_mfdaflow_docker
 # fmt: on
 
-# def run_mfdaflow_docker(
-#     design,
-#     mfda_platform,
-#     make_args,
-#     docker_env_vars=None,
-#     run_deps=False,
-#     no_check=False,
-# ):
-run_mfdaflow_docker(
-    design='smart_toilet',
-    mfda_platform='h.r.3.3',
-    make_args=make_args_full,
-    run_deps=True
-)
+run_mfdaflow_docker('smart_toilet', 'h.r.3.3', make_args_full, run_deps=True)
+
+run_mfdaflow_docker('valves_demo', 'h.r.3.3', make_args_part, run_deps=True)
+
+run_mfdaflow_docker('reservoir_demo', 'h.r.3.3', make_args_part, run_deps=True)
+
+run_mfdaflow_docker('pcl_serpentine', 'h.r.3.3', 'mk_pcell ' + make_args_part, run_deps=True)
+
+run_mfdaflow_docker('pcl_valve', 'h.r.3.3', 'mk_pcell ' + make_args_part, run_deps=True)
+
+
+
+
+

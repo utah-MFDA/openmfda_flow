@@ -445,7 +445,6 @@ def fix_routes(
                     if len(rt_stack) == 0:
                         break
                 cur_net = rt[0]
-
             routing_fix.solve_rt(
                 pt_pair=rt[1],
                 net_name=rt[0],

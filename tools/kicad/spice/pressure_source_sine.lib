@@ -1,0 +1,10 @@
+pressure_source_sine
+
+.control
+pre_osdi pressure_source_sine.osdi
+.endc
+
+.model pressure_source_sine_model pressure_source_sine length=5m
+.subckt pressure_src_sine IN OUT
+N1 plus minus pressure_source_sine_model
+.ends

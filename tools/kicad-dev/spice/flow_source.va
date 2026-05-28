@@ -1,0 +1,16 @@
+
+`include "nature_fluid_dynamics.vams"
+`include "disciplines.vams"
+`include "constants.vams"
+
+module flow_source(f_plus, f_minus);
+output f_plus, f_minus;
+fluidDynamics f_plus, f_minus;
+
+(*desc="flow rate", type="instance"*) parameter real flowrate=1u;
+
+analog begin
+   Qfl(f_plus, f_minus) <+ flowrate;
+end
+
+endmodule

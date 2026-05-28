@@ -1,0 +1,16 @@
+
+`include "nature_fluid_dynamics.vams"
+`include "disciplines.vams"
+`include "constants.vams"
+
+module pressure_source(fl_plus, fl_minus);
+output fl_plus, fl_minus;
+fluidDynamics fl_plus, fl_minus;
+
+(*desc="pressure", type="instance"*) parameter real pressure=34k;
+
+analog begin
+   P(fl_plus, fl_minus) <+ pressure;
+end
+
+endmodule

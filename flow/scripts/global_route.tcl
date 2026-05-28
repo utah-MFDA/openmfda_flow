@@ -30,33 +30,40 @@ if {[info exist env(PRE_GLOBAL_ROUTE)]} {
 }
 
 if {[info exist env(FASTROUTE_TCL)]} {
-  source $env(FASTROUTE_TCL)
+  # source $env(FASTROUTE_TCL)
+  puts "Reading Fastroute files:"
+  puts $::env(FASTROUTE_TCL)
+  foreach fast_rt $::env(FASTROUTE_TCL) {
+    source $fast_rt
+  }
+  puts "fastroute files loaded"
 } else {
+  puts "No FASTROUTE file supplied"
   set_global_routing_layer_adjustment $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER) 0.5
   set_routing_layers -signal $env(MIN_ROUTING_LAYER)-$env(MAX_ROUTING_LAYER)
   set_macro_extension 2
 }
 
 global_route -guide_file $env(RESULTS_DIR)/route.guide \
-               -congestion_iterations 100 \
+               -congestion_iterations 200 \
                -verbose
 
 # Set res and cap
-if [file exists $env(PLATFORM_DIR)/setRC.tcl] {
-  source $env(PLATFORM_DIR)/setRC.tcl
-}
+#if [file exists $env(PLATFORM_DIR)/setRC.tcl] {
+  #source $env(PLATFORM_DIR)/setRC.tcl
+#}
 
-set_propagated_clock [all_clocks]
-estimate_parasitics -global_routing
+#set_propagated_clock [all_clocks]
+#estimate_parasitics -global_routing
 
-source $env(SCRIPTS_DIR)/report_metrics.tcl
-report_metrics "global route"
+#source $env(SCRIPTS_DIR)/report_metrics.tcl
+#report_metrics "global route"
 
-puts "\n=========================================================================="
-puts "check_antennas"
-puts "--------------------------------------------------------------------------"
-check_antennas -report_file $env(REPORTS_DIR)/antenna.log -report_violating_nets
+#puts "\n=========================================================================="
+#puts "check_antennas"
+#puts "--------------------------------------------------------------------------"
+#check_antennas -report_file $env(REPORTS_DIR)/antenna.log -report_violating_nets
 
 # Write SDC to results with updated clock periods that are just failing.
 # Use make target update_sdc_clock to install the updated sdc.
-source [file join $env(SCRIPTS_DIR) "write_ref_sdc.tcl"]
+#source [file join $env(SCRIPTS_DIR) "write_ref_sdc.tcl"]

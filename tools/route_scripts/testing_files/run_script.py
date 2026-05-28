@@ -23,7 +23,6 @@ lef_files = [
 plt_conf = this_file_dir + '/h.r.3.3.techlef.config.json'
 
 
-
 def run_test_1():
     routing_fix_main.fix_routes(
         def_file=test_def_file,

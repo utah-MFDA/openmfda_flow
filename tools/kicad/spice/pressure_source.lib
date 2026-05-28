@@ -1,0 +1,10 @@
+pressure_source
+
+.control
+pre_osdi pressure_source.osdi
+.endc
+
+.model pressure_source_model pressure_source pressure=24k
+.subckt pressure_src plus minus params:pressure=24k
+N1 plus minus pressure_source_model pressure=pressure
+.ends
