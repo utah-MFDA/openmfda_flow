@@ -1,0 +1,4 @@
+lef,cell_name,parameters
+p_serpentine_0_50_200,p_serpentine_0,X1=50.0 Y1=200.0
+p_serpentine_0_150_200,p_serpentine_0,X1=150.0 Y1=200.0
+p_serpentine_0_250_200,p_serpentine_0,X1=250.0 Y1=200.0

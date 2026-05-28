@@ -1,0 +1,4 @@
+Inlet,Solution,InConcentration,Outlet,OutConcentration
+soln1,H2O,100m,out,89.2m
+soln2,Tag,100m,out,10m
+soln3,Sample,100m,out,0.8m

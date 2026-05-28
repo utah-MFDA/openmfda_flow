@@ -1,0 +1,2 @@
+Name,Simulation Type,Duration,Time Slice
+Sim_1,transient,1m,0.1m

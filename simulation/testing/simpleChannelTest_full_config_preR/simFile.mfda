@@ -1,0 +1,8 @@
+
+
+dev pressurePump soln1 pressure=100k
+
+inlet soln1 chemConcentration=100m 
+eval  out chemConcentration=89.2m err=0.1
+
+NETLIST file simple_channel.v

@@ -1,0 +1,16 @@
+[dockerImages]
+simulation_image=     bgoenner/mfda_xyce
+simulation_container= vibrant_clarke
+
+[projectConfig]
+project_directory=    ./../testing/projects
+active_project=       simple_channel
+
+[dockerConfig]
+sim_docker_run=
+sim_docker_wd=        /mfda_simulation/local/simulations
+
+[simConfig]
+libraryfile=  ../testing/StandardCellLibrary.csv
+circonfig=    ../V2Va_Parser/VMF_xyce.mfsp
+xycefiles=    spiceList

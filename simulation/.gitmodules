@@ -1,0 +1,5 @@
+
+[submodule "V2Va_Parser"]
+	path = V2Va_Parser_dep
+	url = https://github.com/utah-MFDA/V2Va_Parser.git
+	branch = 0.0.0b
