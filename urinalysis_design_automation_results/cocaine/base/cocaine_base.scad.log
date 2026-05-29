@@ -1,0 +1,349 @@
+
+    --------------------------------
+          OpenSCAD generation
+    --------------------------------
+    
+Starting writing @ ./results/cocaine/base/cocaine.scad
+pcell dict:  {'p_serpentine_0_360_30_18': {'pcell': 'p_serpentine_0', 'params': 'L1=360 L2=30 turns=18'}, 'p_serpentine_0_60_30_1': {'pcell': 'p_serpentine_0', 'params': 'L1=60 L2=30 turns=1'}, 'p_serpentine_0_30_30_1': {'pcell': 'p_serpentine_0', 'params': 'L1=30 L2=30 turns=1'}}
+Importing TECH_LEF: ./platforms/h.r.3.3/lef/h.r.3.3.tlef
+import via M1M2_PR
+['via1', 'met1', 'met2']
+import via M2M3_PR
+['via2', 'met2', 'met3']
+import via M3M4_PR
+['via3', 'met3', 'met4']
+import via M4M5_PR
+['via4', 'met4', 'met5']
+import via M5M6_PR
+['via5', 'met5', 'met6']
+import via M6M7_PR
+['via6', 'met6', 'met7']
+import via M7M8_PR
+['via7', 'met7', 'met8']
+import via M8M9_PR
+['via8', 'met8', 'met9']
+import via M9M10_PR
+['via9', 'met9', 'met10']
+Parsing macro: serpentine_50px_0
+Parsing macro: serpentine_100px_0
+Parsing macro: serpentine_150px_0
+Parsing macro: serpentine_200px_0
+Parsing macro: serpentine_200px_3
+Parsing macro: serpentine_300px_0
+Parsing macro: serpentine_300px_1
+Parsing macro: serpentine_300px_2
+Parsing macro: serpentine_300px_3
+Parsing macro: diffmix_25px_0
+Parsing macro: p_serpentine_0_60_30_1
+Parsing macro: p_serpentine_0_30_30_1
+b'connect0'
+b'( serp0 out_fluid ) ( mix0 a_fluid )'
+b'connect1'
+b'( serp1 out_fluid ) ( mix0 b_fluid )'
+b'connect2'
+b'( serp2 out_fluid ) ( mix1 a_fluid )'
+b'connect3'
+b'( mix1 b_fluid ) ( mix0 out_fluid )'
+b'out'
+b'( PIN out ) ( mix1 out_fluid )'
+b'soln1'
+b'( PIN soln1 ) ( serp0 in_fluid )'
+b'soln2'
+b'( PIN soln2 ) ( serp1 in_fluid )'
+b'soln3'
+b'( PIN soln3 ) ( serp2 in_fluid )'
+ROUTE: [[[9.804, 6.84, 'met5'], [10.02991, 6.84, 'met5']], [[9.804, 6.84, 'met3'], [10.488, 6.84, 'met3']], [[10.488, 6.384, 'met2'], [10.488, 6.84, 'met2']], [[10.488, 6.384, 'met1'], [11.856, 6.384, 'met1']], [[11.856, 3.42209, 'met2'], [11.856, 6.384, 'met2']], [[10.02991, 6.84, 'met4'], [10.02991, 6.84, 'met5']], [[9.804, 6.84, 'met3'], [9.804, 6.84, 'met4']], [[9.804, 6.84, 'met4'], [9.804, 6.84, 'met5']], [[10.488, 6.84, 'met2'], [10.488, 6.84, 'met3']], [[10.488, 6.384, 'met1'], [10.488, 6.384, 'met2']], [[11.856, 6.384, 'met1'], [11.856, 6.384, 'met2']], [[11.856, 3.42209, 'met1'], [11.856, 3.42209, 'met2']]]
+Component list not passed!!!!
+converting route:  connect0 : 
+ROUTE: [[[9.576, 6.612, 'met5'], [10.02991, 6.612, 'met5']], [[10.02991, 6.612, 'met4'], [10.02991, 6.612, 'met5']], [[9.576, 6.612, 'met1'], [9.576, 6.612, 'met2']], [[9.576, 6.612, 'met2'], [9.576, 6.612, 'met3']], [[9.576, 6.612, 'met3'], [9.576, 6.612, 'met4']], [[9.576, 6.612, 'met4'], [9.576, 6.612, 'met5']]]
+Component list not passed!!!!
+converting route:  connect1 : 
+ROUTE: [[[10.716, 6.84, 'met4'], [10.716, 7.068, 'met4']], [[10.716, 7.068, 'met3'], [11.4, 7.068, 'met3']], [[11.4, 6.61409, 'met2'], [11.4, 7.068, 'met2']], [[10.716, 7.068, 'met3'], [10.716, 7.068, 'met4']], [[11.4, 7.068, 'met2'], [11.4, 7.068, 'met3']], [[11.4, 6.61409, 'met1'], [11.4, 6.61409, 'met2']]]
+Component list not passed!!!!
+converting route:  connect2 : 
+ROUTE: [[[10.26209, 6.84, 'met5'], [10.488, 6.84, 'met5']], [[10.488, 6.612, 'met6'], [10.488, 6.84, 'met6']], [[10.488, 6.612, 'met5'], [10.713909999999998, 6.612, 'met5']], [[10.26209, 6.84, 'met4'], [10.26209, 6.84, 'met5']], [[10.488, 6.84, 'met5'], [10.488, 6.84, 'met6']], [[10.488, 6.612, 'met5'], [10.488, 6.612, 'met6']], [[10.713909999999998, 6.612, 'met4'], [10.713909999999998, 6.612, 'met5']]]
+Component list not passed!!!!
+converting route:  connect3 : 
+ROUTE: [[[12.084, 5.7, 'met8'], [12.084, 6.84, 'met8']], [[10.94609, 6.84, 'met5'], [12.084, 6.84, 'met5']], [[12.084, 6.84, 'met5'], [12.084, 6.84, 'met6']], [[12.084, 6.84, 'met6'], [12.084, 6.84, 'met7']], [[12.084, 6.84, 'met7'], [12.084, 6.84, 'met8']], [[10.94609, 6.84, 'met4'], [10.94609, 6.84, 'met5']], [[12.084, 5.7, 'met8'], [12.084, 5.7, 'met9']]]
+Component list not passed!!!!
+converting route:  out : 
+ROUTE: [[[7.98, 5.016, 'met8'], [7.98, 5.472, 'met8']], [[7.752, 5.472, 'met7'], [7.98, 5.472, 'met7']], [[7.752, 5.472, 'met2'], [7.752, 6.15391, 'met2']], [[7.98, 5.472, 'met7'], [7.98, 5.472, 'met8']], [[7.752, 5.472, 'met2'], [7.752, 5.472, 'met3']], [[7.752, 5.472, 'met3'], [7.752, 5.472, 'met4']], [[7.752, 5.472, 'met4'], [7.752, 5.472, 'met5']], [[7.752, 5.472, 'met5'], [7.752, 5.472, 'met6']], [[7.752, 5.472, 'met6'], [7.752, 5.472, 'met7']], [[7.752, 6.15391, 'met1'], [7.752, 6.15391, 'met2']], [[7.98, 5.016, 'met8'], [7.98, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln1 : 
+ROUTE: [[[8.664, 5.016, 'met8'], [8.664, 5.472, 'met8']], [[8.664, 5.472, 'met7'], [9.348, 5.472, 'met7']], [[9.348, 5.472, 'met2'], [9.348, 6.60991, 'met2']], [[8.664, 5.472, 'met7'], [8.664, 5.472, 'met8']], [[9.348, 5.472, 'met2'], [9.348, 5.472, 'met3']], [[9.348, 5.472, 'met3'], [9.348, 5.472, 'met4']], [[9.348, 5.472, 'met4'], [9.348, 5.472, 'met5']], [[9.348, 5.472, 'met5'], [9.348, 5.472, 'met6']], [[9.348, 5.472, 'met6'], [9.348, 5.472, 'met7']], [[9.348, 6.60991, 'met1'], [9.348, 6.60991, 'met2']], [[8.664, 5.016, 'met8'], [8.664, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln2 : 
+ROUTE: [[[9.348, 5.016, 'met8'], [9.348, 5.7, 'met8']], [[9.348, 5.7, 'met5'], [11.628, 5.7, 'met5']], [[11.628, 5.7, 'met2'], [11.628, 6.60991, 'met2']], [[9.348, 5.7, 'met5'], [9.348, 5.7, 'met6']], [[9.348, 5.7, 'met6'], [9.348, 5.7, 'met7']], [[9.348, 5.7, 'met7'], [9.348, 5.7, 'met8']], [[11.628, 5.7, 'met2'], [11.628, 5.7, 'met3']], [[11.628, 5.7, 'met3'], [11.628, 5.7, 'met4']], [[11.628, 5.7, 'met4'], [11.628, 5.7, 'met5']], [[11.628, 6.60991, 'met1'], [11.628, 6.60991, 'met2']], [[9.348, 5.016, 'met8'], [9.348, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln3 : 
+Importing TECH_LEF: ./platforms/h.r.3.3/lef/h.r.3.3.tlef
+import via M1M2_PR
+['via1', 'met1', 'met2']
+import via M2M3_PR
+['via2', 'met2', 'met3']
+import via M3M4_PR
+['via3', 'met3', 'met4']
+import via M4M5_PR
+['via4', 'met4', 'met5']
+import via M5M6_PR
+['via5', 'met5', 'met6']
+import via M6M7_PR
+['via6', 'met6', 'met7']
+import via M7M8_PR
+['via7', 'met7', 'met8']
+import via M8M9_PR
+['via8', 'met8', 'met9']
+import via M9M10_PR
+['via9', 'met9', 'met10']
+<generator_class.Nets object at 0x7fd6375230d0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+calc len connect0
+['']
+[[11.856, 3.42209, 0.75], [11.856, 3.42209, 0.9500000000000001], [11.856, 6.384, 0.9500000000000001], [11.856, 6.384, 0.75], [10.488, 6.384, 0.75], [10.488, 6.384, 0.9500000000000001], [10.488, 6.84, 0.9500000000000001], [10.488, 6.84, 1.1500000000000001], [9.804, 6.84, 1.1500000000000001], [9.804, 6.84, 1.35], [9.804, 6.84, 1.55], [10.02991, 6.84, 1.55], [10.02991, 6.84, 1.35]]
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+calc len connect1
+['']
+[[9.576, 6.612, 0.75], [9.576, 6.612, 0.9500000000000001], [9.576, 6.612, 1.1500000000000001], [9.576, 6.612, 1.35], [9.576, 6.612, 1.55], [10.02991, 6.612, 1.55], [10.02991, 6.612, 1.35]]
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+calc len connect2
+['']
+[[10.716, 6.84, 1.35], [10.716, 7.068, 1.35], [10.716, 7.068, 1.1500000000000001], [11.4, 7.068, 1.1500000000000001], [11.4, 7.068, 0.9500000000000001], [11.4, 6.61409, 0.9500000000000001], [11.4, 6.61409, 0.75]]
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+calc len connect3
+['']
+[[10.26209, 6.84, 1.35], [10.26209, 6.84, 1.55], [10.488, 6.84, 1.55], [10.488, 6.84, 1.75], [10.488, 6.612, 1.75], [10.488, 6.612, 1.55], [10.713909999999998, 6.612, 1.55], [10.713909999999998, 6.612, 1.35]]
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+calc len out
+['']
+[[12.084, 5.7, 2.35], [12.084, 5.7, 2.15], [12.084, 6.84, 2.15], [12.084, 6.84, 1.95], [12.084, 6.84, 1.75], [12.084, 6.84, 1.55], [10.94609, 6.84, 1.55], [10.94609, 6.84, 1.35]]
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+calc len soln1
+['']
+[[7.98, 5.016, 2.35], [7.98, 5.016, 2.15], [7.98, 5.472, 2.15], [7.98, 5.472, 1.95], [7.752, 5.472, 1.95], [7.752, 5.472, 1.75], [7.752, 5.472, 1.55], [7.752, 5.472, 1.35], [7.752, 5.472, 1.1500000000000001], [7.752, 5.472, 0.9500000000000001], [7.752, 6.15391, 0.9500000000000001], [7.752, 6.15391, 0.75]]
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+calc len soln2
+['']
+[[8.664, 5.016, 2.35], [8.664, 5.016, 2.15], [8.664, 5.472, 2.15], [8.664, 5.472, 1.95], [9.348, 5.472, 1.95], [9.348, 5.472, 1.75], [9.348, 5.472, 1.55], [9.348, 5.472, 1.35], [9.348, 5.472, 1.1500000000000001], [9.348, 5.472, 0.9500000000000001], [9.348, 6.60991, 0.9500000000000001], [9.348, 6.60991, 0.75]]
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+calc len soln3
+['']
+[[9.348, 5.016, 2.35], [9.348, 5.016, 2.15], [9.348, 5.7, 2.15], [9.348, 5.7, 1.95], [9.348, 5.7, 1.75], [9.348, 5.7, 1.55], [11.628, 5.7, 1.55], [11.628, 5.7, 1.35], [11.628, 5.7, 1.1500000000000001], [11.628, 5.7, 0.9500000000000001], [11.628, 6.60991, 0.9500000000000001], [11.628, 6.60991, 0.75]]
+Reporting routing graph
+<generator_class.Nets object at 0x7fd637523100>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7fd58e1ba160>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7fd58e1ba0a0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7fd58e210d60>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7fd58e210c70>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7fd58e1c78e0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7fd58e210490>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+
+    --------------------------------
+          OpenSCAD complete
+    --------------------------------
+    
+	Command being timed: "python3 ../tools/scad_render/generator_v2.py --component_file ./platforms/h.r.3.3/pdk/scad_lib/h.r.3.3_merged.scad --routing_file ./platforms/h.r.3.3/scad/routing.scad --scad_include ./platforms/h.r.3.3/pdk/scad_include/polychannel_v2.scad ./platforms/h.r.3.3/pdk/scad_include/lef_scad_config.scad ./platforms/h.r.3.3/pdk/scad_include/lef_helper.scad --lef_file ./platforms/h.r.3.3/lef/h.r.3.3_merged.lef ./results/cocaine/base/h.r.3.3_cocaine_pcells.lef --tlef_file ./platforms/h.r.3.3/lef/h.r.3.3.tlef --platform h.r.3.3 --px 0.0076 --layer 0.01 --bottom_layer 75 --lpv 20 --xbulk 2550 --ybulk 1600 --zbulk 230 --xchip 325 2225 --ychip 325 1275 --pitch 30 --res 120 --dimm_file  --pcell ./results/cocaine/base/pcell_out_scad --def_file results/cocaine/base/4_final.def --design cocaine --scad_out_file ./results/cocaine/base/cocaine_base.scad --scad_include ./platforms/h.r.3.3/pdk/scad_lib/polychannel_v2.scad ./platforms/h.r.3.3/pdk/scad_lib/lef_helper.scad ./platforms/h.r.3.3/pdk/scad_lib/lef_scad_config.scad --results_dir ./results/cocaine/base"
+	User time (seconds): 3.34
+	System time (seconds): 3.41
+	Percent of CPU this job got: 295%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.28
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 75648
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 13693
+	Voluntary context switches: 1325
+	Involuntary context switches: 78489
+	Swaps: 0
+	File system inputs: 16
+	File system outputs: 3968
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

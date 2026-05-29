@@ -1,0 +1,952 @@
+soln1
+soln2
+soln3
+out
+{'inputs': [['soln1', 'soln2', 'soln3']], 'outputs': [['out']], 'wires': [['connect0', 'connect1', 'connect2', 'connect3']], 'components': {'serp0': {'component_type': 'p_serpentine_1_360_30_46', 'ports': {'comp_port': 'out_fluid', 'net_port': 'connect0'}, 'isModule': False}, 'serp1': {'component_type': 'p_serpentine_0_60_30_10', 'ports': {'comp_port': 'out_fluid', 'net_port': 'connect1'}, 'isModule': False}, 'serp2': {'component_type': 'p_serpentine_0_30_30_1', 'ports': {'comp_port': 'out_fluid', 'net_port': 'connect2'}, 'isModule': False}, 'mix0': {'component_type': 'diffmix_25px_0', 'ports': {'comp_port': 'out_fluid', 'net_port': 'connect3'}, 'isModule': False}, 'mix1': {'component_type': 'diffmix_25px_0', 'ports': {'comp_port': 'out_fluid', 'net_port': 'out'}, 'isModule': False}}}
+Simulation import config
+
+Devices =============================
+chem: pressurePump
+net:  soln1
+args: ['pressure=100k']
+
+chem: pressurePump
+net:  soln2
+args: ['pressure=100k']
+
+chem: pressurePump
+net:  soln3
+args: ['pressure=100k']
+
+Chem Input ==========================
+chem: sample
+net:  soln1
+value: 1
+
+chem: R2
+net:  soln2
+value: 1
+
+chem: R1
+net:  soln3
+value: 1
+
+Probe ===============================
+Probe ---
+type: concentration
+net:  out
+device None
+
+Probe ---
+type: concentration
+net:  out
+device None
+
+Probe ---
+type: concentration
+net:  out
+device None
+
+Eval ================================
+property: sample
+net:  out
+value: 0.01315789
+device: None
+time: 0.0
+
+property: R2
+net:  out
+value: 0.29605263000000004
+device: None
+time: 0.0
+
+property: R1
+net:  out
+value: 0.69078947
+device: None
+time: 0.0
+
+
+<SimulationXyce.SimulationXyce.Probe object at 0x7f3b7cb64430>
+<SimulationXyce.SimulationXyce.Probe object at 0x7f3b7cb64700>
+<SimulationXyce.SimulationXyce.Probe object at 0x7f3b7cb648b0>
+{'': '0', 'wire': 'connect0', 'length (mm)': {'': 13.59391}}
+3
+{'': '1', 'wire': 'connect1', 'length (mm)': {'': 2.59182}}
+3
+{'': '2', 'wire': 'connect2', 'length (mm)': {'': 2.363819999999998}}
+3
+{'': '3', 'wire': 'connect3', 'length (mm)': {'': 4.443819999999998}}
+3
+{'': '4', 'wire': 'out', 'length (mm)': {'': 3.9619099999999987}}
+3
+{'': '5', 'wire': 'soln1', 'length (mm)': {'': 14.165909999999997}}
+3
+{'': '6', 'wire': 'soln2', 'length (mm)': {'': 3.4219100000000013}}
+3
+{'': '7', 'wire': 'soln3', 'length (mm)': {'': 4.789910000000001}}
+3
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+Reading:  ./results/ethyl/base/7_ethyl_route_nets.json
+Loading graph: ./results/ethyl/base/7_ethyl_route_nets.json
+comp node : serp0 wire node:  soln1
+comp node : serp1 wire node:  soln2
+comp node : serp2 wire node:  soln3
+comp node : mix1 wire node:  out
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp0 wire node:  connect0
+comp node : mix0 wire node:  connect0
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp1 wire node:  connect1
+comp node : mix0 wire node:  connect1
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp2 wire node:  connect2
+comp node : mix1 wire node:  connect2
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : mix0 wire node:  connect3
+comp node : mix1 wire node:  connect3
+Node serp0 is of type p_serpentine_1_360_30_46
+Node serp1 is of type p_serpentine_0_60_30_10
+Node serp2 is of type p_serpentine_0_30_30_1
+Node mix0 is of type diffmix_25px_0
+Node mix1 is of type diffmix_25px_0
+{'p_serpentine_0_60_30_10': {'base cell': 'p_serpentine_0', 'parameters': 'L1=60 L2=30 turns=10'}, 'p_serpentine_0_30_30_1': {'base cell': 'p_serpentine_0', 'parameters': 'L1=30 L2=30 turns=1'}, 'p_serpentine_1_360_30_46': {'base cell': 'p_serpentine_1', 'parameters': 'L1=360 L2=30 turns=46'}}
+IN nodes ['soln1', 'soln2', 'soln3'] 
+OUT nodes ['out'] 
+CHAN nodes ['connect0', 'connect1', 'connect2', 'connect3'] 
+COMP nodes ['serp0', 'serp1', 'serp2', 'mix0', 'mix1']
+edges of node connect0: [('connect0', 'serp0'), ('connect0', 'mix0')]
+edges of node connect1: [('connect1', 'serp1'), ('connect1', 'mix0')]
+edges of node connect2: [('connect2', 'serp2'), ('connect2', 'mix1')]
+edges of node connect3: [('connect3', 'mix0'), ('connect3', 'mix1')]
+node: serp0, connected nodes {'soln1': {'port': 'in_fluid', 'fl_net': 'soln1_serp0', 'ch_net': 'soln1_serp0_chem'}, 'connect0': {'port': 'out_fluid', 'fl_net': 'connect0_serp0', 'ch_net': 'connect0_serp0_chem'}}
+node: serp1, connected nodes {'soln2': {'port': 'in_fluid', 'fl_net': 'soln2_serp1', 'ch_net': 'soln2_serp1_chem'}, 'connect1': {'port': 'out_fluid', 'fl_net': 'connect1_serp1', 'ch_net': 'connect1_serp1_chem'}}
+node: serp2, connected nodes {'soln3': {'port': 'in_fluid', 'fl_net': 'soln3_serp2', 'ch_net': 'soln3_serp2_chem'}, 'connect2': {'port': 'out_fluid', 'fl_net': 'connect2_serp2', 'ch_net': 'connect2_serp2_chem'}}
+node: mix0, connected nodes {'connect0': {'port': 'a_fluid', 'fl_net': 'connect0_mix0', 'ch_net': 'connect0_mix0_chem'}, 'connect1': {'port': 'b_fluid', 'fl_net': 'connect1_mix0', 'ch_net': 'connect1_mix0_chem'}, 'connect3': {'port': 'out_fluid', 'fl_net': 'connect3_mix0', 'ch_net': 'connect3_mix0_chem'}}
+node: mix1, connected nodes {'connect2': {'port': 'a_fluid', 'fl_net': 'connect2_mix1', 'ch_net': 'connect2_mix1_chem'}, 'connect3': {'port': 'b_fluid', 'fl_net': 'connect3_mix1', 'ch_net': 'connect3_mix1_chem'}, 'out': {'port': 'out_fluid', 'fl_net': 'out_mix1', 'ch_net': 'out_mix1_chem'}}
+['.tran', '1m', '0.1m']
+{'': '0', 'wire': 'connect0', 'length (mm)': {'': 13.59391}}
+3
+{'': '1', 'wire': 'connect1', 'length (mm)': {'': 2.59182}}
+3
+{'': '2', 'wire': 'connect2', 'length (mm)': {'': 2.363819999999998}}
+3
+{'': '3', 'wire': 'connect3', 'length (mm)': {'': 4.443819999999998}}
+3
+{'': '4', 'wire': 'out', 'length (mm)': {'': 3.9619099999999987}}
+3
+{'': '5', 'wire': 'soln1', 'length (mm)': {'': 14.165909999999997}}
+3
+{'': '6', 'wire': 'soln2', 'length (mm)': {'': 3.4219100000000013}}
+3
+{'': '7', 'wire': 'soln3', 'length (mm)': {'': 4.789910000000001}}
+3
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+Reading:  ./results/ethyl/base/7_ethyl_route_nets.json
+Loading graph: ./results/ethyl/base/7_ethyl_route_nets.json
+comp node : serp0 wire node:  soln1
+comp node : serp1 wire node:  soln2
+comp node : serp2 wire node:  soln3
+comp node : mix1 wire node:  out
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp0 wire node:  connect0
+comp node : mix0 wire node:  connect0
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp1 wire node:  connect1
+comp node : mix0 wire node:  connect1
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp2 wire node:  connect2
+comp node : mix1 wire node:  connect2
+
+*****
+***** Welcome to the Xyce(TM) Parallel Electronic Simulator
+*****
+***** This is version Xyce Release 7.8-opensource
+***** Date: Fri Jul 11 09:02:47 MDT 2025
+
+
+***** Executing netlist ./results/ethyl/base/simulation/ethyl_sample.cir
+
+***** Reading and parsing netlist...
+***** Setting up topology...
+
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: resistance Mixer: 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 7.48241e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: test 4 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: resistance Mixer: 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 7.48241e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_sample.cir at or
+ near line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: test 4 
+ 
+Netlist warning: Voltage Node (31) connected to only 1 device Terminal
+Netlist warning: Voltage Node (26) does not have a DC path to ground
+Netlist warning: Voltage Node (28) does not have a DC path to ground
+Netlist warning: Voltage Node (23) does not have a DC path to ground
+Netlist warning: Voltage Node (27) does not have a DC path to ground
+Netlist warning: Voltage Node (31) does not have a DC path to ground
+Netlist warning: Voltage Node (11) does not have a DC path to ground
+Netlist warning: Voltage Node (18) does not have a DC path to ground
+Netlist warning: Voltage Node (9) does not have a DC path to ground
+Netlist warning: Voltage Node (21) does not have a DC path to ground
+Netlist warning: Voltage Node (4) does not have a DC path to ground
+Netlist warning: Voltage Node (25) does not have a DC path to ground
+Netlist warning: Voltage Node (12) does not have a DC path to ground
+Netlist warning: Voltage Node (1) does not have a DC path to ground
+Netlist warning: Voltage Node (14) does not have a DC path to ground
+Netlist warning: Voltage Node (2) does not have a DC path to ground
+Netlist warning: Voltage Node (10) does not have a DC path to ground
+Netlist warning: Voltage Node (3) does not have a DC path to ground
+Netlist warning: Voltage Node (13) does not have a DC path to ground
+Netlist warning: Voltage Node (30) does not have a DC path to ground
+Netlist warning: Voltage Node (8) does not have a DC path to ground
+Netlist warning: Voltage Node (22) does not have a DC path to ground
+Netlist warning: Voltage Node (5) does not have a DC path to ground
+Netlist warning: Voltage Node (7) does not have a DC path to ground
+Netlist warning: Voltage Node (24) does not have a DC path to ground
+Netlist warning: Voltage Node (17) does not have a DC path to ground
+Netlist warning: Voltage Node (19) does not have a DC path to ground
+Netlist warning: Voltage Node (15) does not have a DC path to ground
+Netlist warning: Voltage Node (6) does not have a DC path to ground
+Netlist warning: Voltage Node (20) does not have a DC path to ground
+Netlist warning: Voltage Node (16) does not have a DC path to ground
+***** Device Count Summary ...
+       CHANNEL level 1 (ADMS channel)                8
+       DIFFMIX_25PX_0 level 1 (ADMS diffmix_25px_0)  2
+       P_SERPENTINE_0 level 1 (ADMS p_serpentine_0)  2
+       P_SERPENTINE_1 level 1 (ADMS p_serpentine_1)  1
+       PRESSUREPUMP level 1 (ADMS pressurePump)      3
+       -----------------------------------------------
+       Total Devices                                16
+***** Setting up matrix structure...
+***** Number of Unknowns = 52
+***** Initializing...
+
+***** Beginning DC Operating Point Calculation...
+
+***** Beginning Transient Calculation...
+
+***** Percent complete: 1.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 3.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 7.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 15.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 25.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 35.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 45.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 55.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 65.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 75.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 85.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 95.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Problem read in and set up time: 0.00568295 seconds
+ ***** DCOP time: 0.00450492 seconds.  Breakdown follows:
+	Number Successful Steps Taken:		1
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		3
+	Number Linear Solves:			3
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		5
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		6.31809e-05 seconds
+	Total Jacobian Load Time:		2.40803e-05 seconds
+	Total Linear Solution Time:		0.000189066 seconds
+
+ ***** Transient Stepping time: 0.00439692 seconds.  Breakdown follows:
+	Number Successful Steps Taken:		14
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		14
+	Number Linear Solves:			14
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		28
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		0.000111818 seconds
+	Total Jacobian Load Time:		6.69956e-05 seconds
+	Total Linear Solution Time:		0.000135183 seconds
+
+
+***** Solution Summary *****
+	Number Successful Steps Taken:		15
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		17
+	Number Linear Solves:			17
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		33
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		0.000174999 seconds
+	Total Jacobian Load Time:		9.10759e-05 seconds
+	Total Linear Solution Time:		0.000324249 seconds
+
+
+***** Total Simulation Solvers Run Time: 0.00943899 seconds
+***** Total Elapsed Run Time:            0.0151098 seconds
+*****
+***** End of Xyce(TM) Simulation
+*****
+
+Timing summary of 1 processor
+                 Stats                   Count       CPU Time              Wall Time
+---------------------------------------- ----- --------------------- ---------------------
+Xyce                                         1        0.008 (100.0%)        0.021 (100.0%)
+  Analysis                                   1        0.002 (25.53%)        0.009 (43.84%)
+    Transient                                1        0.002 (25.36%)        0.009 (43.78%)
+      Nonlinear Solve                       15        0.001 (15.30%)        0.001 ( 6.26%)
+        Residual                            33        0.000 ( 2.16%)        0.000 ( 0.96%)
+        Jacobian                            17        0.000 ( 1.15%)        0.000 ( 0.50%)
+        Linear Solve                        17        0.000 ( 3.91%)        0.000 ( 1.63%)
+      Successful DCOP Steps                  1        0.000 ( 3.70%)        0.004 (16.94%)
+      Successful Step                       14        0.000 ( 1.98%)        0.004 (16.86%)
+  Netlist Import                             1        0.001 (17.55%)        0.004 (16.49%)
+    Parse Context                            1        0.000 ( 2.68%)        0.002 (10.22%)
+    Distribute Devices                       1        0.000 ( 4.63%)        0.000 ( 1.74%)
+    Verify Devices                           1        0.000 ( 0.08%)        0.000 ( 0.03%)
+    Instantiate                              1        0.000 ( 3.56%)        0.000 ( 1.32%)
+  Late Initialization                        1        0.001 (14.54%)        0.001 ( 5.44%)
+    Global Indices                           1        0.000 ( 2.24%)        0.000 ( 0.83%)
+  Setup Matrix Structure                     1        0.000 ( 4.28%)        0.000 ( 1.61%)
+
+
+*****
+***** Welcome to the Xyce(TM) Parallel Electronic Simulator
+*****
+***** This is version Xyce Release 7.8-opensource
+***** Date: Fri Jul 11 09:02:47 MDT 2025
+
+
+***** Executing netlist ./results/ethyl/base/simulation/ethyl_R2.cir
+
+***** Reading and parsing netlist...
+***** Setting up topology...
+
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: resistance Mixer: 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 7.48241e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: test 4 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: resistance Mixer: 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 7.48241e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R2.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: test 4 
+ 
+Netlist warning: Voltage Node (31) connected to only 1 device Terminal
+Netlist warning: Voltage Node (26) does not have a DC path to ground
+Netlist warning: Voltage Node (28) does not have a DC path to ground
+Netlist warning: Voltage Node (23) does not have a DC path to ground
+Netlist warning: Voltage Node (27) does not have a DC path to ground
+Netlist warning: Voltage Node (31) does not have a DC path to ground
+Netlist warning: Voltage Node (11) does not have a DC path to ground
+Netlist warning: Voltage Node (18) does not have a DC path to ground
+Netlist warning: Voltage Node (9) does not have a DC path to ground
+Netlist warning: Voltage Node (21) does not have a DC path to ground
+Netlist warning: Voltage Node (4) does not have a DC path to ground
+Netlist warning: Voltage Node (25) does not have a DC path to ground
+Netlist warning: Voltage Node (12) does not have a DC path to ground
+Netlist warning: Voltage Node (1) does not have a DC path to ground
+Netlist warning: Voltage Node (14) does not have a DC path to ground
+Netlist warning: Voltage Node (2) does not have a DC path to ground
+Netlist warning: Voltage Node (10) does not have a DC path to ground
+Netlist warning: Voltage Node (3) does not have a DC path to ground
+Netlist warning: Voltage Node (13) does not have a DC path to ground
+Netlist warning: Voltage Node (30) does not have a DC path to ground
+Netlist warning: Voltage Node (8) does not have a DC path to ground
+Netlist warning: Voltage Node (22) does not have a DC path to ground
+Netlist warning: Voltage Node (5) does not have a DC path to ground
+Netlist warning: Voltage Node (7) does not have a DC path to ground
+Netlist warning: Voltage Node (24) does not have a DC path to ground
+Netlist warning: Voltage Node (17) does not have a DC path to ground
+Netlist warning: Voltage Node (19) does not have a DC path to ground
+Netlist warning: Voltage Node (15) does not have a DC path to ground
+Netlist warning: Voltage Node (6) does not have a DC path to ground
+Netlist warning: Voltage Node (20) does not have a DC path to ground
+Netlist warning: Voltage Node (16) does not have a DC path to ground
+***** Device Count Summary ...
+       CHANNEL level 1 (ADMS channel)                8
+       DIFFMIX_25PX_0 level 1 (ADMS diffmix_25px_0)  2
+       P_SERPENTINE_0 level 1 (ADMS p_serpentine_0)  2
+       P_SERPENTINE_1 level 1 (ADMS p_serpentine_1)  1
+       PRESSUREPUMP level 1 (ADMS pressurePump)      3
+       -----------------------------------------------
+       Total Devices                                16
+***** Setting up matrix structure...
+***** Number of Unknowns = 52
+***** Initializing...
+
+***** Beginning DC Operating Point Calculation...
+
+***** Beginning Transient Calculation...
+
+***** Percent complete: 1.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 3.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 7.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 15.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 25.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 35.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 45.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 55.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 65.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 75.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 85.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 95.5 %
+***** Current system time: Fri Jul 11 09:02:47 2025
+***** Estimated time to completion:  0 sec.
+
+***** Problem read in and set up time: 0.00454903 seconds
+ ***** DCOP time: 0.0044651 seconds.  Breakdown follows:
+	Number Successful Steps Taken:		1
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		3
+	Number Linear Solves:			3
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		5
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		6.7234e-05 seconds
+	Total Jacobian Load Time:		2.5034e-05 seconds
+	Total Linear Solution Time:		0.000196218 seconds
+
+ ***** Transient Stepping time: 0.000977993 seconds.  Breakdown follows:
+	Number Successful Steps Taken:		14
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		14
+	Number Linear Solves:			14
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		28
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		0.00011158 seconds
+	Total Jacobian Load Time:		7.00951e-05 seconds
+	Total Linear Solution Time:		0.000119448 seconds
+
+
+***** Solution Summary *****
+	Number Successful Steps Taken:		15
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		17
+	Number Linear Solves:			17
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		33
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		0.000178814 seconds
+	Total Jacobian Load Time:		9.5129e-05 seconds
+	Total Linear Solution Time:		0.000315666 seconds
+
+
+***** Total Simulation Solvers Run Time: 0.00751209 seconds
+***** Total Elapsed Run Time:            0.012048 seconds
+*****
+***** End of Xyce(TM) Simulation
+*****
+
+Timing summary of 1 processor
+                 Stats                   Count       CPU Time              Wall Time
+---------------------------------------- ----- --------------------- ---------------------
+Xyce                                         1        0.009 (100.0%)        0.021 (100.0%)
+  Analysis                                   1        0.002 (23.18%)        0.007 (34.93%)
+    Transient                                1        0.002 (23.03%)        0.007 (34.86%)
+      Nonlinear Solve                       15        0.001 (13.61%)        0.001 ( 6.24%)
+        Residual                            33        0.000 ( 2.13%)        0.000 ( 0.99%)
+        Jacobian                            17        0.000 ( 1.02%)        0.000 ( 0.53%)
+        Linear Solve                        17        0.000 ( 3.38%)        0.000 ( 1.55%)
+      Successful DCOP Steps                  1        0.000 ( 3.17%)        0.004 (16.71%)
+      Successful Step                       14        0.000 ( 1.86%)        0.000 ( 0.95%)
+  Netlist Import                             1        0.001 (15.47%)        0.002 (11.00%)
+    Parse Context                            1        0.000 ( 2.47%)        0.001 ( 4.65%)
+    Distribute Devices                       1        0.000 ( 3.93%)        0.000 ( 1.73%)
+    Verify Devices                           1        0.000 ( 0.09%)        0.000 ( 0.04%)
+    Instantiate                              1        0.000 ( 3.00%)        0.000 ( 1.31%)
+  Late Initialization                        1        0.001 (12.73%)        0.001 ( 5.57%)
+    Global Indices                           1        0.000 ( 1.95%)        0.000 ( 0.85%)
+  Setup Matrix Structure                     1        0.000 ( 3.79%)        0.000 ( 1.67%)
+
+
+*****
+***** Welcome to the Xyce(TM) Parallel Electronic Simulator
+*****
+***** This is version Xyce Release 7.8-opensource
+***** Date: Fri Jul 11 09:02:48 MDT 2025
+
+
+***** Executing netlist ./results/ethyl/base/simulation/ethyl_R1.cir
+
+***** Reading and parsing netlist...
+***** Setting up topology...
+
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: resistance Mixer: 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 7.48241e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 22
+ Device instance YDIFFMIX_25PX_0!MIX0: test 4 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: resistance Mixer: 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 7.48241e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: 5.28498e+10 
+ 
+Netlist info in file ./results/ethyl/base/simulation/ethyl_R1.cir at or near
+ line 23
+ Device instance YDIFFMIX_25PX_0!MIX1: test 4 
+ 
+Netlist warning: Voltage Node (31) connected to only 1 device Terminal
+Netlist warning: Voltage Node (26) does not have a DC path to ground
+Netlist warning: Voltage Node (28) does not have a DC path to ground
+Netlist warning: Voltage Node (23) does not have a DC path to ground
+Netlist warning: Voltage Node (27) does not have a DC path to ground
+Netlist warning: Voltage Node (31) does not have a DC path to ground
+Netlist warning: Voltage Node (11) does not have a DC path to ground
+Netlist warning: Voltage Node (18) does not have a DC path to ground
+Netlist warning: Voltage Node (9) does not have a DC path to ground
+Netlist warning: Voltage Node (21) does not have a DC path to ground
+Netlist warning: Voltage Node (4) does not have a DC path to ground
+Netlist warning: Voltage Node (25) does not have a DC path to ground
+Netlist warning: Voltage Node (12) does not have a DC path to ground
+Netlist warning: Voltage Node (1) does not have a DC path to ground
+Netlist warning: Voltage Node (14) does not have a DC path to ground
+Netlist warning: Voltage Node (2) does not have a DC path to ground
+Netlist warning: Voltage Node (10) does not have a DC path to ground
+Netlist warning: Voltage Node (3) does not have a DC path to ground
+Netlist warning: Voltage Node (13) does not have a DC path to ground
+Netlist warning: Voltage Node (30) does not have a DC path to ground
+Netlist warning: Voltage Node (8) does not have a DC path to ground
+Netlist warning: Voltage Node (22) does not have a DC path to ground
+Netlist warning: Voltage Node (5) does not have a DC path to ground
+Netlist warning: Voltage Node (7) does not have a DC path to ground
+Netlist warning: Voltage Node (24) does not have a DC path to ground
+Netlist warning: Voltage Node (17) does not have a DC path to ground
+Netlist warning: Voltage Node (19) does not have a DC path to ground
+Netlist warning: Voltage Node (15) does not have a DC path to ground
+Netlist warning: Voltage Node (6) does not have a DC path to ground
+Netlist warning: Voltage Node (20) does not have a DC path to ground
+Netlist warning: Voltage Node (16) does not have a DC path to ground
+***** Device Count Summary ...
+       CHANNEL level 1 (ADMS channel)                8
+       DIFFMIX_25PX_0 level 1 (ADMS diffmix_25px_0)  2
+       P_SERPENTINE_0 level 1 (ADMS p_serpentine_0)  2
+       P_SERPENTINE_1 level 1 (ADMS p_serpentine_1)  1
+       PRESSUREPUMP level 1 (ADMS pressurePump)      3
+       -----------------------------------------------
+       Total Devices                                16
+***** Setting up matrix structure...
+***** Number of Unknowns = 52
+***** Initializing...
+
+***** Beginning DC Operating Point Calculation...
+
+***** Beginning Transient Calculation...
+
+***** Percent complete: 1.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  1 sec.
+
+***** Percent complete: 3.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 7.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 15.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 25.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 35.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 45.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 55.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 65.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 75.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 85.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Percent complete: 95.5 %
+***** Current system time: Fri Jul 11 09:02:48 2025
+***** Estimated time to completion:  0 sec.
+
+***** Problem read in and set up time: 0.00505805 seconds
+ ***** DCOP time: 0.00763416 seconds.  Breakdown follows:
+	Number Successful Steps Taken:		1
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		3
+	Number Linear Solves:			3
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		5
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		6.7234e-05 seconds
+	Total Jacobian Load Time:		2.45571e-05 seconds
+	Total Linear Solution Time:		0.000210047 seconds
+
+ ***** Transient Stepping time: 0.00642681 seconds.  Breakdown follows:
+	Number Successful Steps Taken:		14
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		14
+	Number Linear Solves:			14
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		28
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		0.000127077 seconds
+	Total Jacobian Load Time:		7.22408e-05 seconds
+	Total Linear Solution Time:		0.000146151 seconds
+
+
+***** Solution Summary *****
+	Number Successful Steps Taken:		15
+	Number Failed Steps Attempted:		0
+	Number Jacobians Evaluated:		17
+	Number Linear Solves:			17
+	Number Failed Linear Solves:		0
+	Number Residual Evaluations:		33
+	Number Nonlinear Convergence Failures:	0
+	Total Residual Load Time:		0.000194311 seconds
+	Total Jacobian Load Time:		9.67979e-05 seconds
+	Total Linear Solution Time:		0.000356197 seconds
+
+
+***** Total Simulation Solvers Run Time: 0.017494 seconds
+***** Total Elapsed Run Time:            0.022537 seconds
+*****
+***** End of Xyce(TM) Simulation
+*****
+
+Timing summary of 1 processor
+                 Stats                   Count       CPU Time              Wall Time
+---------------------------------------- ----- --------------------- ---------------------
+Xyce                                         1        0.006 (100.0%)        0.028 (100.0%)
+  Analysis                                   1        0.002 (24.12%)        0.017 (61.47%)
+    Transient                                1        0.002 (23.92%)        0.017 (61.42%)
+      Nonlinear Solve                       15        0.001 (15.58%)        0.001 ( 4.92%)
+        Residual                            33        0.000 ( 1.54%)        0.000 ( 0.81%)
+        Jacobian                            17        0.000 ( 1.07%)        0.000 ( 0.40%)
+        Linear Solve                        17        0.000 ( 4.10%)        0.000 ( 1.32%)
+      Successful DCOP Steps                  1        0.000 ( 5.07%)        0.007 (23.71%)
+      Successful Step                       14        0.000 ( 1.10%)        0.006 (19.69%)
+  Netlist Import                             1        0.000 ( 1.62%)        0.003 (10.32%)
+    Parse Context                            1        0.000 ( 0.00%)        0.002 ( 5.56%)
+    Distribute Devices                       1        0.000 ( 0.00%)        0.000 ( 1.34%)
+    Verify Devices                           1        0.000 ( 0.00%)        0.000 ( 0.02%)
+    Instantiate                              1        0.000 ( 0.00%)        0.000 ( 0.93%)
+  Late Initialization                        1        0.001 (10.93%)        0.001 ( 4.16%)
+    Global Indices                           1        0.000 ( 0.00%)        0.000 ( 0.64%)
+  Setup Matrix Structure                     1        0.000 ( 1.44%)        0.000 ( 1.19%)
+
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : mix0 wire node:  connect3
+comp node : mix1 wire node:  connect3
+Node serp0 is of type p_serpentine_1_360_30_46
+Node serp1 is of type p_serpentine_0_60_30_10
+Node serp2 is of type p_serpentine_0_30_30_1
+Node mix0 is of type diffmix_25px_0
+Node mix1 is of type diffmix_25px_0
+{'p_serpentine_0_60_30_10': {'base cell': 'p_serpentine_0', 'parameters': 'L1=60 L2=30 turns=10'}, 'p_serpentine_0_30_30_1': {'base cell': 'p_serpentine_0', 'parameters': 'L1=30 L2=30 turns=1'}, 'p_serpentine_1_360_30_46': {'base cell': 'p_serpentine_1', 'parameters': 'L1=360 L2=30 turns=46'}}
+IN nodes ['soln1', 'soln2', 'soln3'] 
+OUT nodes ['out'] 
+CHAN nodes ['connect0', 'connect1', 'connect2', 'connect3'] 
+COMP nodes ['serp0', 'serp1', 'serp2', 'mix0', 'mix1']
+edges of node connect0: [('connect0', 'serp0'), ('connect0', 'mix0')]
+edges of node connect1: [('connect1', 'serp1'), ('connect1', 'mix0')]
+edges of node connect2: [('connect2', 'serp2'), ('connect2', 'mix1')]
+edges of node connect3: [('connect3', 'mix0'), ('connect3', 'mix1')]
+node: serp0, connected nodes {'soln1': {'port': 'in_fluid', 'fl_net': 'soln1_serp0', 'ch_net': 'soln1_serp0_chem'}, 'connect0': {'port': 'out_fluid', 'fl_net': 'connect0_serp0', 'ch_net': 'connect0_serp0_chem'}}
+node: serp1, connected nodes {'soln2': {'port': 'in_fluid', 'fl_net': 'soln2_serp1', 'ch_net': 'soln2_serp1_chem'}, 'connect1': {'port': 'out_fluid', 'fl_net': 'connect1_serp1', 'ch_net': 'connect1_serp1_chem'}}
+node: serp2, connected nodes {'soln3': {'port': 'in_fluid', 'fl_net': 'soln3_serp2', 'ch_net': 'soln3_serp2_chem'}, 'connect2': {'port': 'out_fluid', 'fl_net': 'connect2_serp2', 'ch_net': 'connect2_serp2_chem'}}
+node: mix0, connected nodes {'connect0': {'port': 'a_fluid', 'fl_net': 'connect0_mix0', 'ch_net': 'connect0_mix0_chem'}, 'connect1': {'port': 'b_fluid', 'fl_net': 'connect1_mix0', 'ch_net': 'connect1_mix0_chem'}, 'connect3': {'port': 'out_fluid', 'fl_net': 'connect3_mix0', 'ch_net': 'connect3_mix0_chem'}}
+node: mix1, connected nodes {'connect2': {'port': 'a_fluid', 'fl_net': 'connect2_mix1', 'ch_net': 'connect2_mix1_chem'}, 'connect3': {'port': 'b_fluid', 'fl_net': 'connect3_mix1', 'ch_net': 'connect3_mix1_chem'}, 'out': {'port': 'out_fluid', 'fl_net': 'out_mix1', 'ch_net': 'out_mix1_chem'}}
+['.tran', '1m', '0.1m']
+{'': '0', 'wire': 'connect0', 'length (mm)': {'': 13.59391}}
+3
+{'': '1', 'wire': 'connect1', 'length (mm)': {'': 2.59182}}
+3
+{'': '2', 'wire': 'connect2', 'length (mm)': {'': 2.363819999999998}}
+3
+{'': '3', 'wire': 'connect3', 'length (mm)': {'': 4.443819999999998}}
+3
+{'': '4', 'wire': 'out', 'length (mm)': {'': 3.9619099999999987}}
+3
+{'': '5', 'wire': 'soln1', 'length (mm)': {'': 14.165909999999997}}
+3
+{'': '6', 'wire': 'soln2', 'length (mm)': {'': 3.4219100000000013}}
+3
+{'': '7', 'wire': 'soln3', 'length (mm)': {'': 4.789910000000001}}
+3
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+Reading:  ./results/ethyl/base/7_ethyl_route_nets.json
+Loading graph: ./results/ethyl/base/7_ethyl_route_nets.json
+comp node : serp0 wire node:  soln1
+comp node : serp1 wire node:  soln2
+comp node : serp2 wire node:  soln3
+comp node : mix1 wire node:  out
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp0 wire node:  connect0
+comp node : mix0 wire node:  connect0
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp1 wire node:  connect1
+comp node : mix0 wire node:  connect1
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : serp2 wire node:  connect2
+comp node : mix1 wire node:  connect2
+{'connect0': 13.59391, 'connect1': 2.59182, 'connect2': 2.363819999999998, 'connect3': 4.443819999999998, 'out': 3.9619099999999987, 'soln1': 14.165909999999997, 'soln2': 3.4219100000000013, 'soln3': 4.789910000000001}
+comp node : mix0 wire node:  connect3
+comp node : mix1 wire node:  connect3
+Node serp0 is of type p_serpentine_1_360_30_46
+Node serp1 is of type p_serpentine_0_60_30_10
+Node serp2 is of type p_serpentine_0_30_30_1
+Node mix0 is of type diffmix_25px_0
+Node mix1 is of type diffmix_25px_0
+{'p_serpentine_0_60_30_10': {'base cell': 'p_serpentine_0', 'parameters': 'L1=60 L2=30 turns=10'}, 'p_serpentine_0_30_30_1': {'base cell': 'p_serpentine_0', 'parameters': 'L1=30 L2=30 turns=1'}, 'p_serpentine_1_360_30_46': {'base cell': 'p_serpentine_1', 'parameters': 'L1=360 L2=30 turns=46'}}
+IN nodes ['soln1', 'soln2', 'soln3'] 
+OUT nodes ['out'] 
+CHAN nodes ['connect0', 'connect1', 'connect2', 'connect3'] 
+COMP nodes ['serp0', 'serp1', 'serp2', 'mix0', 'mix1']
+edges of node connect0: [('connect0', 'serp0'), ('connect0', 'mix0')]
+edges of node connect1: [('connect1', 'serp1'), ('connect1', 'mix0')]
+edges of node connect2: [('connect2', 'serp2'), ('connect2', 'mix1')]
+edges of node connect3: [('connect3', 'mix0'), ('connect3', 'mix1')]
+node: serp0, connected nodes {'soln1': {'port': 'in_fluid', 'fl_net': 'soln1_serp0', 'ch_net': 'soln1_serp0_chem'}, 'connect0': {'port': 'out_fluid', 'fl_net': 'connect0_serp0', 'ch_net': 'connect0_serp0_chem'}}
+node: serp1, connected nodes {'soln2': {'port': 'in_fluid', 'fl_net': 'soln2_serp1', 'ch_net': 'soln2_serp1_chem'}, 'connect1': {'port': 'out_fluid', 'fl_net': 'connect1_serp1', 'ch_net': 'connect1_serp1_chem'}}
+node: serp2, connected nodes {'soln3': {'port': 'in_fluid', 'fl_net': 'soln3_serp2', 'ch_net': 'soln3_serp2_chem'}, 'connect2': {'port': 'out_fluid', 'fl_net': 'connect2_serp2', 'ch_net': 'connect2_serp2_chem'}}
+node: mix0, connected nodes {'connect0': {'port': 'a_fluid', 'fl_net': 'connect0_mix0', 'ch_net': 'connect0_mix0_chem'}, 'connect1': {'port': 'b_fluid', 'fl_net': 'connect1_mix0', 'ch_net': 'connect1_mix0_chem'}, 'connect3': {'port': 'out_fluid', 'fl_net': 'connect3_mix0', 'ch_net': 'connect3_mix0_chem'}}
+node: mix1, connected nodes {'connect2': {'port': 'a_fluid', 'fl_net': 'connect2_mix1', 'ch_net': 'connect2_mix1_chem'}, 'connect3': {'port': 'b_fluid', 'fl_net': 'connect3_mix1', 'ch_net': 'connect3_mix1_chem'}, 'out': {'port': 'out_fluid', 'fl_net': 'out_mix1', 'ch_net': 'out_mix1_chem'}}
+['.tran', '1m', '0.1m']
+Loaded config file: ./results/ethyl/base/xyce_run.config
+reading file: ./results/ethyl/base/simulation/spice_files.csv
+---------------------------------
+run Xyce: Xyce -plugin /home/u1287005/Desktop/openmfda_flow_pCell_2/flow/platforms/h.r.3.3/xyce/MFXyce_0.0.0.so ./results/ethyl/base/simulation/ethyl_sample.cir
+---------------------------------
+run Xyce: Xyce -plugin /home/u1287005/Desktop/openmfda_flow_pCell_2/flow/platforms/h.r.3.3/xyce/MFXyce_0.0.0.so ./results/ethyl/base/simulation/ethyl_R2.cir
+---------------------------------
+run Xyce: Xyce -plugin /home/u1287005/Desktop/openmfda_flow_pCell_2/flow/platforms/h.r.3.3/xyce/MFXyce_0.0.0.so ./results/ethyl/base/simulation/ethyl_R1.cir
+Result files
+0    ./results/ethyl/base/simulation/ethyl_sample.c...
+1     ./results/ethyl/base/simulation/ethyl_R2.cir.prn
+2     ./results/ethyl/base/simulation/ethyl_R1.cir.prn
+Name: OutputFile, dtype: object
+Chemical list
+0    sample
+1        R2
+2        R1
+Name: Chemical, dtype: object
+./results/ethyl/base/simulation/ethyl_sample.cir.prn
+['TIME', 'V(30)']
+---TIME---
+---V(30)---
+Node #: 30 Node T: V
+(None, None, 'out', 'mix1', None, None)
+out : out_mix1_chem
+  new node: C_sample(out)
+./results/ethyl/base/simulation/ethyl_R2.cir.prn
+['TIME', 'V(30)']
+---TIME---
+---V(30)---
+Node #: 30 Node T: V
+(None, None, 'out', 'mix1', None, None)
+out : out_mix1_chem
+  new node: C_R2(out)
+./results/ethyl/base/simulation/ethyl_R1.cir.prn
+['TIME', 'V(30)']
+---TIME---
+---V(30)---
+Node #: 30 Node T: V
+(None, None, 'out', 'mix1', None, None)
+out : out_mix1_chem
+  new node: C_R1(out)
+./results/ethyl/base/simulation
+Writing results to ./results/ethyl/base/simulation/ethyl_xyceOut.csv
+EVALS {'sample': [<SimulationXyce.SimulationXyce.Eval object at 0x7f3b7cb6a850>], 'R2': [<SimulationXyce.SimulationXyce.Eval object at 0x7f3b7cb6af70>], 'R1': [<SimulationXyce.SimulationXyce.Eval object at 0x7f3b7cb6a760>]}
+evaluating: C_sample(out)
+evaluating: C_R2(out)
+evaluating: C_R1(out)
+Moving results to ./results/ethyl/base
+Moving eval to ./results/ethyl/base
+	Command being timed: "python3 ../tools/simulation/runMFDASim.py --output_dir ./results/ethyl/base --netlist ./designs/src/ethyl/ethyl.v --sim_config ./designs/h.r.3.3/ethyl/simulation.config --design ethyl --sim_dir ./results/ethyl/base/simulation --cir_config ../tools/simulation/V2Va_Parser/VMF_template.mfsp --local_xyce --xyce_run_config ./results/ethyl/base/xyce_run.config --length_file ./results/ethyl/base/7_ethyl_length.csv --pcell_file ./results/ethyl/base/pcell_out_xyce --lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv"
+	User time (seconds): 3.99
+	System time (seconds): 3.51
+	Percent of CPU this job got: 197%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:03.81
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 101316
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 40889
+	Voluntary context switches: 1859
+	Involuntary context switches: 79887
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 160
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

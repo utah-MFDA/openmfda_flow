@@ -1,0 +1,29 @@
+* Simulation of device dev; chem: sample
+YpressurePump soln1_dev soln1_in soln1_in_chem pressure=100k chemConcentration=1 
+YpressurePump soln2_dev soln2_in soln2_in_chem pressure=100k 
+Ychannel soln1 soln1_in soln1_serp0 soln1_in_chem soln1_serp0_chem length=6.360000000000002m
+Ychannel soln2 soln2_in soln2_serp1 soln2_in_chem soln2_serp1_chem length=5.476000000000002m
+
+
+Ychannel connect0 connect0_serp0 connect0_mix0 connect0_serp0_chem connect0_mix0_chem length=9.663819999999998m
+Ychannel connect1 connect1_serp1 connect1_mix0 connect1_serp1_chem connect1_mix0_chem length=1.6819099999999985m
+
+
+Ychannel out out_mix0 0 out_mix0_chem out_out_chem length=2.5939099999999984m
+
+
+Yp_serpentine_1 serp0 soln1_serp0 connect0_serp0 soln1_serp0_chem connect0_serp0_chem  L1=360 L2=30 turns=38
+Yp_serpentine_0 serp1 soln2_serp1 connect1_serp1 soln2_serp1_chem connect1_serp1_chem  L1=30 L2=30 turns=1
+Ydiffmix_25px_0 mix0 connect0_mix0 connect1_mix0 out_mix0 connect0_mix0_chem connect1_mix0_chem out_mix0_chem 
+
+
+
+
+
+
+
+
+.tran 1m 0.1m
+.print tran V(out_mix0_chem)
+
+.end

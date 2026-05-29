@@ -1,0 +1,5 @@
+,pcell,lef_loc,pcell_reg,param1,param2,param3
+0,p_serpentine_0,/home/u1287005/Desktop/openmfda_flow_pCell_2/tools/p_cell_generator/lef/p_cell_serpentines.lef,p_serpentine_0_(?P<L1>\d+)_(?P<L2>\d+)_(?P<turns>\d+),L1,L2,turns
+1,p_serpentine_1,/home/u1287005/Desktop/openmfda_flow_pCell_2/tools/p_cell_generator/lef/p_cell_serpentines.lef,p_serpentine_1_(?P<L1>\d+)_(?P<L2>\d+)_(?P<turns>\d+),L1,L2,turns
+2,p_serpentine_2,/home/u1287005/Desktop/openmfda_flow_pCell_2/tools/p_cell_generator/lef/p_cell_serpentines.lef,p_serpentine_2_(?P<L1>\d+)_(?P<L2>\d+)_(?P<turns>\d+),L1,L2,turns
+3,p_serpentine_3,/home/u1287005/Desktop/openmfda_flow_pCell_2/tools/p_cell_generator/lef/p_cell_serpentines.lef,p_serpentine_3_(?P<L1>\d+)_(?P<L2>\d+)_(?P<turns>\d+),L1,L2,turns

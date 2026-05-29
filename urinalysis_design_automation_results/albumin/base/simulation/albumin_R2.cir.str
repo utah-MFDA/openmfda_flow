@@ -1,0 +1,41 @@
+* Simulation of device dev; chem: R2
+YpressurePump soln1_dev soln1_in soln1_in_chem pressure=100k 
+YpressurePump soln2_dev soln2_in soln2_in_chem pressure=100k 
+YpressurePump soln3_dev soln3_in soln3_in_chem pressure=100k chemConcentration=1 
+YpressurePump soln4_dev soln4_in soln4_in_chem pressure=100k 
+Ychannel soln1 soln1_in soln1_serp0 soln1_in_chem soln1_serp0_chem length=10.71791m
+Ychannel soln2 soln2_in soln2_serp1 soln2_in_chem soln2_serp1_chem length=3.87791m
+Ychannel soln3 soln3_in soln3_serp2 soln3_in_chem soln3_serp2_chem length=3.6499100000000015m
+Ychannel soln4 soln4_in soln4_serp3 soln4_in_chem soln4_serp3_chem length=3.6499099999999998m
+
+
+Ychannel connect0 connect0_mix0 connect0_serp0 connect0_mix0_chem connect0_serp0_chem length=2.107820000000001m
+Ychannel connect1 connect1_mix0 connect1_serp1 connect1_mix0_chem connect1_serp1_chem length=15.787819999999998m
+Ychannel connect2 connect2_mix1 connect2_serp2 connect2_mix1_chem connect2_serp2_chem length=10.543819999999997m
+Ychannel connect3 connect3_mix2 connect3_serp3 connect3_mix2_chem connect3_serp3_chem length=3.0219100000000005m
+Ychannel connect4 connect4_mix0 connect4_mix1 connect4_mix0_chem connect4_mix1_chem length=5.652180000000003m
+Ychannel connect5 connect5_mix1 connect5_mix2 connect5_mix1_chem connect5_mix2_chem length=7.984000000000003m
+
+
+Ychannel out out_mix2 0 out_mix2_chem out_out_chem length=4.7940900000000015m
+
+
+Ydiffmix_25px_0 mix0 connect0_mix0 connect1_mix0 connect4_mix0 connect0_mix0_chem connect1_mix0_chem connect4_mix0_chem 
+Ydiffmix_25px_0 mix1 connect2_mix1 connect4_mix1 connect5_mix1 connect2_mix1_chem connect4_mix1_chem connect5_mix1_chem 
+Ydiffmix_25px_0 mix2 connect3_mix2 connect5_mix2 out_mix2 connect3_mix2_chem connect5_mix2_chem out_mix2_chem 
+Yp_serpentine_0 serp0 soln1_serp0 connect0_serp0 soln1_serp0_chem connect0_serp0_chem  L1=360 L2=30 turns=48
+Yp_serpentine_0 serp1 soln2_serp1 connect1_serp1 soln2_serp1_chem connect1_serp1_chem  L1=360 L2=30 turns=32
+Yp_serpentine_0 serp2 soln3_serp2 connect2_serp2 soln3_serp2_chem connect2_serp2_chem  L1=360 L2=30 turns=8
+Yp_serpentine_0 serp3 soln4_serp3 connect3_serp3 soln4_serp3_chem connect3_serp3_chem  L1=60 L2=30 turns=8
+
+
+
+
+
+
+
+
+.tran 1m 0.1m
+.print tran V(out_mix2_chem)
+
+.end

@@ -1,0 +1,124 @@
+VERSION 5.7 ;
+BUSBITCHARS "[]" ;
+DIVIDERCHAR "/" ;
+
+MACRO p_serpentine_0_360_30_48
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN p_serpentine_0_360_30_48 0 0 ;
+  SIZE 1500 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 1469.5 389.5 1470.5 390.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 1500 420 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END p_serpentine_0_360_30_48
+
+MACRO p_serpentine_0_360_30_32
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN p_serpentine_0_360_30_32 0 0 ;
+  SIZE 1020 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 989.5 389.5 990.5 390.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 1020 420 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END p_serpentine_0_360_30_32
+
+MACRO p_serpentine_0_360_30_8
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN p_serpentine_0_360_30_8 0 0 ;
+  SIZE 300 BY 420 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 269.5 389.5 270.5 390.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 300 420 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END p_serpentine_0_360_30_8
+
+MACRO p_serpentine_0_60_30_8
+  CLASS CORE ;
+  ORIGIN  0 0 ;
+  FOREIGN p_serpentine_0_60_30_8 0 0 ;
+  SIZE 300 BY 120 ;
+  SYMMETRY X Y ;
+  SITE CoreSite ;
+  PIN in_fluid
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 29.5 29.5 30.5 30.5 ;
+    END
+  END in_fluid
+  PIN out_fluid
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met1 ;
+        RECT 269.5 89.5 270.5 90.5 ;
+    END
+  END out_fluid
+  OBS
+    LAYER met1 ;
+      RECT 30 30 300 120 ;
+  END
+  PROPERTY CatenaDesignType "deviceLevel" ;
+END p_serpentine_0_60_30_8
+
