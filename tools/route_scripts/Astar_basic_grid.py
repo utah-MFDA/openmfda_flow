@@ -139,7 +139,7 @@ def trace_path(cell_details, dest):
 # Implement the A* search algorithm
 
 
-def a_star_search(grid, src, dest, silent=True):
+def a_star_search(grid, src, dest):
 
     # get grid size
     if 'ROW' in globals():
@@ -162,7 +162,7 @@ def a_star_search(grid, src, dest, silent=True):
         DIMM = 2
 
     if len(src) != len(dest):
-        print("Source and destination are different size")
+        print("Srouce and destination are different size")
         return
 
     # Check if the source and destination are valid
