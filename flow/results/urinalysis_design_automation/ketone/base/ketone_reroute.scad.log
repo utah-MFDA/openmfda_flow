@@ -1,0 +1,217 @@
+
+    --------------------------------
+          OpenSCAD generation
+    --------------------------------
+    
+Starting writing @ ./results/ketone/base/ketone.scad
+pcell dict:  {'p_serpentine_0_30_30_1': {'pcell': 'p_serpentine_0', 'params': 'L1=30 L2=30 turns=1'}, 'p_serpentine_1_360_30_48': {'pcell': 'p_serpentine_1', 'params': 'L1=360 L2=30 turns=48'}}
+Importing TECH_LEF: ./platforms/h.r.3.3/lef/h.r.3.3.tlef
+import via M1M2_PR
+['via1', 'met1', 'met2']
+import via M2M3_PR
+['via2', 'met2', 'met3']
+import via M3M4_PR
+['via3', 'met3', 'met4']
+import via M4M5_PR
+['via4', 'met4', 'met5']
+import via M5M6_PR
+['via5', 'met5', 'met6']
+import via M6M7_PR
+['via6', 'met6', 'met7']
+import via M7M8_PR
+['via7', 'met7', 'met8']
+import via M8M9_PR
+['via8', 'met8', 'met9']
+import via M9M10_PR
+['via9', 'met9', 'met10']
+Parsing macro: serpentine_50px_0
+Parsing macro: serpentine_100px_0
+Parsing macro: serpentine_150px_0
+Parsing macro: serpentine_200px_0
+Parsing macro: serpentine_200px_3
+Parsing macro: serpentine_300px_0
+Parsing macro: serpentine_300px_1
+Parsing macro: serpentine_300px_2
+Parsing macro: serpentine_300px_3
+Parsing macro: diffmix_25px_0
+SIZE: [0.76, 0.76]
+SIZE: [0.912, 0.912]
+SIZE: [1.368, 1.368]
+SIZE: [1.824, 1.824]
+SIZE: [2.28, 2.28]
+SIZE: [2.28, 2.28]
+SIZE: [3.192, 3.192]
+SIZE: [3.192, 3.192]
+SIZE: [3.42, 3.192]
+SIZE: [3.192, 3.192]
+SIZE: [0.684, 0.684]
+Parsing macro: p_serpentine_1_360_30_48
+SIZE: [0.684, 0.684]
+SIZE: [11.4, 3.192]
+b'connect0'
+b'( serp0 out_fluid ) ( mix0 a_fluid )'
+b'connect1'
+b'( serp1 out_fluid ) ( mix0 b_fluid )'
+b'out'
+b'( PIN out ) ( mix0 out_fluid )'
+b'soln1'
+b'( PIN soln1 ) ( serp0 in_fluid )'
+b'soln2'
+b'( PIN soln2 ) ( serp1 in_fluid )'
+ROUTE: [[[11.628, 6.84, 'met5'], [11.853909999999999, 6.84, 'met5']], [[4.56, 6.84, 'met3'], [11.628, 6.84, 'met3']], [[4.56, 6.384, 'met8'], [4.56, 6.84, 'met8']], [[4.56, 6.15809, 'met4'], [4.56, 6.384, 'met4']], [[11.853909999999999, 6.84, 'met4'], [11.853909999999999, 6.84, 'met5']], [[11.628, 6.84, 'met3'], [11.628, 6.84, 'met4']], [[11.628, 6.84, 'met4'], [11.628, 6.84, 'met5']], [[4.56, 6.84, 'met3'], [4.56, 6.84, 'met4']], [[4.56, 6.84, 'met4'], [4.56, 6.84, 'met5']], [[4.56, 6.84, 'met5'], [4.56, 6.84, 'met6']], [[4.56, 6.84, 'met6'], [4.56, 6.84, 'met7']], [[4.56, 6.84, 'met7'], [4.56, 6.84, 'met8']], [[4.56, 6.384, 'met4'], [4.56, 6.384, 'met5']], [[4.56, 6.384, 'met5'], [4.56, 6.384, 'met6']], [[4.56, 6.384, 'met6'], [4.56, 6.384, 'met7']], [[4.56, 6.384, 'met7'], [4.56, 6.384, 'met8']], [[4.56, 6.15809, 'met3'], [4.56, 6.15809, 'met4']]]
+Component list not passed!!!!
+converting route:  connect0 : 
+ROUTE: [[[11.172, 6.612, 'met5'], [11.853909999999999, 6.612, 'met5']], [[11.853909999999999, 6.612, 'met4'], [11.853909999999999, 6.612, 'met5']], [[11.172, 6.612, 'met1'], [11.172, 6.612, 'met2']], [[11.172, 6.612, 'met2'], [11.172, 6.612, 'met3']], [[11.172, 6.612, 'met3'], [11.172, 6.612, 'met4']], [[11.172, 6.612, 'met4'], [11.172, 6.612, 'met5']]]
+Component list not passed!!!!
+converting route:  connect1 : 
+ROUTE: [[[12.084, 5.7, 'met8'], [12.084, 6.84, 'met8']], [[12.084, 6.84, 'met7'], [12.312, 6.84, 'met7']], [[12.08609, 6.84, 'met5'], [12.312, 6.84, 'met5']], [[12.084, 6.84, 'met7'], [12.084, 6.84, 'met8']], [[12.312, 6.84, 'met5'], [12.312, 6.84, 'met6']], [[12.312, 6.84, 'met6'], [12.312, 6.84, 'met7']], [[12.08609, 6.84, 'met4'], [12.08609, 6.84, 'met5']], [[12.084, 5.7, 'met8'], [12.084, 5.7, 'met9']]]
+Component list not passed!!!!
+converting route:  out : 
+ROUTE: [[[7.98, 5.016, 'met8'], [7.98, 6.612, 'met8']], [[4.788, 6.612, 'met7'], [7.98, 6.612, 'met7']], [[4.788, 6.384, 'met2'], [4.788, 6.612, 'met2']], [[4.56, 6.384, 'met1'], [4.788, 6.384, 'met1']], [[4.56, 6.156, 'met2'], [4.56, 6.384, 'met2']], [[7.98, 6.612, 'met7'], [7.98, 6.612, 'met8']], [[4.788, 6.612, 'met2'], [4.788, 6.612, 'met3']], [[4.788, 6.612, 'met3'], [4.788, 6.612, 'met4']], [[4.788, 6.612, 'met4'], [4.788, 6.612, 'met5']], [[4.788, 6.612, 'met5'], [4.788, 6.612, 'met6']], [[4.788, 6.612, 'met6'], [4.788, 6.612, 'met7']], [[4.788, 6.384, 'met1'], [4.788, 6.384, 'met2']], [[4.56, 6.384, 'met1'], [4.56, 6.384, 'met2']], [[7.98, 5.016, 'met8'], [7.98, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln1 : 
+ROUTE: [[[8.664, 5.016, 'met8'], [8.664, 6.612, 'met8']], [[8.664, 6.612, 'met5'], [10.944, 6.612, 'met5']], [[8.664, 6.612, 'met5'], [8.664, 6.612, 'met6']], [[8.664, 6.612, 'met6'], [8.664, 6.612, 'met7']], [[8.664, 6.612, 'met7'], [8.664, 6.612, 'met8']], [[10.944, 6.612, 'met1'], [10.944, 6.612, 'met2']], [[10.944, 6.612, 'met2'], [10.944, 6.612, 'met3']], [[10.944, 6.612, 'met3'], [10.944, 6.612, 'met4']], [[10.944, 6.612, 'met4'], [10.944, 6.612, 'met5']], [[8.664, 5.016, 'met8'], [8.664, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln2 : 
+Importing TECH_LEF: ./platforms/h.r.3.3/lef/h.r.3.3.tlef
+import via M1M2_PR
+['via1', 'met1', 'met2']
+import via M2M3_PR
+['via2', 'met2', 'met3']
+import via M3M4_PR
+['via3', 'met3', 'met4']
+import via M4M5_PR
+['via4', 'met4', 'met5']
+import via M5M6_PR
+['via5', 'met5', 'met6']
+import via M6M7_PR
+['via6', 'met6', 'met7']
+import via M7M8_PR
+['via7', 'met7', 'met8']
+import via M8M9_PR
+['via8', 'met8', 'met9']
+import via M9M10_PR
+['via9', 'met9', 'met10']
+<generator_class.Nets object at 0x7f00b6bb0df0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+calc len connect0
+['']
+[[4.56, 6.15809, 1.1500000000000001], [4.56, 6.15809, 1.35], [4.56, 6.384, 1.35], [4.56, 6.384, 1.55], [4.56, 6.384, 1.75], [4.56, 6.384, 1.95], [4.56, 6.384, 2.15], [4.56, 6.84, 2.15], [4.56, 6.84, 1.95], [4.56, 6.84, 1.75], [4.56, 6.84, 1.55], [4.56, 6.84, 1.35], [4.56, 6.84, 1.1500000000000001], [11.628, 6.84, 1.1500000000000001], [11.628, 6.84, 1.35], [11.628, 6.84, 1.55], [11.853909999999999, 6.84, 1.55], [11.853909999999999, 6.84, 1.35]]
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+calc len connect1
+['']
+[[11.172, 6.612, 0.75], [11.172, 6.612, 0.9500000000000001], [11.172, 6.612, 1.1500000000000001], [11.172, 6.612, 1.35], [11.172, 6.612, 1.55], [11.853909999999999, 6.612, 1.55], [11.853909999999999, 6.612, 1.35]]
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+calc len out
+['']
+[[12.084, 5.7, 2.35], [12.084, 5.7, 2.15], [12.084, 6.84, 2.15], [12.084, 6.84, 1.95], [12.312, 6.84, 1.95], [12.312, 6.84, 1.75], [12.312, 6.84, 1.55], [12.08609, 6.84, 1.55], [12.08609, 6.84, 1.35]]
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+calc len soln1
+['']
+[[7.98, 5.016, 2.35], [7.98, 5.016, 2.15], [7.98, 6.612, 2.15], [7.98, 6.612, 1.95], [4.788, 6.612, 1.95], [4.788, 6.612, 1.75], [4.788, 6.612, 1.55], [4.788, 6.612, 1.35], [4.788, 6.612, 1.1500000000000001], [4.788, 6.612, 0.9500000000000001], [4.788, 6.384, 0.9500000000000001], [4.788, 6.384, 0.75], [4.56, 6.384, 0.75], [4.56, 6.384, 0.9500000000000001], [4.56, 6.156, 0.9500000000000001]]
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+calc len soln2
+['']
+[[8.664, 5.016, 2.35], [8.664, 5.016, 2.15], [8.664, 6.612, 2.15], [8.664, 6.612, 1.95], [8.664, 6.612, 1.75], [8.664, 6.612, 1.55], [10.944, 6.612, 1.55], [10.944, 6.612, 1.35], [10.944, 6.612, 1.1500000000000001], [10.944, 6.612, 0.9500000000000001], [10.944, 6.612, 0.75]]
+Reporting routing graph
+<generator_class.Nets object at 0x7f00b6bb0e20>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f000d8e3e80>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f000d8be3d0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f000d8befd0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+
+    --------------------------------
+          OpenSCAD complete
+    --------------------------------
+    
+	Command being timed: "python3 ../tools/scad_render/generator_v2.py --component_file ./platforms/h.r.3.3/pdk/scad_lib/h.r.3.3_merged.scad --routing_file ./platforms/h.r.3.3/scad/routing.scad --scad_include ./platforms/h.r.3.3/pdk/scad_include/polychannel_v2.scad ./platforms/h.r.3.3/pdk/scad_include/lef_scad_config.scad ./platforms/h.r.3.3/pdk/scad_include/lef_helper.scad --lef_file ./platforms/h.r.3.3/lef/h.r.3.3_merged.lef ./results/ketone/base/h.r.3.3_ketone_pcells.lef --tlef_file ./platforms/h.r.3.3/lef/h.r.3.3.tlef --platform h.r.3.3 --px 0.0076 --layer 0.01 --bottom_layer 75 --lpv 20 --xbulk 2550 --ybulk 1600 --zbulk 230 --xchip 325 2225 --ychip 325 1275 --pitch 30 --res 120 --dimm_file  --pcell_file ./results/ketone/base/pcell_out_scad --pcell_file ./results/ketone/base/pcell_out_scad --def_file results/ketone/base/3_route_1.def --design ketone --length_out ./results/ketone/base/7_ketone_length.csv --route_map_out ./results/ketone/base/7_ketone_route_nets.json --scad_out_file ./results/ketone/base/ketone_reroute.scad --results_dir ./results/ketone/base"
+	User time (seconds): 3.52
+	System time (seconds): 3.53
+	Percent of CPU this job got: 263%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.68
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 75944
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 13644
+	Voluntary context switches: 1252
+	Involuntary context switches: 247
+	Swaps: 0
+	File system inputs: 16
+	File system outputs: 3568
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,3 @@
+,Chemical,Time,Node,Error,Expected Conc,Eval Conc
+0,sample,0.0,out,1.347679092,0.025,0.0586919773
+0,R1,0.0,out,0.03455587384615377,0.975,0.941308023

@@ -1,0 +1,29 @@
+
+YpressurePump soln1_dev 1 2 pressure=100k chemConcentration=1
+YpressurePump soln2_dev 3 4 pressure=100k
+Ychannel soln1 1 5 2 6 length=7.069910000000001m
+Ychannel soln2 3 7 4 8 length=5.017910000000001m
+
+
+Ychannel connect0 9 10 11 12 length=6.439820000000002m
+Ychannel connect1 13 14 15 16 length=5.022090000000001m
+
+
+Ychannel out 17 0 18 19 length=4.56191m
+
+
+Ydiffmix_25px_0 mix0 9 13 17 11 15 18
+Yp_serpentine_0 serp0 5 10 6 12 L1=360 L2=30 turns=54
+Yp_serpentine_0 serp1 7 14 8 16 L1=30 L2=30 turns=1
+
+
+
+
+
+
+
+
+.tran 1m 0.1m
+.print tran V(18)
+
+.end

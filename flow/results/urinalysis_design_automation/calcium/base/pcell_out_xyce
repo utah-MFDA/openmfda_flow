@@ -1,0 +1,4 @@
+lef,cell_name,parameters
+p_serpentine_0_270_30_23,p_serpentine_0,L1=270 L2=30 turns=23
+p_serpentine_0_30_30_1,p_serpentine_0,L1=30 L2=30 turns=1
+p_serpentine_3_360_30_62,p_serpentine_3,L1=360 L2=30 turns=62

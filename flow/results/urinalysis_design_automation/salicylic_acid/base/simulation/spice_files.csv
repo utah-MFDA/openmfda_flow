@@ -1,0 +1,5 @@
+,Chemical,spice_str_file,spice_file,OutputFile
+0,sample,./results/salicylic_acid/base/simulation/salicylic_acid_sample.cir.str,./results/salicylic_acid/base/simulation/salicylic_acid_sample.cir,./results/salicylic_acid/base/simulation/salicylic_acid_sample.cir.prn
+1,H2O,./results/salicylic_acid/base/simulation/salicylic_acid_H2O.cir.str,./results/salicylic_acid/base/simulation/salicylic_acid_H2O.cir,./results/salicylic_acid/base/simulation/salicylic_acid_H2O.cir.prn
+2,R2,./results/salicylic_acid/base/simulation/salicylic_acid_R2.cir.str,./results/salicylic_acid/base/simulation/salicylic_acid_R2.cir,./results/salicylic_acid/base/simulation/salicylic_acid_R2.cir.prn
+3,R1,./results/salicylic_acid/base/simulation/salicylic_acid_R1.cir.str,./results/salicylic_acid/base/simulation/salicylic_acid_R1.cir,./results/salicylic_acid/base/simulation/salicylic_acid_R1.cir.prn

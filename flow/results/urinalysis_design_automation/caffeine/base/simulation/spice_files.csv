@@ -1,0 +1,4 @@
+,Chemical,spice_str_file,spice_file,OutputFile
+0,sample,./results/caffeine/base/simulation/caffeine_sample.cir.str,./results/caffeine/base/simulation/caffeine_sample.cir,./results/caffeine/base/simulation/caffeine_sample.cir.prn
+1,R1,./results/caffeine/base/simulation/caffeine_R1.cir.str,./results/caffeine/base/simulation/caffeine_R1.cir,./results/caffeine/base/simulation/caffeine_R1.cir.prn
+2,R2,./results/caffeine/base/simulation/caffeine_R2.cir.str,./results/caffeine/base/simulation/caffeine_R2.cir,./results/caffeine/base/simulation/caffeine_R2.cir.prn
