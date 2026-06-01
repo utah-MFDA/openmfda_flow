@@ -15,7 +15,6 @@ def file_generation(device_name, design, assay_ls, num_assays, platform, assay, 
     # Initial mixing and verilog file
     len_list, layer_list, pitch_list, turn_list, chan_vol, reg_vol = init_mix(num_samples, length_dict)
     v_file(assay, num_samples, len_list, layer_list, pitch_list, turn_list)
-    return io_loc
 
 # Function to define concentration ratios
 def conc_ratio(design, assay_ls, num_assays):
@@ -167,24 +166,37 @@ def constraint_file(device_name, platform):
         f.write(f"current_design {device_name}")
 
 # Function to create io_constraints.tcl
-def io_file(assay, platform, num_samples):
+def io_file(device_name, platform, design, assay_ls, num_assays):
     pin_str = ""
-    f1 = 1050
-    f2 = 660
-    for i in range(num_samples):
-        pin_str += f"place_pin -pin_name soln{i+1} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {1 1}" + f"\n"
-        f1 += 90
-        if f1 >= 1590:
-            f1 = 960
-            f2 = 750
-    pin_str += "place_pin -pin_name out -layer met9 -location { 1590 750 } -pin_size {1 1}"
-    directory = f'flow/designs/{platform}/{assay}'
+    f1_o = 960
+    f2_o = 660
+    k = 1
+    for i in range(num_assays):   
+        pin_str += f"#{assay_ls[i]}\n" 
+        f1 = f1_o
+        f2 = f2_o
+        # logic to account for all assays drawing from single sample solution line
+        if i == 0:
+            soln_num = design[assay_ls[i]]["num_samples"]
+        else:
+            soln_num = design[assay_ls[i]]["num_samples"] - 1
+        for j in range(soln_num):
+            pin_str += f"place_pin -pin_name soln{k} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {1 1}" + f"\n"
+            f2 += 90
+            if f2 > 930:
+                f1 += 90
+                f2 -= 90
+            if f1 > 1590:
+                f1 -= 90
+            k+=1
+        pin_str += f"place_pin -pin_name out{i+1} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {1 1}" + f"\n\n"
+        f1_o += 90
+    directory = f'flow/designs/{platform}/{device_name}'
     filename = 'io_constraints.tcl'
     filepath = os.path.join(directory, filename)
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(f"{pin_str}")
-
 
 # Function to create simulation.config and eval.config
 def sim_eval_files(assay, platform, soln_dict, ratio_dict):
@@ -217,6 +229,3 @@ transient\t1m\t0.1m\n\n
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(f"# eval chem time concentration node\n{eval_str}")
-
-
-
