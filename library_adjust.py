@@ -139,10 +139,11 @@ def edit_file(filename, parameter, new_value, sub_num):
 
 # CREATE TEMPORARY PLATFORM 
 # Copy over temporary platform and rename 
-subprocess.run(f"cp -r flow/platforms/e.c.l flow/platforms/{platform_name}", shell=True)
+subprocess.run(f"cp -r flow/platforms/platform_template flow/platforms/{platform_name}", shell=True)
 # Edit platform name in config.mk 
 edit_file(f"flow/platforms/{platform_name}/config.mk", "PLATFORM_NAME", f"= {platform_name}", 4)
 # Rename e.c.l_merged.lef for new platform 
+#### PDK component doesn't get copied from platform_template
 subprocess.run(f"mv flow/platforms/{platform_name}/pdk/Components/e.c.l_merged.lef flow/platforms/{platform_name}/pdk/Components/{platform_name}_merged.lef", shell=True)
 # Remove broken lef/e.c.l_merged.lef and add new symbolic link to {platform_name}_merged.lef
 subprocess.run(f"rm flow/platforms/{platform_name}/lef/e.c.l_merged.lef", shell=True)
