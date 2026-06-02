@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+python3 tools/route_scripts/routing_fix_main.py \
+  --def_file=flow/results/salicylic_acid/base/4_final.def \
+  --design_name=salicylic_acid \
+  --platform_conf=tools/route_scripts/testing_files/h.r.3.3.techlef.config.json \
+  --src_lef=flow/platforms/h.r.3.3/lef/h.r.3.3_merged.lef \
+  --grid_size 88 52 10 \
+  --def_scale=1000 \
+  --additional_lefs=flow/results/salicylic_acid/base/h.r.3.3_salicylic_acid_pcells.lef
+
