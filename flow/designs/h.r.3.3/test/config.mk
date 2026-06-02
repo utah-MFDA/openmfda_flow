@@ -3,6 +3,7 @@ export VERILOG_FILES 	= ./designs/src/$(DESIGN_NAME)/$(DESIGN_NAME).v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NAME)/constraint.sdc
 export IO_CONSTRAINTS	= ./designs/$(PLATFORM)/$(DESIGN_NAME)/io_constraints.tcl
 export SIMULATION_CONFIG= ./designs/$(PLATFORM)/$(DESIGN_NAME)/simulation.config
+export DIMM_FILE = ./designs/$(PLATFORM)/$(DESIGN_NAME)/routing.csv
 SCAD_ARGS += --dimm_file "$(DIMM_FILE)" 
 SCAD_LIB = $(PLATFORM_DIR)/pdk/scad_lib
 export XYCE_WL_GRAPH = ./$(RESULTS_DIR)/$(DESIGN_NAME)_route_nets.json
