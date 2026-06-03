@@ -1,18 +1,19 @@
 from design_automation import init_mix, v_file
 import os
-import random 
 
 # Generate all necessary files
-def file_generation(device_name, design, assay_ls, num_assays, platform, assay, num_samples, input_dict):
+def file_generation(design, device_name, platform, assay_ls, num_assays):
     # Generate concentration and resistance length ratios 
-    conc_ratio(design, assay_ls, num_assays)
+    design = conc_ratio(design, assay_ls, num_assays)
     # Generate necessary files
     configure_file(device_name, platform) 
     make_file(device_name, platform) 
     constraint_file(device_name, platform) 
-    io_loc = io_file(assay, platform, num_samples) #####
-    sim_eval_files(assay, platform, solution_dict(length_dict), ratio_dict)
-    # Initial mixing and verilog file
+    io_file(device_name, platform, design, assay_ls, num_assays)
+    design = solution_dict(assay_ls, design)
+    sim_eval_files(device_name, platform, design, assay_ls)
+    #####################
+    # Initial mixing and verilog file ### dimm routing file
     len_list, layer_list, pitch_list, turn_list, chan_vol, reg_vol = init_mix(num_samples, length_dict)
     v_file(assay, num_samples, len_list, layer_list, pitch_list, turn_list)
 
@@ -39,15 +40,21 @@ def conc_ratio(design, assay_ls, num_assays):
             length_dict[key] = resist_sort[key] / resist_sort[next(reversed(resist_sort))] 
         design[assay_ls[i]]["ratio_dict"] = ratio_dict
         design[assay_ls[i]]["length_dict"] = length_dict
+    return design
 
 # Function to assign samples to solution numbers
-def solution_dict(length_dict):
-    soln_dict = {}
-    i = 1
-    for key in length_dict.keys():
-        soln_dict[key] = f"soln{i}"
-        i += 1
-    return soln_dict
+def solution_dict(assay_ls, design):
+    i = 2
+    for assay in assay_ls:
+        soln_dict = {}
+        for key in design[assay]["length_dict"].keys():
+            if key == "sample":
+                soln_dict[key] = f"soln1"
+            else:
+                soln_dict[key] = f"soln{i}"
+                i += 1
+        design[assay]["solution_dict"] = soln_dict
+    return design
 
 # Function to create {device_name}.py
 def configure_file(device_name, platform):
@@ -98,6 +105,7 @@ export VERILOG_FILES 	= ./designs/src/$(DESIGN_NAME)/$(DESIGN_NAME).v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NAME)/constraint.sdc
 export IO_CONSTRAINTS	= ./designs/$(PLATFORM)/$(DESIGN_NAME)/io_constraints.tcl
 export SIMULATION_CONFIG= ./designs/$(PLATFORM)/$(DESIGN_NAME)/simulation.config
+export DIMM_FILE = ./designs/$(PLATFORM)/$(DESIGN_NAME)/routing.csv
 SCAD_ARGS += --dimm_file "$(DIMM_FILE)" 
 SCAD_LIB = $(PLATFORM_DIR)/pdk/scad_lib
 export XYCE_WL_GRAPH = ./$(RESULTS_DIR)/$(DESIGN_NAME)_route_nets.json
@@ -199,21 +207,36 @@ def io_file(device_name, platform, design, assay_ls, num_assays):
         file.write(f"{pin_str}")
 
 # Function to create simulation.config and eval.config
-def sim_eval_files(assay, platform, soln_dict, ratio_dict):
+def sim_eval_files(device_name, platform, design, assay_ls):
     input_str = ""
     chem_str = ""
     eval_str = ""
-    for key in soln_dict.keys():
-        input_str += f"input\t{soln_dict[key]}\tpressurePump\tpressure=100k\n"
-        chem_str += f"chem\t{key}\t{soln_dict[key]}\t1\n"
-        eval_str += f"eval\t{key}\t0\tout\t{round(ratio_dict[key]*10**3, 5)}m\n"
+    i = 1
+    j = 1
+    for assay in assay_ls:
+        soln_dict = design[assay]["solution_dict"]
+        ratio_dict = design[assay]["ratio_dict"]
+        eval_str += f"# {assay}\n"
+        for key in soln_dict.keys():
+            if key == "sample":
+                key_name = "sample"
+                if j == 1: 
+                    input_str += f"input\t{soln_dict[key]}\tpressurePump\tpressure=100k\n"
+                    chem_str += f"chem\t{key_name}\t{soln_dict[key]}\t1\n"
+            else:
+                key_name = f"R{i}"
+                i += 1
+                input_str += f"input\t{soln_dict[key]}\tpressurePump\tpressure=100k\n"
+                chem_str += f"chem\t{key_name}\t{soln_dict[key]}\t1\n"
+            eval_str += f"eval\t{key_name}\t0\tout{j}\t{round(ratio_dict[key]*10**3, 5)}m\n"
+        j += 1
     # Create simulation.config
-    directory = f'flow/designs/{platform}/{assay}'
+    directory = f'flow/designs/{platform}/{device_name}'
     filename1 = 'simulation.config'
     filepath = os.path.join(directory, filename1)
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as file:
-        file.write(f"""
+            file.write(f"""
 # time inputs\n
 transient\t1m\t0.1m\n\n
 # input devices
