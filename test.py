@@ -1,8 +1,5 @@
-import json, os
-
-
-device_name = "multiplex_test"
-platform= "h.r.3.3x2"
+from multiplex_design_automation.file_generation import conc_ratio, solution_dict, sim_eval_files
+import json
 
 with open('multiplex_design_automation/multiplex.json', 'r') as file:
     design = json.load(file)
@@ -10,6 +7,52 @@ with open('multiplex_design_automation/multiplex.json', 'r') as file:
 num_assays = len(design.keys())
 assay_ls = list(design.keys())
 
+import os, csv, subprocess
+import time
+import matplotlib.pyplot as plt 
+from matplotlib.ticker import MultipleLocator
+
+error_diff_condition = 0.0000000001
+cutoff_time = 30 * 60
+max_turn = 82
+max_turn = 79
+x_coord = 2550000
+y_coord = 1590000
+
+device_name = "multiplex_test"
+platform= "h.r.3.3x2"
+
+# Function to assign samples to solution numbers and to outline/format solutions used in .v file
+def solution_dict(design, assay_ls, num_assays):
+    soln_list = ""
+    soln_str = ""
+    j = 2
+    for assay in assay_ls:
+        soln_dict = {}
+        for key in design[assay]["length_dict"].keys():
+            if key == "sample":
+                soln_dict[key] = f"soln1"
+                if j == 2:
+                    soln_list += f"\tsoln1,\n"
+                    soln_str += f"soln1" 
+            else:
+                soln_dict[key] = f"soln{j}"
+                soln_list += f"\tsoln{j},\n"
+                soln_str += f"soln{j}"
+                j += 1
+            if assay == assay_ls[-1] and key == list(design[assay]["length_dict"].keys())[-1]:
+                soln_str += ";"
+            elif key != list(design[assay]["length_dict"].keys())[-1]:
+                soln_str += ", "
+                print("KEY: ", key)
+                print("SOLN_STR")
+        design[assay]["solution_dict"] = soln_dict
+    for i in range(num_assays):
+        if i == num_assays - 1:
+            soln_list += f"\tout{i+1}"
+        else:
+            soln_list += f"\tout{i+1},\n"
+    return design, soln_list, soln_str
 
 # Function for specifying solutions; used in .v file
 def soln_spec(num_samples):
@@ -24,6 +67,7 @@ def soln_spec(num_samples):
         else:
             soln_str += ", "
     return soln_list, soln_str
+
 
 # Function for initial mixing geometry based on resistance length
 def init_mix(num_samples, length_dict): 
@@ -170,4 +214,9 @@ wire\t{connect}\n
 
     
 
-    
+design = conc_ratio(design, assay_ls, num_assays)
+design, soln_list, soln_str = solution_dict(design, assay_ls, num_assays)
+sim_eval_files(device_name, platform, design, assay_ls)   
+print("DESIGN: ", design)
+print("SOLN_LIST: ", soln_list)
+print("SOLN_STR: ", soln_str)

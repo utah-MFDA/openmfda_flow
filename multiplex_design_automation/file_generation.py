@@ -1,4 +1,4 @@
-from design_automation import init_mix, v_file
+# from design_automation import init_mix, v_file
 import os
 
 # Generate all necessary files
