@@ -1,4 +1,4 @@
-# from design_automation import init_mix, v_file
+from design_automation import init_mix, mix_v, v_file
 import os
 
 # Generate all necessary files
@@ -10,12 +10,13 @@ def file_generation(design, device_name, platform, assay_ls, num_assays):
     make_file(device_name, platform) 
     constraint_file(device_name, platform) 
     io_file(device_name, platform, design, assay_ls, num_assays)
-    design = solution_dict(assay_ls, design)
+    design, soln_list, soln_str = solution_dict(design, assay_ls, num_assays)
     sim_eval_files(device_name, platform, design, assay_ls)
-    #####################
-    # Initial mixing and verilog file ### dimm routing file
-    len_list, layer_list, pitch_list, turn_list, chan_vol, reg_vol = init_mix(num_samples, length_dict)
-    v_file(assay, num_samples, len_list, layer_list, pitch_list, turn_list)
+    # Initial mixing and verilog file 
+    design = init_mix(design, assay_ls)
+    ##################### ### dimm routing file
+    mix_str, connect_str, output_str = mix_v(design, assay_ls)
+    v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)
 
 # Function to define concentration ratios
 def conc_ratio(design, assay_ls, num_assays):
@@ -42,24 +43,40 @@ def conc_ratio(design, assay_ls, num_assays):
         design[assay_ls[i]]["length_dict"] = length_dict
     return design
 
-# Function to assign samples to solution numbers
-def solution_dict(assay_ls, design):
-    i = 2
+# Function to assign samples to solution numbers and to outline/format solutions used in .v file
+def solution_dict(design, assay_ls, num_assays):
+    soln_list = ""
+    soln_str = ""
+    j = 2
     for assay in assay_ls:
         soln_dict = {}
         for key in design[assay]["length_dict"].keys():
             if key == "sample":
                 soln_dict[key] = f"soln1"
+                if j == 2:
+                    soln_list += f"\tsoln1,\n"
+                    soln_str += f"soln1, " 
             else:
-                soln_dict[key] = f"soln{i}"
-                i += 1
+                soln_dict[key] = f"soln{j}"
+                soln_list += f"\tsoln{j},\n"
+                soln_str += f"soln{j}"
+                j += 1
+                if assay == assay_ls[-1] and key == list(design[assay]["length_dict"].keys())[-1]:
+                    soln_str += ";"
+                else:
+                    soln_str += ", "
         design[assay]["solution_dict"] = soln_dict
-    return design
+    for i in range(num_assays):
+        if i == num_assays - 1:
+            soln_list += f"\tout{i+1}"
+        else:
+            soln_list += f"\tout{i+1},\n"
+    return design, soln_list, soln_str
 
 # Function to create {device_name}.py
 def configure_file(device_name, platform):
     # Create configure.py file
-    directory = f'flow/designs/{platform}/{device_name}'
+    directory = f'../flow/designs/{platform}/{device_name}'
     filename = f'{device_name}.py'
     filepath = os.path.join(directory, filename)
     os.makedirs(directory, exist_ok=True)
@@ -95,7 +112,7 @@ proj.run_flow(mk_targets=make_targets)
 
 # Function to create config.mk
 def make_file(device_name, platform):
-    directory = f'flow/designs/{platform}/{device_name}'
+    directory = f'../flow/designs/{platform}/{device_name}'
     filename = f'config.mk'
     filepath = os.path.join(directory, filename)
     os.makedirs(directory, exist_ok=True)
@@ -166,7 +183,7 @@ $(RESULTS_DIR)/xyceOut_1.csv: $(RESULTS_DIR)/$(DESIGN)_reroute.scad $(SIMULATION
 # Function to create constraint.sdc
 def constraint_file(device_name, platform):
     # Create configure.py file
-    directory = f'flow/designs/{platform}/{device_name}'
+    directory = f'../flow/designs/{platform}/{device_name}'
     filename = f'constraint.sdc'
     filepath = os.path.join(directory, filename)
     os.makedirs(directory, exist_ok=True)
@@ -199,7 +216,7 @@ def io_file(device_name, platform, design, assay_ls, num_assays):
             k+=1
         pin_str += f"place_pin -pin_name out{i+1} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {1 1}" + f"\n\n"
         f1_o += 90
-    directory = f'flow/designs/{platform}/{device_name}'
+    directory = f'../flow/designs/{platform}/{device_name}'
     filename = 'io_constraints.tcl'
     filepath = os.path.join(directory, filename)
     os.makedirs(directory, exist_ok=True)
@@ -231,7 +248,7 @@ def sim_eval_files(device_name, platform, design, assay_ls):
             eval_str += f"eval\t{key_name}\t0\tout{j}\t{round(ratio_dict[key]*10**3, 5)}m\n"
         j += 1
     # Create simulation.config
-    directory = f'flow/designs/{platform}/{device_name}'
+    directory = f'../flow/designs/{platform}/{device_name}'
     filename1 = 'simulation.config'
     filepath = os.path.join(directory, filename1)
     os.makedirs(directory, exist_ok=True)

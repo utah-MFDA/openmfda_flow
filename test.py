@@ -34,18 +34,16 @@ def solution_dict(design, assay_ls, num_assays):
                 soln_dict[key] = f"soln1"
                 if j == 2:
                     soln_list += f"\tsoln1,\n"
-                    soln_str += f"soln1" 
+                    soln_str += f"soln1, " 
             else:
                 soln_dict[key] = f"soln{j}"
                 soln_list += f"\tsoln{j},\n"
                 soln_str += f"soln{j}"
                 j += 1
-            if assay == assay_ls[-1] and key == list(design[assay]["length_dict"].keys())[-1]:
-                soln_str += ";"
-            elif key != list(design[assay]["length_dict"].keys())[-1]:
-                soln_str += ", "
-                print("KEY: ", key)
-                print("SOLN_STR")
+                if assay == assay_ls[-1] and key == list(design[assay]["length_dict"].keys())[-1]:
+                    soln_str += ";"
+                else:
+                    soln_str += ", "
         design[assay]["solution_dict"] = soln_dict
     for i in range(num_assays):
         if i == num_assays - 1:
@@ -54,160 +52,154 @@ def solution_dict(design, assay_ls, num_assays):
             soln_list += f"\tout{i+1},\n"
     return design, soln_list, soln_str
 
-# Function for specifying solutions; used in .v file
-def soln_spec(num_samples):
-    soln_list = ""
-    soln_str = ""
-    for i in range(1, num_samples+1):
-        soln_list += f"\tsoln{i},\n"
-        soln_str += f"soln{i}"
-        if i == num_samples:
-            soln_list += f"\tout"
-            soln_str += ";"
-        else:
-            soln_str += ", "
-    return soln_list, soln_str
-
 
 # Function for initial mixing geometry based on resistance length
-def init_mix(num_samples, length_dict): 
-    # Empty list for specifying extra number of layers
-    layer_list = [[] for i in range(num_samples)]
-    # Empty list for adding mixing length based on sample concentration values
-    len_list = [[] for i in range(num_samples)]
-    # Empty list for specifying pitch between turns
-    pitch_list = [[] for i in range(num_samples)]
-    # Empty list for specifying number of turns
-    turn_list = [[] for i in range(num_samples)]
-    # Assign number of turns based on length of first (smallest concentration/highest resistance) soln
-    key_num = 0
-    expect_px_len_list = []
-    actual_px_len_list = []
-    actual_len_list = []
-    for key in length_dict.keys():
-        actual_len_list.append(length_dict[key])
-        if num_samples <= 3:
-            if key_num == 0:
-                px_len = length_dict[key] * 60
-                mult_factor = 9
+def init_mix(design, assay_ls): 
+    for assay in assay_ls:
+        # Empty dictionary for specifying extra number of blocks
+        block_dict = {}
+        # Empty dictionary for large channel width
+        w_dict = {}
+        # Empty dictionary for large channel height
+        h_dict = {}
+        # Empty dictionary for smaller channel width
+        w3_dict = {}
+        # Empty dictionary for smaller channel height
+        h3_dict = {}
+        # Empty dictionary for channel lengths
+        len_dict = {}
+        
+        # Get length_dict for each assay
+        length_dict = design[assay]["length_dict"]
+        # Assign 100, 10, or 1 resistance block for each input 
+        for key in length_dict.keys():
+            if length_dict[key] // 100 > 0:
+                w_dict[key] = 14
+                h_dict[key] = 10
+                w3_dict[key] = 6
+                h3_dict[key] = 5
+                len_dict[key] = 5
+                block_dict[key] = int(length_dict[key]/100)
+            elif length_dict[key] // 10 > 0:
+                w_dict[key] = 20
+                h_dict[key] = 15
+                w3_dict[key] = 11
+                h3_dict[key] = 8
+                len_dict[key] = 5
+                block_dict[key] = int(length_dict[key]/10)
             else:
-                px_len = length_dict[key] * 30
-                mult_factor = 1
-        else:
-            mult_factor = 8
-            px_len = length_dict[key] * 60
-        expect_px_len_list.append(px_len * mult_factor)
-        # Assign length, turns, pitch, and layers to each sample/reagent p_serp
-        px_int = 360
-        while px_len // px_int == 0:
-            px_int -= 30
-        len_list[key_num].append(px_int)
-        turn_num = round(px_len / px_int) * mult_factor
-        layer_list[key_num].append(0)
-        pitch_list[key_num].append(30)
-        turn_list[key_num].append(turn_num)
-        # Add additional layer if turns exceeds maximum amount
-        if turn_num > max_turn:
-            layer_list[key_num][0] = 1
-            turn_list[key_num][0] = max_turn
-        # Calculate actual px length versus expected
-        actual_px_len = calc_px_len(px_int, turn_list[key_num][0], layer_list[key_num][0], pitch_list[key_num][0])
-        actual_px_len_list.append(actual_px_len)
-        error_val = error_calc((px_len * mult_factor), actual_px_len)
-        key_num += 1
-    chan_vol, reg_vol = volume(expect_px_len_list)
-    return len_list, layer_list, pitch_list, turn_list, chan_vol, reg_vol
+                w_dict[key] = 40
+                h_dict[key] = 30
+                w3_dict[key] = 20
+                h3_dict[key] = 15
+                len_dict[key] = 5
+                block_dict[key] = int(length_dict[key]/1)
+        
+        design[assay]["block_dict"] = block_dict
+        design[assay]["w_dict"] = w_dict
+        design[assay]["h_dict"] = h_dict
+        design[assay]["w3_dict"] =  w3_dict
+        design[assay]["h3_dict"] = h3_dict
+        design[assay]["len_dict"] = len_dict        
+    return design
 
-# Function that calculates entire px length
-def calc_px_len(len, turn, layer, pitch):
-    actual_px_len = len * turn + 1
-    actual_px_len += pitch * turn
-    actual_px_len *= (layer + 1)
-    # Account for double counted corners
-    actual_px_len -= 14 * turn * 2 * (layer + 1)
-    return actual_px_len
+######### UPDATE VOLUME CALCULATIONS 
+# # Function that calculates entire px length
+# def calc_px_len(len, turn, layer, pitch):
+#     actual_px_len = len * turn + 1
+#     actual_px_len += pitch * turn
+#     actual_px_len *= (layer + 1)
+#     # Account for double counted corners
+#     actual_px_len -= 14 * turn * 2 * (layer + 1)
+#     return actual_px_len
 
-# Function that calculates percent error based on expected and observed values 
-def error_calc(expected, actual):
-    return abs(actual - expected) / expected * 100
+# # Function that calculates percent error based on expected and observed values 
+# def error_calc(expected, actual):
+#     return abs(actual - expected) / expected * 100
 
-# Function to calculate theoretical channel volumes in mL
-def volume(len_list):
-    chan_vol = []
-    reg_vol = []
-    w = 14 * 7.6
-    h = 10 * 7.6
-    for i in range(len(len_list)):
-        l = len_list[i] * 7.6
-        chan_vol.append(w * h * l * 10**-12)
-        reg_vol.append((len_list[0]**2 / len_list[i]**2) * w * h * l * 10**-12)
-    return chan_vol, reg_vol
+# # Function to calculate theoretical channel volumes in mL
+# def volume(len_list):
+#     chan_vol = []
+#     reg_vol = []
+#     w = 14 * 7.6
+#     h = 10 * 7.6
+#     for i in range(len(len_list)):
+#         l = len_list[i] * 7.6
+#         chan_vol.append(w * h * l * 10**-12)
+#         reg_vol.append((len_list[0]**2 / len_list[i]**2) * w * h * l * 10**-12)
+#     return chan_vol, reg_vol
 
 # Function that formats mix_list for verilog file
-def mix_v(num_samples, len_list, layer_list, pitch_list, turn_list):
-    # Define serpentine combinations for each solution
+def mix_v(design, assay_ls):
     mix_str = ""
+    i = 0
+    j = 1
     k = 0
-    connect_list = []
-    for i in range(len(len_list)):
-        for j in range(len(len_list[i])):
-            mix_str += f"\np_serpentine_{layer_list[i][j]}_{len_list[i][j]}_{pitch_list[i][j]}_{turn_list[i][j]}"
-            if j == 0:
-                mix_str += f"\tserp{k}\t(.in_fluid(soln{i+1}), .out_fluid(connect{k}));"
-            else:
-                mix_str += f"\tserp{k}\t(.in_fluid(connect{k-1}), .out_fluid(connect{k}));"
+    for assay in assay_ls:
+        mix_str += f"\n// {assay}"
+        connect_dict = {}
+
+        # Define resistance for each assay solution
+        num_blocks = design[assay]["block_dict"]
+        w_chan = design[assay]["w_dict"] 
+        h_chan = design[assay]["h_dict"] 
+        w3_chan = design[assay]["w3_dict"]
+        h3_chan = design[assay]["h3_dict"]
+        len_chan = design[assay]["len_dict"]
+        solution_dict = design[assay]["solution_dict"]
+        
+        for key in solution_dict.keys(): 
+            mix_str += f"\np_resistor_0_{num_blocks[key]}_{w_chan[key]}_{h_chan[key]}_{w3_chan[key]}_{h3_chan[key]}_{len_chan[key]}"
+            mix_str += f"\tresist{k}\t(.in_fluid({solution_dict[key]}), .out_fluid(connect{k}));"
+            mix_str += "\n"
+            connect_dict[key] = f"connect{k}"
             k += 1
-        mix_str += "\n"
-        if len_list[i] == []:
-            connect_list.append(f"soln{i+1}")       
-        else:
-            connect_list.append(f"connect{k-1}")
 
-    # Define mixing 
-    for i in range(len(len_list)- 1):
-        if i == len(len_list) - 2:
-            if len_list[num_samples-1] == []:
-                if connect_list == []:
-                    mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid(soln{len(len_list)-1}), .b_fluid(soln{len(len_list)}), .out_fluid(out));\n"
-                else:
-                    mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid(soln{len(len_list)}), .b_fluid(connect{k-1}), .out_fluid(out));\n"
+        # Define mixing 
+        connect_ls = list(connect_dict.values())
+        for h in range(len(connect_ls)-1):
+            if h == 0:
+                mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(connect{k}));\n"
+                k += 1
+            elif h == len(connect_ls) - 2:
+                mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(out{j}));\n"
             else:
-                if num_samples < 3:
-                    mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_list[i]}), .b_fluid(connect{k-1}), .out_fluid(out));\n"
-                else:
-                    mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_list[i+1]}), .b_fluid(connect{k-1}), .out_fluid(out));\n"
-        else:
-            if i == 0:
-                mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_list[i]}), .b_fluid({connect_list[i+1]}), .out_fluid(connect{k}));\n"
-            else:
-                mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_list[i+1]}), .b_fluid({connect_list[len(connect_list)-1]}), .out_fluid(connect{k}));\n"
-            connect_list.append(f"connect{k}")
-        k += 1
+                mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(connect{k}));\n"
+                k += 1
+            i += 1  
+        j += 1
 
-    # Connect string
-    connect = ""
-    for i in range(k-1):
-        if i == k-2:
-            connect += f"connect{i};"
-        else:
-            connect+= f"connect{i},\t"
-    
-    return connect, mix_str
+        # Connect string
+        connect_str = ""
+        for i in range(k-1):
+            if i == k-2:
+                connect_str += f"connect{i};"
+            else:
+                connect_str += f"connect{i}, "
+        
+        # Output string
+        output_str = ""
+        for i in range(1, j):
+            if i == j-1:
+                output_str += f"out{i};"
+            else:
+                output_str += f"out{i}, "
+
+    return mix_str, connect_str, output_str
+
 
 # Function for creating verilog file based on mixing specifications
-def v_file(assay, num_samples, len_list, layer_list, pitch_list, turn_list):
-    soln_list, soln_str = soln_spec(num_samples)
-    connect, mix_str = mix_v(num_samples, len_list, layer_list, pitch_list, turn_list)
+def v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str):
     # Create and define .v file
-    directory = f'flow/designs/src/{assay}'
-    filename = f'{assay}.v'
+    directory = f'flow/designs/src/{device_name}'
+    filename = f'{device_name}.v'
     filepath = os.path.join(directory, filename)
     os.makedirs(directory, exist_ok=True)
     with open(filepath, "w") as f:
-        f.write(f"""module {assay} (\n{soln_list} \n);
+        f.write(f"""module {device_name} (\n{soln_list} \n);
 input\t{soln_str}
-output\tout;\n
-wire\t{connect}\n
+output\t{output_str}\n
+wire\t{connect_str}\n
     {mix_str}
     \nendmodule
     """)
@@ -217,6 +209,22 @@ wire\t{connect}\n
 design = conc_ratio(design, assay_ls, num_assays)
 design, soln_list, soln_str = solution_dict(design, assay_ls, num_assays)
 sim_eval_files(device_name, platform, design, assay_ls)   
-print("DESIGN: ", design)
-print("SOLN_LIST: ", soln_list)
-print("SOLN_STR: ", soln_str)
+# print("DESIGN: ", design)
+# print("SOLN_LIST: ", soln_list)
+# print("SOLN_STR: ", soln_str)
+design = init_mix(design, assay_ls)
+# for assay in assay_ls:
+#     print("----------------------")
+#     print("ASSAY: ", assay)
+#     print(design[assay])
+#     print("[length_dict]", design[assay]["length_dict"])
+#     print("[block_dict]", design[assay]["block_dict"]) 
+#     print("[w_dict]", design[assay]["w_dict"])
+#     print("[h_dict]", design[assay]["h_dict"])
+#     print("[w3_dict]", design[assay]["w3_dict"])
+#     print("[h3_dict]", design[assay]["h3_dict"])
+#     print("[len_dict]", design[assay]["len_dict"] ) 
+mix_str, connect_str, output_str = mix_v(design, assay_ls)
+print("MIX_STR: ", mix_str)
+print("CONNECT_STR: ", connect_str)
+v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)

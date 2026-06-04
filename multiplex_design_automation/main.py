@@ -24,10 +24,10 @@ platform = "h.r.3.3x2"
 
 # Define device name
 # device_name = (str(input("What is the name of your device?\n")).lower()).replace(" ", "")
-device_name = "multiplex"
+device_name = "multiplex_test"
 
 ## COLLECT JSON FILE PATH INFORMATION
-filepath = ".multiplex_design_automation/urinalysis_dicts.json"
+filepath = "multiplex.json"
 
 # Collect device information from JSON file
 with open(filepath, 'r') as file:
@@ -52,19 +52,20 @@ def store_design(num_samples):
     return error_list_stored
 
 # Main flow process
-def main(assay, platform, num_samples, input_dict, error_condition, start_time, error_list_stored):
+def main(device_name, platform, design, assay_ls, num_assays):
     # Generate necessary files
-    io_loc = file_generation(platform, assay, num_samples, input_dict)
+    file_generation(design, device_name, platform, assay_ls, num_assays)
+    # io_loc = file_generation(platform, assay, num_samples, input_dict)
     # Run flow
-    subprocess.run(["python3", f"flow/designs/{platform}/{assay}/{assay}.py"])
-    print(con_results(assay)[0])
-    # Optimize design
-    ratio_dict, length_dict = conc_ratio(input_dict)
-    len_list, layer_list, pitch_list, turn_list, chan_vol, reg_vol = init_mix(num_samples, length_dict)
-    error_list, opt_time, max_x = min_error(0, len_list, layer_list, pitch_list, turn_list, error_condition, assay, num_samples, 0, platform, length_dict, 100, start_time, error_list_stored, 0)
-    # Append verilog file
-    # subprocess.run(f"cat flow/designs/src/{assay}/{assay}.v", shell=True)
-    return error_list, opt_time, max_x, chan_vol, reg_vol, io_loc
+    subprocess.run(["python3", f"../flow/designs/{platform}/{device_name}/{device_name}.py"])
+    # print(con_results(assay)[0])
+    # # Optimize design
+    # ratio_dict, length_dict = conc_ratio(input_dict)
+    # len_list, layer_list, pitch_list, turn_list, chan_vol, reg_vol = init_mix(num_samples, length_dict)
+    # error_list, opt_time, max_x = min_error(0, len_list, layer_list, pitch_list, turn_list, error_condition, assay, num_samples, 0, platform, length_dict, 100, start_time, error_list_stored, 0)
+    # # Append verilog file
+    # # subprocess.run(f"cat flow/designs/src/{assay}/{assay}.v", shell=True)
+    # return error_list, opt_time, max_x, chan_vol, reg_vol, io_loc
 
 
 # Function for replacing serpentine information in specified file(s)
@@ -109,48 +110,49 @@ def max_mean_med(filename, info, delimiter1, delimiter2, delimiter4, index1, ind
 
 
 if __name__ == "__main__":
-    # create csv file for storing design metrics
-    today = date.today().strftime(f"%Y_%m_%d")
-    filename = f'{assay}_{today}.csv'
-    with open(filename, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['Name', 'Number of Samples', 'Runtime [s]', 'Time to Best Design [s]', 'Die Area', 'Design Area',
-        '% Area Utilization', 'Maximum X Coordinate', 'Total Wire Length', 'Max Wire Length', 'Max Wire Location', 'Mean Wire Length', 'Median Wire Length', 'Concentrations', 'Concentration Error [%]', 'Channel Volume [mL]', 'Required Volume [mL]'])
-        # Record start time
-        start_time = time.time()
-        # Generate error_list_stored
-        error_list_stored = store_design(num_samples)
-        # Run design process
-        error_list, total_time_opt, max_x, chan_vol, reg_vol, io_loc = main(assay, platform, num_samples, input_dict, error_condition, start_time, error_list_stored)
-        # Record end time
-        end_time = time.time()
-        total_time = end_time - start_time
-        # total_time_opt = opt_time_end
-        min = total_time // 60
-        sec = total_time % 60
-        print(f"Your design was generated in {min} min and {round(sec, 4)} s.\n")
-        # Data to be added to csv file
-        rows = [[] for _ in range(num_samples+1)]
+    main(device_name, platform, design, assay_ls, num_assays)
+    # # create csv file for storing design metrics
+    # today = date.today().strftime(f"%Y_%m_%d")
+    # filename = f'{assay}_{today}.csv'
+    # with open(filename, mode='w', newline='') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerow(['Name', 'Number of Samples', 'Runtime [s]', 'Time to Best Design [s]', 'Die Area', 'Design Area',
+    #     '% Area Utilization', 'Maximum X Coordinate', 'Total Wire Length', 'Max Wire Length', 'Max Wire Location', 'Mean Wire Length', 'Median Wire Length', 'Concentrations', 'Concentration Error [%]', 'Channel Volume [mL]', 'Required Volume [mL]'])
+    #     # Record start time
+    #     start_time = time.time()
+    #     # Generate error_list_stored
+    #     error_list_stored = store_design(num_samples)
+    #     # Run design process
+    #     error_list, total_time_opt, max_x, chan_vol, reg_vol, io_loc = main(assay, platform, num_samples, input_dict, error_condition, start_time, error_list_stored)
+    #     # Record end time
+    #     end_time = time.time()
+    #     total_time = end_time - start_time
+    #     # total_time_opt = opt_time_end
+    #     min = total_time // 60
+    #     sec = total_time % 60
+    #     print(f"Your design was generated in {min} min and {round(sec, 4)} s.\n")
+    #     # Data to be added to csv file
+    #     rows = [[] for _ in range(num_samples+1)]
 
-        die_area = grab_info("flow/platforms/h.r.3.3/config.mk", "CORE_AREA", "=", -1) 
-        design_area = grab_info(f"flow/logs/{assay}/base/4_report.log", "Design area", " ", 2) 
-        percent_utilization = grab_info(f"flow/logs/{assay}/base/4_report.log", "Design area", " ", 4) 
-        total_wire_length = grab_info(f"flow/logs/{assay}/base/3_2_TritonRoute.log", "Total wire length", "=", -1) 
-        max_wire_length, wire_connect, mean_wire_length, median_wire_length = max_mean_med(f"flow/results/{assay}/base/{assay}_length.csv", "{", ":", "}", ",", -1, 0, 0, 1)
+    #     die_area = grab_info("flow/platforms/h.r.3.3/config.mk", "CORE_AREA", "=", -1) 
+    #     design_area = grab_info(f"flow/logs/{assay}/base/4_report.log", "Design area", " ", 2) 
+    #     percent_utilization = grab_info(f"flow/logs/{assay}/base/4_report.log", "Design area", " ", 4) 
+    #     total_wire_length = grab_info(f"flow/logs/{assay}/base/3_2_TritonRoute.log", "Total wire length", "=", -1) 
+    #     max_wire_length, wire_connect, mean_wire_length, median_wire_length = max_mean_med(f"flow/results/{assay}/base/{assay}_length.csv", "{", ":", "}", ",", -1, 0, 0, 1)
             
-        rows[0] = [assay, num_samples, total_time, total_time_opt, die_area, design_area, percent_utilization, max_x, total_wire_length, max_wire_length, wire_connect, mean_wire_length, median_wire_length]
-        for j in range(1, len(rows)):
-            rows[j] = ["", "", "", "", "", "", "", "", "", "", "", "", ""]
-        k = 0
-        for key in input_dict.keys():
-            # rows[k].append(io_loc[k])
-            rows[k].append(input_dict[key])
-            rows[k].append(error_list[k] * 100)
-            rows[k].append(chan_vol[k])
-            rows[k].append(reg_vol[k])
-            # if k == len(io_loc) - 2:
-            #     rows[k+1].append(io_loc[k+1])
-            k += 1
-        with open(filename, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(rows)
+    #     rows[0] = [assay, num_samples, total_time, total_time_opt, die_area, design_area, percent_utilization, max_x, total_wire_length, max_wire_length, wire_connect, mean_wire_length, median_wire_length]
+    #     for j in range(1, len(rows)):
+    #         rows[j] = ["", "", "", "", "", "", "", "", "", "", "", "", ""]
+    #     k = 0
+    #     for key in input_dict.keys():
+    #         # rows[k].append(io_loc[k])
+    #         rows[k].append(input_dict[key])
+    #         rows[k].append(error_list[k] * 100)
+    #         rows[k].append(chan_vol[k])
+    #         rows[k].append(reg_vol[k])
+    #         # if k == len(io_loc) - 2:
+    #         #     rows[k+1].append(io_loc[k+1])
+    #         k += 1
+    #     with open(filename, mode='a', newline='') as file:
+    #         writer = csv.writer(file)
+    #         writer.writerows(rows)
