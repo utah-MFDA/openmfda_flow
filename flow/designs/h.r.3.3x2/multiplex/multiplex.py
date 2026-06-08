@@ -19,7 +19,6 @@ proj.set_replace_arg('bin'    , 4)
 proj.set_replace_arg('max_phi', 1.04)
 proj.set_replace_arg('overflow', 0.1)
 
-# make_targets = ['gen_pcells', 'pnr','render', 'simulate', '-B']
 make_targets = ['gen_pcells', 'pnr','scad', 'simulate', '-B']
 
 if args.run_all_deps:

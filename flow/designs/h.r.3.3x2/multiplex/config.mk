@@ -3,6 +3,7 @@ export VERILOG_FILES 	= ./designs/src/$(DESIGN_NAME)/$(DESIGN_NAME).v
 export SDC_FILE      	= ./designs/$(PLATFORM)/$(DESIGN_NAME)/constraint.sdc
 export IO_CONSTRAINTS	= ./designs/$(PLATFORM)/$(DESIGN_NAME)/io_constraints.tcl
 export SIMULATION_CONFIG= ./designs/$(PLATFORM)/$(DESIGN_NAME)/simulation.config
+export DIMM_FILE = ./designs/$(PLATFORM)/$(DESIGN_NAME)/routing.csv
 SCAD_ARGS += --dimm_file "$(DIMM_FILE)" 
 SCAD_LIB = $(PLATFORM_DIR)/pdk/scad_lib
 export XYCE_WL_GRAPH = ./$(RESULTS_DIR)/$(DESIGN_NAME)_route_nets.json
@@ -40,7 +41,8 @@ $(RESULTS_DIR)/$(DESIGN)_reroute.scad: $(RESULTS_DIR)/$(SCAD_DEF) $(LIBRARY_DEPS
 		--length_out $(LENGTH_FILE_REROUTE) \
 		--route_map_out $(ROUTE_MAP_OUT_REROUTE) \
 		--scad_out_file $(RESULTS_DIR)/$(DESIGN)_reroute.scad \
-		--results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
+		--scad_include $(SCAD_INCLUDE_FILES) \
+        --results_dir "$(RESULTS_DIR)" 2>&1 | tee $@.log
 
 $(RESULTS_DIR)/xyceOut_1.csv: $(RESULTS_DIR)/$(DESIGN)_reroute.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation

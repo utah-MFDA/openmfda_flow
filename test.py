@@ -159,8 +159,11 @@ def mix_v(design, assay_ls):
         connect_ls = list(connect_dict.values())
         for h in range(len(connect_ls)-1):
             if h == 0:
-                mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(connect{k}));\n"
-                k += 1
+                if len(connect_ls) <= 2:
+                    mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(out{j}));\n"
+                else:
+                    mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(connect{k}));\n"
+                    k += 1
             elif h == len(connect_ls) - 2:
                 mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(out{j}));\n"
             else:
@@ -171,19 +174,19 @@ def mix_v(design, assay_ls):
 
         # Connect string
         connect_str = ""
-        for i in range(k-1):
-            if i == k-2:
-                connect_str += f"connect{i};"
+        for m in range(k-1):
+            if m == k-2:
+                connect_str += f"connect{m};"
             else:
-                connect_str += f"connect{i}, "
+                connect_str += f"connect{m}, "
         
         # Output string
         output_str = ""
-        for i in range(1, j):
-            if i == j-1:
-                output_str += f"out{i};"
+        for n in range(1, j):
+            if n == j-1:
+                output_str += f"out{n};"
             else:
-                output_str += f"out{i}, "
+                output_str += f"out{n}, "
 
     return mix_str, connect_str, output_str
 
@@ -226,5 +229,5 @@ design = init_mix(design, assay_ls)
 #     print("[len_dict]", design[assay]["len_dict"] ) 
 mix_str, connect_str, output_str = mix_v(design, assay_ls)
 print("MIX_STR: ", mix_str)
-print("CONNECT_STR: ", connect_str)
-v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)
+# print("CONNECT_STR: ", connect_str)
+# v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)

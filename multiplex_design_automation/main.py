@@ -20,7 +20,7 @@ from design_automation import min_error, init_mix, con_results
 #             correct = True
 # except ValueError:
 #     print("Error: Please enter a valid platform number.")
-platform = "h.r.3.3x2"
+platform = "h.r.3.3"
 
 # Define device name
 # device_name = (str(input("What is the name of your device?\n")).lower()).replace(" ", "")
