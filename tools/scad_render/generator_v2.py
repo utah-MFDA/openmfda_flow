@@ -12,7 +12,7 @@ import argparse
 #from generator_class import *
 
 #import solid
-import regex
+#import regex
 import json
 import csv
 import pandas as pd
@@ -22,21 +22,30 @@ from generator_class import NetBuilder
 from generator_class import Pin, Component, Nets
 #from route_scripts import link_routes, convert_layers, convert_lengths, get_intersections
 #from route_scripts import check_net_intersections
-import route_scripts
 import component_parse
+# fmt:off
+#sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import route_scripts
+from route_scripts import link_routes
+
+import def_obj_load
 
 ## Regex parsing
-pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$'
-pin_line_reg  = r'^\s*-\s*(?P<pin>\w*)\s*\+\s*NET\s*(?P<net>\w*)\s*\+\s*DIRECTION\s*(?P<dir>\w*)\s*\+\sUSE\s*SIGNAL\s*\+\s*PORT\s*\+\s*LAYER\s*(?P<layer>\w*)\s*(\(\s*(?P<lx1>[-\d]*)\s*(?P<ly1>[-\d]*)\s*\))\s*(\(\s*(?P<lx2>[-\d]*)\s*(?P<ly2>[-\d]*)\s*\))\s*\+\s*FIXED\s*(\(\s*(?P<fx1>\d*)\s*(?P<fy1>\d*)\s*\)\s*(?P<fdir>\w))\s*;'
+#pin_block_reg = r'^PINS\s*\d*\s*;\w*\n(?|.*\n)*END\s*PINS$' # last implementation
+pin_block_reg = r'^PINS\s*\d*\s*;\w*\n([\s\S]*)^\s*END\s*PINS$'
+pin_line_reg  = r'^\s*-\s*(?P<pin>\w*)\s*\+\s*NET\s*(?P<net>[\w\.]*)\s*\+\s*DIRECTION\s*(?P<dir>\w*)\s*\+\sUSE\s*SIGNAL\s*\+\s*PORT\s*\+\s*LAYER\s*(?P<layer>\w*)\s*(\(\s*(?P<lx1>[-\d]*)\s*(?P<ly1>[-\d]*)\s*\))\s*(\(\s*(?P<lx2>[-\d]*)\s*(?P<ly2>[-\d]*)\s*\))\s*\+\s*FIXED\s*(\(\s*(?P<fx1>\d*)\s*(?P<fy1>\d*)\s*\)\s*(?P<fdir>\w))\s*;'
 
-comp_block_reg = r'^COMPONENTS\s*\d*\s*;\w*\n(?|.*\n)*END\s*COMPONENTS$'
-comp_line_reg = r'^\s*-\s*(?P<name>\w*)\s*(?P<comp>\w*)\s*\+\s*(?:PLACED|FIXED)\s*(\(\s*(?P<x1>\d*)\s*(?P<y1>\d*)\s*\)\s*(?P<dir>\w*))\s*;'
+#comp_block_reg = r'^COMPONENTS\s*\d*\s*;\w*\n(?|.*\n)*END\s*COMPONENTS$' # last implementation
+comp_block_reg = r'^\s*COMPONENTS\s*\d*\s*;([\s\S]*)^\s*END\s*COMPONENTS$'
+comp_line_reg = r'^\s*-\s*(?P<name>[\w\.]*)\s*(?P<comp>\w*)\s*\+\s*(?:PLACED|FIXED)\s*(\(\s*(?P<x1>\d*)\s*(?P<y1>\d*)\s*\)\s*(?P<dir>\w*))\s*;'
 
-nets_block_reg = r'^NETS\s*\d*\s*;\w*\n(?|.*\n)*END\s*NETS$'
+#nets_block_reg = r'^NETS\s*\d*\s*;\w*\n(?|.*\n)*END\s*NETS$' # last implementation
+nets_block_reg = r'^NETS\s*\d*\s*;\w*\n([\s\S]*)^\s*END\s*NETS$'
 #nets_line_reg = r'-\s*(?P<net>\w*)\s*(\(\s*(?P<dev1>\w*)\s*(?P<p1>\w*)\s*\))\s*(\(\s*(?P<dev2>\w*)\s*(?P<p2>\w*)\s*\))\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
 #nets_line_reg = r'^[ ]*-\s*(?P<net>\w*)\s*(?P<dev_groups>(\(\s*\w*\s*\w*\s*\))\s*(\(\s*\w*\s*\w*\s*\)\s*?)+)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
 #nets_line_reg = r'^[ ]*-\s*(?P<net>\w*)\s*(?P<dev_groups>(\(\s*\w*\s*\w*\s*\)\s*?)+)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
-nets_line_reg = r'^[ ]*-\s*(?P<net>\w*)\s*(?P<dev_groups>[\(\s\w\)]*?)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n(?|\s*NEW.*)*;$'
+#nets_line_reg = r'^[ ]*-\s*(?P<net>[\w\.]*)\s*(?P<dev_groups>[\(\s\w\.\)]*?)\s*\+\s*USE SIGNAL.*\s*\+\s*ROUTED.*\n?(?|\s*NEW.*)*;$' # last implemenation
+nets_line_reg = r'^[ ]*-\s*(?P<net>[\w\.]*)\s*(?P<dev_groups>[\(\s\w\.\)\-]*?)\s*\+\s*USE\s+SIGNAL.*\s*\+\s*ROUTED.*\n?(?:[\s\S]*?);$'
 nets_route_reg= r'(?:ROUTED|NEW)\s*(?P<layer>\w*)\s*((?:\(\s*(?P<x1>[\d\*]*)\s*(?P<y1>[\d\*]*)\s*(?P<z1>[\d\*]*)\s*\)))\s((?:\(\s*(?P<x2>[\d\*]*)\s*(?P<y2>[\d\*]*)\s*(?P<z2>[\d\*]*)\s*\)|(?P<via>\w*)))'
 
 # solid imports
@@ -58,6 +67,31 @@ mets = {
     'met7':6,
     'met8':7,
     'met9':8,
+    'met10':9,
+    'met11':10,
+    'met12':11,
+    'met13':12,
+    'met14':13,
+    'met15':14,
+    'met16':15,
+    'met17':16,
+    'met18':17,
+    'met19':18,
+    'met20':19,
+    'met21':20,
+    'met22':21,
+    'met23':22,
+    'met24':23,
+    'met25':24,
+    'met26':25,
+    'met27':26,
+    'met28':27,
+    'met29':28,
+    'met30':29,
+    'met31':30,
+    'met32':31,
+    'met33':32,
+    'met34':33,
 }
 
 run_u_adjustment_script = False
@@ -74,7 +108,8 @@ def get_pins(in_def, in_pins_cdir, debug=False):
     # parse template
     with open(in_def, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
-        mo = regex.findall(mod_re, data, re.MULTILINE)
+        #mo = regex.findall(mod_re, data, re.MULTILINE)
+        mo = re.findall(mod_re, data, re.MULTILINE)
 
     if in_pins_cdir is None:
         _only_top = True
@@ -137,21 +172,41 @@ def get_pin_line(in_pin):
     else:
         data = in_pin
 
-    mo = regex.finditer(mod_re, data, re.MULTILINE)
+    mo = re.finditer(mod_re, data, re.MULTILINE)
 
     return mo
 
 
-def write_pins(o_file, pin_list, bulk, tlef_properties, mets, mode='w+', debug=False):
+def write_pins(
+        o_file,
+        pin_list,
+        bulk,
+        tlef_properties,
+        mets,
+        use_def_io_size=False,
+        io_interface_size=None,
+        mode='w+',
+        debug=False):
 
     f = open(o_file, mode)
-    f.write("\n// PINS")
+    f.write("\n// PINS\n")
 
     nl = '\n'
 
     shape = 'cube'
-    size = [0.1, 0.1, 0.1]
-    rot  = [0, [0,0,1]]
+    if not use_def_io_size:
+        if io_interface_size is None:
+            size = [0.1, 0.1, 0.1]
+        elif isinstance(io_interface_size, list) and len(io_interface_size) == 3:
+            size = io_interface_size
+        else:
+            raise ValueError(f'io_interface_size not correctly defined; got {io_interface_size} expecting len 3 list')
+    else:
+        print('use_def_io_size, not yet implemented used io_interface_size')
+        size = [0.1, 0.1, 0.1]
+        print(f'  default value {size}')
+
+    rot = [0, [0, 0, 1]]
 
     flp = tlef_properties
 
@@ -208,7 +263,7 @@ def get_components(in_def, in_lef_merged=None):
     # parse template
     with open(in_def, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
-        mo = regex.findall(mod_re, data, re.MULTILINE)
+        mo = re.findall(mod_re, data, re.MULTILINE)
 
     mo_l = get_comp_line(mo)
 
@@ -245,15 +300,25 @@ def get_comp_line(in_comp):
     if not isinstance(in_comp, bytes):
         with open(in_comp, 'r+') as f:
             data = mmap.mmap(f.fileno(), 0)
-            mo = regex.findall(mod_re, data, re.MULTILINE)
+            mo = re.findall(mod_re, data, re.MULTILINE)
     else:
         data = in_comp
 
-    mo = regex.finditer(mod_re, data, re.MULTILINE)
+    mo = re.finditer(mod_re, data, re.MULTILINE)
 
     return mo
 
-def write_components(o_file, comp_list, layer_h, px, def_scale, bottom_layers=0, mode="w+", pcell_file=None):
+
+def write_components(
+        o_file,
+        comp_list,
+        layer_h,
+        px,
+        def_scale,
+        bottom_layers=0,
+        mode="w+",
+        pcell_file=None
+):
 
     if isinstance(o_file, str):
         o_file = open(o_file, mode)
@@ -275,8 +340,9 @@ def write_components(o_file, comp_list, layer_h, px, def_scale, bottom_layers=0,
 
     print('pcell dict: ', pc_dict)
 
-    o_file.write("""
+    o_file.write(f"""
 // Components
+// has pcells : {has_pcells}
 """)
 
     for c in comp_list:
@@ -314,11 +380,21 @@ hc_net_property = {
 }
 
 
-def get_nets(in_def, design, tlef=None, tlef_property=None,
-             report_len_file=None, pins=None, components=None,
-             component_lef=None, debug={}, testing=False,
-             dimm_file=None, report_route_net_file=None,
-             gen_with_px_conversion=True, skip_u_adj=(not run_u_adjustment_script)
+def get_nets(in_def,
+             design,
+             tlef=None,
+             tlef_property=None,
+             report_len_file=None,
+             pins=None,
+             components=None,
+             component_lef=None,
+             debug={},
+             testing=False,
+             dimm_file=None,
+             report_route_net_file=None,
+             gen_with_px_conversion=True,
+             skip_u_adj=(not run_u_adjustment_script),
+             just_return_net=False
              ):
 
     mod_re = bytes(nets_block_reg, 'utf-8')
@@ -328,7 +404,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
     # parse template
     with open(in_def, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
-        mo = regex.findall(mod_re, data, re.MULTILINE)
+        mo = re.findall(mod_re, data, re.MULTILINE)
 
     mo_l = get_net_lines(mo)
 
@@ -338,35 +414,35 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         print("Testing! Using test tlef file")
         tlef = tlef_f
 
-    if tlef_property is None:  # load defaults
-        nb = NetBuilder(
-            px        =hc_net_property['px'],
-            layer     =hc_net_property['layer'],
-            lpv       =hc_net_property['lpv'],
-            def_scale =hc_net_property['def_scale'],
-            bottom_layers=hc_net_property['bot_layers']
-        )
-        s = hc_net_property['px']*1000/hc_net_property['def_scale']
-    else:
-        nb = NetBuilder(
-            px        =tlef_property['px'],
-            layer     =tlef_property['layer'],
-            lpv       =tlef_property['lpv'],
-            def_scale =tlef_property['def_scale'],
-            bottom_layers=tlef_property['bot_layers']
-        )
-        s = tlef_property['px']*1000/tlef_property['def_scale']
+    # hard coded defaults
+    # if tlef_property is None:  # load defaults
+    #     nb = NetBuilder(
+    #         px        =hc_net_property['px'],
+    #         layer     =hc_net_property['layer'],
+    #         lpv       =hc_net_property['lpv'],
+    #         def_scale =hc_net_property['def_scale'],
+    #         bottom_layers=hc_net_property['bot_layers']
+    #     )
+    #     s = hc_net_property['px']*1000/hc_net_property['def_scale']
+    #else:
+    if tlef_property is None:
+        raise ValueError("Get nets tlef error")
+    nb = NetBuilder(
+        px        =tlef_property['px'],
+        layer     =tlef_property['layer'],
+        lpv       =tlef_property['lpv'],
+        def_scale =tlef_property['def_scale'],
+        bottom_layers=tlef_property['bot_layers']
+    )
+    s = tlef_property['px']*1000/tlef_property['def_scale']
     nb.import_tlef(tlef)
     nb.import_met(mets)
+    px_size = nb.px
+    def_scale = nb.def_scale
 
 
     os.environ["XYCE_WL_GRAPH"] = ''
-    # with open(components_lef, 'r') as f:
-    # component pins can be checked by
-    # def is_pt_in_pins(self, pt, pos=None, layer=None):
-    #get_comp_pins_from_lef
-    # comp_dict = component_parse.ComponentParser().parser_multi_file(components_lef)
-    # s = 7.6/1000  # hard coded scale
+
     comp_dict = {}
     if isinstance(component_lef, str):
         comp_dict = component_parse.ComponentParser().get_comp_pins_from_lef(component_lef, scale=s)
@@ -386,7 +462,7 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
 
         print(l.group('net'))
         print(l.group('dev_groups'))
-        devs = regex.finditer(bytes(net_dev_reg, 'utf-8'), l.group('dev_groups'))
+        devs = re.finditer(bytes(net_dev_reg, 'utf-8'), l.group('dev_groups'))
 
         dev_list = []
         for d in devs:
@@ -401,7 +477,6 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         for route in mo_r:
             r_deco = {}
             v_deco = ''
-            #print(route.group('layer'))
             for coor in ['x1', 'y1', 'z1', 'x2', 'y2', 'z2']:
                 if route.group(coor) is not None:
                     r_deco[coor] = route.group(coor).decode('utf-8')
@@ -441,45 +516,50 @@ def get_nets(in_def, design, tlef=None, tlef_property=None,
         nets_list.append(nb.export_net())
 
     if gen_with_px_conversion:
-        def_scale = 7.6e-6
-        # def_scale = 1e3
-        # px_size = 7.6e-3
+        #def_scale = 7.6e-6
+        def_scale = 1000
     else:
         def_scale = 1000
         px_size = 1
 
+    if just_return_net:
+        return nets_list
+
     for n in nets_list:
         print("ROUTE:",n.route)
         if 'compress_routes' in debug and debug['compress_routes'] is True:
+            raise Exception("Old compression implementation, TODO update")
             n.compress_routes(debug=True, design=design)
             # linked_net = link_routes(n.route, n.devs, debug=True, design=design)
         else:
             if components is None:
+                raise Exception("Old compression implementation, TODO update")
                 n.compress_routes(design=design, pin_list=pins, def_scale=def_scale)
-                # linked_net = link_routes(
+                # n.route = link_routes(
                 #     n.route,
                 #     n.devs,
-                #     debug=True,
+                #     debug=False,
                 #     design=design,
                 #     pin_list=pins,
                 #     def_scale=def_scale,
                 #     px_sz=px_size
                 # )
             else:
-                n.compress_routes(design=design, pin_list=pins, component_list=components,
-                                  components_lef=component_lef, comp_dict=comp_dict,
-                                  def_scale=def_scale)
-                # linked_net = link_routes(
-                #     n.route,
-                #     n.devs,
-                #     debug=True,
-                #     design=design,
-                #     pin_list=pins,
-                #     component_list=components,
-                #     components_lef=component_lef,
-                #     def_scale=def_scale,
-                #     px_sz=px_size
-                # )
+                # n.compress_routes(design=design, pin_list=pins, component_list=components,
+                #                   components_lef=component_lef, comp_dict=comp_dict,
+                #                   def_scale=def_scale)
+                n.route = link_routes(
+                    n.route,
+                    n.devs,
+                    debug=True,
+                    design=design,
+                    pin_list=pins,
+                    full_component_list=components,
+                    components_lef=component_lef,
+                    def_scale=def_scale,
+                    px_sz=px_size
+                )
+                n.compress = True
 
         if gen_with_px_conversion:
             n.convert_layers(nb)
@@ -570,7 +650,7 @@ def get_net_lines(in_net):
     else:
         data = in_net
 
-    mo = regex.finditer(mod_re, data, re.MULTILINE)
+    mo = re.finditer(mod_re, data, re.MULTILINE)
     return mo
 
 
@@ -584,7 +664,7 @@ def get_net_route(in_net_line):
     else:
         data = in_net_line
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
     return mo
 
 
@@ -592,8 +672,10 @@ def write_nets(o_file, net_list, shape='cube',
                size=[14, 14, 10], mode="w+",
                dimm_file=None, init_size=[14, 14, 10],
                report_len_file=None, report_route_net_file=None,
-               tlef=None, tlef_property=None,
-               dim_is_converted=False, poly_px_module=False,
+               tlef=None, 
+               tlef_property=None,
+               dim_is_converted=False,
+               poly_px_module=False,
                px_conversion=1
                ):
 
@@ -616,24 +698,25 @@ def write_nets(o_file, net_list, shape='cube',
         else:
             return f"[{sz[0]}*px, {sz[1]}*px, {sz[2]}*layer]"
 
-    if tlef_property is None:  # load defaults
-        nb = NetBuilder(
-            px        =hc_net_property['px'],
-            layer     =hc_net_property['layer'],
-            lpv       =hc_net_property['lpv'],
-            def_scale =hc_net_property['def_scale'],
-            bottom_layers=hc_net_property['bot_layers']
-        )
-        s = hc_net_property['px']*1000/hc_net_property['def_scale']
-    else:
-        nb = NetBuilder(
-            px        =tlef_property['px'],
-            layer     =tlef_property['layer'],
-            lpv       =tlef_property['lpv'],
-            def_scale =tlef_property['def_scale'],
-            bottom_layers=tlef_property['bot_layers']
-        )
-        s = tlef_property['px']*1000/tlef_property['def_scale']
+    # hard coded defaults
+    # if tlef_property is None:  # load defaults
+    #     nb = NetBuilder(
+    #         px        =hc_net_property['px'],
+    #         layer     =hc_net_property['layer'],
+    #         lpv       =hc_net_property['lpv'],
+    #         def_scale =hc_net_property['def_scale'],
+    #         bottom_layers=hc_net_property['bot_layers']
+    #     )
+    #     s = hc_net_property['px']*1000/hc_net_property['def_scale']
+    #else:
+    nb = NetBuilder(
+        px        =tlef_property['px'],
+        layer     =tlef_property['layer'],
+        lpv       =tlef_property['lpv'],
+        def_scale =tlef_property['def_scale'],
+        bottom_layers=tlef_property['bot_layers']
+    )
+    s = tlef_property['px']*1000/tlef_property['def_scale']
     nb.import_tlef(tlef)
     nb.import_met(mets)
 
@@ -672,10 +755,13 @@ def write_nets(o_file, net_list, shape='cube',
                     #pt = r
 
                     if len(pc_route) == 0:
-                        pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        # pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        pc_pt1 = [shape, rt_size, pt, rot]
                     elif len(pc_route) == len(n.route.nodes[r]) - 1:
-                        pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        # pc_pt1 = [shape, convert_size(init_size), pt, rot]
+                        pc_pt1 = [shape, rt_size, pt, rot]
                     else:
+                        # pc_pt1 = [shape, convert_size(init_size), pt, rot]
                         pc_pt1 = [shape, rt_size, pt, rot]
                     #pc_pt2 = [shape, size, pt2, rot]
 
@@ -774,7 +860,7 @@ def write_imports(
                 raise ValueError("No results directory")
             if scad_lib_dir == '.':
                 shutil.copy(
-                    cf,
+                    os.path.realpath(cf),
                     f"{results_dir}/{cf.split('/')[-1]}"
                 )
             else:
@@ -875,11 +961,13 @@ def read_dimm(dimm_file):
             print(f"Line {ind} is defined incorrectly, expecting [net_name, dimm_wd_1, dimm_wd_2, dimm_ht]")
     return out_dict
 
-
-tlef_bl_re = r'(?P<key>(?:LAYER|SITE|VIA|PROPERTYDEFINITIONS|UNITS))\s*(?|.*\s*)*?END\s*\w*'
+# these are currently unused
+#tlef_bl_re = r'(?P<key>(?:LAYER|SITE|VIA|PROPERTYDEFINITIONS|UNITS))\s*(?|.*\s*)*?END\s*\w*'
+tlef_bl_re = r'(?P<key>(?:LAYER|SITE|VIA|PROPERTYDEFINITIONS|UNITS))\s*(?:[\S\s]*?)*?END\s*\w*'
 tlef_layer_re = r'LAYER\s*(?P<layer_name>\w*)\s*(?|(?:TYPE\s*(?P<type>(?:ROUTING|CUT))\s*;|DIRECTION\s*(?P<direction>(?:HORIZONTAL|VERTICAL))\s*;|MINWIDTH\s*(?P<minwidth>[\d.]*)\s*;|WIDTH\s*(?P<width>[\d.]*)\s*;)\s*)*END\s*(\w*)\s$'
 tlef_via_re  = r'VIA\s*(?P<via_name>\w*)\s*(?P<type>\w*)(?|.*\n)*?(?:END\s*(?&via_name)\s*$)'
 tlef_via_l_re= r'LAYER (?P<via_name>\w*)\s*;\s*(?:RECT\s*(?P<x1>[\d.-]*)\s*(?P<y1>[\d.-]*)\s*(?P<x2>[\d.-]*)\s*(?P<y2>[\d.-]*)\s*;)*'
+#tlef_site_re= r'SITE*\s(?P<site_name>\w*)\s*(?|(?:CLASS\s*(?P<class>\w*)\s*;|SYMMETRY\s*(?P<symmetry>\w*)\s*;|\s*SIZE\s*(?P<size_x>\d*)\s*BY\s*(?P<size_y>\d*)\s*;)\s*)*END\s*(\w*)\s*$'
 tlef_site_re= r'SITE*\s(?P<site_name>\w*)\s*(?|(?:CLASS\s*(?P<class>\w*)\s*;|SYMMETRY\s*(?P<symmetry>\w*)\s*;|\s*SIZE\s*(?P<size_x>\d*)\s*BY\s*(?P<size_y>\d*)\s*;)\s*)*END\s*(\w*)\s*$'
 
 
@@ -891,7 +979,7 @@ def get_tlef_layer(tlef):
     with open(tlef, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
 
 
 def get_tlef_via(tlef):
@@ -902,7 +990,7 @@ def get_tlef_via(tlef):
     with open(tlef, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
 
 
 def tlef_via_layer(in_via):
@@ -915,7 +1003,7 @@ def tlef_via_layer(in_via):
     else:
         data = in_via
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
     return mo
 
 
@@ -927,7 +1015,7 @@ def get_tlef_site(tlef):
     with open(tlef, 'r+') as f:
         data = mmap.mmap(f.fileno(), 0)
 
-    mo = regex.finditer(mod_re, data, 0)
+    mo = re.finditer(mod_re, data, 0)
 
 def write_bulk(o_file, bulk_dim, transparent=False, mode='a'):
 
@@ -952,8 +1040,6 @@ difference() {fb}
 
 # hard coded support files
 
-
-
 def main(
         platform,
         design,
@@ -974,6 +1060,9 @@ def main(
         tlef,
         o_file,
         def_scale=1000,
+        routing_size=[14, 14, 10],
+        io_size=[14, 14, 10],
+        use_def_io=False,
         comp_file=None,
         pin_con_dir_f=None,
         pcell_file=None,
@@ -1000,12 +1089,14 @@ def main(
     if isinstance(routing_scad, str):
         routing_scad = [routing_scad]
     elif routing_scad is None:
+        print("No instances of routing scad files supplied")
         routing_scad = ['polychannel_v2.scad', 'routing.scad']
 
     if component_scad is None and comp_file is not None:
         component_scad = comp_file
-    elif component_scad is None and comp_file is None:
-        component_scad = f"scad_flow/support_libs/{platform}_pdk_merged.scad"
+    # old implementation needs remove, this is a bad default path
+    # elif component_scad is None and comp_file is None:
+    #     component_scad = f"scad_flow/support_libs/{platform}_pdk_merged.scad"
     if isinstance(component_scad, str):
         component_scad = [component_scad]
 
@@ -1014,11 +1105,14 @@ def main(
 
     #o_file = f"{results_dir}/{design}.scad"
 
+    # read in def object
+    def_obj = def_obj_load.Design().import_def(def_file)
+
     net_properties = {
-        'px':px,
-        'layer':layer,
-        'lpv':lpv,
-        'def_scale':def_scale,
+        'px': px,
+        'layer': layer,
+        'lpv': lpv,
+        'def_scale': def_scale,
         'bot_layers':bttm_layer
     }
 
@@ -1071,11 +1165,13 @@ show_lefs=false ;
 
     # write pin vias
     io_list = write_pins(
-        o_file,
-        get_pins(def_file, pin_con_dir_f),
-        bulk,
-        net_properties,
-        mets,
+        o_file=o_file,
+        pin_list=get_pins(def_file, pin_con_dir_f),
+        bulk=bulk,
+        tlef_properties=net_properties,
+        mets=mets,
+        io_interface_size=io_size,
+        use_def_io_size=use_def_io,
         mode='a')
 
     if dimm_file is not None:
@@ -1093,13 +1189,17 @@ show_lefs=false ;
             report_len_file=length_out_file,
             pins=io_list if add_comp_to_routes else None,
             components=comp_list if add_comp_to_routes else None,
-            component_lef = component_merge_lef,
+            component_lef=component_merge_lef,
             report_route_net_file=route_net_file
         )
 
     if len(net_intersects) > 0:
         pt_reg = r"\[\s*(\d+[.]?\d*),\s*(\d+[.]?\d*),\s*(\d+[.]?\d*)\s*\]"
-        intersct_file = os.path.dirname(o_file) + "/net_intersections.json"
+        if os.path.dirname(o_file) == '':
+            intersct_file = "./net_intersections.json"
+        else:
+            intersct_file = os.path.dirname(o_file) + "/net_intersections.json"
+        print(o_file)
         with open(intersct_file, "w+") as insct_f:
             insct_f.write(
                 re.sub(
@@ -1115,7 +1215,7 @@ show_lefs=false ;
         o_file,
         nets_list,
         shape='cube',
-        size=[14,14,10],
+        size=routing_size,
         mode='a',
         dimm_file=dimm_,
         report_len_file=length_out_file,
@@ -1146,10 +1246,12 @@ if($preview) {fb}
 {bb}
 """)
 
-    print("""
+    print(f"""
     --------------------------------
           OpenSCAD complete
     --------------------------------
+
+    output file: {o_file}
     """)
 
 
@@ -1183,6 +1285,11 @@ if __name__ == "__main__":
     parser.add_argument('--transparent_bulk', action='store_true', default=False)
     parser.add_argument('--no_copy_include', action='store_true', default=False)
 
+    parser.add_argument('--routing_size', type=int, default=None, nargs='+')
+
+    parser.add_argument('--io_size', type=int, default=None, nargs='+')
+    parser.add_argument('--use_def_io_size', action='store_true', default=False)
+
     parser.add_argument('--scad_out_file', type=str, default=None)
 
     parser.add_argument('--component_file', type=str, default=None)
@@ -1196,15 +1303,56 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # --scad_out_file
     if args.scad_out_file is None:
-        args.scad_out_file = f"{args.results_dir}/{args.design}.scad"
+        if '/' in args.design:
+            o_file_basename = os.path.basename(args.design)
+            args.scad_out_file = f"{args.results_dir}/{o_file_basename}.scad"
+        else:
+            args.scad_out_file = f"{args.results_dir}/{args.design}.scad"
 
+    # --tlef_file
     if args.tlef is not None and args.tlef_file is not None:
         raise ValueError("Cannot define both --tlef and --tlef_file")
     elif args.tlef is not None:
         pass
     elif args.tlef_file is not None:
         args.tlef = args.tlef_file
+
+    # -- routing_size
+    if args.routing_size is not None:
+        if len(args.routing_size) == 2:
+            routing_size = [
+                    args.routing_size[0],
+                    args.routing_size[0],
+                    args.routing_size[1]]
+        elif len(args.routing_size) == 3:
+            routing_size = args.routing_size
+        else:
+            raise ValueError(f'Too many arguments for --routing_size, expecting 2 or 3 got {len(args.routing_size)}')
+
+    else:
+        routing_size = [14, 14, 10]
+
+    if args.io_size is not None and args.use_def_io_size:
+        print('  Both io_size and use_def_io_size defined, the def io size will get priority')
+    if args.io_size is not None:
+        if len(args.io_size) == 2:
+            args.io_size = [
+                args.io_size[0] * args.px,
+                args.io_size[1] * args.px,
+                routing_size[2] * args.layer,
+            ]
+            print('  Defaulting io_size height to routing hieght')
+        elif len(args.io_size) == 3:
+            args.io_size = [
+                args.io_size[0] * args.px,
+                args.io_size[1] * args.px,
+                args.io_size[2] * args.layer,
+            ]
+            pass # nothing to be done
+        else:
+            raise ValueError(f'Incorrect amount of arguments expecting 2 or 3, got {len(args.io_size)}')
 
     if args.comp_file is not None and args.component_file is not None:
         raise ValueError("Cannot define both --comp_file and --component_file")
@@ -1248,6 +1396,9 @@ if __name__ == "__main__":
         args.tlef,
         o_file=args.scad_out_file,
         def_scale=args.def_scale,
+        routing_size=routing_size,
+        io_size=args.io_size,
+        use_def_io=args.use_def_io_size,
         comp_file=args.comp_file,
         pin_con_dir_f=args.pin_file,
         pcell_file=args.pcell_file,
