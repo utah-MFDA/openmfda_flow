@@ -153,8 +153,8 @@ def lnk_pts_2_def_obj(
                 else:
                     # create segement
                     exp_layer = tuple(lay_map[a] for a in
-                        sorted([pt1[2], pt2[2]], key=lambda x: x)
-                    )
+                                      sorted([pt1[2], pt2[2]], key=lambda x: x)
+                                      )
 
                     segment_list += [{
                         'pt1': exp_seg[0],
@@ -166,6 +166,28 @@ def lnk_pts_2_def_obj(
         net_list[rt] = segment_list + via_list
 
     return net_list
+
+
+# def check_inters(lnk_routes):
+#     # in astar_route
+#     seg_inters = astar_route.get_intersections(lnk_routes)
+#
+#     ex_inter_pts = routing_fix.extract_intersect_pt_list2(
+#         seg_inters,
+#     )
+#
+#     # where is this function found?
+#     inter_pts_sgmts = astar_route.get_intersect_indexes(
+#         ex_inter_pts,
+#         lnk_routes
+#     )
+#
+#     o_net_sol = routing_fix.get_outter_sgmt_pts(
+#         lnk_rts=lnk_routes,
+#         inter_pts_sgmts=inter_pts_sgmts
+#     )
+#
+#     return o_net_sol
 
 
 def fix_routes(
@@ -214,7 +236,7 @@ def fix_routes(
     if 'def_scale' in def_obj:
         def_scale = def_obj['def_scale']
 
-    int_convert_d = (1/def_scale) * platform_conf['def_grid_scale']
+    int_convert_d = (1/def_scale) * platform_conf['def_grid_scale'] * 10
 
     for net in lnk_routes.items():
         print(net[0])
@@ -233,26 +255,6 @@ def fix_routes(
                     pt[0] = pt[0]/platform_conf["def_grid_scale"]
             print("after: ", rt)
 
-    # in astar_route
-    seg_inters = astar_route.get_intersections(lnk_routes)
-
-    ex_inter_pts = routing_fix.extract_intersect_pt_list2(
-        seg_inters,
-    )
-
-    # where is this function found?
-    inter_pts_sgmts = astar_route.get_intersect_indexes(
-        ex_inter_pts,
-        lnk_routes
-    )
-
-    o_net_sol = routing_fix.get_outter_sgmt_pts(
-        lnk_rts=lnk_routes,
-        inter_pts_sgmts=inter_pts_sgmts
-    )
-
-    sol_q = routing_fix.create_solve_queue(o_net_sol)
-
     # --------------------------------------------------
     # initialize solver
     if 0 in grid_size:
@@ -270,15 +272,12 @@ def fix_routes(
     for leff in lef_files:
         loaded_lefs.append(CompP.parser_file(in_file=leff))
 
-    # I think I can unload CompP
-
     # put into a dict
     lef_dict = loaded_lefs[0]
     if len(loaded_lefs) > 1:
         for l in loaded_lefs[1:]:
             lef_dict.update(l)
 
-    # in astar_route
     astar_route.initialize_components_in_grid(
         solv_grid,
         design_obj.components,
@@ -286,45 +285,135 @@ def fix_routes(
         layers_map=platform_conf["layers"]
     )
 
-    # -------------------------------------------------------
-    # Fix the routes
+    def add_routes_2_grid(a_grid, lnk_rts, v=0):
+        for net in lnk_rts.items():
+            net_name = net[0]
+            net_rt = net[1].nodes['']['route']
+            astar_route.add_route_2_grid(
+                a_grid=a_grid,
+                route=net_rt,
+                v=v
+            )
 
-    sol_rts = []
-    rt_stack = []
+    add_routes_2_grid(solv_grid, lnk_routes)
 
-    cur_net = ''
-    for rt in iter(sol_q.get, None):
-        if cur_net == '':
-            cur_net = rt[0]
-        # rt = ['rt_name', [pt1, pt2]]
-        if rt[0] != cur_net and len(rt_stack) > 0:
-            for plrt in iter(rt_stack.pop, None):
-                # function not found
-                routing_fix.insert_rt(plrt, lnk_routes)
-                if len(rt_stack) == 0:
-                    break
-            cur_net = rt[0]
-        routing_fix.solve_rt(
-            pt_pair=rt[1],
-            net_name=rt[0],
-            insert_stack=rt_stack,
-            rt_dict=lnk_routes,
-            intersecting_rts='',
-            grid=solv_grid,
-            write_2_grid=True
+    # ---------------
+    # get intersections
+
+    def check_inters(lnk_routes):
+        # in astar_route
+        seg_inters = astar_route.get_intersections(lnk_routes)
+
+        ex_inter_pts = routing_fix.extract_intersect_pt_list2(
+            seg_inters,
         )
-        if rt[0] not in sol_rts:
-            sol_rts.append(rt[0])
 
-        if sol_q.qsize() == 0:
-            break
+        # where is this function found?
+        inter_pts_sgmts = astar_route.get_intersect_indexes(
+            ex_inter_pts,
+            lnk_routes
+        )
 
-    # for final routes
-    for plrt in iter(rt_stack.pop, None):
-        # function not found
-        routing_fix.insert_rt(plrt, lnk_routes)
+        o_net_sol = routing_fix.get_outter_sgmt_pts(
+            lnk_rts=lnk_routes,
+            inter_pts_sgmts=inter_pts_sgmts
+        )
+
+        return o_net_sol
+
+    def route(lnk_routes):
+
+        # in astar_route
+        seg_inters = astar_route.get_intersections(lnk_routes)
+
+        ex_inter_pts = routing_fix.extract_intersect_pt_list2(
+            seg_inters,
+        )
+
+        # where is this function found?
+        inter_pts_sgmts = astar_route.get_intersect_indexes(
+            ex_inter_pts,
+            lnk_routes
+        )
+
+        o_net_sol = routing_fix.get_outter_sgmt_pts(
+            lnk_rts=lnk_routes,
+            inter_pts_sgmts=inter_pts_sgmts
+        )
+
+        print("Len o_net_sol", len(o_net_sol))
+
+        sol_q = routing_fix.create_solve_queue(o_net_sol)
+
+        # I think I can unload CompP
+
+        # in astar_route
+        # astar_route.initialize_components_in_grid(
+        #     solv_grid,
+        #     design_obj.components,
+        #     lef_dict,
+        #     layers_map=platform_conf["layers"]
+        # )
+
+        # -------------------------------------------------------
+        # Fix the routes
+
+        sol_rts = []
+        rt_stack = []
+
+        cur_net = ''
+        for rt in iter(sol_q.get, None):
+            if cur_net == '':
+                cur_net = rt[0]
+            # rt = ['rt_name', [pt1, pt2]]
+            if rt[0] != cur_net and len(rt_stack) > 0:
+                for plrt in iter(rt_stack.pop, None):
+                    routing_fix.insert_rt(plrt, lnk_routes)
+                    if len(rt_stack) == 0:
+                        break
+                cur_net = rt[0]
+            routing_fix.solve_rt(
+                pt_pair=rt[1],
+                net_name=rt[0],
+                insert_stack=rt_stack,
+                rt_dict=lnk_routes,
+                intersecting_rts='',
+                grid=solv_grid,
+                write_2_grid=True
+            )
+            if rt[0] not in sol_rts:
+                sol_rts.append(rt[0])
+
+            if sol_q.qsize() == 0:
+                break
+
+        # for final routes
+        print("Len rt_stack:", len(rt_stack))
         if len(rt_stack) == 0:
-            break
+            return lnk_routes
+
+        for plrt in iter(rt_stack.pop, None):
+            # function not found
+            routing_fix.insert_rt(plrt, lnk_routes)
+            if len(rt_stack) == 0:
+                break
+
+        return lnk_routes
+
+    num_inters = len(check_inters(lnk_routes))
+
+    count = 0
+
+    while num_inters > 1 and count < 5:
+        lnk_routes = route(lnk_routes)
+        num_inters = len(check_inters(lnk_routes))
+        count += 1
+
+    if num_inters == 0:
+        print("Solved all routes")
+
+    # ---
+    # Write routes
 
     if write_polyroute:
         fix_polyroute_out = 'fix_polyroute.scad'
@@ -405,5 +494,5 @@ if __name__ == "__main__":
             args.grid_size[2]
         ],
         def_scale=args.def_scale,
-        write_polyroute=False
+        write_polyroute=args.write_polyroute
     )

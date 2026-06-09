@@ -1,0 +1,1 @@
+../plugins/pnr_dialog.py
