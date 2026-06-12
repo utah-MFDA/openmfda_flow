@@ -585,7 +585,8 @@ clean_finish:
 #  ___) | || |  | | |_| | |___ / ___ \| |  | | |_| | |\  |
 # |____/___|_|  |_|\___/|_____/_/   \_\_| |___\___/|_| \_|
 # ==============================================================================
-SIMULATION_SCRIPT = ../tools/simulation/runMFDASim.py
+#SIMULATION_SCRIPT = ../tools/simulation/runMFDASim.py
+SIMULATION_SCRIPT = ../tools/simulation/runMFDASim2.py
 LENGTH_FILE       = $(RESULTS_DIR)/$(DESIGN)_length.csv
 XYCE_RUN_CONFIG   = $(RESULTS_DIR)/xyce_run.config
 
@@ -606,9 +607,6 @@ xyce_run_config: $(RESULTS_DIR)/xyce_run.config
 $(RESULTS_DIR)/xyce_run.config: $(XYCE_LIB)
 	echo '{"xyce_command":"$(XYCE_CMD)", "library_files":["$(XYCE_LIB)"]}' > $@
 
-#$(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/4_final.scad $(RESULTS_DIR)/4_final.v $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
-	# we want to work towards VVVVVVVVVVVVVVVV
-#$(RESULTS_DIR)/xyceOut.csv: $(RESULTS_DIR)/1_synth.v $(RESULTS_DIR)/$(DESIGN)_base.scad $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIGN)_base.scad $(RESULTS_DIR)/1_synth.v $(SIMULATION_CONFIG) $(RESULTS_DIR)/xyce_run.config
 	mkdir -p $(RESULTS_DIR)/simulation
 	$(TIME_CMD) $(PYTHON3) $(SIMULATION_SCRIPT) \

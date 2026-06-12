@@ -1,0 +1,64 @@
+
+* serpentine 100px subcir
+
+.SUBCKT serpentine_sub_100px 11 12 80 82 PARAMS: cross_sect=1
+
+Ychannel c1 11 12 80 82 length=4.56m cross_section=cross_sect
+
+.ENDS
+
+* serpentine 150px subcir
+
+.SUBCKT serpentine_sub_150px 11 12 80 82 PARAMS: cross_sect=1
+
+Ychannel c1 11 12 80 82 length=9.576m cross_section=cross_sect
+
+.ENDS
+
+* serpentine 200px subcir
+
+.SUBCKT serpentine_sub_200px 11 12 80 82 PARAMS: cross_sect=1
+
+Ychannel c1 11 12 80 82 length=16.416m cross_section=cross_sect
+
+.ENDS
+
+* serpentine 200px 4 layers subcir
+
+.SUBCKT serpentine_200px_3 11 12 80 82 PARAMS: cross_sect=1
+
+Ychannel c1 11 12 80 82 length=49.248m cross_section=cross_sect
+
+.ENDS
+
+* base serpentine component
+
+.SUBCKT serpentine_base_0 11 12 81 82
+.PARAMS px=7.6u layer=10u turns=1 l1=30 l2=10 via_h=20
+
+Ychannel c1 11 12 81 82 length={px*(turns+1)*l1 + px*l2*turns}
+
+.ENDS
+
+
+.SUBCKT serpentine_base_1 11 14 81 84
+.PARAMS px=7.6u layer=10u turns=1 l1=30 l2=10 via_h=20
+
+Ychannel c1 11 12 81 82 length={px*(turns+1)*l1 + px*l2*turns}
+Ychannel c2 12 13 82 83 length={layer*via_h}
+Ychannel c3 13 14 83 84 length={px*(turns+1)*l1 + px*l2*turns}
+
+.ENDS
+
+
+.SUBCKT serpentine_base_2 11 16 81 86
+.PARAMS px=7.6u layer=10u turns=1 l1=30 l2=10 via_h=20
+
+Ychannel c1 11 12 81 82 length={px*(turns+1)*l1 + px*l2*turns}
+Ychannel c2 12 13 82 83 length={layer*via_h}
+Ychannel c3 13 14 83 84 length={px*(turns+1)*l1 + px*l2*turns}
+Ychannel c4 14 15 84 85 length={layer*via_h}
+Ychannel c5 15 16 85 86 length={px*(turns+1)*l1 + px*l2*turns}
+
+.ENDS
+

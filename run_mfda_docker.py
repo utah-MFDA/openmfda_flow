@@ -77,6 +77,8 @@ def run_mfdaflow_docker(
 
     if isinstance(docker_env_vars, str):
         docker_env_vars = [docker_env_vars]
+    elif isinstance(docker_env_vars, dict):
+        docker_env_vars = [f"{k}={v}" for k, v in docker_env_vars.items()]
 
     if docker_env_vars is not None and len(docker_env_vars) > 0:
         d_env_vars = ' '.join([f'-e {d_env}' for d_env in docker_env_vars])

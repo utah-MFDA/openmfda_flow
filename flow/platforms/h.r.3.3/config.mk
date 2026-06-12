@@ -92,6 +92,15 @@ export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
 # KLayout technology file
 export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
 
+# ---------------------------------------------------------
+#  Simulation
+# ---------------------------------------------------------
+XYCE_INCLUDE_FILES = $(abspath $(PLATFORM_DIR)/xyce/mfda_subcrkt.cir)
+
+ifneq ($(wildcard $(XYCE_INCLUDE_FILES)),)
+export SIMULATION_ARGS += --include_files $(XYCE_INCLUDE_FILES)
+endif
+
 # Default SCAD script arguments
 ifeq ($(abspath $(SCAD_SCRIPT)),$(abspath ../tools/scad_render/generator_v2.py))
 SCAD_ARGS += --component_file ${SCAD_COMPONENT_LIBRARY} \
