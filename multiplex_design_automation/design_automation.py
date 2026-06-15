@@ -87,9 +87,10 @@ def init_mix(design, assay_ls):
     # return chan_vol, reg_vol
 
 
-# Function that formats mix_list for verilog file
+# Function that formats mix_list, and input and output strings for verilog file; keeps track of routing dimensions
 def mix_v(design, assay_ls):
     mix_str = ""
+    routing_str = ""
     i = 0
     j = 1
     k = 0
@@ -111,6 +112,11 @@ def mix_v(design, assay_ls):
             mix_str += f"\tresist{k}\t(.in_fluid({solution_dict[key]}), .out_fluid(connect{k}));"
             mix_str += "\n"
             connect_dict[key] = f"connect{k}"
+            if "soln1" in routing_str and solution_dict[key] == "soln1":
+                pass
+            else:
+                routing_str += f"{solution_dict[key]},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
+            routing_str += f"connect{k},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
             k += 1
 
         # Define mixing 
@@ -119,13 +125,17 @@ def mix_v(design, assay_ls):
             if h == 0:
                 if len(connect_ls) <= 2:
                     mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(out{j}));\n"
+                    routing_str += f"out{j},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
                 else:
                     mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(connect{k}));\n"
+                    routing_str += f"connect{k},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
                     k += 1
             elif h == len(connect_ls) - 2:
                 mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(out{j}));\n"
+                routing_str += f"out{j},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
             else:
                 mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(connect{k}));\n"
+                routing_str += f"connect{k},14,14,10\n"
                 k += 1
             i += 1  
         j += 1
@@ -146,7 +156,8 @@ def mix_v(design, assay_ls):
             else:
                 output_str += f"out{n}, "
 
-    return mix_str, connect_str, output_str
+    return mix_str, connect_str, output_str, routing_str
+
 
 
 # Function for creating verilog file based on mixing specifications
@@ -164,6 +175,16 @@ wire\t{connect_str}\n
     {mix_str}
     \nendmodule
     """)
+        
+# Function for creating routing.csv file to define routing geometry based on channel cross section
+def routing_file(device_name, platform, routing_str):
+    # Create and define .v file
+    directory = f'../flow/designs/{platform}/{device_name}'
+    filename = 'routing.csv'
+    filepath = os.path.join(directory, filename)
+    os.makedirs(directory, exist_ok=True)
+    with open(filepath, "w") as f:
+        f.write(routing_str)
 
 # Function for displaying concentration results from Chem_Eval.csv
 import csv

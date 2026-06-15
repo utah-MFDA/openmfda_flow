@@ -1,4 +1,4 @@
-from design_automation import init_mix, mix_v, v_file
+from design_automation import init_mix, mix_v, v_file, routing_file
 import os
 
 # Generate all necessary files
@@ -14,9 +14,9 @@ def file_generation(design, device_name, platform, assay_ls, num_assays):
     sim_eval_files(device_name, platform, design, assay_ls)
     # Initial mixing and verilog file 
     design = init_mix(design, assay_ls)
-    ##################### ### dimm routing file
-    mix_str, connect_str, output_str = mix_v(design, assay_ls)
+    mix_str, connect_str, output_str, routing_str = mix_v(design, assay_ls)
     v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)
+    routing_file(device_name, platform, routing_str)
 
 # Function to define concentration ratios
 def conc_ratio(design, assay_ls, num_assays):
@@ -61,7 +61,11 @@ def solution_dict(design, assay_ls, num_assays):
                 soln_list += f"\tsoln{j},\n"
                 soln_str += f"soln{j}"
                 j += 1
-                if assay == assay_ls[-1] and key == list(design[assay]["length_dict"].keys())[-1]:
+                if list(design[assay]["length_dict"].keys())[-1] == "sample":
+                    key_stop = list(design[assay]["length_dict"].keys())[-2]
+                else:
+                    key_stop = list(design[assay]["length_dict"].keys())[-1]
+                if assay == assay_ls[-1] and key == key_stop:
                     soln_str += ";"
                 else:
                     soln_str += ", "

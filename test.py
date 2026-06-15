@@ -40,7 +40,11 @@ def solution_dict(design, assay_ls, num_assays):
                 soln_list += f"\tsoln{j},\n"
                 soln_str += f"soln{j}"
                 j += 1
-                if assay == assay_ls[-1] and key == list(design[assay]["length_dict"].keys())[-1]:
+                if list(design[assay]["length_dict"].keys())[-1] == "sample":
+                    key_stop = list(design[assay]["length_dict"].keys())[-2]
+                else:
+                    key_stop = list(design[assay]["length_dict"].keys())[-1]
+                if assay == assay_ls[-1] and key == key_stop:
                     soln_str += ";"
                 else:
                     soln_str += ", "
@@ -129,9 +133,10 @@ def init_mix(design, assay_ls):
 #         reg_vol.append((len_list[0]**2 / len_list[i]**2) * w * h * l * 10**-12)
 #     return chan_vol, reg_vol
 
-# Function that formats mix_list for verilog file
+# Function that formats mix_list, and input and output strings for verilog file; keeps track of routing dimensions
 def mix_v(design, assay_ls):
     mix_str = ""
+    routing_str = ""
     i = 0
     j = 1
     k = 0
@@ -153,6 +158,11 @@ def mix_v(design, assay_ls):
             mix_str += f"\tresist{k}\t(.in_fluid({solution_dict[key]}), .out_fluid(connect{k}));"
             mix_str += "\n"
             connect_dict[key] = f"connect{k}"
+            if "soln1" in routing_str and solution_dict[key] == "soln1":
+                pass
+            else:
+                routing_str += f"{solution_dict[key]},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
+            routing_str += f"connect{k},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
             k += 1
 
         # Define mixing 
@@ -161,13 +171,19 @@ def mix_v(design, assay_ls):
             if h == 0:
                 if len(connect_ls) <= 2:
                     mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(out{j}));\n"
+                    print(f"OUT {j}")
+                    routing_str += f"out{j},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
                 else:
                     mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(connect{k}));\n"
+                    routing_str += f"connect{k},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
                     k += 1
             elif h == len(connect_ls) - 2:
                 mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(out{j}));\n"
+                print(f"OUT {j}")
+                routing_str += f"out{j},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
             else:
                 mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(connect{k}));\n"
+                routing_str += f"connect{k},14,14,10\n"
                 k += 1
             i += 1  
         j += 1
@@ -188,7 +204,7 @@ def mix_v(design, assay_ls):
             else:
                 output_str += f"out{n}, "
 
-    return mix_str, connect_str, output_str
+    return mix_str, connect_str, output_str, routing_str
 
 
 # Function for creating verilog file based on mixing specifications
@@ -206,6 +222,17 @@ wire\t{connect_str}\n
     {mix_str}
     \nendmodule
     """)
+        
+# Function for creating routing.csv file to define routing geometry based on channel cross section
+def routing_file(device_name, platform, routing_str):
+    # Create and define .v file
+    directory = f'flow/designs/{platform}/{device_name}'
+    filename = 'routing.csv'
+    filepath = os.path.join(directory, filename)
+    os.makedirs(directory, exist_ok=True)
+    with open(filepath, "w") as f:
+        f.write(routing_str)
+
 
     
 
@@ -227,7 +254,9 @@ design = init_mix(design, assay_ls)
 #     print("[w3_dict]", design[assay]["w3_dict"])
 #     print("[h3_dict]", design[assay]["h3_dict"])
 #     print("[len_dict]", design[assay]["len_dict"] ) 
-mix_str, connect_str, output_str = mix_v(design, assay_ls)
-print("MIX_STR: ", mix_str)
+mix_str, connect_str, output_str, routing_str = mix_v(design, assay_ls)
+# print("MIX_STR: ", mix_str)
+print("ROUTING_STR: ", routing_str)
+routing_file(device_name, platform, routing_str)
 # print("CONNECT_STR: ", connect_str)
 # v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)

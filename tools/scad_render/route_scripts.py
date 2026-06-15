@@ -103,7 +103,8 @@ def link_routes(
                     r_list = r_list[:ii]+l_list
 
                 if debug:
-                    print("new list: "+r_list)
+                    # print("new list: "+r_list)
+                    print("new list: ", r_list)
             else:
                 if head:
                     r_list.insert(0, node)
