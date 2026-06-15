@@ -115,8 +115,8 @@ def mix_v(design, assay_ls):
             if "soln1" in routing_str and solution_dict[key] == "soln1":
                 pass
             else:
-                routing_str += f"{solution_dict[key]},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
-            routing_str += f"connect{k},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
+                routing_str += f"{solution_dict[key]},{w3_chan[key]},{w3_chan[key]},{h3_chan[key]}\n"
+            routing_str += f"connect{k},{w3_chan[key]},{w3_chan[key]},{h3_chan[key]}\n"
             k += 1
 
         # Define mixing 
@@ -125,14 +125,14 @@ def mix_v(design, assay_ls):
             if h == 0:
                 if len(connect_ls) <= 2:
                     mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(out{j}));\n"
-                    routing_str += f"out{j},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
+                    routing_str += f"out{j},{w3_chan[key]},{w3_chan[key]},{h3_chan[key]}\n"
                 else:
                     mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h]}), .b_fluid({connect_ls[h+1]}), .out_fluid(connect{k}));\n"
-                    routing_str += f"connect{k},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
+                    routing_str += f"connect{k},{w3_chan[key]},{w3_chan[key]},{h3_chan[key]}\n"
                     k += 1
             elif h == len(connect_ls) - 2:
                 mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(out{j}));\n"
-                routing_str += f"out{j},{w_chan[key]},{w_chan[key]},{h_chan[key]}\n"
+                routing_str += f"out{j},{w3_chan[key]},{w3_chan[key]},{h3_chan[key]}\n"
             else:
                 mix_str += f"diffmix_25px_0\tmix{i}\t(.a_fluid({connect_ls[h+1]}), .b_fluid(connect{k-1}), .out_fluid(connect{k}));\n"
                 routing_str += f"connect{k},14,14,10\n"
