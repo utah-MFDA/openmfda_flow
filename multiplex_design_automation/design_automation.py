@@ -189,19 +189,20 @@ def routing_file(device_name, platform, routing_str):
 # Function for displaying concentration results from Chem_Eval.csv
 import csv
 
-def con_results(assay, num_samples):
+def con_results(device_name, num_assays):
     error_list = []
     expect_conc = []
     eval_conc = []
+    error_dict = {}
 
     table_str = "\n"
     table_str += "-" * 65
-    table_str += f"\n|{assay.upper().center(63)}|\n"
+    table_str += f"\n|{device_name.upper().center(63)}|\n"
     table_str += "-" * 65
     table_str += f"\n| SAMPLES/REAGENTS | EXPECTED CON. | EVALUATED CON. | ERROR [%] |\n"
     table_str += "-" * 65
 
-    base_path = f"../flow/results/{assay}/base"
+    base_path = f"./flow/results/{device_name}/base"
     paths = [
         f"{base_path}/Chem_Eval.csv",
         f"{base_path}/simulation/Chem_Eval.csv",
@@ -222,6 +223,11 @@ def con_results(assay, num_samples):
                     error_list.append(float(row['Error']))
                     expect_conc.append(float(row['Expected Conc']))
                     eval_conc.append(float(row['Eval Conc']))
+                    error_dict[f'{row['Chemical']}_{row['Node']}'] = {
+                    "error": float(row["Error"]) * 100,
+                    "expected_conc": float(row["Expected Conc"]),
+                    "evaluated_conc": float(row["Eval Conc"]),
+                    }
             break
 
         except FileNotFoundError:
@@ -229,10 +235,10 @@ def con_results(assay, num_samples):
     else:
         table_str += f"\n|{'CSV FILE NOT FOUND'.center(63)}|"
         table_str += f"\n" + "-" * 65
-        return table_str, [10 for _ in range(num_samples)], [], []
+        return table_str, [10 for _ in range(num_assays)], [], []
 
     table_str += f"\n" + "-" * 65
-    return table_str, error_list, expect_conc, eval_conc
+    return table_str, error_dict
 
 # Function for replacing serpentine information in specified file(s)
 def edit_file(filename, num_samples, serp_num, old_serp, new_serp, max_x, zero):

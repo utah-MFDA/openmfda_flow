@@ -1,4 +1,4 @@
-from design_automation import init_mix, mix_v, v_file, routing_file
+# from design_automation import init_mix, mix_v, v_file, routing_file
 import os
 
 # Generate all necessary files
@@ -11,7 +11,7 @@ def file_generation(design, device_name, platform, assay_ls, num_assays):
     constraint_file(device_name, platform) 
     io_file(device_name, platform, design, assay_ls, num_assays)
     design, soln_list, soln_str = solution_dict(design, assay_ls, num_assays)
-    sim_eval_files(device_name, platform, design, assay_ls)
+    design = sim_eval_files(device_name, platform, design, assay_ls)
     # Initial mixing and verilog file 
     design = init_mix(design, assay_ls)
     mix_str, connect_str, output_str, routing_str = mix_v(design, assay_ls)
@@ -235,6 +235,7 @@ def sim_eval_files(device_name, platform, design, assay_ls):
     i = 1
     j = 1
     for assay in assay_ls:
+        eval_dict = {}
         soln_dict = design[assay]["solution_dict"]
         ratio_dict = design[assay]["ratio_dict"]
         eval_str += f"# {assay}\n"
@@ -250,6 +251,8 @@ def sim_eval_files(device_name, platform, design, assay_ls):
                 input_str += f"input\t{soln_dict[key]}\tpressurePump\tpressure=100k\n"
                 chem_str += f"chem\t{key_name}\t{soln_dict[key]}\t1\n"
             eval_str += f"eval\t{key_name}\t0\tout{j}\t{round(ratio_dict[key]*10**3, 5)}m\n"
+            eval_dict[key] = key_name
+        design[assay]["eval_dict"] = eval_dict
         j += 1
     # Create simulation.config
     directory = f'../flow/designs/{platform}/{device_name}'
@@ -260,7 +263,7 @@ def sim_eval_files(device_name, platform, design, assay_ls):
             file.write(f"""
 # time inputs\n
 transient\t1m\t0.1m\n\n
-# input devices
+# input devices 
 {input_str}
 # chemical definitions
 {chem_str}
@@ -273,3 +276,4 @@ transient\t1m\t0.1m\n\n
     os.makedirs(directory, exist_ok=True)
     with open(filepath, 'w') as file:
         file.write(f"# eval chem time concentration node\n{eval_str}")
+    return design
