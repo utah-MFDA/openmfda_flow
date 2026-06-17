@@ -234,8 +234,6 @@ def routing_file(device_name, platform, routing_str):
 
 
 # Function for displaying concentration results from Chem_Eval.csv
-import csv
-
 def con_results(device_name, num_assays):
     error_list = []
     expect_conc = []
@@ -289,23 +287,23 @@ def con_results(device_name, num_assays):
 
 ######################################################################################
 # Function for replacing serpentine information in specified file(s)
-def edit_file(filename, num_samples, serp_num, old_serp, new_serp, max_x, zero):
+def edit_file(filename, resist_num, old_resist, new_resist):
     # Read and modify each line of a file
     with open(filename, "r") as f:
         lines = f.readlines()
     new_lines = []
-    serp_ls = []
-    x_pos = [] 
-    y_pos = []
+    # serp_ls = []
+    # x_pos = []
+    # y_pos = []
     for line in lines:
-        # Keep track of y_pos of serpentines
-        if filename.endswith("def") and "serp" in line:
-            if line.split()[-4] != "+":
-                serp_ls.append(line.split()[2])
-                x_pos.append(line.split()[-5])
-                y_pos.append(line.split()[-4])
-        if serp_num in line:
-            new_lines.append(line.replace(old_serp, new_serp))
+        # # Keep track of y_pos of resistors
+        # if filename.endswith("def") and "serp" in line:
+        #     if line.split()[-4] != "+":
+        #         serp_ls.append(line.split()[2])
+        #         x_pos.append(line.split()[-5])
+        #         y_pos.append(line.split()[-4])
+        if resist_num in line:
+            new_lines.append(line.replace(old_resist, new_resist))
         else:
             new_lines.append(line)
 
@@ -313,42 +311,16 @@ def edit_file(filename, num_samples, serp_num, old_serp, new_serp, max_x, zero):
     with open(filename, "w") as f:
         f.writelines(new_lines)
     
-    if filename.endswith("def") and zero:
-        print("serpnum", serp_num)
-        print("serpnum[-1]", serp_num[-1])
-        print("{x_pos[int(serp_num[-1])]}", f"{x_pos[int(serp_num[-1])]}")
-        time.sleep(10)
-        edit_file(filename, num_samples, serp_num, f"{x_pos[int(serp_num[-1])]}", "0", max_x, False)
+    # if filename.endswith("def") and zero:
+    #     print("serpnum", serp_num)
+    #     print("serpnum[-1]", serp_num[-1])
+    #     print("{x_pos[int(serp_num[-1])]}", f"{x_pos[int(serp_num[-1])]}")
+    #     time.sleep(10)
+    #     edit_file(filename, num_samples, serp_num, f"{x_pos[int(serp_num[-1])]}", "0", max_x, False)
 
-    # Check for serpentines that share same ypos and overlap
-    # if 0 < len(set(y_pos)) < num_samples:
-    for i in range(len(y_pos)):
-        width_x_i, width_y_i = calc_width(i, serp_ls, x_pos)
-        if int(width_x_i) > x_coord and num_samples == 4:
-                edit_file(filename, num_samples, serp_num, old_serp, new_serp, max_x, True)
-        for j in range(len(y_pos)):
-            width_x_j, width_y_j = calc_width(j, serp_ls, x_pos)
-            if int(width_x_i) > max_x:
-                max_x = int(width_x_i)
-            if i != j:
-                if (int(x_pos[i]) <= int(x_pos[j])) and (int(x_pos[j]) <= int(width_x_i)) and ((int(y_pos[i]) - width_y_i) <= int(y_pos[j]) <= (int(y_pos[i]) + width_y_i) or (int(y_pos[j]) - width_y_j) <= int(y_pos[i]) <= (int(y_pos[j]) + width_y_j)): 
-                    if serp_ls[i].split("_")[3] > serp_ls[j].split("_")[3]:
-                        px_add = serp_ls[i].split("_")[3]
-                    else:
-                        px_add = serp_ls[j].split("_")[3]
-                    add_px_y = int(px_add + '000') + 120000
-                    if int(y_pos[j]) + add_px_y >= y_coord - (width_y_j + 50000):
-                        add_px_x = (int(width_x_i) - int(x_pos[i])) + 120000
-                        if int(x_pos[j]) + add_px_x >= x_coord - 100000:
-                            if int(x_pos[j]) - add_px_x < 0:
-                                edit_file(filename, num_samples, f"serp{j}", f"( {x_pos[j]}", "( 0", max_x, zero)
-                            else:
-                                edit_file(filename, num_samples, f"serp{j}", f"( {x_pos[j]}", f"( {int(x_pos[j]) - add_px_x}", max_x, zero)
-                        else:
-                            edit_file(filename, num_samples, f"serp{j}", f"( {x_pos[j]}", f"( {int(x_pos[j]) + add_px_x}", max_x, zero)
-                    else:
-                        edit_file(filename, num_samples, f"serp{j}", f" {y_pos[j]} )", f" {int(y_pos[j]) + add_px_y} )", max_x, zero)      
-    return max_x    
+    # Check for resistors that share same ypos and overlap??
+
+    # return max_x
 
 # Function to calculate x_pos + width of serpentine
 def calc_width(i, serp_ls, x_pos):
@@ -356,104 +328,54 @@ def calc_width(i, serp_ls, x_pos):
     width_y = int(serp_ls[i].split("_")[3])
     return str(int(x_pos[i]) + int((str(width_x) + '000'))), int((str(width_y) + '000'))
 
-# Function for re-running second half of flow when modifying serpentine(s)
-def update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero):
-    # Edit .def and .v files
-    def_file = f"flow/results/{assay}/base/2_place.def"
-    verilog_file = f"flow/designs/src/{assay}/{assay}.v"
-    
-    max_x = edit_file(def_file, num_samples, serp_num, old_serp, new_serp, 0, zero)
-    max_x = edit_file(verilog_file, num_samples, serp_num, old_serp, new_serp, max_x, zero)
+# Function for re-running second half of flow when modifying resistor(s)
+def update_flow(device_name):
+    # # Edit .def and .v files
+    # def_file = f"flow/results/{device_name}/base/2_place.def"
+    # verilog_file = f"flow/designs/src/{device_name}/{device_name}.v"
+    #
+    # edit_file(def_file, resist_num, old_resist, new_resist)
+    # edit_file(verilog_file, resist_num, old_resist, new_resist)
    
     # Run Tcl script commands following .def and .v modification 
-    command = f"cd flow && make -e DESIGN={assay} run_tcl_script -B"
+    command = f"cd flow && make -e DESIGN={device_name} run_tcl_script -B"
     result = subprocess.run(command, shell=True)
 
     # Print results
-    table_str, error_list, expect_conc, eval_conc = con_results(assay, num_samples)
+    table_str, error_dict = con_results(device_name, num_assays)
     print(table_str)
-    return error_list, expect_conc, eval_conc, result, max_x
+    return table_str, error_dict, result
 
 # Function to perform Newton-Raphson method on number of turns
-def newton_method(i, assay, num_samples, len_list, layer_list, pitch_list, turn_list, eval_conc, error_condition, eval_list, count, old_error, max_x, zero):
-    serp_num = f"serp{i}"
-    count += 1
-    table_str, error_list, expect_conc, eval_conc = con_results(assay, num_samples)
-    eval_list.append(eval_conc[i])
-    if eval_conc[i] > expect_conc[i]:
-        old_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{turn_list[i][len(turn_list[i])-1]}"
-        while eval_conc[i] > expect_conc[i]:
-            if turn_list[i][len(turn_list[i])-1] >= max_turn or turn_list[i][len(turn_list[i])-1] * 2 >= max_turn:
-                if layer_list[i][len(turn_list[i])-1] == 3:
-                    a = turn_list[i][len(turn_list[i])-1]
-                    b = max_turn
-                    turn_list[i][len(turn_list[i])-1] = b
-                    new_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{turn_list[i][len(turn_list[i])-1]}"
-                    error_list, expect_conc, eval_conc, result, max_x = update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
-                    return a, b, new_serp, eval_list, expect_conc[i], count, error_list, max_x
-                elif layer_list[i][len(turn_list[i])-1] <= 2:
-                    layer_list[i][len(turn_list[i])-1] += 1
-                    turn_list[i][len(turn_list[i])-1] = 1
-            count += 1
-            a = turn_list[i][len(turn_list[i])-1]
-            b = a * 2
-            if b > 75:
-                b == 75
-            turn_list[i][len(turn_list[i])-1] = b
-            new_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{turn_list[i][len(turn_list[i])-1]}"
-            error_list, expect_conc, eval_conc, result, max_x = update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
-            eval_list.append(eval_conc[i])
-            if result.returncode != 0:
-                count += 1
-                old_serp = new_serp 
-                if layer_list[i][len(turn_list[i])-1] <= 2:
-                    layer_list[i][len(turn_list[i])-1] += 1
-                    b = 41
-                else: 
-                    b = 41
-                turn_list[i][len(turn_list[i])-1] = b
-                new_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{turn_list[i][len(turn_list[i])-1]}"
-                error_list, expect_conc, eval_conc, result, max_x = update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
-                eval_list.append(eval_conc[i])
-            old_serp = new_serp
+def newton_method(design, assay, key, error_dict, error_key):
+    old_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
+    if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
+        a = design[assay]["block_dict"[key]]
+        b = a * 2
+        design[assay]["block_dict"[key]] = b
     else:
-        b = turn_list[i][len(turn_list[i])-1] 
-        old_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{b}"
-        while eval_conc[i] < expect_conc[i]:
-            a = turn_list[i][len(turn_list[i])-1] // 2
-            if a == 0:
-                a = 1
-                return a, b, old_serp, eval_list, expect_conc[i], count, error_list, max_x
-            count += 1
-            turn_list[i][len(turn_list[i])-1] = a
-            new_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{a}"
-            error_list, expect_conc, eval_conc, result, max_x = update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
-            eval_list.append(eval_conc[i])
-    return a, b, new_serp, eval_list, expect_conc[i], count, error_list, max_x
+        b = design[assay]["block_dict"[key]]
+        a = b // 2
+        if a == 0:
+            a = 1
+        design[assay]["block_dict"[key]] = a
+    new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
+    return a, b, old_resist, new_resist
 
-# Recursive function to perform bisection method on number of turns
-def bisection_method(i, assay, num_samples, error_condition, eval_list, len_list, layer_list, pitch_list, turn_list, a, b, old_serp, count, old_error, max_x, zero):
-    count += 1
-    serp_num = f"serp{i}"
-    m = int((a + b) / 2)
-    turn_list[i][len(turn_list[i])-1] = m
-    new_serp = f"p_serpentine_{layer_list[i][len(turn_list[i])-1]}_{len_list[i][len(turn_list[i])-1]}_{pitch_list[i][len(turn_list[i])-1]}_{turn_list[i][len(turn_list[i])-1]}"
-    error_list, expect_conc, eval_conc, result, max_x = update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
-    old_serp = new_serp
-    eval_list.append(eval_conc[i])
-    if result.returncode != 0:
-        zero = True 
-        update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
-        zero = False
-    if error_list[i] * 100 <= error_condition or error_calc(old_error, error_list[i]) * 100 <= error_diff_condition or a == b or b - a == 1:
-        return eval_list, count, error_list, max_x
-    # Update a and b appropriately 
+# Function to perform bisection method on number of turns
+def bisection_method(a, b, design, assay, key, error_dict, error_key):
+    # Update a and b appropriately
+    if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
+        a = m
     else:
-        if eval_conc[i] > expect_conc[i]:
-            a = m
-        else:
-            b = m
-    return bisection_method(i, assay, num_samples, error_condition, eval_list, len_list, layer_list, pitch_list, turn_list, a, b, old_serp, count, error_list[i], max_x, zero)
+        b = m
+    # Calculate m
+    m = int((a + b) / 2)
+    design[assay]["block_dict"[key]] = m
+    new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
+    error_list, expect_conc, eval_conc, result, max_x = update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
+    old_resist = new_resist
+    return a, b
 
 # Function to plot results
 def plot(i, assay, count_x, eval_y, expect_y, method):
@@ -495,6 +417,13 @@ def min_error(i, len_list, layer_list, pitch_list, turn_list, error_condition, a
         command = f"cp flow/designs/src/{assay}/{assay}.v flow/designs/src/{assay}/{assay}_stored.v"
         subprocess.run(command, shell=True)
     # Base case
+    newton_method(design, assay, key, error_dict, error_key)
+    # Edit .def and .v files
+    def_file = f"flow/results/{device_name}/base/2_place.def"
+    verilog_file = f"flow/designs/src/{device_name}/{device_name}.v"
+
+    edit_file(def_file, resist_num, old_resist, new_resist)
+    edit_file(verilog_file, resist_num, old_resist, new_resist)
     for j in range(len(error_list)):
         if j == len(error_list) - 1:
             if error_list[j] * 100  <= error_condition: 
@@ -562,11 +491,12 @@ mix_str, connect_str, output_str, routing_str = mix_v(design, assay_ls)
 table_str, error_dict = con_results(device_name, num_assays)
 print(error_dict)
 # print(table_str)
+print("###########################")
 print(design)
 # print("keys", design.keys())
 # for assay in design:
 #     # print(design[assay].keys())
-#     print(design[assay]['eval_dict'])
+#     print(design[assay]['solution_dict'])
 # print("ROUTING_STR: ", routing_str)
 # routing_file(device_name, platform, routing_str)
 # print("CONNECT_STR: ", connect_str)
