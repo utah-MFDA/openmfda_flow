@@ -329,13 +329,13 @@ def calc_width(i, serp_ls, x_pos):
     return str(int(x_pos[i]) + int((str(width_x) + '000'))), int((str(width_y) + '000'))
 
 # Function for re-running second half of flow when modifying resistor(s)
-def update_flow(device_name):
-    # # Edit .def and .v files
-    # def_file = f"flow/results/{device_name}/base/2_place.def"
-    # verilog_file = f"flow/designs/src/{device_name}/{device_name}.v"
-    #
-    # edit_file(def_file, resist_num, old_resist, new_resist)
-    # edit_file(verilog_file, resist_num, old_resist, new_resist)
+def update_flow(device_name, resist_num, old_resist, new_resist):
+    # Edit .def and .v files
+    def_file = f"flow/results/{device_name}/base/2_place.def"
+    verilog_file = f"flow/designs/src/{device_name}/{device_name}.v"
+
+    edit_file(def_file, resist_num, old_resist, new_resist)
+    edit_file(verilog_file, resist_num, old_resist, new_resist)
    
     # Run Tcl script commands following .def and .v modification 
     command = f"cd flow && make -e DESIGN={device_name} run_tcl_script -B"
@@ -347,23 +347,30 @@ def update_flow(device_name):
     return table_str, error_dict, result
 
 # Function to perform Newton-Raphson method on number of turns
-def newton_method(design, assay, key, error_dict, error_key):
+def newton_method(design, assay, key, error_dict, error_key, resist_num):
     old_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
     if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
+        # while error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
         a = design[assay]["block_dict"[key]]
         b = a * 2
         design[assay]["block_dict"[key]] = b
+            # new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
+            # table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
     else:
+        # while error_dict[error_key]['evaluated_conc'] < error_dict[error_key]['expected_conc']:
         b = design[assay]["block_dict"[key]]
         a = b // 2
         if a == 0:
             a = 1
         design[assay]["block_dict"[key]] = a
+            # new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
+            # table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
     new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
     return a, b, old_resist, new_resist
 
 # Function to perform bisection method on number of turns
-def bisection_method(a, b, design, assay, key, error_dict, error_key):
+def bisection_method(a, b, m, design, assay, key, error_dict, error_key, resist_num, error_condition):
+    old_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
     # Update a and b appropriately
     if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
         a = m
@@ -373,9 +380,12 @@ def bisection_method(a, b, design, assay, key, error_dict, error_key):
     m = int((a + b) / 2)
     design[assay]["block_dict"[key]] = m
     new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
-    error_list, expect_conc, eval_conc, result, max_x = update_flow(assay, num_samples, old_serp, new_serp, serp_num, max_x, zero)
-    old_resist = new_resist
-    return a, b
+    # table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
+    # if error_dict[error_key]['error'] < error_condition:
+    #     return
+    # else:
+
+    return a, b, m, old_resist, new_resist
 
 # Function to plot results
 def plot(i, assay, count_x, eval_y, expect_y, method):
@@ -401,84 +411,28 @@ def error_diff(old_error, new_error):
     return abs(old_error - new_error) / old_error * 100
 
 # Recursive function for error minimization based on difference between expected and evaluated concentration values
-def min_error(i, len_list, layer_list, pitch_list, turn_list, error_condition, assay, num_samples, recurv_count, platform, length_dict, old_error, start_time, error_list_stored, max_x):
-    end_time = time.time()
-    # Display results
-    table_str, error_list, expect_conc, eval_conc = con_results(assay, num_samples)
-    # print(table_str)
-    # Store best design 
-    if max(error_list) < max(error_list_stored):
-        error_list_stored = error_list
-        opt_time = end_time - start_time
-        # Store .def and .v files
-        command = f"cp flow/results/{assay}/base/2_place.def flow/results/{assay}/base/2_place_stored.def"
-        # command = f"cp flow/results/{assay}/base/2_2_place_iop.def flow/results/{assay}/base/2_2_place_iop_stored.def"
-        subprocess.run(command, shell=True)
-        command = f"cp flow/designs/src/{assay}/{assay}.v flow/designs/src/{assay}/{assay}_stored.v"
-        subprocess.run(command, shell=True)
-    # Base case
-    newton_method(design, assay, key, error_dict, error_key)
-    # Edit .def and .v files
-    def_file = f"flow/results/{device_name}/base/2_place.def"
-    verilog_file = f"flow/designs/src/{device_name}/{device_name}.v"
-
-    edit_file(def_file, resist_num, old_resist, new_resist)
-    edit_file(verilog_file, resist_num, old_resist, new_resist)
-    for j in range(len(error_list)):
-        if j == len(error_list) - 1:
-            if error_list[j] * 100  <= error_condition: 
-            # or error_calc(old_error, error_list[j]) * 100 <= error_diff_condition:
-                return error_list, opt_time, max_x
-        else:
-            if error_list[j] * 100 <= error_condition: 
-            # or error_calc(old_error, error_list[j]) * 100 <= error_diff_condition:
-                continue
+def min_error(design, error_condition):
+    assay_num = 0
+    for assay in design:
+        assay_num += 1
+        for key in design[assay]["eval_dict"].keys():
+            error_key = f"{key}_out{assay_num}"
+            if error_dict[error_key]['error']  <= error_condition:
+                return
             else:
-                break 
-    # Exit error minimiation after 30 min 
-    if end_time - start_time > cutoff_time:
-        # Assign optimal time
-        try:
-            opt_time
-        except NameError or UnboundLocalError:
-            opt_time = end_time - start_time
-        # Replace current design with best design
-        command = f"cp flow/results/{assay}/base/2_place_stored.def flow/results/{assay}/base/2_place.def"
-        # command = f"cp flow/results/{assay}/base/2_2_place_iop_stored.def flow/results/{assay}/base/2_2_place_iop.def"
-        subprocess.run(command, shell=True)
-        command = f"cp flow/designs/src/{assay}/{assay}_stored.v flow/designs/src/{assay}/{assay}.v"
-        subprocess.run(command, shell=True)
-        command = f"cp flow/results/{assay}/base/2_place.def"
-        # command = f"cp flow/results/{assay}/base/2_2_place_iop.def"
+                while (error_a and error_b < error_dict[error_key]['expected_conc']) or (error_a and error_b > error_dict[error_key]['expected_conc']):
+                    continue
+                if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
+                    while error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
+                        a, b, old_resist, new_resist = newton_method(design, assay, key, error_dict, error_key, resist_num)
+                        a, b = newton_method(design, assay, key, error_dict, error_key, resist_num)
+                        bisection_method(a, b, m, design, assay, key, error_dict, error_key)
+                else:
+                    while error_dict[error_key]['evaluated_conc'] < error_dict[error_key]['expected_conc']:
+                        a, b = newton_method(design, assay, key, error_dict, error_key, resist_num)
+                        bisection_method(a, b, m, design, assay, key, error_dict, error_key)
 
-        # Run Tcl script commands following .def and .v modification 
-        command = f"cd flow && make -e DESIGN={assay} run_tcl_script"
-        result = subprocess.run(command, shell=True)
-
-        # Print results
-        table_str, error_list, expect_conc, eval_conc = con_results(assay, num_samples)
-        print(f"AFTER {cutoff_time/60} MINUTES")
-        print(table_str)
-        return error_list, opt_time, max_x
-    # Perform Newton Rapshon method on current component/soln, return a and b for bisection method 
-    eval_list = []
-    count = 0
-    a, b, old_serp, eval_y, expect_y, count_x, error_list, max_x = newton_method(i, assay, num_samples, len_list, layer_list, pitch_list, turn_list, eval_conc, error_condition, eval_list, count, error_list[i], max_x, False)
-    # plot(i, assay, count_x, eval_y, expect_y, "Newton-Raphson")
-    # Perform Bisection Method on current component/soln using a and b from Newton Raphson method
-    eval_list = []
-    count = 0
-    eval_y, count_x, error_list, max_x = bisection_method(i, assay, num_samples, error_condition, eval_list, len_list, layer_list, pitch_list, turn_list, a, b, old_serp, count, error_list[i], max_x, False)
-    # plot(i, assay, count_x, eval_y, expect_y, "Bisection")
-    # Update i to perform bisection method on each component/soln
-    if i < num_samples - 1:
-        i += 1
-        recurv_count = 0
-    else:
-        i = 0
-        recurv_count = 0
-    error_list, opt_time, max_x = min_error(i, len_list, layer_list, pitch_list, turn_list, error_condition, assay, num_samples, recurv_count, platform, length_dict, error_list[i], start_time, error_list_stored, max_x)
-    return error_list, opt_time, max_x
+    return min_error(design, error_condition)
 
 
     
@@ -494,9 +448,9 @@ print(error_dict)
 print("###########################")
 print(design)
 # print("keys", design.keys())
-# for assay in design:
-#     # print(design[assay].keys())
-#     print(design[assay]['solution_dict'])
+for assay in design:
+    # print(design[assay].keys())
+    print(design[assay]['eval_dict'])
 # print("ROUTING_STR: ", routing_str)
 # routing_file(device_name, platform, routing_str)
 # print("CONNECT_STR: ", connect_str)
