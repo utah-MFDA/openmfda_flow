@@ -18,6 +18,7 @@ max_turn = 82
 max_turn = 79
 x_coord = 2550000
 y_coord = 1590000
+error_condition = 3
 
 device_name = "multiplex_test"
 platform= "h.r.3.3x2"
@@ -348,44 +349,46 @@ def update_flow(device_name, resist_num, old_resist, new_resist):
 
 # Function to perform Newton-Raphson method on number of turns
 def newton_method(design, assay, key, error_dict, error_key, resist_num):
-    old_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
+    old_resist = f"p_resistor_0_{design[assay]["block_dict"][key]}_{design[assay]["w_dict"][key]}_{design[assay]["h_dict"][key]}_{design[assay]["w3_dict"][key]}_{design[assay]["h3_dict"][key]}_{design[assay]["len_dict"][key]}"
     if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
-        # while error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
-        a = design[assay]["block_dict"[key]]
-        b = a * 2
-        design[assay]["block_dict"[key]] = b
-            # new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
-            # table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
+        while error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
+            a = design[assay]["block_dict"][key]
+            b = a * 2
+            design[assay]["block_dict"][key] = b
+            new_resist = f"p_resistor_0_{design[assay]["block_dict"][key]}_{design[assay]["w_dict"][key]}_{design[assay]["h_dict"][key]}_{design[assay]["w3_dict"][key]}_{design[assay]["h3_dict"][key]}_{design[assay]["len_dict"][key]}"
+            table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
     else:
-        # while error_dict[error_key]['evaluated_conc'] < error_dict[error_key]['expected_conc']:
-        b = design[assay]["block_dict"[key]]
-        a = b // 2
-        if a == 0:
-            a = 1
-        design[assay]["block_dict"[key]] = a
-            # new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
-            # table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
-    new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
-    return a, b, old_resist, new_resist
+        while error_dict[error_key]['evaluated_conc'] < error_dict[error_key]['expected_conc']:
+            b = design[assay]["block_dict"][key]
+            a = b // 2
+            if a == 0:
+                a = 1
+            design[assay]["block_dict"][key] = a
+            new_resist = f"p_resistor_0_{design[assay]["block_dict"][key]}_{design[assay]["w_dict"][key]}_{design[assay]["h_dict"][key]}_{design[assay]["w3_dict"][key]}_{design[assay]["h3_dict"][key]}_{design[assay]["len_dict"][key]}"
+            table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
+            print(table_str)
+            time.sleep(5)
+    return a, b
 
 # Function to perform bisection method on number of turns
-def bisection_method(a, b, m, design, assay, key, error_dict, error_key, resist_num, error_condition):
-    old_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
-    # Update a and b appropriately
-    if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
-        a = m
-    else:
-        b = m
+def bisection_method(a, b, design, assay, key, error_key, resist_num, error_condition):
+    old_resist = f"p_resistor_0_{design[assay]["block_dict"][key]}_{design[assay]["w_dict"][key]}_{design[assay]["h_dict"][key]}_{design[assay]["w3_dict"][key]}_{design[assay]["h3_dict"][key]}_{design[assay]["len_dict"][key]}"
     # Calculate m
     m = int((a + b) / 2)
-    design[assay]["block_dict"[key]] = m
-    new_resist = f"p_resistor_0_{design[assay]["block_dict"[key]]}_{design[assay]["w_dict"[key]]}_{design[assay]["h_dict"[key]]}_{design[assay]["w3_dict"[key]]}_{design[assay]["h3_dict"[key]]}_{design[assay]["len_dict"[key]]}"
-    # table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
-    # if error_dict[error_key]['error'] < error_condition:
-    #     return
-    # else:
-
-    return a, b, m, old_resist, new_resist
+    design[assay]["block_dict"][key] = m
+    new_resist = f"p_resistor_0_{design[assay]["block_dict"][key]}_{design[assay]["w_dict"][key]}_{design[assay]["h_dict"][key]}_{design[assay]["w3_dict"][key]}_{design[assay]["h3_dict"][key]}_{design[assay]["len_dict"][key]}"
+    table_str, error_dict, result = update_flow(device_name, resist_num, old_resist, new_resist)
+    print(table_str)
+    time.sleep(5)
+    if error_dict[error_key]['error'] < error_condition:
+        return
+    else:
+    # Update a and b appropriately
+        if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
+            a = m
+        else:
+            b = m
+    return bisection_method(a, b, design, assay, key, error_key, resist_num, error_condition)
 
 # Function to plot results
 def plot(i, assay, count_x, eval_y, expect_y, method):
@@ -413,26 +416,20 @@ def error_diff(old_error, new_error):
 # Recursive function for error minimization based on difference between expected and evaluated concentration values
 def min_error(design, error_condition):
     assay_num = 0
+    resist_num_index = 0
     for assay in design:
         assay_num += 1
         for key in design[assay]["eval_dict"].keys():
             error_key = f"{key}_out{assay_num}"
-            if error_dict[error_key]['error']  <= error_condition:
-                return
+            resist_num = f"resist{resist_num_index}"
+            if error_dict[error_key]['error'] <= error_condition:
+                break
             else:
-                while (error_a and error_b < error_dict[error_key]['expected_conc']) or (error_a and error_b > error_dict[error_key]['expected_conc']):
-                    continue
-                if error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
-                    while error_dict[error_key]['evaluated_conc'] > error_dict[error_key]['expected_conc']:
-                        a, b, old_resist, new_resist = newton_method(design, assay, key, error_dict, error_key, resist_num)
-                        a, b = newton_method(design, assay, key, error_dict, error_key, resist_num)
-                        bisection_method(a, b, m, design, assay, key, error_dict, error_key)
-                else:
-                    while error_dict[error_key]['evaluated_conc'] < error_dict[error_key]['expected_conc']:
-                        a, b = newton_method(design, assay, key, error_dict, error_key, resist_num)
-                        bisection_method(a, b, m, design, assay, key, error_dict, error_key)
+                a, b = newton_method(design, assay, key, error_dict, error_key, resist_num)
+                bisection_method(a, b, design, assay, key, error_key, resist_num, error_condition)
+            resist_num_index += 1
 
-    return min_error(design, error_condition)
+    # return min_error(design, error_condition)
 
 
     
@@ -443,14 +440,26 @@ design = sim_eval_files(device_name, platform, design, assay_ls)
 design = init_mix(design, assay_ls)
 mix_str, connect_str, output_str, routing_str = mix_v(design, assay_ls)
 table_str, error_dict = con_results(device_name, num_assays)
-print(error_dict)
-# print(table_str)
-print("###########################")
-print(design)
-# print("keys", design.keys())
-for assay in design:
-    # print(design[assay].keys())
-    print(design[assay]['eval_dict'])
+# for assay in design:
+#     for key in design[assay]["eval_dict"].keys():
+#         print("key", key)
+#         print("design[assay]", design[assay]["block_dict"][key])
+#
+#         print("{design[assay]['block_dict'[key]]}", {design[assay]["block_dict"][key]})
+#         print("{design[assay]['w_dict'[key]]}", {design[assay]["w_dict"][key]})
+#         print("{design[assay]['h_dict'[key]]}", {design[assay]["h_dict"][key]})
+#         print("{design[assay]['w3_dict'[key]]}", {design[assay]["w3_dict"][key]})
+#         print("{design[assay]['h3_dict'[key]]}", {design[assay]["h3_dict"][key]})
+#         print("{design[assay]['len_dict'[key]]}", {design[assay]["len_dict"][key]})
+min_error(design, 3)
+# print(error_dict)
+# # print(table_str)
+# print("###########################")
+# print(design)
+# # print("keys", design.keys())
+# for assay in design:
+#     # print(design[assay].keys())
+#     print(design[assay]['eval_dict'])
 # print("ROUTING_STR: ", routing_str)
 # routing_file(device_name, platform, routing_str)
 # print("CONNECT_STR: ", connect_str)
