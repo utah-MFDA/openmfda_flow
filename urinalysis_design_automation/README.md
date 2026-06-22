@@ -8,7 +8,7 @@ This document, along with the included python scripts, is provided to help with 
 To install OpenMFDA, clone the repo at https://github.com/utah-MFDA/openmfda_flow and follow the provided setup instructions.
 
 ### Interfacing OpenMFDA+ with OpenMFDA
-To automate microfluidic designs using OpenMFDA+, download 'main.py', 'file_generation.py', and 'design_automation.py' and place the files in the main OpenMFDA directory. 
+To automate microfluidic designs using OpenMFDA+, download 'main.py', 'file_generation.py', and 'design_automation.py' and place the files in the main OpenMFDA directory. Additionally, 'update_design.tcl' should be downloaded and part of the flow/scripts directory.
 
 To replicate the urinalysis suite and class of continuous-flow, pressure driven device results as found in publication, navigate to 'flow/platforms/h.r.3.3/config_3dp.mk' within the OpenMFDA flow. In 'config_3dp.mk', set 'ZBULK_VAL = 230' and 'EDGE_PADDING = 0'.
 
