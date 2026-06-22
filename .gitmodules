@@ -9,7 +9,7 @@
 	url = https://github.com/utah-MFDA/mfda_benchmarks.git
 [submodule "tools/simulation"]
 	path = tools/simulation
-	url = https://github.com/utah-MFDA/simulation
+	url = https://github.com/utah-MFDA/simulation/tree/fb06f18ceb5b020bf13ca44c491dfd3659c4a0d9
 [submodule "tools/p_cell_generator"]
   path = tools/p_cell_generator
   url = https://github.com/utah-MFDA/pcell_generator
