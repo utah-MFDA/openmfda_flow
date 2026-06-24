@@ -139,19 +139,22 @@ include $(FLOW_HOME)/../tools/p_cell_generator/util.mk
 # export XYCE_LIB = $(PLATFORM_DIR)/pdk/Components/verilogA_build/.libs/MFXyce.so
 
 # For updating routing, SCAD rendering, and simulation following .def file modification
-SCAD_DEF = 3_route_1.def
-#SCAD_DEF = 3_route.def
+#SCAD_DEF = 3_route_1.def
+SCAD_DEF = 3_route.def
 
-run_tcl_script: $(PCELL_MERGE_LEF)
-	$(OPENROAD_CMD) ./scripts/update_design.tcl
-	make re_render
-	make re_simulate
+.PHONY: run_tcl_script gen_pcells re_render re_simulate 
 
 export ADDITIONAL_LEFS += $(PCELL_MERGE_LEF)
 
 gen_pcells: $(PCELL_MERGE_LEF)
 re_render: $(RESULTS_DIR)/$(DESIGN)_reroute.scad
 re_simulate: $(RESULTS_DIR)/xyceOut_1.csv
+
+run_tcl_script: 
+    $(MAKE) gen_pcells
+	$(OPENROAD_CMD) ./scripts/update_design.tcl
+	$(MAKE) re_render
+	$(MAKE) re_simulate
 
 LENGTH_FILE_REROUTE = $(RESULTS_DIR)/7_$(DESIGN)_length.csv
 ROUTE_MAP_OUT_REROUTE = $(RESULTS_DIR)/7_$(DESIGN)_route_nets.json
