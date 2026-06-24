@@ -21,7 +21,7 @@ y_coord = 1590000
 error_condition = 3
 
 device_name = "multiplex_test"
-platform= "h.r.3.3x2"
+platform= "h.r.3.3"
 
 
 # Function to assign samples to solution numbers and to outline/format solutions used in .v file
@@ -278,6 +278,7 @@ def con_results(device_name, num_assays):
 
         except FileNotFoundError:
             continue
+
     else:
         table_str += f"\n|{'CSV FILE NOT FOUND'.center(63)}|"
         table_str += f"\n" + "-" * 65
@@ -332,11 +333,16 @@ def calc_width(i, serp_ls, x_pos):
 # Function for re-running second half of flow when modifying resistor(s)
 def update_flow(device_name, resist_num, old_resist, new_resist):
     # Edit .def and .v files
-    def_file = f"flow/results/{device_name}/base/2_place.def"
+    # def_file = f"flow/results/{device_name}/base/2_place.def"
+    def_file = f"flow/results/{device_name}/base/2_2_place_iop.def"
     verilog_file = f"flow/designs/src/{device_name}/{device_name}.v"
 
     edit_file(def_file, resist_num, old_resist, new_resist)
     edit_file(verilog_file, resist_num, old_resist, new_resist)
+    print("EDIT FILES")
+    print("old_resist", old_resist)
+    print("new_resist", new_resist)
+    time.sleep(5)
    
     # Run Tcl script commands following .def and .v modification 
     command = f"cd flow && make -e DESIGN={device_name} run_tcl_script -B"
