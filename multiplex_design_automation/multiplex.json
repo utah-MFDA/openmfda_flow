@@ -51,6 +51,23 @@
             "sample":50e-6, 
             "R1":50e-6
         }
+    },
+  "nitrite": {
+    "num_samples": 3,
+    "input_dict": {
+            "sample":100e-6,
+            "R1":50e-6,
+            "R2":50e-6
+        }
+    },
+"salicylic_acid": {
+    "num_samples": 4,
+    "input_dict": {
+            "sample":3e-6,
+            "R1":150e-6,
+            "R2":75e-6,
+            "H2O":10e-6
+        }
     }
 }
 

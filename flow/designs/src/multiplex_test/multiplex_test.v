@@ -33,7 +33,7 @@ wire	connect0, connect1, connect2, connect3, connect4, connect5, connect6, conne
 
     
 // albumin
-p_resistor_0_1_20_15_11_8_5	resist0	(.in_fluid(soln1), .out_fluid(connect0));
+p_resistor_0_3_20_15_11_8_5	resist0	(.in_fluid(soln1), .out_fluid(connect0));
 
 p_resistor_0_2_20_15_11_8_5	resist1	(.in_fluid(soln2), .out_fluid(connect1));
 
