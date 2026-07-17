@@ -13,6 +13,8 @@ ifeq ($(BUILD_PDK_LIBRARY),)
 export TECH_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3.tlef
 export SC_LEF ?= $(PLATFORM_DIR)/lef/h.r.3.3_merged.lef
 
+export XYCE_LIB ?= $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so
+
 # lib file is not required
 #export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      #$(ADDITIONAL_LIBS)
@@ -89,6 +91,16 @@ export FASTROUTE_TCL = $(PLATFORM_DIR)/fastroute.tcl
 
 # KLayout technology file
 export KLAYOUT_TECH_FILE = $(PLATFORM_DIR)/$(PLATFORM).lyt
+
+# ---------------------------------------------------------
+#  Simulation
+# ---------------------------------------------------------
+# needed for subcircuit finding
+XYCE_INCLUDE_FILES = $(abspath $(PLATFORM_DIR)/xyce/mfda_subckt.cir)
+
+ifneq ($(wildcard $(XYCE_INCLUDE_FILES)),)
+export SIMULATION_ARGS += --include_files $(XYCE_INCLUDE_FILES)
+endif
 
 # Default SCAD script arguments
 ifeq ($(abspath $(SCAD_SCRIPT)),$(abspath ../tools/scad_render/generator_v2.py))
