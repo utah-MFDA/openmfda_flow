@@ -626,6 +626,7 @@ $(RESULTS_DIR)/simulation/$(DESIGN_NICKNAME)_xyceOut.csv: $(RESULTS_DIR)/$(DESIG
 		--length_file $(LENGTH_FILE) \
 		--lib ../tools/simulation/stdCellLib/StandardCellLibrary.csv 2>&1 | tee $(RESULTS_DIR)/simulation.log
 
+
 endif
 
 # ==============================================================================

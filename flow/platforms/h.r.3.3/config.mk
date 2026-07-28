@@ -100,6 +100,7 @@ XYCE_INCLUDE_FILES = $(abspath $(PLATFORM_DIR)/xyce/mfda_subckt.cir)
 
 ifneq ($(wildcard $(XYCE_INCLUDE_FILES)),)
 export SIMULATION_ARGS += --include_files $(XYCE_INCLUDE_FILES)
+SIMULATION_ARGS += --eval_result
 endif
 
 # Default SCAD script arguments
