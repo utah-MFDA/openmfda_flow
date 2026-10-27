@@ -222,7 +222,7 @@ def io_file(device_name, platform, design, assay_ls, num_assays):
         else:
             soln_num = design[assay_ls[i]]["num_samples"] - 1
         for j in range(soln_num):
-            pin_str += f"place_pin -pin_name soln{k} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {1 1}" + f"\n"
+            pin_str += f"place_pin -pin_name soln{k} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {10 10}" + f"\n"
             f2 += 90
             if f2 > 930:
                 f1 += 90
@@ -230,7 +230,7 @@ def io_file(device_name, platform, design, assay_ls, num_assays):
             if f1 > 1590:
                 f1 -= 90
             k+=1
-        pin_str += f"place_pin -pin_name out{i+1} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {1 1}" + f"\n\n"
+        pin_str += f"place_pin -pin_name out{i+1} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {10 10}" + f"\n\n"
         f1_o += 90
     # directory = f'../flow/designs/{platform}/{device_name}'
     directory = f'./flow/designs/{platform}/{device_name}'
@@ -674,22 +674,37 @@ def min_error(design, error_condition):
 
     
 #################################################################################
-# Generate concentration and resistance length ratios
-design = conc_ratio(design, assay_ls, num_assays)
-# Generate necessary files
-configure_file(device_name, platform)
-make_file(device_name, platform)
-constraint_file(device_name, platform)
-io_file(device_name, platform, design, assay_ls, num_assays)
-design, soln_list, soln_str = solution_dict(design, assay_ls, num_assays)
-design = sim_eval_files(device_name, platform, design, assay_ls)
-# Initial mixing and verilog file
-design = init_mix(design, assay_ls)
-mix_str, connect_str, output_str, routing_str = mix_v(design, assay_ls)
-v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)
-routing_file(device_name, platform, routing_str)
-subprocess.run(["python3", f"./flow/designs/{platform}/{device_name}/{device_name}.py"])
-table_str, error_dict = con_results(device_name, num_assays)
+# # Generate concentration and resistance length ratios
+# design = conc_ratio(design, assay_ls, num_assays)
+# # Generate necessary files
+# configure_file(device_name, platform)
+# make_file(device_name, platform)
+# constraint_file(device_name, platform)
+# io_file(device_name, platform, design, assay_ls, num_assays)
+# design, soln_list, soln_str = solution_dict(design, assay_ls, num_assays)
+# design = sim_eval_files(device_name, platform, design, assay_ls)
+# # Initial mixing and verilog file
+# design = init_mix(design, assay_ls)
+# mix_str, connect_str, output_str, routing_str = mix_v(design, assay_ls)
+# v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)
+# routing_file(device_name, platform, routing_str)
+# subprocess.run(["python3", f"./flow/designs/{platform}/{device_name}/{device_name}.py"])
+# table_str, error_dict = con_results(device_name, num_assays)
+# print(table_str)
+# min_error(design, 3)
+
+device_name = "multiplex_test"
+def_file = f"flow/results/{device_name}/base/2_2_place_iop.def"
+verilog_file = f"flow/designs/src/{device_name}/{device_name}.v"
+resist_num = "resist10"
+old_resist = "p_resistor_0_1_14_10_6_5_5"
+new_resist = "p_resistor_0_1_14_10_6_5_15"
+filename = verilog_file 
+edit_file(filename, resist_num, old_resist, new_resist)
+# update_flow(device_name, resist_num, old_resist, new_resist)
+# newton_method(design, assay, key, error_dict, error_key, resist_num)
+# bisection_method(a, b, design, assay, key, error_key, resist_num, error_condition)
+# min_error(design, error_condition)
 
 # for assay in design:
 #     for key in design[assay]["eval_dict"].keys():
@@ -702,16 +717,4 @@ table_str, error_dict = con_results(device_name, num_assays)
 #         print("{design[assay]['w3_dict'[key]]}", {design[assay]["w3_dict"][key]})
 #         print("{design[assay]['h3_dict'[key]]}", {design[assay]["h3_dict"][key]})
 #         print("{design[assay]['len_dict'[key]]}", {design[assay]["len_dict"][key]})
-# min_error(design, 3)
-# print(error_dict)
-# # print(table_str)
-# print("###########################")
-# print(design)
-# # print("keys", design.keys())
-# for assay in design:
-#     # print(design[assay].keys())
-#     print(design[assay]['eval_dict'])
-# print("ROUTING_STR: ", routing_str)
-# routing_file(device_name, platform, routing_str)
-# print("CONNECT_STR: ", connect_str)
-# v_file(device_name, soln_list, soln_str, connect_str, output_str, mix_str)
+

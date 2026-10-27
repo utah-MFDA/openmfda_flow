@@ -1,0 +1,4 @@
+,Chemical,spice_str_file,spice_file,OutputFile
+0,R1,./results/nitrite/base/simulation/nitrite_R1.cir.str,./results/nitrite/base/simulation/nitrite_R1.cir,./results/nitrite/base/simulation/nitrite_R1.cir.prn
+1,R2,./results/nitrite/base/simulation/nitrite_R2.cir.str,./results/nitrite/base/simulation/nitrite_R2.cir,./results/nitrite/base/simulation/nitrite_R2.cir.prn
+2,sample,./results/nitrite/base/simulation/nitrite_sample.cir.str,./results/nitrite/base/simulation/nitrite_sample.cir,./results/nitrite/base/simulation/nitrite_sample.cir.prn

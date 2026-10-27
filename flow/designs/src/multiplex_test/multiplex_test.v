@@ -29,15 +29,15 @@ module multiplex_test (
 input	soln1, soln2, soln3, soln4, soln5, soln6, soln7, soln8, soln9, soln10, soln11, soln12, soln13, soln14, soln15, soln16, soln17, soln18;
 output	out1, out2, out3, out4, out5, out6, out7, out8;
 
-wire	connect0, connect1, connect2, connect3, connect4, connect5, connect6, connect7, connect8, connect9, connect10, connect11, connect12, connect13, connect14, connect15, connect16, connect17, connect18, connect19, connect20, connect21, connect22, connect23, connect24, connect25, connect26, connect27, connect28, connect29, connect30, connect31, connect32, connect33;
+wire	connect0, connect1, connect2, connect3, connect4, connect5, connect6, connect7, connect8, connect9, connect10, connect11, connect12, connect13, connect14, connect15, connect16, connect17, connect18, connect19, connect20, connect21, connect22, connect23, connect24, connect25, connect26, connect27, connect28, connect29, connect30, connect31, connect32;
 
     
 // albumin
-p_resistor_0_23_20_15_11_8_5	resist0	(.in_fluid(soln1), .out_fluid(connect0));
+p_resistor_0_3_20_15_11_8_5	resist0	(.in_fluid(soln1), .out_fluid(connect0));
 
 p_resistor_0_2_20_15_11_8_5	resist1	(.in_fluid(soln2), .out_fluid(connect1));
 
-p_resistor_0_1_40_30_20_15_5	resist2	(.in_fluid(soln3), .out_fluid(connect2));
+p_resistor_0_8_40_30_20_15_5	resist2	(.in_fluid(soln3), .out_fluid(connect2));
 
 p_resistor_0_1_40_30_20_15_5	resist3	(.in_fluid(soln4), .out_fluid(connect3));
 diffmix_25px_0	mix0	(.a_fluid(connect0), .b_fluid(connect1), .out_fluid(connect4));

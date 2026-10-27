@@ -1,4 +1,4 @@
-# from design_automation import init_mix, mix_v, v_file, routing_file
+from design_automation import init_mix, mix_v, v_file, routing_file
 import os
 
 # Generate all necessary files
@@ -150,8 +150,8 @@ gen_pcells: $(PCELL_MERGE_LEF)
 re_render: $(RESULTS_DIR)/$(DESIGN)_reroute.scad
 re_simulate: $(RESULTS_DIR)/xyceOut_1.csv
 
-run_tcl_script: 
-    $(MAKE) gen_pcells
+run_tcl_script:
+	$(MAKE) gen_pcells
 	$(OPENROAD_CMD) ./scripts/update_design.tcl
 	$(MAKE) re_render
 	$(MAKE) re_simulate
@@ -213,7 +213,7 @@ def io_file(device_name, platform, design, assay_ls, num_assays):
         else:
             soln_num = design[assay_ls[i]]["num_samples"] - 1
         for j in range(soln_num):
-            pin_str += f"place_pin -pin_name soln{k} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {1 1}" + f"\n"
+            pin_str += f"place_pin -pin_name soln{k} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {10 10}" + f"\n"
             f2 += 90
             if f2 > 930:
                 f1 += 90
@@ -221,7 +221,7 @@ def io_file(device_name, platform, design, assay_ls, num_assays):
             if f1 > 1590:
                 f1 -= 90
             k+=1
-        pin_str += f"place_pin -pin_name out{i+1} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {1 1}" + f"\n\n"
+        pin_str += f"place_pin -pin_name out{i+1} -layer met9 -location" + " { " + str(f1) + " " + str(f2) +" } -pin_size {10 10}" + f"\n\n"
         f1_o += 90
     directory = f'../flow/designs/{platform}/{device_name}'
     filename = 'io_constraints.tcl'

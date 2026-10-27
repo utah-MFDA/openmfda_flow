@@ -1,0 +1,4 @@
+,Chemical,spice_str_file,spice_file,OutputFile
+0,sample,./results/cocaine/base/simulation/cocaine_sample.cir.str,./results/cocaine/base/simulation/cocaine_sample.cir,./results/cocaine/base/simulation/cocaine_sample.cir.prn
+1,R2,./results/cocaine/base/simulation/cocaine_R2.cir.str,./results/cocaine/base/simulation/cocaine_R2.cir,./results/cocaine/base/simulation/cocaine_R2.cir.prn
+2,R1,./results/cocaine/base/simulation/cocaine_R1.cir.str,./results/cocaine/base/simulation/cocaine_R1.cir,./results/cocaine/base/simulation/cocaine_R1.cir.prn

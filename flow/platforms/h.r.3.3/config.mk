@@ -18,7 +18,8 @@ export XYCE_LIB ?= $(PLATFORM_DIR)/xyce/MFXyce_0.0.0.so
 # lib file is not required
 #export LIB_FILES = $(PLATFORM_DIR)/lib/h.r.3.3.lib \
                      #$(ADDITIONAL_LIBS)
-export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3_merged.scad
+# export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/scad_lib/h.r.3.3_merged.scad
+export SCAD_COMPONENT_LIBRARY = $(PLATFORM_DIR)/pdk/distrib/2.0.0/h.r.3.3_merged.scad
 export SCAD_ROUTING_LIBRARY = $(PLATFORM_DIR)/scad/routing.scad
 else
 # Locally built distribution files

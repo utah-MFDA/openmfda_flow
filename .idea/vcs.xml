@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/benchmarks" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/benchmarks/sources/MINT-Benchmarks" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/benchmarks/sources/MINT-TestCases" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/benchmarks/sources/Microfluidics-Benchmarks" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/benchmarks/sources/Parchmint" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/flow/platforms/h.r.3.3/pdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/flow/platforms/h.r.3.3/pdk_cp_032326" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/flow/platforms/h.r.3.3/pdk_new" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/flow/platforms/h.r.3.3x2/pdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/flow/platforms/h.r.3.3x2/pdk_new" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/flow/platforms/p.m.8.k/pdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools/p_cell_generator" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools/simulation" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools/simulation/xyce_run_old_bak" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools/slicer" vcs="Git" />
+  </component>
+</project>

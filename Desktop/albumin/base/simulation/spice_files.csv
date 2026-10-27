@@ -1,0 +1,5 @@
+,Chemical,spice_str_file,spice_file,OutputFile
+0,sample,./results/albumin/base/simulation/albumin_sample.cir.str,./results/albumin/base/simulation/albumin_sample.cir,./results/albumin/base/simulation/albumin_sample.cir.prn
+1,H2O,./results/albumin/base/simulation/albumin_H2O.cir.str,./results/albumin/base/simulation/albumin_H2O.cir,./results/albumin/base/simulation/albumin_H2O.cir.prn
+2,R2,./results/albumin/base/simulation/albumin_R2.cir.str,./results/albumin/base/simulation/albumin_R2.cir,./results/albumin/base/simulation/albumin_R2.cir.prn
+3,R1,./results/albumin/base/simulation/albumin_R1.cir.str,./results/albumin/base/simulation/albumin_R1.cir,./results/albumin/base/simulation/albumin_R1.cir.prn

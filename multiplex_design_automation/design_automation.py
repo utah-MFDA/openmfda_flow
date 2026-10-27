@@ -202,10 +202,10 @@ def con_results(device_name, num_assays):
     table_str += f"\n| SAMPLES/REAGENTS | EXPECTED CON. | EVALUATED CON. | ERROR [%] |\n"
     table_str += "-" * 65
 
-    base_path = f"./flow/results/{device_name}/base"
+    base_path = f"./../flow/results/{device_name}/base"
     paths = [
-        f"{base_path}/Chem_Eval.csv",
         f"{base_path}/simulation/Chem_Eval.csv",
+        f"{base_path}/Chem_Eval.csv"
     ]
 
     for path in paths:

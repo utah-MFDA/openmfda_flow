@@ -36,7 +36,7 @@ p_resistor_0_1_20_15_11_8_5	resist0	(.in_fluid(soln1), .out_fluid(connect0));
 
 p_resistor_0_2_20_15_11_8_5	resist1	(.in_fluid(soln2), .out_fluid(connect1));
 
-p_resistor_0_1_40_30_20_15_5	resist2	(.in_fluid(soln3), .out_fluid(connect2));
+p_resistor_0_8_40_30_20_15_5	resist2	(.in_fluid(soln3), .out_fluid(connect2));
 
 p_resistor_0_1_40_30_20_15_5	resist3	(.in_fluid(soln4), .out_fluid(connect3));
 diffmix_25px_0	mix0	(.a_fluid(connect0), .b_fluid(connect1), .out_fluid(connect4));

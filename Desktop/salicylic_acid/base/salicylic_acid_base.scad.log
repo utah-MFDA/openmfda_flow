@@ -1,0 +1,571 @@
+
+    --------------------------------
+          OpenSCAD generation
+    --------------------------------
+    
+Starting writing @ ./results/salicylic_acid/base/salicylic_acid.scad
+pcell dict:  {'p_serpentine_0_360_30_64': {'pcell': 'p_serpentine_0', 'params': 'L1=360 L2=30 turns=64'}, 'p_serpentine_0_360_30_16': {'pcell': 'p_serpentine_0', 'params': 'L1=360 L2=30 turns=16'}, 'p_serpentine_0_120_30_8': {'pcell': 'p_serpentine_0', 'params': 'L1=120 L2=30 turns=8'}, 'p_serpentine_0_60_30_8': {'pcell': 'p_serpentine_0', 'params': 'L1=60 L2=30 turns=8'}}
+Importing TECH_LEF: ./platforms/h.r.3.3/lef/h.r.3.3.tlef
+import via M1M2_PR
+['via1', 'met1', 'met2']
+import via M2M3_PR
+['via2', 'met2', 'met3']
+import via M3M4_PR
+['via3', 'met3', 'met4']
+import via M4M5_PR
+['via4', 'met4', 'met5']
+import via M5M6_PR
+['via5', 'met5', 'met6']
+import via M6M7_PR
+['via6', 'met6', 'met7']
+import via M7M8_PR
+['via7', 'met7', 'met8']
+import via M8M9_PR
+['via8', 'met8', 'met9']
+import via M9M10_PR
+['via9', 'met9', 'met10']
+Parsing macro: serpentine_50px_0
+Parsing macro: serpentine_100px_0
+Parsing macro: serpentine_150px_0
+Parsing macro: serpentine_200px_0
+Parsing macro: serpentine_200px_3
+Parsing macro: serpentine_300px_0
+Parsing macro: serpentine_300px_1
+Parsing macro: serpentine_300px_2
+Parsing macro: serpentine_300px_3
+Parsing macro: diffmix_25px_0
+Parsing macro: p_serpentine_0_360_30_16
+Parsing macro: p_serpentine_0_120_30_8
+Parsing macro: p_serpentine_0_60_30_8
+b'connect0'
+b'( serp0 out_fluid ) ( mix0 a_fluid )'
+b'connect1'
+b'( serp1 out_fluid ) ( mix0 b_fluid )'
+b'connect2'
+b'( serp2 out_fluid ) ( mix1 a_fluid )'
+b'connect3'
+b'( serp3 out_fluid ) ( mix2 a_fluid )'
+b'connect4'
+b'( mix1 b_fluid ) ( mix0 out_fluid )'
+b'connect5'
+b'( mix2 b_fluid ) ( mix1 out_fluid )'
+b'out'
+b'( PIN out ) ( mix2 out_fluid )'
+b'soln1'
+b'( PIN soln1 ) ( serp0 in_fluid )'
+b'soln2'
+b'( PIN soln2 ) ( serp1 in_fluid )'
+b'soln3'
+b'( PIN soln3 ) ( serp2 in_fluid )'
+b'soln4'
+b'( PIN soln4 ) ( serp3 in_fluid )'
+ROUTE: [[[14.82, 2.96609, 'met2'], [14.82, 3.42, 'met2']], [[14.364, 3.42, 'met1'], [14.82, 3.42, 'met1']], [[14.13809, 3.42, 'met3'], [14.364, 3.42, 'met3']], [[14.82, 2.96609, 'met1'], [14.82, 2.96609, 'met2']], [[14.82, 3.42, 'met1'], [14.82, 3.42, 'met2']], [[14.364, 3.42, 'met1'], [14.364, 3.42, 'met2']], [[14.364, 3.42, 'met2'], [14.364, 3.42, 'met3']], [[14.13809, 3.42, 'met1'], [14.13809, 3.42, 'met2']], [[14.13809, 3.42, 'met2'], [14.13809, 3.42, 'met3']]]
+Component list not passed!!!!
+converting route:  connect0 : 
+ROUTE: [[[7.29809, 3.42, 'met1'], [10.26, 3.42, 'met1']], [[10.26, 3.42, 'met4'], [10.26, 3.648, 'met4']], [[10.26, 3.648, 'met5'], [10.716, 3.648, 'met5']], [[10.716, 3.648, 'met3'], [10.71809, 3.648, 'met3']], [[10.71809, 3.648, 'met1'], [13.905909999999999, 3.648, 'met1']], [[13.905909999999999, 3.648, 'met3'], [14.13809, 3.648, 'met3']], [[3.648, 3.42, 'met3'], [7.29809, 3.42, 'met3']], [[3.648, 3.42, 'met1'], [3.648, 3.42, 'met2']], [[3.648, 3.42, 'met2'], [3.648, 3.42, 'met3']], [[7.29809, 3.42, 'met1'], [7.29809, 3.42, 'met2']], [[7.29809, 3.42, 'met2'], [7.29809, 3.42, 'met3']], [[10.26, 3.42, 'met1'], [10.26, 3.42, 'met2']], [[10.26, 3.42, 'met2'], [10.26, 3.42, 'met3']], [[10.26, 3.42, 'met3'], [10.26, 3.42, 'met4']], [[10.26, 3.648, 'met4'], [10.26, 3.648, 'met5']], [[10.716, 3.648, 'met3'], [10.716, 3.648, 'met4']], [[10.716, 3.648, 'met4'], [10.716, 3.648, 'met5']], [[10.71809, 3.648, 'met1'], [10.71809, 3.648, 'met2']], [[10.71809, 3.648, 'met2'], [10.71809, 3.648, 'met3']], [[13.905909999999999, 3.648, 'met1'], [13.905909999999999, 3.648, 'met2']], [[13.905909999999999, 3.648, 'met2'], [13.905909999999999, 3.648, 'met3']], [[14.13809, 3.648, 'met1'], [14.13809, 3.648, 'met2']], [[14.13809, 3.648, 'met2'], [14.13809, 3.648, 'met3']]]
+Component list not passed!!!!
+converting route:  connect1 : 
+ROUTE: [[[7.296, 6.84209, 'met2'], [7.296, 7.296, 'met2']], [[7.296, 7.296, 'met1'], [10.032, 7.296, 'met1']], [[10.032, 7.296, 'met3'], [10.488, 7.296, 'met3']], [[10.488, 7.296, 'met2'], [10.488, 7.52191, 'met2']], [[7.296, 6.84209, 'met1'], [7.296, 6.84209, 'met2']], [[7.296, 7.296, 'met1'], [7.296, 7.296, 'met2']], [[10.032, 7.296, 'met1'], [10.032, 7.296, 'met2']], [[10.032, 7.296, 'met2'], [10.032, 7.296, 'met3']], [[10.488, 7.296, 'met2'], [10.488, 7.296, 'met3']], [[10.488, 7.52191, 'met1'], [10.488, 7.52191, 'met2']]]
+Component list not passed!!!!
+converting route:  connect2 : 
+ROUTE: [[[13.68, 6.156, 'met1'], [13.908, 6.156, 'met1']], [[13.68, 3.42, 'met2'], [13.68, 6.156, 'met2']], [[10.944, 3.42, 'met1'], [13.68, 3.42, 'met1']], [[10.488, 3.42, 'met7'], [10.944, 3.42, 'met7']], [[10.485909999999999, 3.42, 'met3'], [10.488, 3.42, 'met3']], [[13.908, 6.156, 'met2'], [13.908, 7.065910000000001, 'met2']], [[13.908, 7.065910000000001, 'met1'], [13.908, 7.065910000000001, 'met2']], [[13.908, 6.156, 'met1'], [13.908, 6.156, 'met2']], [[13.68, 6.156, 'met1'], [13.68, 6.156, 'met2']], [[13.68, 3.42, 'met1'], [13.68, 3.42, 'met2']], [[10.944, 3.42, 'met1'], [10.944, 3.42, 'met2']], [[10.944, 3.42, 'met2'], [10.944, 3.42, 'met3']], [[10.944, 3.42, 'met3'], [10.944, 3.42, 'met4']], [[10.944, 3.42, 'met4'], [10.944, 3.42, 'met5']], [[10.944, 3.42, 'met5'], [10.944, 3.42, 'met6']], [[10.944, 3.42, 'met6'], [10.944, 3.42, 'met7']], [[10.488, 3.42, 'met3'], [10.488, 3.42, 'met4']], [[10.488, 3.42, 'met4'], [10.488, 3.42, 'met5']], [[10.488, 3.42, 'met5'], [10.488, 3.42, 'met6']], [[10.488, 3.42, 'met6'], [10.488, 3.42, 'met7']], [[10.485909999999999, 3.42, 'met1'], [10.485909999999999, 3.42, 'met2']], [[10.485909999999999, 3.42, 'met2'], [10.485909999999999, 3.42, 'met3']]]
+Component list not passed!!!!
+converting route:  connect3 : 
+ROUTE: [[[13.905909999999999, 3.42, 'met3'], [13.908, 3.42, 'met3']], [[13.908, 3.42, 'met4'], [13.908, 4.104, 'met4']], [[7.29809, 4.104, 'met1'], [13.908, 4.104, 'met1']], [[7.296, 4.104, 'met3'], [7.29809, 4.104, 'met3']], [[7.296, 4.104, 'met6'], [7.296, 6.612, 'met6']], [[7.296, 6.612, 'met3'], [7.29809, 6.612, 'met3']], [[13.905909999999999, 3.42, 'met1'], [13.905909999999999, 3.42, 'met2']], [[13.905909999999999, 3.42, 'met2'], [13.905909999999999, 3.42, 'met3']], [[13.908, 3.42, 'met3'], [13.908, 3.42, 'met4']], [[13.908, 4.104, 'met1'], [13.908, 4.104, 'met2']], [[13.908, 4.104, 'met2'], [13.908, 4.104, 'met3']], [[13.908, 4.104, 'met3'], [13.908, 4.104, 'met4']], [[7.29809, 4.104, 'met1'], [7.29809, 4.104, 'met2']], [[7.29809, 4.104, 'met2'], [7.29809, 4.104, 'met3']], [[7.296, 4.104, 'met3'], [7.296, 4.104, 'met4']], [[7.296, 4.104, 'met4'], [7.296, 4.104, 'met5']], [[7.296, 4.104, 'met5'], [7.296, 4.104, 'met6']], [[7.296, 6.612, 'met3'], [7.296, 6.612, 'met4']], [[7.296, 6.612, 'met4'], [7.296, 6.612, 'met5']], [[7.296, 6.612, 'met5'], [7.296, 6.612, 'met6']], [[7.29809, 6.612, 'met1'], [7.29809, 6.612, 'met2']], [[7.29809, 6.612, 'met2'], [7.29809, 6.612, 'met3']]]
+Component list not passed!!!!
+converting route:  connect4 : 
+ROUTE: [[[7.065910000000001, 6.60991, 'met2'], [7.065910000000001, 6.83791, 'met2']], [[7.065910000000001, 6.60991, 'met1'], [7.068, 6.60991, 'met1']], [[7.068, 3.648, 'met2'], [7.068, 6.60991, 'met2']], [[7.068, 3.648, 'met3'], [7.29809, 3.648, 'met3']], [[7.29809, 3.648, 'met1'], [10.26, 3.648, 'met1']], [[10.26, 3.648, 'met5'], [10.488, 3.648, 'met5']], [[10.485909999999999, 3.648, 'met3'], [10.488, 3.648, 'met3']], [[7.065910000000001, 6.83791, 'met1'], [7.065910000000001, 6.83791, 'met2']], [[7.065910000000001, 6.60991, 'met1'], [7.065910000000001, 6.60991, 'met2']], [[7.068, 6.60991, 'met1'], [7.068, 6.60991, 'met2']], [[7.068, 3.648, 'met2'], [7.068, 3.648, 'met3']], [[7.29809, 3.648, 'met1'], [7.29809, 3.648, 'met2']], [[7.29809, 3.648, 'met2'], [7.29809, 3.648, 'met3']], [[10.26, 3.648, 'met1'], [10.26, 3.648, 'met2']], [[10.26, 3.648, 'met2'], [10.26, 3.648, 'met3']], [[10.26, 3.648, 'met3'], [10.26, 3.648, 'met4']], [[10.26, 3.648, 'met4'], [10.26, 3.648, 'met5']], [[10.488, 3.648, 'met3'], [10.488, 3.648, 'met4']], [[10.488, 3.648, 'met4'], [10.488, 3.648, 'met5']], [[10.485909999999999, 3.648, 'met1'], [10.485909999999999, 3.648, 'met2']], [[10.485909999999999, 3.648, 'met2'], [10.485909999999999, 3.648, 'met3']]]
+Component list not passed!!!!
+converting route:  connect5 : 
+ROUTE: [[[12.084, 5.244, 'met8'], [12.084, 5.7, 'met8']], [[10.716, 5.244, 'met7'], [12.084, 5.244, 'met7']], [[10.716, 3.42, 'met8'], [10.716, 5.244, 'met8']], [[10.716, 3.42, 'met3'], [10.71809, 3.42, 'met3']], [[12.084, 5.244, 'met7'], [12.084, 5.244, 'met8']], [[10.716, 5.244, 'met7'], [10.716, 5.244, 'met8']], [[10.716, 3.42, 'met3'], [10.716, 3.42, 'met4']], [[10.716, 3.42, 'met4'], [10.716, 3.42, 'met5']], [[10.716, 3.42, 'met5'], [10.716, 3.42, 'met6']], [[10.716, 3.42, 'met6'], [10.716, 3.42, 'met7']], [[10.716, 3.42, 'met7'], [10.716, 3.42, 'met8']], [[10.71809, 3.42, 'met1'], [10.71809, 3.42, 'met2']], [[10.71809, 3.42, 'met2'], [10.71809, 3.42, 'met3']], [[12.084, 5.7, 'met8'], [12.084, 5.7, 'met9']]]
+Component list not passed!!!!
+converting route:  out : 
+ROUTE: [[[0.228, 3.42, 'met1'], [3.192, 3.42, 'met1']], [[0.228, 0.23009, 'met2'], [0.228, 3.42, 'met2']], [[7.98, 3.42, 'met8'], [7.98, 5.016, 'met8']], [[3.192, 3.42, 'met7'], [7.98, 3.42, 'met7']], [[3.192, 3.42, 'met1'], [3.192, 3.42, 'met2']], [[3.192, 3.42, 'met2'], [3.192, 3.42, 'met3']], [[3.192, 3.42, 'met3'], [3.192, 3.42, 'met4']], [[3.192, 3.42, 'met4'], [3.192, 3.42, 'met5']], [[3.192, 3.42, 'met5'], [3.192, 3.42, 'met6']], [[3.192, 3.42, 'met6'], [3.192, 3.42, 'met7']], [[0.228, 3.42, 'met1'], [0.228, 3.42, 'met2']], [[0.228, 0.23009, 'met1'], [0.228, 0.23009, 'met2']], [[7.98, 3.42, 'met7'], [7.98, 3.42, 'met8']], [[7.98, 5.016, 'met8'], [7.98, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln1 : 
+ROUTE: [[[8.664, 5.016, 'met8'], [8.664, 6.156, 'met8']], [[7.296, 6.156, 'met7'], [8.664, 6.156, 'met7']], [[8.664, 6.156, 'met7'], [8.664, 6.156, 'met8']], [[7.296, 6.156, 'met1'], [7.296, 6.156, 'met2']], [[7.296, 6.156, 'met2'], [7.296, 6.156, 'met3']], [[7.296, 6.156, 'met3'], [7.296, 6.156, 'met4']], [[7.296, 6.156, 'met4'], [7.296, 6.156, 'met5']], [[7.296, 6.156, 'met5'], [7.296, 6.156, 'met6']], [[7.296, 6.156, 'met6'], [7.296, 6.156, 'met7']], [[8.664, 5.016, 'met8'], [8.664, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln2 : 
+ROUTE: [[[9.348, 5.016, 'met8'], [9.348, 5.472, 'met8']], [[9.348, 5.472, 'met5'], [12.312, 5.472, 'met5']], [[12.312, 5.472, 'met2'], [12.312, 6.60991, 'met2']], [[9.348, 5.472, 'met5'], [9.348, 5.472, 'met6']], [[9.348, 5.472, 'met6'], [9.348, 5.472, 'met7']], [[9.348, 5.472, 'met7'], [9.348, 5.472, 'met8']], [[12.312, 5.472, 'met2'], [12.312, 5.472, 'met3']], [[12.312, 5.472, 'met3'], [12.312, 5.472, 'met4']], [[12.312, 5.472, 'met4'], [12.312, 5.472, 'met5']], [[12.312, 6.60991, 'met1'], [12.312, 6.60991, 'met2']], [[9.348, 5.016, 'met8'], [9.348, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln3 : 
+ROUTE: [[[10.032, 5.016, 'met8'], [10.032, 6.156, 'met8']], [[10.032, 6.156, 'met7'], [10.26, 6.156, 'met7']], [[10.26, 6.156, 'met1'], [15.732, 6.156, 'met1']], [[15.732, 6.156, 'met2'], [15.732, 6.60991, 'met2']], [[10.032, 6.156, 'met7'], [10.032, 6.156, 'met8']], [[10.26, 6.156, 'met1'], [10.26, 6.156, 'met2']], [[10.26, 6.156, 'met2'], [10.26, 6.156, 'met3']], [[10.26, 6.156, 'met3'], [10.26, 6.156, 'met4']], [[10.26, 6.156, 'met4'], [10.26, 6.156, 'met5']], [[10.26, 6.156, 'met5'], [10.26, 6.156, 'met6']], [[10.26, 6.156, 'met6'], [10.26, 6.156, 'met7']], [[15.732, 6.156, 'met1'], [15.732, 6.156, 'met2']], [[15.732, 6.60991, 'met1'], [15.732, 6.60991, 'met2']], [[10.032, 5.016, 'met8'], [10.032, 5.016, 'met9']]]
+Component list not passed!!!!
+converting route:  soln4 : 
+(1.4) pt [10.26, 3.648, 1.35] is in [[10.26, 3.42, 1.35], [10.26, 3.648, 1.35]]
+(1.3) pt [10.26, 3.648, 1.35] is in [[10.26, 3.42, 1.35], [10.26, 3.648, 1.35]]
+(1.2) pt [10.26, 3.648, 1.55] is in [[10.488, 3.648, 1.55], [10.26, 3.648, 1.55]]
+(1.4) pt [10.488, 3.648, 1.55] is in [[10.26, 3.648, 1.55], [10.716, 3.648, 1.55]]
+(1.3) pt [10.26, 3.648, 1.55] is in [[10.26, 3.648, 1.55], [10.716, 3.648, 1.55]]
+(1.4) pt [10.716, 3.42, 1.95] is in [[10.488, 3.42, 1.95], [10.944, 3.42, 1.95]]
+(1.3) pt [10.716, 3.42, 1.95] is in [[10.488, 3.42, 1.95], [10.944, 3.42, 1.95]]
+(1.2) pt [13.68, 6.156, 0.75] is in [[10.26, 6.156, 0.75], [15.732, 6.156, 0.75]]
+(1.1) pt [13.908, 6.156, 0.75] is in [[10.26, 6.156, 0.75], [15.732, 6.156, 0.75]]
+(1.4) pt [7.296, 6.156, 1.75] is in [[7.296, 4.104, 1.75], [7.296, 6.612, 1.75]]
+(1.3) pt [7.296, 6.156, 1.75] is in [[7.296, 4.104, 1.75], [7.296, 6.612, 1.75]]
+(1.2) pt [10.488, 3.648, 1.55] is in [[10.26, 3.648, 1.55], [10.716, 3.648, 1.55]]
+(1.4) pt [10.26, 3.648, 1.55] is in [[10.488, 3.648, 1.55], [10.26, 3.648, 1.55]]
+(1.2) pt [10.26, 3.648, 1.35] is in [[10.26, 3.42, 1.35], [10.26, 3.648, 1.35]]
+(1.1) pt [10.26, 3.648, 1.55] is in [[10.26, 3.648, 1.55], [10.716, 3.648, 1.55]]
+(1.1) pt [10.26, 3.648, 1.35] is in [[10.26, 3.42, 1.35], [10.26, 3.648, 1.35]]
+(1.2) pt [10.716, 3.42, 1.95] is in [[10.488, 3.42, 1.95], [10.944, 3.42, 1.95]]
+(1.1) pt [10.716, 3.42, 1.95] is in [[10.488, 3.42, 1.95], [10.944, 3.42, 1.95]]
+(1.2) pt [7.296, 6.156, 1.75] is in [[7.296, 4.104, 1.75], [7.296, 6.612, 1.75]]
+(1.1) pt [7.296, 6.156, 1.75] is in [[7.296, 4.104, 1.75], [7.296, 6.612, 1.75]]
+(1.4) pt [13.68, 6.156, 0.75] is in [[10.26, 6.156, 0.75], [15.732, 6.156, 0.75]]
+(1.3) pt [13.908, 6.156, 0.75] is in [[10.26, 6.156, 0.75], [15.732, 6.156, 0.75]]
+./results/salicylic_acid/base/salicylic_acid_base.scad
+Importing TECH_LEF: ./platforms/h.r.3.3/lef/h.r.3.3.tlef
+import via M1M2_PR
+['via1', 'met1', 'met2']
+import via M2M3_PR
+['via2', 'met2', 'met3']
+import via M3M4_PR
+['via3', 'met3', 'met4']
+import via M4M5_PR
+['via4', 'met4', 'met5']
+import via M5M6_PR
+['via5', 'met5', 'met6']
+import via M6M7_PR
+['via6', 'met6', 'met7']
+import via M7M8_PR
+['via7', 'met7', 'met8']
+import via M8M9_PR
+['via8', 'met8', 'met9']
+import via M9M10_PR
+['via9', 'met9', 'met10']
+<generator_class.Nets object at 0x7f4f35f32670>
+converting route:  connect0 : 
+converting route:  connect0 : 
+calc len connect0
+['']
+[[14.82, 2.96609, 0.75], [14.82, 2.96609, 0.9500000000000001], [14.82, 3.42, 0.9500000000000001], [14.82, 3.42, 0.75], [14.364, 3.42, 0.75], [14.364, 3.42, 0.9500000000000001], [14.364, 3.42, 1.1500000000000001], [14.13809, 3.42, 1.1500000000000001], [14.13809, 3.42, 0.9500000000000001], [14.13809, 3.42, 0.75]]
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+calc len connect1
+['']
+[[3.648, 3.42, 0.75], [3.648, 3.42, 0.9500000000000001], [3.648, 3.42, 1.1500000000000001], [7.29809, 3.42, 1.1500000000000001], [7.29809, 3.42, 0.9500000000000001], [7.29809, 3.42, 0.75], [10.26, 3.42, 0.75], [10.26, 3.42, 0.9500000000000001], [10.26, 3.42, 1.1500000000000001], [10.26, 3.42, 1.35], [10.26, 3.648, 1.35], [10.26, 3.648, 1.55], [10.716, 3.648, 1.55], [10.716, 3.648, 1.35], [10.716, 3.648, 1.1500000000000001], [10.71809, 3.648, 1.1500000000000001], [10.71809, 3.648, 0.9500000000000001], [10.71809, 3.648, 0.75], [13.905909999999999, 3.648, 0.75], [13.905909999999999, 3.648, 0.9500000000000001], [13.905909999999999, 3.648, 1.1500000000000001], [14.13809, 3.648, 1.1500000000000001], [14.13809, 3.648, 0.9500000000000001], [14.13809, 3.648, 0.75]]
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+calc len connect2
+['']
+[[7.296, 6.84209, 0.75], [7.296, 6.84209, 0.9500000000000001], [7.296, 7.296, 0.9500000000000001], [7.296, 7.296, 0.75], [10.032, 7.296, 0.75], [10.032, 7.296, 0.9500000000000001], [10.032, 7.296, 1.1500000000000001], [10.488, 7.296, 1.1500000000000001], [10.488, 7.296, 0.9500000000000001], [10.488, 7.52191, 0.9500000000000001], [10.488, 7.52191, 0.75]]
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+calc len connect3
+['']
+[[10.485909999999999, 3.42, 0.75], [10.485909999999999, 3.42, 0.9500000000000001], [10.485909999999999, 3.42, 1.1500000000000001], [10.488, 3.42, 1.1500000000000001], [10.488, 3.42, 1.35], [10.488, 3.42, 1.55], [10.488, 3.42, 1.75], [10.488, 3.42, 1.95], [10.944, 3.42, 1.95], [10.944, 3.42, 1.75], [10.944, 3.42, 1.55], [10.944, 3.42, 1.35], [10.944, 3.42, 1.1500000000000001], [10.944, 3.42, 0.9500000000000001], [10.944, 3.42, 0.75], [13.68, 3.42, 0.75], [13.68, 3.42, 0.9500000000000001], [13.68, 6.156, 0.9500000000000001], [13.68, 6.156, 0.75], [13.908, 6.156, 0.75], [13.908, 6.156, 0.9500000000000001], [13.908, 7.065910000000001, 0.9500000000000001], [13.908, 7.065910000000001, 0.75]]
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+calc len connect4
+['']
+[[13.905909999999999, 3.42, 0.75], [13.905909999999999, 3.42, 0.9500000000000001], [13.905909999999999, 3.42, 1.1500000000000001], [13.908, 3.42, 1.1500000000000001], [13.908, 3.42, 1.35], [13.908, 4.104, 1.35], [13.908, 4.104, 1.1500000000000001], [13.908, 4.104, 0.9500000000000001], [13.908, 4.104, 0.75], [7.29809, 4.104, 0.75], [7.29809, 4.104, 0.9500000000000001], [7.29809, 4.104, 1.1500000000000001], [7.296, 4.104, 1.1500000000000001], [7.296, 4.104, 1.35], [7.296, 4.104, 1.55], [7.296, 4.104, 1.75], [7.296, 6.612, 1.75], [7.296, 6.612, 1.55], [7.296, 6.612, 1.35], [7.296, 6.612, 1.1500000000000001], [7.29809, 6.612, 1.1500000000000001], [7.29809, 6.612, 0.9500000000000001], [7.29809, 6.612, 0.75]]
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+calc len connect5
+['']
+[[10.485909999999999, 3.648, 0.75], [10.485909999999999, 3.648, 0.9500000000000001], [10.485909999999999, 3.648, 1.1500000000000001], [10.488, 3.648, 1.1500000000000001], [10.488, 3.648, 1.35], [10.488, 3.648, 1.55], [10.26, 3.648, 1.55], [10.26, 3.648, 1.35], [10.26, 3.648, 1.1500000000000001], [10.26, 3.648, 0.9500000000000001], [10.26, 3.648, 0.75], [7.29809, 3.648, 0.75], [7.29809, 3.648, 0.9500000000000001], [7.29809, 3.648, 1.1500000000000001], [7.068, 3.648, 1.1500000000000001], [7.068, 3.648, 0.9500000000000001], [7.068, 6.60991, 0.9500000000000001], [7.068, 6.60991, 0.75], [7.065910000000001, 6.60991, 0.75], [7.065910000000001, 6.60991, 0.9500000000000001], [7.065910000000001, 6.83791, 0.9500000000000001], [7.065910000000001, 6.83791, 0.75]]
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+calc len out
+['']
+[[10.71809, 3.42, 0.75], [10.71809, 3.42, 0.9500000000000001], [10.71809, 3.42, 1.1500000000000001], [10.716, 3.42, 1.1500000000000001], [10.716, 3.42, 1.35], [10.716, 3.42, 1.55], [10.716, 3.42, 1.75], [10.716, 3.42, 1.95], [10.716, 3.42, 2.15], [10.716, 5.244, 2.15], [10.716, 5.244, 1.95], [12.084, 5.244, 1.95], [12.084, 5.244, 2.15], [12.084, 5.7, 2.15], [12.084, 5.7, 2.35]]
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+calc len soln1
+['']
+[[0.228, 0.23009, 0.75], [0.228, 0.23009, 0.9500000000000001], [0.228, 3.42, 0.9500000000000001], [0.228, 3.42, 0.75], [3.192, 3.42, 0.75], [3.192, 3.42, 0.9500000000000001], [3.192, 3.42, 1.1500000000000001], [3.192, 3.42, 1.35], [3.192, 3.42, 1.55], [3.192, 3.42, 1.75], [3.192, 3.42, 1.95], [7.98, 3.42, 1.95], [7.98, 3.42, 2.15], [7.98, 5.016, 2.15], [7.98, 5.016, 2.35]]
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+calc len soln2
+['']
+[[8.664, 5.016, 2.35], [8.664, 5.016, 2.15], [8.664, 6.156, 2.15], [8.664, 6.156, 1.95], [7.296, 6.156, 1.95], [7.296, 6.156, 1.75], [7.296, 6.156, 1.55], [7.296, 6.156, 1.35], [7.296, 6.156, 1.1500000000000001], [7.296, 6.156, 0.9500000000000001], [7.296, 6.156, 0.75]]
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+calc len soln3
+['']
+[[9.348, 5.016, 2.35], [9.348, 5.016, 2.15], [9.348, 5.472, 2.15], [9.348, 5.472, 1.95], [9.348, 5.472, 1.75], [9.348, 5.472, 1.55], [12.312, 5.472, 1.55], [12.312, 5.472, 1.35], [12.312, 5.472, 1.1500000000000001], [12.312, 5.472, 0.9500000000000001], [12.312, 6.60991, 0.9500000000000001], [12.312, 6.60991, 0.75]]
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+calc len soln4
+['']
+[[10.032, 5.016, 2.35], [10.032, 5.016, 2.15], [10.032, 6.156, 2.15], [10.032, 6.156, 1.95], [10.26, 6.156, 1.95], [10.26, 6.156, 1.75], [10.26, 6.156, 1.55], [10.26, 6.156, 1.35], [10.26, 6.156, 1.1500000000000001], [10.26, 6.156, 0.9500000000000001], [10.26, 6.156, 0.75], [15.732, 6.156, 0.75], [15.732, 6.156, 0.9500000000000001], [15.732, 6.60991, 0.9500000000000001], [15.732, 6.60991, 0.75]]
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f32e80>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f32fa0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f32af0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f88ac0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f88730>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f884c0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f884f0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f88520>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f883a0>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+<generator_class.Nets object at 0x7f4f35f88400>
+converting route:  connect0 : 
+converting route:  connect0 : 
+Reporting routing graph
+converting route:  connect1 : 
+converting route:  connect1 : 
+Reporting routing graph
+converting route:  connect2 : 
+converting route:  connect2 : 
+Reporting routing graph
+converting route:  connect3 : 
+converting route:  connect3 : 
+Reporting routing graph
+converting route:  connect4 : 
+converting route:  connect4 : 
+Reporting routing graph
+converting route:  connect5 : 
+converting route:  connect5 : 
+Reporting routing graph
+converting route:  out : 
+converting route:  out : 
+Reporting routing graph
+converting route:  soln1 : 
+converting route:  soln1 : 
+Reporting routing graph
+converting route:  soln2 : 
+converting route:  soln2 : 
+Reporting routing graph
+converting route:  soln3 : 
+converting route:  soln3 : 
+Reporting routing graph
+converting route:  soln4 : 
+converting route:  soln4 : 
+Reporting routing graph
+
+    --------------------------------
+          OpenSCAD complete
+    --------------------------------
+    
+	Command being timed: "python3 ../tools/scad_render/generator_v2.py --component_file ./platforms/h.r.3.3/pdk/scad_lib/h.r.3.3_merged.scad --routing_file ./platforms/h.r.3.3/scad/routing.scad --scad_include ./platforms/h.r.3.3/pdk/scad_include/polychannel_v2.scad ./platforms/h.r.3.3/pdk/scad_include/lef_scad_config.scad ./platforms/h.r.3.3/pdk/scad_include/lef_helper.scad --lef_file ./platforms/h.r.3.3/lef/h.r.3.3_merged.lef ./results/salicylic_acid/base/h.r.3.3_salicylic_acid_pcells.lef --tlef_file ./platforms/h.r.3.3/lef/h.r.3.3.tlef --platform h.r.3.3 --px 0.0076 --layer 0.01 --bottom_layer 75 --lpv 20 --xbulk 2550 --ybulk 1600 --zbulk 230 --xchip 325 2225 --ychip 325 1275 --pitch 30 --res 120 --dimm_file  --pcell ./results/salicylic_acid/base/pcell_out_scad --def_file results/salicylic_acid/base/4_final.def --design salicylic_acid --scad_out_file ./results/salicylic_acid/base/salicylic_acid_base.scad --scad_include ./platforms/h.r.3.3/pdk/scad_lib/polychannel_v2.scad ./platforms/h.r.3.3/pdk/scad_lib/lef_helper.scad ./platforms/h.r.3.3/pdk/scad_lib/lef_scad_config.scad --results_dir ./results/salicylic_acid/base"
+	User time (seconds): 3.39
+	System time (seconds): 3.43
+	Percent of CPU this job got: 254%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.68
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 75904
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 13784
+	Voluntary context switches: 1289
+	Involuntary context switches: 71382
+	Swaps: 0
+	File system inputs: 24
+	File system outputs: 1256
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

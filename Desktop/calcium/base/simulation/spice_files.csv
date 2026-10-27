@@ -1,0 +1,4 @@
+,Chemical,spice_str_file,spice_file,OutputFile
+0,sample,./results/calcium/base/simulation/calcium_sample.cir.str,./results/calcium/base/simulation/calcium_sample.cir,./results/calcium/base/simulation/calcium_sample.cir.prn
+1,R1,./results/calcium/base/simulation/calcium_R1.cir.str,./results/calcium/base/simulation/calcium_R1.cir,./results/calcium/base/simulation/calcium_R1.cir.prn
+2,H2O,./results/calcium/base/simulation/calcium_H2O.cir.str,./results/calcium/base/simulation/calcium_H2O.cir,./results/calcium/base/simulation/calcium_H2O.cir.prn

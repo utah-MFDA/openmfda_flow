@@ -27,7 +27,7 @@ gen_pcells: $(PCELL_MERGE_LEF)
 re_render: $(RESULTS_DIR)/$(DESIGN)_reroute.scad
 re_simulate: $(RESULTS_DIR)/xyceOut_1.csv
 
-run_tcl_script: 
+run_tcl_script:
 	$(MAKE) gen_pcells
 	$(OPENROAD_CMD) ./scripts/update_design.tcl
 	$(MAKE) re_render
